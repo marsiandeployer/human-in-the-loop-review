@@ -75,13 +75,8 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         self._cors_headers()
         self.end_headers()
 
-    def do_POST(self):
-        if self.path != "/feedback":
-            self.send_response(404)
-            self.end_headers()
-            self.wfile.write(b'{"error": "not found"}')
-            return
-
+    def _read_json_body(self, max_size=10000):
+        """Read and parse JSON body. Returns (data, error_sent) tuple."""
         # Rate limiting
         client_ip = self.headers.get("X-Real-IP", self.client_address[0])
         if not check_rate_limit(client_ip):
@@ -89,7 +84,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             self._cors_headers()
             self.end_headers()
             self.wfile.write(b'{"error": "too many requests, try again later"}')
-            return
+            return None, True
 
         try:
             content_length = int(self.headers.get("Content-Length", 0))
@@ -98,25 +93,53 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             self._cors_headers()
             self.end_headers()
             self.wfile.write(b'{"error": "invalid content-length"}')
-            return
+            return None, True
 
-        if content_length > 10000:
+        if content_length > max_size:
             self.send_response(413)
             self.end_headers()
             self.wfile.write(b'{"error": "too large"}')
-            return
+            return None, True
 
         body = self.rfile.read(content_length)
         try:
-            data = json.loads(body)
+            return json.loads(body), False
         except json.JSONDecodeError:
             self.send_response(400)
             self._cors_headers()
             self.end_headers()
             self.wfile.write(b'{"error": "invalid json"}')
+            return None, True
+
+    def _send_and_respond(self, tg_text):
+        """Send to Telegram and write HTTP response."""
+        sent = send_telegram(tg_text)
+        if sent:
+            self.send_response(200)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"status": "accepted"}')
+        else:
+            self.send_response(502)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "failed to deliver, contact @onoutnoxon on Telegram"}')
+
+    def do_POST(self):
+        if self.path == "/feedback":
+            self._handle_feedback()
+        elif self.path == "/review":
+            self._handle_review()
+        else:
+            self.send_response(404)
+            self.end_headers()
+            self.wfile.write(b'{"error": "not found"}')
+
+    def _handle_feedback(self):
+        data, err = self._read_json_body()
+        if err:
             return
 
-        # Type-safe field extraction
         message = data.get("message") if isinstance(data.get("message"), str) else None
         repo = data.get("repo") if isinstance(data.get("repo"), str) else None
 
@@ -134,7 +157,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'{"error": "repo is required (string)"}')
             return
 
-        message = message.strip()[:2000]  # cap message length
+        message = message.strip()[:2000]
         repo = repo.strip()[:500]
 
         tg_text = (
@@ -142,19 +165,48 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             f"Repo: {repo}\n"
             f"Message: {message}"
         )
+        self._send_and_respond(tg_text)
 
-        sent = send_telegram(tg_text)
+    def _handle_review(self):
+        data, err = self._read_json_body(max_size=50000)
+        if err:
+            return
 
-        if sent:
-            self.send_response(200)
+        repo = data.get("repo") if isinstance(data.get("repo"), str) else None
+        if not repo or not repo.strip():
+            self.send_response(400)
             self._cors_headers()
             self.end_headers()
-            self.wfile.write(b'{"status": "feedback accepted"}')
-        else:
-            self.send_response(502)
-            self._cors_headers()
-            self.end_headers()
-            self.wfile.write(b'{"error": "failed to deliver feedback, please contact us on Telegram @onoutnoxon"}')
+            self.wfile.write(b'{"error": "repo is required"}')
+            return
+
+        repo = repo.strip()[:500]
+        branch = (data.get("branch") or "unknown")[:100] if isinstance(data.get("branch"), str) else "unknown"
+        sha = (data.get("sha") or "")[:40] if isinstance(data.get("sha"), str) else ""
+        author = (data.get("author") or "unknown")[:100] if isinstance(data.get("author"), str) else "unknown"
+        scope = (data.get("scope") or "full")[:50] if isinstance(data.get("scope"), str) else "full"
+        spec_url = (data.get("spec_url") or "")[:500] if isinstance(data.get("spec_url"), str) else ""
+        contact = (data.get("contact") or "")[:100] if isinstance(data.get("contact"), str) else ""
+        files = (data.get("changed_files") or "")[:3000] if isinstance(data.get("changed_files"), str) else ""
+        file_count = len([f for f in files.split("\n") if f.strip()]) if files else 0
+
+        repo_url = f"https://github.com/{repo}" if "/" in repo and not repo.startswith("http") else repo
+
+        tg_text = (
+            f"**Vibers: Review Request**\n\n"
+            f"Repo: [{repo}]({repo_url})\n"
+            f"Branch: `{branch}`\n"
+            f"Commit: `{sha[:8]}`\n"
+            f"Author: {author}\n"
+            f"Scope: {scope}\n"
+        )
+        if spec_url:
+            tg_text += f"Spec: {spec_url}\n"
+        if contact:
+            tg_text += f"Contact: {contact}\n"
+        tg_text += f"\nChanged files ({file_count}):\n```\n{files[:1000]}\n```"
+
+        self._send_and_respond(tg_text)
 
     def _cors_headers(self):
         self.send_header("Content-Type", "application/json")
