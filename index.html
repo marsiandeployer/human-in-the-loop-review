@@ -4,11 +4,51 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vibers — Human-in-the-Loop Code Review for Vibecoded Projects</title>
-    <meta name="description" content="We review code after vibecoders. Connect your GitHub, share your spec — we check commits, fix issues, and send pull requests. From $1/hour.">
-    <meta name="keywords" content="vibecoding review, code review service, human in the loop, ai code review, cheap developer qa, pull request review, vibe coding quality">
+    <meta name="description" content="We review and fix code after vibecoders. Add marsiandeployer to your GitHub, share your spec — we check commits, fix issues, and send pull requests. $1/hr promo.">
+    <link rel="canonical" href="https://vibers.onout.org/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Vibers — Code Review & Fixes for Vibecoded Projects">
+    <meta property="og:description" content="Your vibecoders ship code. We fix what's broken. Add marsiandeployer to GitHub, share your spec, get PRs with fixes. $1/hr promo rate.">
+    <meta property="og:url" content="https://vibers.onout.org/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Vibers — Code Review & Fixes for Vibecoded Projects">
+    <meta name="twitter:description" content="We review and fix vibecoded code. $1/hr promo rate for early adopters.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Vibers",
+      "description": "Human-in-the-loop code review and fixes for vibecoded projects",
+      "url": "https://vibers.onout.org/",
+      "provider": {
+        "@type": "Organization",
+        "name": "Onout",
+        "url": "https://onout.org"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "1",
+        "priceCurrency": "USD",
+        "description": "Promo rate: $1/hour for early adopters"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "What is a vibecoder?", "acceptedAnswer": {"@type": "Answer", "text": "Developers (often $1-5/hr from Upwork, Fiverr, or similar platforms) who use AI tools like Cursor, Copilot, or ChatGPT to write code quickly. Fast and cheap, but quality varies wildly."}},
+        {"@type": "Question", "name": "Why not just use automated code review tools?", "acceptedAnswer": {"@type": "Answer", "text": "Tools like SonarQube catch syntax issues. We check if the code actually matches your business requirements. We read your Google Doc and verify that the feature does what you described."}},
+        {"@type": "Question", "name": "Do you actually fix code or just report bugs?", "acceptedAnswer": {"@type": "Answer", "text": "We fix it. Every review comes with a pull request containing our improvements. You review the PR and merge if you like it."}},
+        {"@type": "Question", "name": "What tech stacks do you support?", "acceptedAnswer": {"@type": "Answer", "text": "JavaScript/TypeScript, Python, React, Node.js, Django, Flask, Next.js, and most popular web frameworks."}},
+        {"@type": "Question", "name": "How is this different from hiring a senior dev?", "acceptedAnswer": {"@type": "Answer", "text": "A senior dev costs $50-150/hr. We cost $1/hr (promo) or $15/hr (standard), pay-as-you-go. No contracts, no subscriptions."}}
+      ]
+    }
+    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -19,6 +59,7 @@
         }
         a { color: #7c6aff; text-decoration: none; }
         a:hover { color: #9d8fff; }
+        a:focus-visible, .btn:focus-visible { outline: 2px solid #7c6aff; outline-offset: 2px; }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
@@ -67,18 +108,12 @@
             font-size: 16px;
             transition: all 0.2s;
         }
-        .btn-primary {
-            background: #7c6aff;
-            color: #fff;
-        }
+        .btn-primary { background: #7c6aff; color: #fff; }
         .btn-primary:hover { background: #6b57f0; color: #fff; }
-        .btn-outline {
-            border: 1px solid #333;
-            color: #ccc;
-        }
+        .btn-outline { border: 1px solid #333; color: #ccc; }
         .btn-outline:hover { border-color: #7c6aff; color: #fff; }
 
-        /* How it works */
+        /* Sections */
         section { padding: 80px 0; }
         section h2 {
             font-size: 36px;
@@ -86,6 +121,9 @@
             color: #fff;
             margin-bottom: 48px;
         }
+        .section-alt { background: rgba(124,106,255,0.03); }
+
+        /* Steps grid */
         .steps {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -101,8 +139,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 10px;
             background: rgba(124,106,255,0.15);
             color: #7c6aff;
@@ -112,14 +149,27 @@
         }
         .step h3 { color: #fff; font-size: 18px; margin-bottom: 8px; }
         .step p { color: #888; font-size: 15px; }
+        .step-highlight { border-color: rgba(124,106,255,0.3); }
 
-        /* Problem / Solution */
+        /* Metric in cards */
+        .step-metric {
+            font-size: 32px;
+            font-weight: 800;
+            color: #7c6aff;
+            margin-bottom: 12px;
+            line-height: 1;
+        }
+
+        /* Two columns */
         .two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
         }
-        @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            .two-col { grid-template-columns: 1fr; }
+            .pricing-inner { grid-template-columns: 1fr !important; }
+        }
         .card {
             background: rgba(255,255,255,0.03);
             border: 1px solid #1a1a2e;
@@ -134,11 +184,7 @@
             position: relative;
             color: #aaa;
         }
-        .card ul li::before {
-            position: absolute;
-            left: 0;
-            font-size: 14px;
-        }
+        .card ul li::before { position: absolute; left: 0; font-size: 14px; }
         .card-problem ul li::before { content: "\2717"; color: #ff5c5c; }
         .card-solution ul li::before { content: "\2713"; color: #5cff8a; }
 
@@ -147,6 +193,13 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
+        }
+        .pricing-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            max-width: 700px;
+            margin: 0 auto;
         }
         .price-card {
             background: rgba(255,255,255,0.03);
@@ -158,25 +211,16 @@
         }
         .price-card.featured { border-color: #7c6aff; }
         .price-card h3 { color: #fff; font-size: 20px; }
-        .price-amount {
-            font-size: 36px;
-            font-weight: 800;
-            color: #fff;
-            margin: 16px 0;
-        }
+        .price-amount { font-size: 36px; font-weight: 800; color: #fff; margin: 16px 0; }
         .price-amount small { font-size: 16px; color: #888; font-weight: 400; }
         .price-card ul { list-style: none; margin: 16px 0; flex-grow: 1; }
         .price-card ul li { padding: 6px 0; color: #aaa; padding-left: 20px; position: relative; }
         .price-card ul li::before { content: "\2713"; position: absolute; left: 0; color: #5cff8a; font-size: 13px; }
 
-        /* Flow diagram */
+        /* Flow */
         .flow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 32px 0;
+            display: flex; align-items: center; justify-content: center;
+            flex-wrap: wrap; gap: 12px; margin: 32px 0;
         }
         .flow-item {
             background: rgba(124,106,255,0.1);
@@ -190,51 +234,79 @@
         }
         .flow-arrow { color: #555; font-size: 24px; }
 
+        /* Comparison table */
+        .compare-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+        .compare-table th { padding: 12px 16px; color: #888; }
+        .compare-table th.vibers-col { color: #7c6aff; font-weight: 700; }
+        .compare-table th[scope="row"] { text-align: left; color: #ccc; font-weight: 400; }
+        .compare-table td { padding: 10px 16px; text-align: center; }
+        .compare-table thead tr { border-bottom: 2px solid #1a1a2e; }
+        .compare-table tbody tr { border-bottom: 1px solid #1a1a2e; }
+        .td-no { color: #ff5c5c; }
+        .td-partial { color: #888; }
+        .td-yes { color: #5cff8a; font-weight: 600; }
+        .td-vibers { color: #7c6aff; font-weight: 600; }
+
         /* FAQ */
-        .faq-item {
-            border-bottom: 1px solid #1a1a2e;
-            padding: 20px 0;
-        }
+        .faq-item { border-bottom: 1px solid #1a1a2e; padding: 20px 0; }
         .faq-item h3 { color: #fff; font-size: 17px; margin-bottom: 8px; }
         .faq-item p { color: #888; font-size: 15px; }
 
         /* CTA */
-        .cta-section {
-            text-align: center;
-            padding: 80px 0;
-        }
+        .cta-section { text-align: center; padding: 80px 0; }
         .cta-section h2 { margin-bottom: 16px; }
         .cta-section p { color: #888; margin-bottom: 32px; font-size: 18px; }
 
         /* Footer */
         footer {
             border-top: 1px solid #1a1a2e;
-            padding: 32px 0;
-            text-align: center;
-            color: #555;
-            font-size: 14px;
+            padding: 32px 0; text-align: center;
+            color: #666; font-size: 14px;
         }
         footer a { color: #888; }
+
+        /* Promo badge */
+        .promo-badge {
+            background: linear-gradient(135deg, #7c6aff, #ff6aaa);
+            color: #fff; display: inline-block;
+            padding: 4px 12px; border-radius: 6px;
+            font-size: 12px; font-weight: 700;
+            margin-bottom: 12px; width: fit-content;
+        }
+        .code-inline {
+            background: rgba(124,106,255,0.2);
+            padding: 2px 8px; border-radius: 4px;
+        }
+        .paygo-box {
+            text-align: center; margin-top: 40px; padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid #1a1a2e; border-radius: 12px;
+            max-width: 700px; margin-left: auto; margin-right: auto;
+        }
+        .text-muted-sm { color: #777; font-size: 13px; }
+        .text-muted-xs { color: #777; font-size: 12px; text-align: center; margin-top: 12px; }
     </style>
 </head>
 <body>
 
+<main>
+
 <!-- Hero -->
-<section class="hero">
+<header class="hero">
     <div class="container">
         <span class="hero-badge">Human-in-the-Loop for Vibecoded Projects</span>
         <h1>Your vibecoders ship code.<br><span>We fix what's broken.</span></h1>
         <p class="hero-sub">
-            Hire cheap AI-assisted developers. Add <code style="background: rgba(124,106,255,0.2); padding: 2px 8px; border-radius: 4px; font-size: 16px;">marsiandeployer</code> to your GitHub.
-            We review every commit, fix bugs and security issues, and send pull requests with working code.
+            Add <code class="code-inline" style="font-size: 16px;">marsiandeployer</code> to your GitHub repo.
+            Share your spec. We review every commit, fix bugs and security issues, and send pull requests with working code.
             Pay as you go — <strong style="color:#7c6aff;">$1/hr promo rate</strong> for early adopters.
         </p>
         <div class="hero-cta">
-            <a href="https://t.me/onoutnoxon" target="_blank" class="btn btn-primary">Start Free Pilot</a>
+            <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Start Free Pilot</a>
             <a href="#how-it-works" class="btn btn-outline">How It Works</a>
         </div>
     </div>
-</section>
+</header>
 
 <!-- Problem / Solution -->
 <section>
@@ -266,13 +338,13 @@
 </section>
 
 <!-- How it works -->
-<section id="how-it-works" style="background: rgba(124,106,255,0.03);">
+<section id="how-it-works" class="section-alt">
     <div class="container">
         <h2>How It Works</h2>
         <div class="flow">
             <div class="flow-item">Vibecoder<br>commits code</div>
             <span class="flow-arrow">&rarr;</span>
-            <div class="flow-item">We pull &<br>review vs spec</div>
+            <div class="flow-item">We pull &amp;<br>review vs spec</div>
             <span class="flow-arrow">&rarr;</span>
             <div class="flow-item">Fix issues<br>ourselves</div>
             <span class="flow-arrow">&rarr;</span>
@@ -284,7 +356,7 @@
             <div class="step">
                 <div class="step-num">1</div>
                 <h3>Add Us to GitHub</h3>
-                <p>Add <code style="background: rgba(124,106,255,0.2); padding: 2px 8px; border-radius: 4px;">marsiandeployer</code> as collaborator to your repo. That's it. <br><span style="color: #666; font-size: 13px;">No GitHub? <a href="https://t.me/onoutnoxon" target="_blank">Write us on Telegram</a></span></p>
+                <p>Add <code class="code-inline">marsiandeployer</code> as collaborator to your repo. That's it. <br><span class="text-muted-sm">No GitHub? <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Write us on Telegram</a></span></p>
             </div>
             <div class="step">
                 <div class="step-num">2</div>
@@ -309,83 +381,84 @@
 <section>
     <div class="container">
         <h2>Why Vibers?</h2>
-        <div class="steps" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="step" style="border-color: rgba(124,106,255,0.3);">
-                <h3 style="font-size: 32px; margin-bottom: 12px; color: #7c6aff;">30 sec</h3>
+        <div class="steps">
+            <div class="step step-highlight">
+                <p class="step-metric">30 sec</p>
                 <h3>Easy Connection</h3>
-                <p>Add our GitHub user, send a spec link. Done. No SDK, no CI config, no onboarding calls, no contracts to sign. Works like AI tools — just plug in and go.</p>
+                <p>Add our GitHub user, send a spec link. Done. No SDK, no CI config, no onboarding calls, no contracts to sign.</p>
             </div>
-            <div class="step" style="border-color: rgba(124,106,255,0.3);">
-                <h3 style="font-size: 32px; margin-bottom: 12px; color: #7c6aff;">$1/hr</h3>
+            <div class="step step-highlight">
+                <p class="step-metric">$1/hr</p>
                 <h3>Pay As You Go</h3>
                 <p>No subscriptions. No minimums. A senior reviewer costs $50-150/hr. We review, fix, and send PRs — $1/hr promo rate for early adopters who give us feedback.</p>
             </div>
-            <div class="step" style="border-color: rgba(124,106,255,0.3);">
-                <h3 style="font-size: 32px; margin-bottom: 12px; color: #7c6aff;">0</h3>
+            <div class="step step-highlight">
+                <p class="step-metric">0</p>
                 <h3>Unnecessary Questions</h3>
-                <p>We read your spec and do what makes sense. No clarification threads, no blocking your pipeline. Same philosophy as AI: do first, discuss later. Fixes ship in the PR description.</p>
+                <p>We read your spec and do what makes sense. No clarification threads, no blocking your pipeline. Decisions and reasoning go in the PR description.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Comparison -->
-<section style="background: rgba(124,106,255,0.03);">
+<section class="section-alt">
     <div class="container">
         <h2>How We Compare</h2>
         <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
+            <table class="compare-table">
+                <caption style="text-align: left; color: #555; font-size: 13px; margin-bottom: 16px;">Feature comparison: Vibers vs popular code review tools</caption>
                 <thead>
-                    <tr style="border-bottom: 2px solid #1a1a2e;">
-                        <th style="text-align: left; padding: 12px 16px; color: #888;">Feature</th>
-                        <th style="padding: 12px 16px; color: #888;">SonarQube</th>
-                        <th style="padding: 12px 16px; color: #888;">CodeRabbit</th>
-                        <th style="padding: 12px 16px; color: #888;">PullRequest.com</th>
-                        <th style="padding: 12px 16px; color: #7c6aff; font-weight: 700;">Vibers</th>
+                    <tr>
+                        <th scope="col" style="text-align: left;">Feature</th>
+                        <th scope="col">SonarQube</th>
+                        <th scope="col">CodeRabbit</th>
+                        <th scope="col">PullRequest.com</th>
+                        <th scope="col" class="vibers-col">Vibers</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid #1a1a2e;">
-                        <td style="padding: 10px 16px; color: #ccc;">Reads your spec / Google Doc</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #ff5c5c;">No</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #ff5c5c;">No</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">Partial</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #5cff8a; font-weight: 600;">Yes</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #1a1a2e;">
-                        <td style="padding: 10px 16px; color: #ccc;">Sends PRs with actual fixes</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #ff5c5c;">No</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #ff5c5c;">No</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #ff5c5c;">No</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #5cff8a; font-weight: 600;">Yes</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #1a1a2e;">
-                        <td style="padding: 10px 16px; color: #ccc;">Setup time</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">Hours</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">Minutes</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">Days</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #5cff8a; font-weight: 600;">30 sec</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #1a1a2e;">
-                        <td style="padding: 10px 16px; color: #ccc;">Asks clarifying questions</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">N/A</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">N/A</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #ff5c5c;">Yes, many</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #5cff8a; font-weight: 600;">No, just fixes</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #1a1a2e;">
-                        <td style="padding: 10px 16px; color: #ccc;">Price</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">Free-$375/mo</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">$12/user/mo</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">$500+/mo</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #5cff8a; font-weight: 600;">$1/hr*</td>
+                    <tr>
+                        <th scope="row">Reads your spec / Google Doc</th>
+                        <td class="td-no">No</td>
+                        <td class="td-no">No</td>
+                        <td class="td-partial">Partial</td>
+                        <td class="td-yes">Yes</td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px 16px; color: #ccc;">Best for</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">CI pipeline</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">PR comments</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #888;">Enterprise</td>
-                        <td style="padding: 10px 16px; text-align: center; color: #7c6aff; font-weight: 600;">Vibecoded MVPs</td>
+                        <th scope="row">Sends PRs with actual fixes</th>
+                        <td class="td-no">No</td>
+                        <td class="td-no">No</td>
+                        <td class="td-no">No</td>
+                        <td class="td-yes">Yes</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Setup time</th>
+                        <td class="td-partial">Hours</td>
+                        <td class="td-partial">Minutes</td>
+                        <td class="td-partial">Days</td>
+                        <td class="td-yes">30 sec</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Asks clarifying questions</th>
+                        <td class="td-partial">N/A</td>
+                        <td class="td-partial">N/A</td>
+                        <td class="td-no">Yes, many</td>
+                        <td class="td-yes">No, just fixes</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Price</th>
+                        <td class="td-partial">Free-$375/mo</td>
+                        <td class="td-partial">$12/user/mo</td>
+                        <td class="td-partial">$500+/mo</td>
+                        <td class="td-yes">$1/hr*</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Best for</th>
+                        <td class="td-partial">CI pipeline</td>
+                        <td class="td-partial">PR comments</td>
+                        <td class="td-partial">Enterprise</td>
+                        <td class="td-vibers">Vibecoded MVPs</td>
                     </tr>
                 </tbody>
             </table>
@@ -419,13 +492,13 @@
 </section>
 
 <!-- Pricing -->
-<section id="pricing" style="background: rgba(124,106,255,0.03);">
+<section id="pricing" class="section-alt">
     <div class="container">
         <h2>Pricing</h2>
         <p style="color: #999; font-size: 18px; margin-top: -32px; margin-bottom: 48px;">Pay as you go. No subscriptions. No commitments.</p>
-        <div class="pricing-grid" style="grid-template-columns: 1fr 1fr; max-width: 700px; margin: 0 auto;">
+        <div class="pricing-inner">
             <div class="price-card featured">
-                <div style="background: linear-gradient(135deg, #7c6aff, #ff6aaa); color: #fff; display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-bottom: 12px; width: fit-content;">PROMO</div>
+                <div class="promo-badge">PROMO</div>
                 <h3>Early Adopter</h3>
                 <div class="price-amount">$1 <small>/ hour</small></div>
                 <ul>
@@ -435,8 +508,8 @@
                     <li>Pay only for hours spent</li>
                     <li>We ask for your feedback in return</li>
                 </ul>
-                <a href="https://t.me/onoutnoxon" target="_blank" class="btn btn-primary" style="text-align:center;">Claim $1/hr Rate</a>
-                <p style="color: #666; font-size: 12px; text-align: center; margin-top: 12px;">Limited spots. Promo rate in exchange for honest feedback.</p>
+                <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="text-align:center;">Claim $1/hr Rate</a>
+                <p class="text-muted-xs">Limited spots. Promo rate in exchange for honest feedback.</p>
             </div>
             <div class="price-card">
                 <h3>Standard</h3>
@@ -444,15 +517,15 @@
                 <ul>
                     <li>Full code review against your spec</li>
                     <li>PRs with fixes included</li>
-                    <li>Security & architecture audit</li>
+                    <li>Security &amp; architecture audit</li>
                     <li>Pay only for hours spent</li>
                     <li>Priority turnaround</li>
                 </ul>
-                <a href="https://t.me/onoutnoxon" target="_blank" class="btn btn-outline" style="text-align:center;">Get Started</a>
+                <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="text-align:center;">Get Started</a>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 40px; padding: 24px; background: rgba(255,255,255,0.02); border: 1px solid #1a1a2e; border-radius: 12px; max-width: 700px; margin-left: auto; margin-right: auto;">
-            <p style="color: #ccc; font-size: 16px; margin-bottom: 8px;">How pay-as-you-go works:</p>
+        <div class="paygo-box">
+            <p style="color: #ccc; font-size: 16px; margin-bottom: 8px;"><strong>How it works</strong></p>
             <p style="color: #888; font-size: 14px;">We review your repo, track time, send you a report with hours spent. You pay for actual work done. A typical review of 5-10 commits takes 1-3 hours. No minimums, no contracts.</p>
         </div>
     </div>
@@ -493,14 +566,16 @@
 <section class="cta-section">
     <div class="container">
         <h2 style="color:#fff;">Ready to stop debugging vibecoded spaghetti?</h2>
-        <p>$1/hr promo rate — we review your code, you give us feedback. Limited spots.</p>
-        <a href="https://t.me/onoutnoxon" target="_blank" class="btn btn-primary" style="font-size:18px; padding: 16px 40px;">Claim $1/hr Rate on Telegram</a>
+        <p>$1/hr promo rate — we review and fix your code, you give us feedback. Limited spots.</p>
+        <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:18px; padding: 16px 40px;">Claim $1/hr Rate on Telegram</a>
     </div>
 </section>
 
+</main>
+
 <footer>
     <div class="container">
-        <p>Vibers &mdash; by <a href="https://onout.org" target="_blank">onout.org</a> | <a href="https://t.me/onoutnoxon" target="_blank">Telegram</a> | <a href="mailto:i448539@gmail.com">Email</a></p>
+        <p>Vibers &mdash; by <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> | <a href="mailto:i448539@gmail.com">Email</a></p>
     </div>
 </footer>
 
