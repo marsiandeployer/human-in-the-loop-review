@@ -45,32 +45,46 @@ To get the best review, follow these practices:
 ### 1. Keep your spec up to date
 The reviewer checks code against your spec. If the spec is outdated, the review will miss things.
 
-### 2. Write clear commit messages with test instructions
-Your AI agent (Cursor, Claude Code, etc.) MUST include a "How to test" section in the commit body. This is what the reviewer sees first.
+### 2. Add "How to test" rule to your AI agent config
 
-Bad:
+**Required step:** Add the following instruction to your project's `CLAUDE.md`, `.cursorrules`, or `AGENTS.md`:
+
+```
+## Commit messages
+
+Every commit message MUST include a "How to test" section in the body:
+- Live URL to open and verify the change
+- Step-by-step what to check
+- Test credentials if login is required
+- Expected result for each step
+
+Example:
+  feat: Add user registration form
+
+  How to test:
+  - Open https://myapp.vercel.app/register
+  - Fill in email/password, submit
+  - Check that confirmation email arrives
+  - Try submitting with invalid email — should show error
+  - Login: test@example.com / demo123
+```
+
+This is how the Vibers reviewer knows what to check. Without "How to test" in commits, the reviewer has to guess — and the review takes longer.
+
+**Bad** (reviewer doesn't know what to verify):
 ```
 fix stuff
 ```
 
-Good:
+**Good** (reviewer opens URL, follows steps, done):
 ```
-Add user registration form (spec section 3.2)
+Fix checkout total calculation (spec 4.1)
 
 How to test:
-- Open https://myapp.vercel.app/register
-- Fill in email/password, submit
-- Check that confirmation email arrives
-- Try submitting with invalid email — should show error
-- Login: test@example.com / demo123
-```
-
-**Tip for AI agents:** Add this to your CLAUDE.md or system prompt:
-```
-Every commit message MUST include a "How to test" section in the body:
-- URLs to open
-- Steps to verify
-- Test credentials if needed
+- Open https://myapp.com/cart
+- Add 3 items, apply discount code SAVE10
+- Verify total = sum - 10%
+- Login: demo@test.com / demo123
 ```
 
 ### 3. One feature per PR
