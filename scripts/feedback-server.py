@@ -201,69 +201,49 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         branch = self._str_field(data, "branch", 100, "unknown")
         sha = self._str_field(data, "sha", 40)
         author = self._str_field(data, "author", 100, "unknown")
-        scope = self._str_field(data, "scope", 50, "full")
         spec_url = self._str_field(data, "spec_url", 500)
         contact = self._str_field(data, "contact", 100)
         commit_msg = self._str_field(data, "commit_msg", 200)
+        commit_body = self._str_field(data, "commit_body", 2000)
         diff_stat = self._str_field(data, "diff_stat", 200)
-        urls = self._str_field(data, "urls", 1000)
-        creds = self._str_field(data, "creds", 1000)
         deploy_url = self._str_field(data, "deploy_url", 500)
         stack = self._str_field(data, "stack", 200)
+        creds = self._str_field(data, "creds", 1000)
         files = self._str_field(data, "changed_files", 3000)
         file_count = len([f for f in files.split("\n") if f.strip()]) if files else 0
 
         repo_url = f"https://github.com/{repo}" if "/" in repo and not repo.startswith("http") else repo
+        commit_url = f"{repo_url}/commit/{sha}" if sha else ""
 
-        # Build Telegram message
+        # Build Telegram message — compact, useful
         tg_text = f"**Vibers: Review Request**\n\n"
-        tg_text += f"Repo: [{repo}]({repo_url})\n"
-        tg_text += f"Branch: `{branch}` | Commit: `{sha[:8]}`\n"
-        tg_text += f"Author: {author}\n"
+        tg_text += f"[{repo}]({repo_url}) | [{sha[:8]}]({commit_url})\n"
+        tg_text += f"Author: {author} | Branch: `{branch}`\n"
 
         if commit_msg:
-            tg_text += f"Message: {commit_msg}\n"
+            tg_text += f"\n**{commit_msg}**\n"
+
+        if commit_body:
+            tg_text += f"\n{commit_body}\n"
 
         if diff_stat:
-            tg_text += f"Stat: {diff_stat}\n"
+            tg_text += f"\n`{diff_stat}`\n"
 
         if stack:
             tg_text += f"Stack: {stack}\n"
 
-        tg_text += f"Scope: {scope}\n"
-
         if spec_url:
-            tg_text += f"\nSpec: {spec_url}\n"
+            tg_text += f"Spec: {spec_url}\n"
         if contact:
             tg_text += f"Contact: {contact}\n"
+        if deploy_url:
+            tg_text += f"Deploy: {deploy_url}\n"
 
-        # URLs section
-        if urls or deploy_url:
-            tg_text += f"\n**URLs to check:**\n"
-            if deploy_url:
-                tg_text += f"Deploy: {deploy_url}\n"
-            if urls:
-                for url in urls.split("\n"):
-                    url = url.strip()
-                    if url:
-                        tg_text += f"- {url}\n"
-
-        # Credentials section
         if creds:
-            tg_text += f"\n**Test credentials found:**\n```\n{creds[:500]}\n```\n"
+            tg_text += f"\n**Credentials:**\n```\n{creds[:500]}\n```\n"
 
-        # Changed files
-        tg_text += f"\n**Changed files ({file_count}):**\n```\n{files[:800]}\n```"
-
-        # Review checklist
-        tg_text += f"\n\n**Review checklist:**\n"
-        tg_text += f"1. `git clone` + checkout `{branch}`\n"
-        tg_text += f"2. Read commit: `{commit_msg[:80]}`\n" if commit_msg else ""
-        if urls or deploy_url:
-            tg_text += f"3. Open URLs above, check UI\n"
-        if creds:
-            tg_text += f"4. Login with test creds, verify flow\n"
-        tg_text += f"{'5' if creds else '3'}. Review changed files vs spec\n"
+        if files:
+            tg_text += f"\n**Files ({file_count}):**\n```\n{files[:800]}\n```"
 
         self._send_and_respond(tg_text)
 

@@ -45,9 +45,33 @@ To get the best review, follow these practices:
 ### 1. Keep your spec up to date
 The reviewer checks code against your spec. If the spec is outdated, the review will miss things.
 
-### 2. Write clear commit messages
-Bad: `fix stuff`
-Good: `Add user registration form (spec section 3.2)`
+### 2. Write clear commit messages with test instructions
+Your AI agent (Cursor, Claude Code, etc.) MUST include a "How to test" section in the commit body. This is what the reviewer sees first.
+
+Bad:
+```
+fix stuff
+```
+
+Good:
+```
+Add user registration form (spec section 3.2)
+
+How to test:
+- Open https://myapp.vercel.app/register
+- Fill in email/password, submit
+- Check that confirmation email arrives
+- Try submitting with invalid email — should show error
+- Login: test@example.com / demo123
+```
+
+**Tip for AI agents:** Add this to your CLAUDE.md or system prompt:
+```
+Every commit message MUST include a "How to test" section in the body:
+- URLs to open
+- Steps to verify
+- Test credentials if needed
+```
 
 ### 3. One feature per PR
 Don't mix 5 features in one commit. The reviewer can't verify spec compliance if changes are tangled.
