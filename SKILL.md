@@ -17,7 +17,6 @@ name: Vibers Code Review
 on:
   push:
     branches: [main]
-  pull_request:
 
 jobs:
   review:

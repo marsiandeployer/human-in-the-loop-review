@@ -56,8 +56,19 @@ def send_telegram(text):
         return False
 
 
+_last_cleanup = 0
+
 def check_rate_limit(ip):
+    global _last_cleanup
     now = time.time()
+
+    # Evict stale IPs every 5 minutes
+    if now - _last_cleanup > 300:
+        stale = [k for k, v in RATE_LIMIT.items() if not v or now - v[-1] > RATE_WINDOW]
+        for k in stale:
+            del RATE_LIMIT[k]
+        _last_cleanup = now
+
     if ip in RATE_LIMIT:
         timestamps = [t for t in RATE_LIMIT[ip] if now - t < RATE_WINDOW]
         RATE_LIMIT[ip] = timestamps
@@ -257,7 +268,17 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         print(f"[feedback-server] {args[0]}")
 
 
+class TimeoutHTTPServer(HTTPServer):
+    """HTTPServer that sets a socket timeout on accepted connections."""
+    request_timeout = 30
+
+    def get_request(self):
+        conn, addr = super().get_request()
+        conn.settimeout(self.request_timeout)
+        return conn, addr
+
+
 if __name__ == "__main__":
-    server = HTTPServer(("127.0.0.1", PORT), FeedbackHandler)
+    server = TimeoutHTTPServer(("127.0.0.1", PORT), FeedbackHandler)
     print(f"Feedback server listening on 127.0.0.1:{PORT}")
     server.serve_forever()

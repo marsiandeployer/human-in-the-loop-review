@@ -27,14 +27,18 @@ def load_state():
         if STATE_FILE.exists():
             data = json.loads(STATE_FILE.read_text())
             if isinstance(data.get("processed"), list):
+                if "pending_notifications" not in data:
+                    data["pending_notifications"] = []
                 return data
     except (json.JSONDecodeError, OSError) as e:
         print(f"Warning: corrupted state file, resetting: {e}", file=sys.stderr)
-    return {"processed": []}
+    return {"processed": [], "pending_notifications": []}
 
 
 def save_state(state):
-    STATE_FILE.write_text(json.dumps(state, indent=2))
+    tmp = STATE_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(state, indent=2))
+    os.replace(tmp, STATE_FILE)
 
 
 def get_invitations():
@@ -104,13 +108,21 @@ def send_telegram(text):
 
 
 def main():
-    invitations = get_invitations()
-    if not invitations:
-        return
-
     state = load_state()
     processed = set(state["processed"])
+    pending = state.get("pending_notifications", [])
 
+    # Retry pending notifications from previous runs
+    still_pending = []
+    for item in pending:
+        if send_telegram(item["msg"]):
+            processed.add(item["inv_id"])
+            print(f"[{datetime.now().isoformat()}] Retried notification for {item.get('repo', '?')} — sent")
+        else:
+            still_pending.append(item)
+
+    # Process new invitations
+    invitations = get_invitations()
     for inv in invitations:
         inv_id = inv["id"]
         if inv_id in processed:
@@ -123,35 +135,31 @@ def main():
         permissions = inv.get("permissions", "unknown")
         created = inv.get("created_at", "")
 
-        # Accept the invitation
         accepted = accept_invitation(inv_id)
-        status = "accepted" if accepted else "FAILED to accept"
-
-        # Only mark as processed if accepted successfully
         if not accepted:
             print(f"[{datetime.now().isoformat()}] FAILED to accept invite {inv_id} from {inviter} for {repo_name} — will retry next run")
             continue
 
-        # Build message
         msg = (
             f"**Vibers: New repo invitation!**\n\n"
             f"Repo: [{repo_name}]({repo_url})\n"
             f"Invited by: @{inviter}\n"
             f"Permissions: {permissions}\n"
             f"Date: {created}\n"
-            f"Status: {status}\n\n"
+            f"Status: accepted\n\n"
             f"Next: check repo for spec/docs and start review."
         )
 
-        print(f"[{datetime.now().isoformat()}] Invitation from {inviter} for {repo_name} — {status}")
-        notified = send_telegram(msg)
-
-        if notified:
+        print(f"[{datetime.now().isoformat()}] Invitation from {inviter} for {repo_name} — accepted")
+        if send_telegram(msg):
             processed.add(inv_id)
         else:
-            print(f"[{datetime.now().isoformat()}] Telegram failed for {repo_name} — will retry notification next run")
+            # Save for retry — invite will be gone from API next run
+            still_pending.append({"inv_id": inv_id, "repo": repo_name, "msg": msg})
+            print(f"[{datetime.now().isoformat()}] Telegram failed for {repo_name} — saved for retry")
 
-    state["processed"] = list(processed)[-100:]  # keep last 100
+    state["processed"] = list(processed)[-100:]
+    state["pending_notifications"] = still_pending[-20:]  # keep last 20
     save_state(state)
 
 
