@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vibers Community — Test Each Other's Projects</title>
+    <meta name="description" content="Vibecoders help each other test projects. Test someone's app, earn credits, use them to get your own project tested. Free peer QA for indie builders.">
+    <link rel="canonical" href="https://vibers.onout.org/community.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #050510;
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        #bg-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+        main, footer, #lang-switch { position: relative; z-index: 1; }
+        a { color: #a78bfa; text-decoration: none; }
+        a:hover { color: #c4b5fd; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+        .glass {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+        }
+        .glass-strong {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+        }
+
+        .nav { padding: 20px 0; display: flex; align-items: center; gap: 12px; }
+        .nav a.back { color: #9ca3af; font-size: 14px; }
+        .nav a.back:hover { color: #fff; }
+        .nav .logo { color: #fff; font-weight: 700; font-size: 18px; }
+
+        .hero { padding: 60px 0 40px; text-align: center; }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(52, 211, 153, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+            color: #6ee7b7;
+            padding: 6px 20px;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: clamp(28px, 5vw, 46px);
+            font-weight: 800;
+            line-height: 1.15;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, #34d399, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        section { padding: 40px 0; }
+        section h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 24px;
+        }
+
+        .cycle {
+            display: flex;
+            align-items: stretch;
+            gap: 16px;
+            margin: 32px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .cycle-step {
+            flex: 1;
+            min-width: 180px;
+            max-width: 260px;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .cycle-step .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(52, 211, 153, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            color: #6ee7b7;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        .cycle-step h3 { color: #fff; font-size: 16px; margin-bottom: 8px; }
+        .cycle-step p { color: #9ca3af; font-size: 14px; }
+        .cycle-arrow {
+            display: flex;
+            align-items: center;
+            color: #4b5563;
+            font-size: 24px;
+        }
+        @media (max-width: 700px) {
+            .cycle-arrow { display: none; }
+            .cycle-step { max-width: 100%; }
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 640px) {
+            .cards { grid-template-columns: 1fr; }
+        }
+        .card { padding: 28px 24px; }
+        .card h3 { color: #fff; font-size: 18px; margin-bottom: 12px; }
+        .card p { color: #9ca3af; font-size: 15px; }
+
+        .credit-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        .credit-table th {
+            text-align: left;
+            padding: 10px 16px;
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(255,255,255,0.06);
+        }
+        .credit-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: #d1d5db;
+            font-size: 15px;
+        }
+        .credit-table .credits {
+            color: #34d399;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .check-list { list-style: none; }
+        .check-list li {
+            padding: 8px 0 8px 28px;
+            position: relative;
+            color: #b0b0b0;
+            font-size: 15px;
+        }
+        .check-list li::before {
+            content: "\2713";
+            position: absolute;
+            left: 0;
+            color: #34d399;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .faq-item { border-bottom: 1px solid rgba(255,255,255,0.06); padding: 20px 0; }
+        .faq-item h3 { color: #fff; font-size: 17px; margin-bottom: 8px; }
+        .faq-item p { color: #9ca3af; font-size: 15px; }
+
+        .cta-box {
+            text-align: center;
+            padding: 60px 40px;
+            margin: 40px 0;
+        }
+        .cta-box h2 { margin-bottom: 12px; }
+        .cta-box p { color: #9ca3af; margin-bottom: 28px; font-size: 17px; }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #059669, #34d399);
+            color: #fff;
+            border: 1px solid rgba(52,211,153,0.3);
+            box-shadow: 0 0 24px rgba(5,150,105,0.3);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #047857, #10b981);
+            box-shadow: 0 0 40px rgba(5,150,105,0.5);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .callout {
+            border-left: 3px solid rgba(52,211,153,0.5);
+            padding: 16px 20px;
+            margin: 20px 0;
+            color: #9ca3af;
+            font-size: 15px;
+            background: rgba(52,211,153,0.04);
+            border-radius: 0 12px 12px 0;
+        }
+
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 32px 0;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        footer a { color: #9ca3af; }
+    </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<main>
+
+<div class="container">
+    <nav class="nav">
+        <a href="/" class="back" data-i18n="nav_back">&larr; Back</a>
+        <span class="logo">Vibers</span>
+    </nav>
+</div>
+
+<header class="hero">
+    <div class="container">
+        <span class="hero-badge" data-i18n="hero_badge">COMMUNITY</span>
+        <h1 data-i18n="hero_title">Test my app, <span>I'll test yours</span></h1>
+        <p class="hero-sub" data-i18n="hero_sub">
+            A peer testing exchange for vibecoders and indie builders.
+            Help someone test their project, earn credits,
+            spend them when you need your own stuff tested.
+        </p>
+    </div>
+</header>
+
+<!-- How the cycle works -->
+<section>
+    <div class="container">
+        <h2 data-i18n="cycle_title">How It Works</h2>
+        <div class="cycle">
+            <div class="cycle-step glass">
+                <div class="num">1</div>
+                <h3 data-i18n="cy1_h">Test someone's project</h3>
+                <p data-i18n="cy1_p">Pick a task from the board. Walk through a test flow, report what's broken or confirm it works.</p>
+            </div>
+            <span class="cycle-arrow">&rarr;</span>
+            <div class="cycle-step glass">
+                <div class="num">2</div>
+                <h3 data-i18n="cy2_h">Earn credits</h3>
+                <p data-i18n="cy2_p">Get credits for each completed test. Found a bug? Bonus credits on top.</p>
+            </div>
+            <span class="cycle-arrow">&rarr;</span>
+            <div class="cycle-step glass">
+                <div class="num">3</div>
+                <h3 data-i18n="cy3_h">Submit your project</h3>
+                <p data-i18n="cy3_p">Need someone to test your app? Spend credits and real testers check your stuff.</p>
+            </div>
+        </div>
+        <div class="callout" data-i18n="cycle_note">
+            Think of it like code review exchanges on Reddit, but for QA.
+            You don't need money to get started — just willingness to help test other people's work.
+        </div>
+    </div>
+</section>
+
+<!-- Earn credits -->
+<section>
+    <div class="container">
+        <h2 data-i18n="earn_title">How You Earn Credits</h2>
+        <div class="cards">
+            <div class="card glass">
+                <h3 data-i18n="earn_flow_h">Complete a test flow</h3>
+                <p data-i18n="earn_flow_p">
+                    Each task has a checklist: steps to follow, things to verify.
+                    Walk through it, mark as passed or failed with a screenshot.
+                    You get credits regardless of whether you find bugs.
+                </p>
+                <table class="credit-table" style="margin-top: 16px;">
+                    <tr>
+                        <td data-i18n="earn_r1">Quick check (3-5 steps)</td>
+                        <td class="credits" data-i18n="earn_r1v">5 credits</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="earn_r2">Full flow (6-10 steps)</td>
+                        <td class="credits" data-i18n="earn_r2v">15 credits</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="earn_r3">Deep test (multi-device, edge cases)</td>
+                        <td class="credits" data-i18n="earn_r3v">30 credits</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card glass">
+                <h3 data-i18n="earn_bug_h">Find a real bug</h3>
+                <p data-i18n="earn_bug_p">
+                    Spotted something broken while testing? Report it with repro steps.
+                    Confirmed bugs earn bonus credits. The more impactful, the more you get.
+                </p>
+                <table class="credit-table" style="margin-top: 16px;">
+                    <tr>
+                        <td data-i18n="bug_r1">Minor (UI glitch, typo)</td>
+                        <td class="credits" data-i18n="bug_r1v">+5</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="bug_r2">Functional (broken feature)</td>
+                        <td class="credits" data-i18n="bug_r2v">+20</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="bug_r3">Critical (data loss, security)</td>
+                        <td class="credits" data-i18n="bug_r3v">+50</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Spend credits -->
+<section>
+    <div class="container">
+        <h2 data-i18n="spend_title">How You Spend Credits</h2>
+        <div class="glass-strong" style="padding: 36px;">
+            <p style="color: #9ca3af; font-size: 16px; margin-bottom: 20px;" data-i18n="spend_text">
+                When you need your own project tested, submit it to the board. Credits are deducted based on the complexity of the test flow you create. Other community members pick it up and test it for you.
+            </p>
+            <table class="credit-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="spend_th1">What you get</th>
+                        <th data-i18n="spend_th2">Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-i18n="spend_s1">Quick smoke test (does it load, basic flow)</td>
+                        <td class="credits" data-i18n="spend_s1v">10 credits</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="spend_s2">Full feature test with bug report</td>
+                        <td class="credits" data-i18n="spend_s2v">25 credits</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="spend_s3">Multi-browser / mobile + desktop test</td>
+                        <td class="credits" data-i18n="spend_s3v">40 credits</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="callout" data-i18n="spend_note" style="margin-top: 20px; margin-bottom: 0;">
+                No credits yet? No problem. Test 2-3 projects for others first — that's enough to submit your own. Or just buy credits if you're in a hurry (but testing for others is more fun).
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- What if demand > supply -->
+<section>
+    <div class="container">
+        <div class="glass" style="padding: 32px;">
+            <h2 data-i18n="scale_title">What If There Are More Requests Than Testers?</h2>
+            <p style="color: #9ca3af; font-size: 15px; margin-bottom: 16px;" data-i18n="scale_text">
+                The community self-balances: more test requests = more credits available for testers = more people join.
+                But if demand spikes, we bring in dedicated testers from our team to keep turnaround times short.
+                Your test request won't sit untouched for days.
+            </p>
+            <ul class="check-list" data-i18n="scale_list">
+                <li>Community testers handle most tasks</li>
+                <li>Our team steps in during peak demand</li>
+                <li>Typical turnaround: under 24 hours</li>
+                <li>Urgent? Flag it and we prioritize</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Why this works -->
+<section>
+    <div class="container">
+        <h2 data-i18n="why_title">Why This Actually Works</h2>
+        <div class="cards">
+            <div class="card glass">
+                <h3 data-i18n="why1_h">Fresh eyes catch more bugs</h3>
+                <p data-i18n="why1_p">You've been staring at your code for weeks. Someone who sees your app for the first time will find issues you've gone blind to.</p>
+            </div>
+            <div class="card glass">
+                <h3 data-i18n="why2_h">No money changes hands</h3>
+                <p data-i18n="why2_p">Credits are internal to the platform. You earn them by helping, spend them to get help. It's a barter system for QA time.</p>
+            </div>
+            <div class="card glass">
+                <h3 data-i18n="why3_h">You learn by testing others</h3>
+                <p data-i18n="why3_p">Seeing how other vibecoders build things teaches you patterns (and anti-patterns). It's free education on top of free QA.</p>
+            </div>
+            <div class="card glass">
+                <h3 data-i18n="why4_h">Built for indie/solo devs</h3>
+                <p data-i18n="why4_p">No team to QA your side project? No budget for testers? This is literally made for you.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section>
+    <div class="container">
+        <div class="glass-strong" style="padding: 36px;">
+            <h2 style="margin-bottom: 24px;">FAQ</h2>
+            <div class="faq-item">
+                <h3 data-i18n="faq1_q">Is this free?</h3>
+                <p data-i18n="faq1_a">Yes. You earn credits by testing other people's projects. Spend credits to get yours tested. No money required to participate. If you want credits without testing others, you can buy them — but it's optional.</p>
+            </div>
+            <div class="faq-item">
+                <h3 data-i18n="faq2_q">What are credits exactly?</h3>
+                <p data-i18n="faq2_a">Credits are points inside the Vibers platform. Think karma on Reddit or reputation on StackOverflow. They track your contributions and let you request testing in return. That's it — no crypto, no blockchain, no wallets.</p>
+            </div>
+            <div class="faq-item">
+                <h3 data-i18n="faq3_q">Can I cash out credits?</h3>
+                <p data-i18n="faq3_a">Credits are designed for the exchange — test for test. We may introduce additional ways to use them in the future (like priority support or extended testing), but the core idea is simple: help others, get help back.</p>
+            </div>
+            <div class="faq-item">
+                <h3 data-i18n="faq4_q">What kind of projects can I submit?</h3>
+                <p data-i18n="faq4_a">Web apps, Telegram bots, mobile web, browser extensions — anything someone can test in a browser or on their phone. We're focused on vibecoded/AI-built projects, but all indie projects are welcome.</p>
+            </div>
+            <div class="faq-item">
+                <h3 data-i18n="faq5_q">What if the tester does a bad job?</h3>
+                <p data-i18n="faq5_a">Every test result goes through a quick review. If someone just clicks through without actually testing, they don't get credits. Reputation builds over time — reliable testers get priority access to higher-value tasks.</p>
+            </div>
+            <div class="faq-item" style="border-bottom:none;">
+                <h3 data-i18n="faq6_q">I don't vibecode. Can I still join?</h3>
+                <p data-i18n="faq6_a">Absolutely. You don't need to code at all. If you can use a website and describe what's broken, you can be a tester. In fact, non-technical testers often catch UX issues that developers miss.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section>
+    <div class="container">
+        <div class="cta-box glass-strong">
+            <h2 style="color:#fff;" data-i18n="cta_title">Join the Exchange</h2>
+            <p data-i18n="cta_sub">We're building the first tester pool. Early members get 20 bonus credits to start. Drop us a message and we'll add you to the board.</p>
+            <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 18px; padding: 16px 40px;" data-i18n="cta_btn">
+                Join on Telegram
+            </a>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <p><a href="/">Vibers</a> &mdash; by <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> | <a href="/career.html">Career</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a></p>
+    </div>
+</footer>
+
+<div id="lang-switch" style="display:none; position:fixed; top:16px; right:16px; z-index:1000; backdrop-filter:blur(20px); background:rgba(5,5,16,0.7); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:4px;">
+    <button id="btn-en" onclick="setLang('en')" style="padding:6px 14px; border:none; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; background:transparent; color:#9ca3af; transition:all 0.2s;">EN</button>
+    <button id="btn-ru" onclick="setLang('ru')" style="padding:6px 14px; border:none; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; background:transparent; color:#9ca3af; transition:all 0.2s;">RU</button>
+</div>
+
+<!-- Animated background -->
+<script>
+(function() {
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    const orbs = [];
+    const ORB_COUNT = 6;
+    function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    const palette = [[16,185,129],[52,211,153],[59,130,246],[124,58,237],[167,139,250],[245,158,11]];
+    for (let i = 0; i < ORB_COUNT; i++) {
+        orbs.push({ x: Math.random()*w, y: Math.random()*h, r: 200+Math.random()*300,
+            vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.3,
+            color: palette[i%palette.length], phase: Math.random()*Math.PI*2 });
+    }
+    function draw(t) {
+        ctx.clearRect(0,0,w,h);
+        for (const o of orbs) {
+            o.x+=o.vx; o.y+=o.vy;
+            if(o.x<-o.r)o.x=w+o.r; if(o.x>w+o.r)o.x=-o.r;
+            if(o.y<-o.r)o.y=h+o.r; if(o.y>h+o.r)o.y=-o.r;
+            const pulse=1+0.15*Math.sin(t*0.001+o.phase), r=o.r*pulse;
+            const [cr,cg,cb]=o.color;
+            const grad=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r);
+            grad.addColorStop(0,`rgba(${cr},${cg},${cb},0.12)`);
+            grad.addColorStop(0.5,`rgba(${cr},${cg},${cb},0.04)`);
+            grad.addColorStop(1,`rgba(${cr},${cg},${cb},0)`);
+            ctx.fillStyle=grad; ctx.fillRect(o.x-r,o.y-r,r*2,r*2);
+        }
+        requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+})();
+</script>
+
+<!-- i18n -->
+<script>
+const ru = {
+    nav_back: "&larr; Назад",
+    hero_badge: "СООБЩЕСТВО",
+    hero_title: 'Протестируй моё, <span>я протестирую твоё</span>',
+    hero_sub: "Обмен тестированием для вайбкодеров и инди-разработчиков. Помоги кому-то протестировать проект, заработай кредиты, потрать их когда нужно протестировать своё.",
+    cycle_title: "Как это работает",
+    cy1_h: "Протестируй чей-то проект",
+    cy1_p: "Выбери задачу с доски. Пройди тест-флоу, сообщи что сломано или подтверди что всё ок.",
+    cy2_h: "Получи кредиты",
+    cy2_p: "Кредиты за каждый завершённый тест. Нашёл баг? Бонусные кредиты сверху.",
+    cy3_h: "Отправь свой проект",
+    cy3_p: "Нужно протестировать твоё приложение? Потрать кредиты и реальные тестировщики проверят.",
+    cycle_note: "Как обмен код-ревью на Reddit, только для QA. Не нужны деньги чтобы начать — только готовность помочь протестировать чужую работу.",
+    earn_title: "Как заработать кредиты",
+    earn_flow_h: "Пройди тест-флоу",
+    earn_flow_p: "У каждой задачи есть чек-лист: шаги, что проверить. Проходишь, отмечаешь как пройдено или не пройдено со скриншотом. Кредиты получаешь независимо от того, нашёл баги или нет.",
+    earn_r1: "Быстрая проверка (3-5 шагов)",
+    earn_r1v: "5 кредитов",
+    earn_r2: "Полный флоу (6-10 шагов)",
+    earn_r2v: "15 кредитов",
+    earn_r3: "Глубокий тест (разные устройства, edge cases)",
+    earn_r3v: "30 кредитов",
+    earn_bug_h: "Найди баг",
+    earn_bug_p: "Заметил что-то сломанное? Опиши с шагами воспроизведения. Подтверждённые баги приносят бонусные кредиты. Чем серьёзнее — тем больше.",
+    bug_r1: "Мелочь (UI глюк, опечатка)",
+    bug_r1v: "+5",
+    bug_r2: "Функциональный (сломана фича)",
+    bug_r2v: "+20",
+    bug_r3: "Критический (потеря данных, безопасность)",
+    bug_r3v: "+50",
+    spend_title: "Как потратить кредиты",
+    spend_text: "Когда нужно протестировать свой проект — отправь его на доску. Кредиты списываются в зависимости от сложности. Другие участники сообщества берут задачу и тестируют.",
+    spend_th1: "Что получаешь",
+    spend_th2: "Стоимость",
+    spend_s1: "Быстрый smoke-тест (загружается ли, базовый флоу)",
+    spend_s1v: "10 кредитов",
+    spend_s2: "Полный тест фичи с баг-репортом",
+    spend_s2v: "25 кредитов",
+    spend_s3: "Тест в разных браузерах / мобильный + десктоп",
+    spend_s3v: "40 кредитов",
+    spend_note: "Нет кредитов? Не проблема. Протестируй 2-3 чужих проекта — этого хватит чтобы отправить свой. Или просто купи кредиты если торопишься (но тестировать чужое — интереснее).",
+    scale_title: "Что если запросов больше чем тестировщиков?",
+    scale_text: "Сообщество балансируется само: больше запросов = больше кредитов для тестировщиков = больше людей приходит. Но если спрос резко растёт, мы подключаем наших штатных тестировщиков чтобы не было очередей. Твой запрос не будет висеть днями.",
+    scale_list: "<li>Основную часть задач берут участники сообщества</li><li>Наша команда подключается при пиковой нагрузке</li><li>Обычное время выполнения: до 24 часов</li><li>Срочно? Отметь — и мы приоритизируем</li>",
+    why_title: "Почему это работает",
+    why1_h: "Свежий взгляд ловит больше багов",
+    why1_p: "Ты смотришь на свой код неделями. Человек, который видит приложение впервые, найдёт то, к чему ты уже привык.",
+    why2_h: "Деньги не нужны",
+    why2_p: "Кредиты внутренние. Зарабатываешь помогая, тратишь получая помощь. Это бартерная система для QA-времени.",
+    why3_h: "Учишься тестируя других",
+    why3_p: "Смотришь как другие вайбкодеры строят вещи — учишься паттернам (и антипаттернам). Бесплатное образование поверх бесплатного QA.",
+    why4_h: "Для инди и соло-разработчиков",
+    why4_p: "Нет команды для QA? Нет бюджета на тестировщиков? Это буквально сделано для тебя.",
+    faq1_q: "Это бесплатно?",
+    faq1_a: "Да. Зарабатываешь кредиты тестируя чужие проекты. Тратишь на тестирование своих. Деньги не нужны. Можно докупить кредиты если хочешь побыстрее — но это опционально.",
+    faq2_q: "Что такое кредиты?",
+    faq2_a: "Баллы внутри платформы Vibers. Как карма на Reddit или репутация на StackOverflow. Они отражают твой вклад и позволяют запрашивать тестирование взамен. Всё. Никакой крипты, блокчейна и кошельков.",
+    faq3_q: "Можно вывести кредиты?",
+    faq3_a: "Кредиты для обмена — тест за тест. Возможно в будущем добавим другие способы использования (приоритетная поддержка, расширенное тестирование), но суть простая: помогай другим — получай помощь.",
+    faq4_q: "Какие проекты можно отправлять?",
+    faq4_a: "Веб-приложения, Telegram-боты, мобильный веб, браузерные расширения — всё что можно протестировать в браузере или на телефоне. Фокус на вайбкод/AI-проектах, но любые инди-проекты приветствуются.",
+    faq5_q: "Что если тестировщик плохо поработал?",
+    faq5_a: "Каждый результат проходит быструю проверку. Если человек просто прокликал без реального тестирования — кредиты не получит. Репутация копится — надёжные тестировщики получают доступ к более ценным задачам.",
+    faq6_q: "Я не вайбкодер. Можно мне?",
+    faq6_a: "Конечно. Кодить вообще не нужно. Если умеешь пользоваться сайтом и описать что сломано — ты можешь быть тестировщиком. Нетехнические тестировщики часто находят UX-проблемы, которые разработчики пропускают.",
+    cta_title: "Присоединяйся к обмену",
+    cta_sub: "Мы собираем первый пул тестировщиков. Первые участники получают 20 бонусных кредитов. Напиши нам и мы добавим тебя на доску.",
+    cta_btn: "Присоединиться в Telegram"
+};
+
+let savedEn = {};
+function setLang(lang) {
+    document.documentElement.lang = lang;
+    document.getElementById('btn-en').style.background = lang === 'en' ? 'rgba(52,211,153,0.3)' : 'transparent';
+    document.getElementById('btn-en').style.color = lang === 'en' ? '#fff' : '#9ca3af';
+    document.getElementById('btn-ru').style.background = lang === 'ru' ? 'rgba(52,211,153,0.3)' : 'transparent';
+    document.getElementById('btn-ru').style.color = lang === 'ru' ? '#fff' : '#9ca3af';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (lang === 'ru') {
+            if (!savedEn[key]) savedEn[key] = el.innerHTML;
+            if (ru[key]) el.innerHTML = ru[key];
+        } else {
+            if (savedEn[key]) el.innerHTML = savedEn[key];
+        }
+    });
+    try { localStorage.setItem('vibers_lang', lang); } catch(e) {}
+}
+(function() {
+    const isRu = /^ru\b/i.test(navigator.language || '');
+    const stored = localStorage.getItem('vibers_lang');
+    if (isRu || stored) {
+        document.getElementById('lang-switch').style.display = 'flex';
+        setLang(stored || (isRu ? 'ru' : 'en'));
+    }
+})();
+</script>
+
+</body>
+</html>
