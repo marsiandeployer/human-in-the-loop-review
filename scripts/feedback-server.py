@@ -146,6 +146,18 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b'{"error": "failed to deliver, contact @onoutnoxon on Telegram"}')
 
+    def do_GET(self):
+        if self.path == "/health":
+            self.send_response(200)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"status": "ok"}')
+        else:
+            self.send_response(404)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "not found"}')
+
     def do_POST(self):
         if self.path == "/feedback":
             self._handle_feedback()
