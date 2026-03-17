@@ -350,7 +350,7 @@
             Plug &amp; play. <strong style="color:#a78bfa;">$1/hr promo rate</strong> for early adopters.
         </p>
         <div class="hero-cta">
-            <a href="#setup" class="btn btn-primary" data-i18n="hero_cta1">Connect in 10 Seconds</a>
+            <a href="#try" class="btn btn-primary" data-i18n="hero_cta1">Try Free Review</a>
             <a href="#how-it-works" class="btn btn-outline" data-i18n="hero_cta2">How It Works</a>
         </div>
     </div>
@@ -628,16 +628,87 @@
     </div>
 </section>
 
-<!-- CTA -->
-<section class="cta-section">
+<!-- CTA — Try Now -->
+<section class="cta-section" id="try">
     <div class="container">
         <div class="glass-strong" style="padding: 60px 40px;">
-            <h2 style="color:#fff;" data-i18n="cta_title">Ready to stop debugging vibecoded spaghetti?</h2>
-            <p data-i18n="cta_sub">$1/hr promo rate — we review and fix your code, you give us feedback. Limited spots.</p>
-            <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:18px; padding: 16px 40px;" data-i18n="cta_btn">Claim $1/hr Rate on Telegram</a>
+            <h2 style="color:#fff;" data-i18n="cta_title">Try it now — paste your repo</h2>
+            <p data-i18n="cta_sub" style="margin-bottom: 24px;">We'll review your latest commit and send a PR with fixes. No setup required.</p>
+
+            <div id="try-form" style="max-width:560px; margin:0 auto;">
+                <div style="display:flex; gap:12px; margin-bottom:16px;">
+                    <input id="try-repo" type="text" placeholder="github.com/you/your-repo" style="flex:1; padding:14px 18px; border-radius:12px; border:1px solid rgba(167,139,250,0.3); background:rgba(255,255,255,0.06); color:#fff; font-size:16px; outline:none; font-family:inherit;" onfocus="this.style.borderColor='#a78bfa'" onblur="this.style.borderColor='rgba(167,139,250,0.3)'">
+                    <button id="try-btn" onclick="submitTryReview()" class="btn btn-primary" style="padding:14px 28px; white-space:nowrap; font-size:16px;">Review my code</button>
+                </div>
+                <input id="try-contact" type="text" placeholder="Telegram or email (so we can reach you)" style="width:100%; padding:12px 18px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); color:#fff; font-size:14px; outline:none; font-family:inherit; margin-bottom:16px;" onfocus="this.style.borderColor='rgba(167,139,250,0.3)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+                <div id="try-result" style="min-height:24px;"></div>
+                <p style="color:#6b7280; font-size:13px; margin-top:12px;" data-i18n="cta_private">Private repo? Add <code class="code-inline">marsiandeployer</code> as collaborator first. <a href="https://t.me/onoutnoxon" style="color:#a78bfa;">Or write us on Telegram</a></p>
+            </div>
+
+            <div style="margin-top:32px; padding-top:24px; border-top:1px solid rgba(255,255,255,0.06);">
+                <p style="color:#9ca3af; font-size:15px;" data-i18n="cta_promo"><strong style="color:#a78bfa;">$1/hr promo rate</strong> for early adopters. We review and fix your code, you give us feedback.</p>
+            </div>
         </div>
     </div>
 </section>
+
+<script>
+function submitTryReview() {
+    var repoInput = document.getElementById('try-repo');
+    var contactInput = document.getElementById('try-contact');
+    var result = document.getElementById('try-result');
+    var btn = document.getElementById('try-btn');
+    var repo = repoInput.value.trim();
+
+    if (!repo) { result.innerHTML = '<span style="color:#f87171;">Please enter a GitHub repo URL</span>'; return; }
+
+    // Normalize repo: extract owner/name from various formats
+    repo = repo.replace(/^https?:\/\/(www\.)?github\.com\//, '').replace(/\.git$/, '').replace(/\/$/, '');
+    if (!repo || repo.split('/').length < 2) {
+        result.innerHTML = '<span style="color:#f87171;">Enter a valid repo like github.com/owner/project</span>';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    result.innerHTML = '';
+
+    fetch('/review', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            repo: repo,
+            contact: contactInput.value.trim(),
+            author: 'website-form',
+            branch: 'main',
+            commit_msg: 'Review request from vibers.onout.org landing page'
+        })
+    })
+    .then(function(r) { return r.json().then(function(d) { return {status: r.status, data: d}; }); })
+    .then(function(res) {
+        if (res.status === 200) {
+            result.innerHTML = '<span style="color:#34d399; font-size:16px;">Sent! We\'ll review and reach out within 24 hours.</span>';
+            repoInput.value = '';
+        } else if (res.status === 429) {
+            result.innerHTML = '<span style="color:#f87171;">Too many requests. Try again in a minute.</span>';
+        } else {
+            result.innerHTML = '<span style="color:#fbbf24;">Request saved. Reach us on <a href="https://t.me/onoutnoxon" style="color:#a78bfa;">Telegram</a> if you don\'t hear back.</span>';
+        }
+    })
+    .catch(function() {
+        result.innerHTML = '<span style="color:#fbbf24;">Network error. Try <a href="https://t.me/onoutnoxon" style="color:#a78bfa;">Telegram</a> instead.</span>';
+    })
+    .finally(function() {
+        btn.disabled = false;
+        btn.textContent = 'Review my code';
+    });
+}
+// Enter key submits
+document.addEventListener('DOMContentLoaded', function() {
+    var el = document.getElementById('try-repo');
+    if (el) el.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitTryReview(); });
+});
+</script>
 
 </main>
 

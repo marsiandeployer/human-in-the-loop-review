@@ -7,7 +7,11 @@ description: Human code review for AI-generated projects. Checks spec compliance
 
 You push code. We review it against your spec, fix issues, and send a PR.
 
-## Quick Start (3 steps)
+## Quickest Start (no setup)
+
+Paste your repo URL at **https://vibers.onout.org/#try** — we'll review the latest commit and send a PR. For private repos, add `marsiandeployer` as collaborator first.
+
+## Full Setup (3 steps, for auto-review on every push)
 
 ### Step 1. Add collaborator
 
