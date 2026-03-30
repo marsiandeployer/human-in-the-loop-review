@@ -267,7 +267,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             f"Repo: {repo}\n"
             f"Message: {message}"
         )
-        self._send_and_respond(tg_text, TELEGRAM_REVIEW_CHAT_ID)
+        self._send_and_respond(tg_text)
 
     def _str_field(self, data, key, max_len=500, default=""):
         """Extract string field from data safely."""
@@ -341,7 +341,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         if files:
             tg_text += f"\n**Files ({file_count}):**\n```\n{files[:800]}\n```"
 
-        self._send_and_respond(tg_text)
+        self._send_and_respond(tg_text, TELEGRAM_REVIEW_CHAT_ID)
 
     def _cors_headers(self):
         self.send_header("Content-Type", "application/json")
