@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Vibers Feedback API — accepts user feedback and sends to Telegram.
+Human-in-the-loop Review Feedback API — accepts user feedback and sends to Telegram.
 
 POST /feedback
 Body: {"message": "...", "repo": "https://github.com/user/repo"}
@@ -263,7 +263,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         repo = repo.strip()[:500]
 
         tg_text = (
-            f"**Vibers Feedback**\n\n"
+            f"**Feedback**\n\n"
             f"Repo: {repo}\n"
             f"Message: {message}"
         )
@@ -311,7 +311,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         access_status = check_access_status(repo_full_name) if repo_full_name else "⚠️ не удалось проверить"
 
         # Build Telegram message — compact, useful
-        tg_text = f"**Vibers: Review Request**\n\n"
+        tg_text = f"**Review Request**\n\n"
         tg_text += f"[{repo}]({repo_url}) | [{sha[:8]}]({commit_url})\n"
         tg_text += f"Author: {author} | Branch: `{branch}`\n"
         tg_text += f"Access: {access_status}\n"

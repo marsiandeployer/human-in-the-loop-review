@@ -149,7 +149,7 @@ def main():
             continue
 
         msg = (
-            f"**Vibers: New repo invitation!**\n\n"
+            f"**New repo invitation!**\n\n"
             f"Repo: [{repo_name}]({repo_url})\n"
             f"Invited by: @{inviter}\n"
             f"Permissions: {permissions}\n"
