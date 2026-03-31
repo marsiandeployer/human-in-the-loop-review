@@ -1,24 +1,28 @@
 ---
 name: vibers-code-review
 description: |
-  Human code review service for AI-generated projects: checks spec compliance, security (OWASP top 10), AI hallucinations, logic bugs — submits PRs with actual fixes.
+  Human-in-the-loop code review for AI-generated projects. Real people look at your code, catch obvious bugs, check main flows work, fix issues and submit PRs. Not a security firm — think alpha tester who sends a PR instead of a ticket.
 
-  Use when: user says "review my code", "check my PR", "send for review", "vibers review", "code review", "проверь код", "отправь на ревью", "ревью кода", or when a push to main happens and vibers action is configured.
+  Use when: user says "review my code", "check my PR", "send for review", "vibers review", "code review", "set up vibers", "add reviewer", "кто-то смотрит мой код", "проверь код", "отправь на ревью", "ревью кода", "настрой вайберс", or when a push to main happens and vibers action is configured.
 ---
 
 # Vibers — Human Code Review for AI-Generated Projects
 
-You push code → we review against your spec, fix issues, submit a PR.
+You push code → humans look at it, fix obvious issues, submit a PR.
 
-## Quickest Start (no setup)
+**What this is:** Regular people reviewing with fresh eyes. We catch obvious bugs, check that main flows work, fix what's broken. Not a security audit, not OWASP penetration testing — think alpha tester who sends a PR instead of filing a ticket.
+
+## Quick Start (no setup)
 
 Paste your repo URL at **https://vibers.onout.org/#try** — we review the latest commit and send a PR. For private repos, add `marsiandeployer` as collaborator first.
 
-## Full Setup (3 steps, auto-review on every push)
+## Full Setup (auto-review on every push)
 
 ### Step 1. Add collaborator
 
 Repo → Settings → Collaborators → Add **`marsiandeployer`**
+
+> Read-only access is enough to start. Write access is only needed to submit PRs — grant it later, or we'll send the diff via Telegram instead.
 
 ### Step 2. Add GitHub Action
 
@@ -45,18 +49,18 @@ jobs:
 
 | Parameter | What it does |
 |-----------|-------------|
-| `spec_url` | Link to your spec (Google Doc, Notion, etc.). Must be publicly accessible. Without spec access, review is impossible. |
+| `spec_url` | Link to your spec (Google Doc, Notion, etc.). Must be publicly accessible. Without it, we review from code alone. |
 | `review_scope` | `full` (default), `security`, or `spec-compliance` |
 | `telegram_contact` | Your Telegram — we message you when review is ready |
 
 ### Step 3. Add commit rules to your AI agent
 
-Add this block to your project's `CLAUDE.md`, `.cursorrules`, or `AGENTS.md`:
+Add this to your project's `CLAUDE.md`, `.cursorrules`, or `AGENTS.md`:
 
 ```markdown
 ## Commit messages
 
-Every commit MUST include a "How to test" section in the body:
+Every commit should include a "How to test" section in the body:
 - Live URL to open and verify the change
 - Step-by-step what to click/check
 - Test credentials if login is required
@@ -73,33 +77,32 @@ Example:
   - Login: test@example.com / demo123
 ```
 
-Without "How to test" the reviewer has to guess what to verify — review takes longer.
+Without "How to test" the reviewer guesses what to verify — review takes longer and catches less.
 
-**Done.** Every push triggers a notification. You'll get a PR with fixes within 24 hours.
+Every push triggers a notification. You'll get a PR with fixes within 24 hours.
 
-## What Happens After Setup
+## What We Check (and Don't)
 
-1. You push → GitHub Action sends us commit details
-2. We read your spec and review changed files
-3. We fix issues in code and submit a PR
-4. You review the PR, merge or comment
+We check by looking at the code and trying the product manually:
+- Spec compliance — does it match what you described?
+- AI hallucinations — fake APIs, non-existent imports
+- Obvious logic bugs — edge cases, broken flows, null handling
+- UI issues — broken layouts, wrong behavior
 
-We check: spec compliance, security (OWASP top 10), AI hallucinations (fake APIs/imports), logic bugs, UI issues.
-
-We don't check: code style (use ESLint/Prettier), performance benchmarks, full QA (use Playwright/Cypress).
+We don't check: code style (use ESLint/Prettier), performance benchmarks, deep security audits, full QA regression (use Playwright/Cypress).
 
 ## Pricing
 
 | Plan | Rate | Details |
 |------|------|---------|
-| **Promo** | Free | Tell us how to test. Share specs or AI-generated test cases. We'll look manually and send one PR if we find something. GitHub star + feedback in return. |
-| **Standard** | $15/hour | Full review + security audit + priority turnaround. |
+| **Promo** | Free | Share how to test + specs if you have them. We look manually, send one PR if we find something. GitHub star + feedback in return. |
+| **Standard** | $15/hour | Full review against spec, PRs with fixes, priority turnaround. Pay only for hours spent. |
 
 No subscriptions. No contracts. Pay per review.
 
-## Feedback & Support
+## Support
 
-Send feedback directly from your agent:
+Send feedback from your agent:
 
 ```bash
 curl -X POST https://vibers.onout.org/feedback \
@@ -107,23 +110,14 @@ curl -X POST https://vibers.onout.org/feedback \
   -d '{"message": "Your question or issue", "repo": "https://github.com/you/your-repo"}'
 ```
 
-Both `message` and `repo` are required. Response: `{"status": "accepted"}`.
-
-Contacts:
-- Telegram: [@onoutnoxon](https://t.me/onoutnoxon)
-- Moltbook: [moltbook.com](https://moltbook.com) — user **noxon**
-- GitHub: [marsiandeployer](https://github.com/marsiandeployer)
+Contacts: Telegram [@onoutnoxon](https://t.me/onoutnoxon) · GitHub [marsiandeployer](https://github.com/marsiandeployer) · Moltbook: noxon
 
 ## FAQ
 
-**Do I need an API key?**
-No. Add collaborator + action, that's it.
+**Do I need an API key?** No. Collaborator + action is enough.
 
-**What languages?**
-JS/TS, Python, React, Next.js, Django, Flask, and more. If it's on GitHub, we review it.
+**What languages?** JS/TS, Python, React, Next.js, Django, Flask, and more. If it's on GitHub, we review it.
 
-**What if I disagree with a fix?**
-Comment on the PR. We discuss and adjust.
+**What if I disagree with a fix?** Comment on the PR — we discuss and adjust.
 
-**Can I use this without GitHub?**
-Yes — write to Telegram with your code and spec.
+**Can I use this without GitHub?** Yes — send code and spec to Telegram.
