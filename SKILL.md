@@ -1,21 +1,24 @@
 ---
 name: vibers-code-review
-description: Human code review for AI-generated projects. Checks spec compliance, security (OWASP top 10), AI hallucinations, and submits PRs with fixes.
+description: |
+  Human code review service for AI-generated projects: checks spec compliance, security (OWASP top 10), AI hallucinations, logic bugs — submits PRs with actual fixes.
+
+  Use when: user says "review my code", "check my PR", "send for review", "vibers review", "code review", "проверь код", "отправь на ревью", "ревью кода", or when a push to main happens and vibers action is configured.
 ---
 
 # Vibers — Human Code Review for AI-Generated Projects
 
-You push code. We review it against your spec, fix issues, and send a PR.
+You push code → we review against your spec, fix issues, submit a PR.
 
 ## Quickest Start (no setup)
 
-Paste your repo URL at **https://vibers.onout.org/#try** — we'll review the latest commit and send a PR. For private repos, add `marsiandeployer` as collaborator first.
+Paste your repo URL at **https://vibers.onout.org/#try** — we review the latest commit and send a PR. For private repos, add `marsiandeployer` as collaborator first.
 
-## Full Setup (3 steps, for auto-review on every push)
+## Full Setup (3 steps, auto-review on every push)
 
 ### Step 1. Add collaborator
 
-Go to your repo → Settings → Collaborators → Add **`marsiandeployer`**
+Repo → Settings → Collaborators → Add **`marsiandeployer`**
 
 ### Step 2. Add GitHub Action
 
@@ -42,9 +45,9 @@ jobs:
 
 | Parameter | What it does |
 |-----------|-------------|
-| `spec_url` | Link to your spec (Google Doc, Notion, etc.). **Must be publicly accessible** (or "anyone with the link can view"). Without access to spec, review is impossible. |
+| `spec_url` | Link to your spec (Google Doc, Notion, etc.). Must be publicly accessible. Without spec access, review is impossible. |
 | `review_scope` | `full` (default), `security`, or `spec-compliance` |
-| `telegram_contact` | Your Telegram — we'll message you when review is ready |
+| `telegram_contact` | Your Telegram — we message you when review is ready |
 
 ### Step 3. Add commit rules to your AI agent
 
@@ -70,15 +73,15 @@ Example:
   - Login: test@example.com / demo123
 ```
 
-Without "How to test" the reviewer has to guess what to verify, and the review takes longer.
+Without "How to test" the reviewer has to guess what to verify — review takes longer.
 
-**Done.** Now every push triggers a notification. You'll get a PR with fixes, usually within 24 hours.
+**Done.** Every push triggers a notification. You'll get a PR with fixes within 24 hours.
 
 ## What Happens After Setup
 
-1. You push code → GitHub Action sends us the commit details
+1. You push → GitHub Action sends us commit details
 2. We read your spec and review changed files
-3. We fix issues directly in code and submit a PR
+3. We fix issues in code and submit a PR
 4. You review the PR, merge or comment
 
 We check: spec compliance, security (OWASP top 10), AI hallucinations (fake APIs/imports), logic bugs, UI issues.
