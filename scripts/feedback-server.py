@@ -319,8 +319,18 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         if commit_msg:
             tg_text += f"\n**{commit_msg}**\n"
 
+        # Parse "How to test" from commit body
+        how_to_test = ""
+        other_body = commit_body or ""
         if commit_body:
-            tg_text += f"\n{commit_body}\n"
+            import re
+            m = re.search(r'(?i)(how to test[:\s]*\n)(.*?)(?=\n\n|\Z)', commit_body, re.DOTALL)
+            if m:
+                how_to_test = m.group(0).strip()
+                other_body = commit_body[:m.start()].strip()
+
+        if other_body:
+            tg_text += f"\n{other_body}\n"
 
         if diff_stat:
             tg_text += f"\n`{diff_stat}`\n"
@@ -340,6 +350,18 @@ class FeedbackHandler(BaseHTTPRequestHandler):
 
         if files:
             tg_text += f"\n**Files ({file_count}):**\n```\n{files[:800]}\n```"
+
+        # How to test block — always last, most important for reviewer
+        if how_to_test:
+            tg_text += f"\n\n✅ **How to test:**\n```\n{how_to_test}\n```"
+        else:
+            missing = []
+            if not deploy_url:
+                missing.append("no deploy URL")
+            if not spec_url:
+                missing.append("no spec")
+            hint = f" ({', '.join(missing)})" if missing else ""
+            tg_text += f"\n\n⚠️ **No test instructions in commit{hint}** — ask client via {contact or 'Telegram'}"
 
         self._send_and_respond(tg_text, TELEGRAM_REVIEW_CHAT_ID)
 
