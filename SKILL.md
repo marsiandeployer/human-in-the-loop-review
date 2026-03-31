@@ -95,15 +95,18 @@ If all three are done — setup is complete. Tell the user they'll get a PR with
 
 ## One-off Review (no Action setup)
 
-To send a single review request directly:
+To send a single review request directly — `message` must include a "How to test" section. Without it the server rejects the request with 400.
 
 ```bash
 curl -X POST https://vibers.onout.org/feedback \
   -H 'Content-Type: application/json' \
-  -d '{"message": "Please review latest commit", "repo": "https://github.com/owner/repo"}'
+  -d '{
+    "message": "Please review the payment flow added in latest commit.\n\nHow to test:\n- Open https://myapp.vercel.app/checkout\n- Add item to cart, go to checkout\n- Enter card 4242 4242 4242 4242 exp 12/26 cvc 123\n- Expected: order confirmation page",
+    "repo": "https://github.com/owner/repo"
+  }'
 ```
 
-Both `message` and `repo` are required. Response: `{"status": "accepted"}`.
+Both `message` (with "How to test") and `repo` are required. Response: `{"status": "accepted"}`.
 
 ## What We Check (and Don't)
 

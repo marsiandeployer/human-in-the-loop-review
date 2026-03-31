@@ -262,6 +262,15 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         message = message.strip()[:2000]
         repo = repo.strip()[:500]
 
+        # Require "How to test" in message
+        import re as _re
+        if not _re.search(r'(?i)how to test', message):
+            self.send_response(400)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "missing \\"How to test\\" section. Add test instructions: live URL, steps to verify, expected result. Without it reviewer cannot check what was changed."}')
+            return
+
         # Fetch last 5 commits from GitHub API
         recent_commits = ""
         repo_path = repo.rstrip("/").replace("https://github.com/", "")
