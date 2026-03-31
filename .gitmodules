@@ -1,0 +1,4 @@
+[submodule "vibers-action"]
+	path = vibers-action
+	url = git@github.com:marsiandeployer/vibers-action.git
+	branch = master
