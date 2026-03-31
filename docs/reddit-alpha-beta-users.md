@@ -47,7 +47,7 @@ Curious what you think:
 
 If anyone wants, I'm happy to try it on a messy repo this week and share results.
 
-(I called it Vibers — if you want to try it:
+(If you want to try it:
 
 ⭐ Star the repo: github.com/marsiandeployer/human-in-the-loop-review
 

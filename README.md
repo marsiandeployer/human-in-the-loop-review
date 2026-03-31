@@ -1,4 +1,4 @@
-# Vibers — Human Code Review for Vibe Coders
+# Human-in-the-loop Review — Code Review for Vibe Coders
 
 [![Star on GitHub](https://img.shields.io/github/stars/marsiandeployer/human-in-the-loop-review?style=social)](https://github.com/marsiandeployer/human-in-the-loop-review)
 
@@ -6,7 +6,7 @@
 
 You vibe code fast with Cursor, Copilot, or Claude. Then spend 3x longer debugging things you didn't write. Sound familiar?
 
-Vibers puts a human in the loop. We look at your code, catch the obvious stuff AI misses, fix it, and send you a PR. You merge and keep shipping.
+It puts a human in the loop. We look at your code, catch the obvious stuff AI misses, fix it, and send you a PR. You merge and keep shipping.
 
 > **Honest about what this is:** We're not a security firm. No OWASP pentests, no architecture deep-dives. We're regular people who review your code with fresh eyes — catch obvious bugs, check that main flows work, write the fix. Think alpha tester who sends a PR instead of filing a ticket.
 

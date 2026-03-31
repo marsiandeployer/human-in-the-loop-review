@@ -3,10 +3,10 @@ name: vibers-code-review
 description: |
   Human-in-the-loop code review for AI-generated projects. Real people look at your code, catch obvious bugs, check main flows work, fix issues and submit PRs. Not a security firm — think alpha tester who sends a PR instead of a ticket.
 
-  Use when: user says "review my code", "check my PR", "send for review", "vibers review", "code review", "set up vibers", "add reviewer", or when a push to main happens and vibers action is configured.
+  Use when: user says "review my code", "check my PR", "send for review", "code review", "set up human-in-the-loop review", "add reviewer", or when a push to main happens and vibers action is configured.
 ---
 
-# Vibers — Human Code Review for AI-Generated Projects
+# Human-in-the-loop Review
 
 You push code → humans look at it, fix obvious issues, submit a PR.
 
@@ -14,14 +14,14 @@ You push code → humans look at it, fix obvious issues, submit a PR.
 
 ## What to Do When This Skill Is Invoked
 
-When the user asks to set up Vibers or send code for review — do these steps:
+When the user asks to set up human-in-the-loop review or send code for review — do these steps:
 
 **1. Create the GitHub Action** (auto-triggers review on every push):
 
 Create `.github/workflows/vibers.yml`:
 
 ```yaml
-name: Vibers Code Review
+name: Human-in-the-loop Code Review
 on:
   push:
     branches: [main]
