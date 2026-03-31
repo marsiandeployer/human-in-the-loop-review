@@ -12,62 +12,36 @@ README="$REPO_ROOT/README.md"
 errors=0
 
 # --- Price checks ---
+# Canonical source: index.html and README.md (SKILL.md no longer contains pricing)
 
-# Check if promo is "Free" in SKILL.md
-skill_promo_is_free=$(grep -iP '\|\s*\*\*Promo\*\*\s*\|\s*Free\s*\|' "$SKILL" | head -1)
-skill_standard=$(grep -oP '\$\d+/hour' "$SKILL" | tail -1)
-
-# Extract standard price from index.html (from the price-amount div)
+# Extract promo from index.html
+index_promo_free=$(grep -oP 'Free <small[^>]*>/ first review' "$INDEX" | head -1)
 index_standard=$(grep -oP '\$\d+ <small[^>]*>/ hour' "$INDEX" | tail -1 | grep -oP '\$\d+')
 
-# Extract standard price from README.md
+# Extract from README.md
+readme_promo_free=$(grep -iP '\|\s*\*\*Promo\*\*\s*\|\s*Free\s*\|' "$README" | head -1)
 readme_standard=$(grep -oP '\$\d+/hour' "$README" | tail -1)
-
-# Normalize
-skill_standard_num=$(echo "$skill_standard" | grep -oP '\d+')
 readme_standard_num=$(echo "$readme_standard" | grep -oP '\d+')
+index_standard_num=$(echo "$index_standard" | grep -oP '\d+')
 
-# Check promo: if SKILL.md says "Free", verify index.html also shows "Free"
-if [ -n "$skill_promo_is_free" ]; then
-    index_promo_free=$(grep -oP 'Free <small[^>]*>/ first review' "$INDEX" | head -1)
-    readme_promo_free=$(grep -iP '\|\s*\*\*Promo\*\*\s*\|\s*Free\s*\|' "$README" | head -1)
-    if [ -z "$index_promo_free" ]; then
-        echo "ERROR: Promo price mismatch — SKILL.md says Free but index.html has no 'Free / first review'"
-        errors=1
-    fi
-    if [ -z "$readme_promo_free" ]; then
-        echo "ERROR: Promo price mismatch — SKILL.md says Free but README.md doesn't"
-        errors=1
-    fi
-    promo_label="Free"
-else
-    skill_promo=$(grep -oP '\$\d+/hour' "$SKILL" | head -1)
-    index_promo=$(grep -oP '\$\d+ <small>/ hour' "$INDEX" | head -1 | grep -oP '\$\d+')
-    readme_promo=$(grep -oP '\$\d+/hour' "$README" | head -1)
-    skill_promo_num=$(echo "$skill_promo" | grep -oP '\d+')
-    readme_promo_num=$(echo "$readme_promo" | grep -oP '\d+')
-    if [ "$index_promo" != "\$$skill_promo_num" ]; then
-        echo "ERROR: Promo price mismatch — index.html ($index_promo) != SKILL.md ($skill_promo)"
-        errors=1
-    fi
-    if [ "$skill_promo_num" != "$readme_promo_num" ]; then
-        echo "ERROR: Promo price mismatch — SKILL.md ($skill_promo) != README.md ($readme_promo)"
-        errors=1
-    fi
-    promo_label="$index_promo"
+# Check promo consistency between index.html and README.md
+if [ -n "$index_promo_free" ] && [ -z "$readme_promo_free" ]; then
+    echo "ERROR: Promo price mismatch — index.html says Free but README.md doesn't"
+    errors=1
 fi
-
-if [ "$index_standard" != "\$$skill_standard_num" ]; then
-    echo "ERROR: Standard price mismatch — index.html ($index_standard) != SKILL.md ($skill_standard)"
+if [ -z "$index_promo_free" ] && [ -n "$readme_promo_free" ]; then
+    echo "ERROR: Promo price mismatch — README.md says Free but index.html doesn't"
     errors=1
 fi
 
-if [ "$skill_standard_num" != "$readme_standard_num" ]; then
-    echo "ERROR: Standard price mismatch — SKILL.md ($skill_standard) != README.md ($readme_standard)"
+# Check standard price consistency
+if [ "$index_standard_num" != "$readme_standard_num" ]; then
+    echo "ERROR: Standard price mismatch — index.html ($index_standard) != README.md ($readme_standard)"
     errors=1
 fi
 
 if [ $errors -eq 0 ]; then
+    promo_label=$([ -n "$index_promo_free" ] && echo "Free" || echo "$index_standard")
     echo "Price check passed: promo=$promo_label, standard=$index_standard"
 fi
 
