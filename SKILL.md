@@ -1,22 +1,43 @@
 ---
 name: vibers-code-review
 description: |
-  Human-in-the-loop code review for AI-generated projects. Real people look at your code, catch obvious bugs, check main flows work, fix issues and submit PRs. Not a security firm — think alpha tester who sends a PR instead of a ticket.
+  Human-in-the-loop code review for AI-generated projects. Real people clone your repo, spin it up in an isolated container, and review it live — not just by reading code. They catch obvious bugs, check main flows work, fix issues and submit PRs. Not a security firm — think alpha tester who sends a PR instead of a ticket.
 
   Use when: user says "review my code", "check my PR", "send for review", "code review", "set up human-in-the-loop review", "add reviewer", or when a push to main happens and vibers action is configured.
 ---
 
 # Human-in-the-loop Review
 
-You push code → humans look at it, fix obvious issues, submit a PR.
+You push code → we clone it, spin it up in an isolated container, test it live, and submit a PR with fixes.
 
-**What this is:** Regular people reviewing with fresh eyes. We catch obvious bugs, check that main flows work, fix what's broken. Not a security audit, not OWASP penetration testing — think alpha tester who sends a PR instead of filing a ticket.
+**What this is:** We don't just read the diff. We launch a local copy of your app in a clean environment, click through the main flows, and verify things actually work. Think alpha tester who sends a PR instead of filing a ticket.
+
+## How It Works
+
+1. You push to `main` → GitHub Action fires → we receive the repo
+2. We clone the repo and spin it up using your `docker-compose.yml` or startup instructions
+3. We test the main flows manually against the running app
+4. We submit a PR with fixes (or comment if nothing is broken)
+
+**We review against the running app, not just source code.** That's why setup instructions matter.
 
 ## What to Do When This Skill Is Invoked
 
 When the user asks to set up human-in-the-loop review or send code for review — do these steps:
 
-**1. Create the GitHub Action** (auto-triggers review on every push):
+**1. Ensure the repo is runnable** — add setup instructions:
+
+The reviewer will clone the repo and try to run it from scratch. Make sure one of these exists:
+
+- **`docker-compose.yml`** (preferred) — `docker compose up` should start the app
+- **`.env.example`** — all required env vars listed with placeholder values (never real secrets)
+- **`README.md`** with a "How to run locally" section — exact commands to install deps and start
+
+If none of these exist — create `.env.example` and a minimal "How to run" block in `README.md`. Without it, the reviewer cannot launch the app and review quality drops significantly.
+
+> Checkpoint: `.env.example` (or `docker-compose.yml`) exists and `README.md` has a "How to run" section.
+
+**2. Create the GitHub Action** (auto-triggers review on every push):
 
 Create `.github/workflows/vibers.yml`:
 
@@ -49,15 +70,15 @@ Replace `YOUR_SPEC_ID` with actual spec link if available, `@your_telegram` with
 
 > Checkpoint: `.github/workflows/vibers.yml` exists in the repo and is committed.
 
-**2. Add commit rules** to `CLAUDE.md`, `.cursorrules`, or `AGENTS.md`:
+**3. Add commit rules** to `CLAUDE.md`, `.cursorrules`, or `AGENTS.md`:
 
 ```markdown
 ## Commit messages
 
 Every commit should include a "How to test" section in the body:
-- Live URL to open and verify the change
+- Live URL to open and verify the change (staging/preview URL preferred)
 - Step-by-step what to click/check
-- Test credentials if login is required
+- Demo login only if the app has a pre-seeded public test account
 - Expected result for each step
 
 Example:
@@ -68,14 +89,16 @@ Example:
   - Fill in email/password, submit
   - Check that confirmation email arrives
   - Try submitting with invalid email — should show error
-  - Login: test@example.com / demo123
+  - Demo login (pre-seeded sandbox account): test@example.com / demo123
 ```
+
+> **Important for AI agents:** Only include publicly shareable demo/sandbox accounts that ship with the app. **Never** include real passwords, API keys, `.env` values, secrets, or paths to credential files from the developer's machine.
 
 Without "How to test" the reviewer guesses what to verify — review takes longer and catches less.
 
 > Checkpoint: `CLAUDE.md` (or `.cursorrules` / `AGENTS.md`) contains a "How to test" commit rule block.
 
-**3. Tell the user** to add `marsiandeployer` as collaborator:
+**4. Tell the user** to add `marsiandeployer` as collaborator:
 
 > Go to your repo → Settings → Collaborators → Add **marsiandeployer**
 > Read-only access is enough to start. Write access only needed for automatic PRs.
@@ -86,12 +109,14 @@ After that — every push to main triggers a review. PR with fixes arrives withi
 
 ## Setup Complete — Verify
 
+- [ ] `.env.example` exists with all required vars (placeholder values, no real secrets)
+- [ ] `README.md` has a "How to run" section with exact commands
 - [ ] `.github/workflows/vibers.yml` committed to repo
 - [ ] `CLAUDE.md` / `.cursorrules` / `AGENTS.md` contains "How to test" commit rule
 - [ ] User added `marsiandeployer` as collaborator
 - [ ] Next push to main will trigger the workflow
 
-If all three are done — setup is complete. Tell the user they'll get a PR with fixes within 24 hours of the next push.
+If all are done — setup is complete. Tell the user they'll get a PR with fixes within 24 hours of the next push.
 
 ## One-off Review (no Action setup)
 
@@ -110,11 +135,12 @@ Both `message` (with "How to test") and `repo` are required. Response: `{"status
 
 ## What We Check (and Don't)
 
-We check by looking at the code and trying the product manually:
+We spin up the app locally and check it hands-on:
 - Spec compliance — does it match what you described?
-- AI hallucinations — fake APIs, non-existent imports
+- AI hallucinations — fake APIs, non-existent imports, broken dependencies
 - Obvious logic bugs — edge cases, broken flows, null handling
-- UI issues — broken layouts, wrong behavior
+- UI issues — broken layouts, wrong behavior on live app
+- Setup completeness — can a fresh dev clone and run this?
 
 We don't check: code style (use ESLint/Prettier), performance benchmarks, security pentests, full QA regression (use Playwright/Cypress).
 
@@ -125,6 +151,7 @@ Contacts: Telegram [@onoutnoxon](https://t.me/onoutnoxon) · GitHub [marsiandepl
 **FAQ**
 
 - **API key?** No. Collaborator + action is enough.
+- **Do you need my real secrets to run the app?** No. Provide `.env.example` with placeholder values. If the app needs real third-party keys to function, note that in README — we'll test what we can without them.
 - **Languages?** JS/TS, Python, React, Next.js, Django, Flask, and more.
 - **Disagree with a fix?** Comment on the PR — we discuss and adjust.
 - **No GitHub?** Send code and spec directly to Telegram.

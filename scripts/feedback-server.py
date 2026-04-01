@@ -104,6 +104,20 @@ def check_access_status(repo_full_name):
 _last_cleanup = 0
 _server_start = time.time()
 
+# Daily queue counter: {date_str: count}
+_daily_queue: dict[str, int] = {}
+
+
+def get_queue_position() -> int:
+    """Increment today's counter and return the position (1-based)."""
+    today = time.strftime("%Y-%m-%d")
+    _daily_queue[today] = _daily_queue.get(today, 0) + 1
+    # Evict old dates (keep only today)
+    for key in list(_daily_queue.keys()):
+        if key != today:
+            del _daily_queue[key]
+    return _daily_queue[today]
+
 def check_rate_limit(ip):
     global _last_cleanup
     now = time.time()
@@ -178,14 +192,17 @@ class FeedbackHandler(BaseHTTPRequestHandler):
 
         return data, False
 
-    def _send_and_respond(self, tg_text, chat_id=None):
+    def _send_and_respond(self, tg_text, chat_id=None, queue_position=None):
         """Send to Telegram and write HTTP response."""
         sent = send_telegram(tg_text, chat_id)
         if sent:
             self.send_response(200)
             self._cors_headers()
             self.end_headers()
-            self.wfile.write(b'{"status": "accepted"}')
+            resp = {"status": "accepted"}
+            if queue_position is not None:
+                resp["queue_position"] = queue_position
+            self.wfile.write(json.dumps(resp).encode())
         else:
             self.send_response(502)
             self._cors_headers()
@@ -391,7 +408,23 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             hint = f" ({', '.join(missing)})" if missing else ""
             tg_text += f"\n\n⚠️ **No test instructions in commit{hint}** — ask client via {contact or 'Telegram'}"
 
-        self._send_and_respond(tg_text, TELEGRAM_REVIEW_CHAT_ID)
+        queue_pos = get_queue_position()
+
+        tg_text += f"\n\n🔢 **Queue today: #{queue_pos}**"
+
+        self._send_and_respond(tg_text, TELEGRAM_REVIEW_CHAT_ID, queue_position=queue_pos)
+
+        # Notify client about their queue position
+        if contact and TELEGRAM_SESSION:
+            notify_handle = contact if contact.startswith("@") else f"@{contact}"
+            client_msg = (
+                f"✅ Ваш репозиторий принят в очередь на ревью.\n\n"
+                f"📋 Репо: {repo_url}\n"
+                f"🔢 Вы **#{queue_pos}** в очереди сегодня.\n\n"
+                f"Обычно PR с правками приходит в течение 24 часов.\n"
+                f"Если вопросы — напишите @onoutnoxon."
+            )
+            send_telegram(client_msg, chat_id=notify_handle)
 
     def _cors_headers(self):
         self.send_header("Content-Type", "application/json")
