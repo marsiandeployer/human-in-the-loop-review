@@ -414,18 +414,6 @@ class FeedbackHandler(BaseHTTPRequestHandler):
 
         self._send_and_respond(tg_text, TELEGRAM_REVIEW_CHAT_ID, queue_position=queue_pos)
 
-        # Notify client about their queue position
-        if contact and TELEGRAM_SESSION:
-            notify_handle = contact if contact.startswith("@") else f"@{contact}"
-            client_msg = (
-                f"✅ Ваш репозиторий принят в очередь на ревью.\n\n"
-                f"📋 Репо: {repo_url}\n"
-                f"🔢 Вы **#{queue_pos}** в очереди сегодня.\n\n"
-                f"Обычно PR с правками приходит в течение 24 часов.\n"
-                f"Если вопросы — напишите @onoutnoxon."
-            )
-            send_telegram(client_msg, chat_id=notify_handle)
-
     def _cors_headers(self):
         self.send_header("Content-Type", "application/json")
         self.send_header("Access-Control-Allow-Origin", "*")
