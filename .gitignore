@@ -6,6 +6,7 @@
 # Runtime state
 scripts/.env
 scripts/*.pem
+scripts/setup-data.json
 *.pem
 scripts/.invite-state.json
 scripts/__pycache__/

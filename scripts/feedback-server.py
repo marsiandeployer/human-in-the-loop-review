@@ -41,6 +41,25 @@ else:
 # In-memory: installation_id -> {"account": str, "repos": list}
 _app_installations: dict[int, dict] = {}
 
+# Setup data storage
+_SETUP_FILE = os.path.join(os.path.dirname(__file__), "setup-data.json")
+
+def _load_setup_data() -> dict:
+    try:
+        with open(_SETUP_FILE) as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def _save_setup_data(data: dict):
+    try:
+        with open(_SETUP_FILE, "w") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Failed to save setup data: {e}", file=sys.stderr)
+
+_setup_data: dict = _load_setup_data()
+
 # Rate limiting: max 5 requests per minute per IP
 RATE_LIMIT = {}
 RATE_WINDOW = 60
@@ -308,6 +327,8 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             self._handle_review()
         elif self.path == "/github/webhook":
             self._handle_github_webhook()
+        elif self.path == "/github/setup":
+            self._handle_github_setup()
         else:
             self.send_response(404)
             self._cors_headers()
@@ -474,6 +495,58 @@ class FeedbackHandler(BaseHTTPRequestHandler):
 
         self._send_and_respond(tg_text, TELEGRAM_REVIEW_CHAT_ID, queue_position=queue_pos)
 
+    def _handle_github_setup(self):
+        data, err = self._read_json_body(max_size=5000)
+        if err:
+            return
+
+        iid_raw = data.get("installation_id", "")
+        try:
+            iid = int(iid_raw) if iid_raw else 0
+        except (ValueError, TypeError):
+            iid = 0
+
+        spec_url = str(data.get("spec_url") or "").strip()[:500]
+        figma_url = str(data.get("figma_url") or "").strip()[:500]
+        telegram = str(data.get("telegram") or "").strip()[:100]
+
+        entry = {
+            "installation_id": iid,
+            "spec_url": spec_url,
+            "figma_url": figma_url,
+            "telegram": telegram,
+            "saved_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+
+        # Merge with known account info
+        known = _app_installations.get(iid, {})
+        account = known.get("account", "unknown")
+        repos = known.get("repos", [])
+        entry["account"] = account
+
+        _setup_data[str(iid)] = entry
+        _save_setup_data(_setup_data)
+
+        # Telegram notification
+        parts = [f"📋 **Setup Filled**\n\nAccount: {account}"]
+        if repos:
+            parts.append(f"Repos: {', '.join(repos[:3])}")
+        if spec_url:
+            parts.append(f"Spec: {spec_url}")
+        if figma_url:
+            parts.append(f"Figma: {figma_url}")
+        if telegram:
+            parts.append(f"Telegram: {telegram}")
+        if not any([spec_url, figma_url, telegram]):
+            parts.append("_(skipped all fields)_")
+
+        send_telegram("\n".join(parts))
+
+        self.send_response(200)
+        self._cors_headers()
+        self.end_headers()
+        self.wfile.write(b'{"ok": true}')
+
     def _handle_github_webhook(self):
         """Handle GitHub App webhook events."""
         # Read raw body (needed for signature verification)
@@ -591,8 +664,8 @@ class FeedbackHandler(BaseHTTPRequestHandler):
                 all_files.update(c.get("modified", []))
                 all_files.update(c.get("removed", []))
 
-            # Extract "How to test" block
-            m = _re.search(r'(?i)(how to test[:\s]*\n)(.*?)(?=\n\n|\Z)', full_message, _re.DOTALL)
+            # Extract "How to test" block (content may start on same line or next line)
+            m = _re.search(r'(?i)(how to test[:\s]*)(.+?)(?=\n\n|\Z)', full_message, _re.DOTALL)
             how_to_test = m.group(0).strip() if m else ""
             other_body = full_message[:m.start()].strip() if m else ""
 
@@ -608,6 +681,17 @@ class FeedbackHandler(BaseHTTPRequestHandler):
                 tg += f"\n**Files ({len(all_files)}):**\n```\n{files_str}\n```"
             if how_to_test:
                 tg += f"\n\n✅ **{how_to_test}**"
+
+            # Attach setup data (spec, figma, telegram) if available
+            install_id = data.get("installation", {}).get("id") or data.get("installation_id")
+            if install_id:
+                setup = _setup_data.get(str(install_id), {})
+                if setup.get("spec_url"):
+                    tg += f"\nSpec: {setup['spec_url']}"
+                if setup.get("figma_url"):
+                    tg += f"\nFigma: {setup['figma_url']}"
+                if setup.get("telegram"):
+                    tg += f"\nContact: {setup['telegram']}"
 
             queue_pos = get_queue_position()
             tg += f"\n\n🔢 **Queue today: #{queue_pos}**"

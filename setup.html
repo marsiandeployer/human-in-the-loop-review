@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibers Review — Setup</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f7f7f8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e5e5;
+    padding: 40px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  }
+  .logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+  }
+  .logo span { color: #5b44e8; }
+  .subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+  }
+  label .opt {
+    font-weight: 400;
+    color: #999;
+    font-size: 12px;
+  }
+  input[type="text"], input[type="url"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1a1a1a;
+    background: #fafafa;
+    margin-bottom: 20px;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  input:focus { border-color: #5b44e8; background: #fff; }
+  .hint {
+    font-size: 12px;
+    color: #999;
+    margin-top: -16px;
+    margin-bottom: 20px;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #5b44e8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button:hover { background: #4a35c7; }
+  button:disabled { background: #aaa; cursor: default; }
+
+  .success {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .success .icon { font-size: 48px; margin-bottom: 16px; }
+  .success h2 { font-size: 20px; color: #1a1a1a; margin-bottom: 8px; }
+  .success p { font-size: 14px; color: #666; line-height: 1.5; }
+  .success a { color: #5b44e8; text-decoration: none; }
+
+  .skip {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13px;
+    color: #999;
+  }
+  .skip a { color: #999; text-decoration: underline; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div id="form-section">
+    <div class="logo">Vibers <span>Review</span></div>
+    <div class="subtitle">App installed ✓ &nbsp;—&nbsp; Help us review better by sharing a few details. All fields are optional.</div>
+
+    <label>Spec / TZ <span class="opt">optional</span></label>
+    <input type="url" id="spec_url" placeholder="https://docs.google.com/... or Notion link">
+    <div class="hint">Google Doc, Notion, Confluence — we'll review code against it</div>
+
+    <label>Figma <span class="opt">optional</span></label>
+    <input type="url" id="figma_url" placeholder="https://figma.com/file/...">
+    <div class="hint">Design file — we check if UI matches the implementation</div>
+
+    <label>Your Telegram <span class="opt">optional</span></label>
+    <input type="text" id="telegram" placeholder="@username">
+    <div class="hint">We'll message you when the review PR is ready</div>
+
+    <button id="submit-btn" onclick="submitSetup()">Save &amp; Continue</button>
+    <div class="skip"><a onclick="skipSetup()">Skip for now</a></div>
+  </div>
+
+  <div class="success" id="success-section">
+    <div class="icon">🎉</div>
+    <h2>You're all set!</h2>
+    <p>Push code to <strong>main</strong> with a <em>"How to test"</em> section in your commit message — we'll review it and send a PR with fixes within 24 hours.</p>
+    <p style="margin-top:16px; font-size:13px; color:#999;">Questions? <a href="https://t.me/onoutnoxon" target="_blank">@onoutnoxon</a> on Telegram</p>
+  </div>
+</div>
+
+<script>
+function getInstallationId() {
+  return new URLSearchParams(window.location.search).get('installation_id') || '';
+}
+
+function submitSetup() {
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  const payload = {
+    installation_id: getInstallationId(),
+    spec_url: document.getElementById('spec_url').value.trim(),
+    figma_url: document.getElementById('figma_url').value.trim(),
+    telegram: document.getElementById('telegram').value.trim(),
+  };
+
+  fetch('/github/setup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+    .then(r => r.json())
+    .then(() => showSuccess())
+    .catch(() => showSuccess()); // show success anyway — don't block user
+}
+
+function skipSetup() {
+  showSuccess();
+}
+
+function showSuccess() {
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('success-section').style.display = 'block';
+}
+</script>
+</body>
+</html>
