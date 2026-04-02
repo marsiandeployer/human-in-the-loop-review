@@ -157,7 +157,7 @@ Contacts: Telegram [@onoutnoxon](https://t.me/onoutnoxon) · GitHub App: [github
 
 **FAQ**
 
-- **API key?** No. Collaborator + action is enough.
+- **API key?** No. Install the GitHub App + action is enough.
 - **Do you need my real secrets to run the app?** No. Provide `.env.example` with placeholder values. If the app needs real third-party keys to function, note that in README — we'll test what we can without them.
 - **Languages?** JS/TS, Python, React, Next.js, Django, Flask, and more.
 - **Disagree with a fix?** Comment on the PR — we discuss and adjust.
