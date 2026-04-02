@@ -40,8 +40,30 @@ if _pem_path and os.path.exists(_pem_path):
 else:
     GH_APP_PRIVATE_KEY = os.environ.get("GH_APP_PRIVATE_KEY", "")
 
-# In-memory: installation_id -> {"account": str, "repos": list}
-_app_installations: dict[int, dict] = {}
+# Persistent installations registry
+_INSTALLS_FILE = os.path.join(os.path.dirname(__file__), "installs.json")
+
+def _load_installs() -> dict:
+    try:
+        with open(_INSTALLS_FILE) as f:
+            raw = json.load(f)
+        # Convert string keys back to int
+        return {int(k): v for k, v in raw.items()}
+    except Exception:
+        return {}
+
+def _save_installs(data: dict):
+    try:
+        dir_ = os.path.dirname(_INSTALLS_FILE)
+        with tempfile.NamedTemporaryFile("w", dir=dir_, delete=False, suffix=".tmp") as tf:
+            json.dump({str(k): v for k, v in data.items()}, tf, indent=2)
+            tmp_path = tf.name
+        os.replace(tmp_path, _INSTALLS_FILE)
+    except Exception as e:
+        print(f"Failed to save installs: {e}", file=sys.stderr)
+
+# In-memory + disk: installation_id -> {"account": str, "repos": list}
+_app_installations: dict[int, dict] = _load_installs()
 
 # Setup data storage
 _SETUP_FILE = os.path.join(os.path.dirname(__file__), "setup-data.json")
@@ -109,9 +131,9 @@ GH_TIMEOUT = 10  # seconds per gh api call
 # ─── GitHub App helpers ────────────────────────────────────────────────────────
 
 def verify_github_signature(payload: bytes, sig_header: str) -> bool:
-    """Verify X-Hub-Signature-256 from GitHub webhook."""
+    """Verify X-Hub-Signature-256 from GitHub webhook. Fail-closed."""
     if not GH_WEBHOOK_SECRET:
-        return True  # not configured — skip verification
+        return False  # secret not configured → reject all (fail-closed)
     if not sig_header or not sig_header.startswith("sha256="):
         return False
     expected = "sha256=" + hmac.new(
@@ -674,6 +696,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             if installation_id:
                 if action == "created":
                     _app_installations[installation_id] = {"account": account, "repos": repos}
+                    _save_installs(_app_installations)
                     repo_list = ", ".join(repos) if repos else "all repos"
                     msg = (
                         f"🎉 **New App Installation**\n\n"
@@ -684,6 +707,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
                     )
                 elif action == "deleted":
                     _app_installations.pop(installation_id, None)
+                    _save_installs(_app_installations)
                     msg = (
                         f"👋 **App Uninstalled**\n\n"
                         f"Account: [{account}](https://github.com/{account})"
@@ -692,6 +716,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
                     added = [r["full_name"] for r in data.get("repositories_added", [])]
                     if installation_id in _app_installations:
                         _app_installations[installation_id]["repos"].extend(added)
+                        _save_installs(_app_installations)
                     msg = (
                         f"➕ **Repos Added**\n\n"
                         f"Account: [{account}](https://github.com/{account})\n"

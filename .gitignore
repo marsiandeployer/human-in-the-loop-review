@@ -8,6 +8,7 @@ scripts/.env
 scripts/*.pem
 scripts/.htpasswd
 scripts/setup-data.json
+scripts/installs.json
 *.pem
 scripts/.invite-state.json
 scripts/__pycache__/
