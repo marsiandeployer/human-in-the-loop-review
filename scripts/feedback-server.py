@@ -567,25 +567,52 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             return
 
         if event == "push":
-            # Minimal push handler via webhook (no rich context like Action provides)
+            import re as _re
             repo = data.get("repository", {}).get("full_name", "")
             pusher = data.get("pusher", {}).get("name", "unknown")
             ref = data.get("ref", "")
             head_commit = data.get("head_commit") or {}
+            full_message = head_commit.get("message", "")
             sha = head_commit.get("id", "")[:8]
-            commit_msg = head_commit.get("message", "").splitlines()[0][:80]
+            commit_subj = full_message.splitlines()[0][:100]
+            commit_url = head_commit.get("url", "")
 
             if not repo or ref not in ("refs/heads/main", "refs/heads/master"):
                 return  # ignore non-default branch pushes
 
-            msg = (
-                f"📦 **Push via App Webhook**\n\n"
-                f"[{repo}](https://github.com/{repo}) — `{sha}`\n"
-                f"Pusher: {pusher}\n"
-                f"Commit: {commit_msg}\n\n"
-                f"_No Action in this repo — limited context_"
-            )
-            send_telegram(msg, TELEGRAM_REVIEW_CHAT_ID)
+            # Gate: require "How to test" in commit message
+            if not _re.search(r'(?i)how to test', full_message):
+                return  # skip silently — no test instructions
+
+            # Collect changed files across all commits
+            all_files = set()
+            for c in data.get("commits", []):
+                all_files.update(c.get("added", []))
+                all_files.update(c.get("modified", []))
+                all_files.update(c.get("removed", []))
+
+            # Extract "How to test" block
+            m = _re.search(r'(?i)(how to test[:\s]*\n)(.*?)(?=\n\n|\Z)', full_message, _re.DOTALL)
+            how_to_test = m.group(0).strip() if m else ""
+            other_body = full_message[:m.start()].strip() if m else ""
+
+            repo_url = f"https://github.com/{repo}"
+            tg = f"**Review Request (App)**\n\n"
+            tg += f"[{repo}]({repo_url}) | [{sha}]({commit_url})\n"
+            tg += f"Pusher: {pusher}\n"
+            tg += f"\n**{commit_subj}**\n"
+            if other_body and other_body != commit_subj:
+                tg += f"\n{other_body}\n"
+            if all_files:
+                files_str = "\n".join(sorted(all_files)[:30])
+                tg += f"\n**Files ({len(all_files)}):**\n```\n{files_str}\n```"
+            if how_to_test:
+                tg += f"\n\n✅ **{how_to_test}**"
+
+            queue_pos = get_queue_position()
+            tg += f"\n\n🔢 **Queue today: #{queue_pos}**"
+
+            send_telegram(tg, TELEGRAM_REVIEW_CHAT_ID)
             return
 
     def _cors_headers(self):

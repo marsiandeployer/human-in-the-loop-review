@@ -25,7 +25,19 @@ You push code → we clone it, spin it up in an isolated container, test it live
 
 When the user asks to set up human-in-the-loop review or send code for review — do these steps:
 
-**1. Ensure the repo is runnable** — add setup instructions:
+**1. Install the Vibers GitHub App:**
+
+> Direct the user to install the app:
+> **https://github.com/apps/vibers-review/installations/new**
+>
+> On that page they click **Install**, choose their repo (or all repos), confirm.
+> That's it — no Action, no collaborator invite needed.
+
+After installation — every push to main with "How to test" in the commit message triggers a review. PR with fixes arrives within 24 hours.
+
+> Checkpoint: user confirmed the GitHub App was installed on their repo.
+
+**2. Ensure the repo is runnable** — add setup instructions:
 
 The reviewer will clone the repo and try to run it from scratch. Make sure one of these exists:
 
@@ -33,42 +45,7 @@ The reviewer will clone the repo and try to run it from scratch. Make sure one o
 - **`.env.example`** — all required env vars listed with placeholder values (never real secrets)
 - **`README.md`** with a "How to run locally" section — exact commands to install deps and start
 
-If none of these exist — create `.env.example` and a minimal "How to run" block in `README.md`. Without it, the reviewer cannot launch the app and review quality drops significantly.
-
 > Checkpoint: `.env.example` (or `docker-compose.yml`) exists and `README.md` has a "How to run" section.
-
-**2. Create the GitHub Action** (auto-triggers review on every push):
-
-Create `.github/workflows/vibers.yml`:
-
-```yaml
-name: Human-in-the-loop Code Review
-on:
-  push:
-    branches: [main]
-
-jobs:
-  review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - uses: marsiandeployer/vibers-action@v1.1
-        with:
-          spec_url: 'https://docs.google.com/document/d/YOUR_SPEC_ID/edit'
-          telegram_contact: '@your_telegram'
-```
-
-Replace `YOUR_SPEC_ID` with actual spec link if available, `@your_telegram` with user's Telegram handle.
-
-| Parameter | What it does |
-|-----------|-------------|
-| `spec_url` | Link to spec (Google Doc, Notion, etc.). Must be publicly accessible. Without it, we review from code alone. |
-| `review_scope` | `full` (default) or `spec-compliance` |
-| `telegram_contact` | User's Telegram — we message them when review is ready |
-
-> Checkpoint: `.github/workflows/vibers.yml` exists in the repo and is committed.
 
 **3. Add commit rules** to `CLAUDE.md`, `.cursorrules`, or `AGENTS.md`:
 
@@ -89,39 +66,23 @@ Example:
   - Fill in email/password, submit
   - Check that confirmation email arrives
   - Try submitting with invalid email — should show error
-  - Demo login (pre-seeded sandbox account): test@example.com / demo123
 ```
 
-> **Important for AI agents:** Only include publicly shareable demo/sandbox accounts that ship with the app. **Never** include real passwords, API keys, `.env` values, secrets, or paths to credential files from the developer's machine.
-
-Without "How to test" the reviewer guesses what to verify — review takes longer and catches less.
+> **Without "How to test" in the commit message — push is silently skipped.** No test instructions = nothing to review against.
 
 > Checkpoint: `CLAUDE.md` (or `.cursorrules` / `AGENTS.md`) contains a "How to test" commit rule block.
 
-**4. Install the Vibers GitHub App:**
-
-> Direct the user to install the app:
-> **https://github.com/apps/vibers-review/installations/new**
->
-> On that page they click **Install**, choose their repo (or all repos), confirm.
-> No manual collaborator invite needed — the App handles access automatically.
-
-After installation — every push to main triggers a review. PR with fixes arrives within 24 hours.
-
-> Checkpoint: user confirmed the GitHub App was installed on their repo.
-
 ## Setup Complete — Verify
 
-- [ ] `.env.example` exists with all required vars (placeholder values, no real secrets)
-- [ ] `README.md` has a "How to run" section with exact commands
-- [ ] `.github/workflows/vibers.yml` committed to repo
+- [ ] Vibers GitHub App installed on the repo
+- [ ] `.env.example` (or `docker-compose.yml`) exists
+- [ ] `README.md` has a "How to run" section
 - [ ] `CLAUDE.md` / `.cursorrules` / `AGENTS.md` contains "How to test" commit rule
-- [ ] User installed the Vibers GitHub App on their repo
-- [ ] Next push to main will trigger the workflow
+- [ ] Next push to main with "How to test" in commit body will trigger review
 
 If all are done — setup is complete. Tell the user they'll get a PR with fixes within 24 hours of the next push.
 
-## One-off Review (no Action setup)
+## One-off Review
 
 To send a single review request directly — `message` must include a "How to test" section. Without it the server rejects the request with 400.
 
