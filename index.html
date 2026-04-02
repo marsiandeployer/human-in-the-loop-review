@@ -450,12 +450,9 @@
 
     <!-- Setup CTA (always visible) -->
     <div class="setup-box">
-        <div class="setup-label" data-i18n="setup_label">Quick Start — tell your AI agent:</div>
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            <code style="flex:1; min-width:0;">Install skill from https://vibers.onout.org/SKILL.md</code>
-            <a class="copy-btn" id="open-claude-btn" href="https://claude.ai/new?q=Install+skill+from+https%3A%2F%2Fvibers.onout.org%2FSKILL.md" target="_blank" rel="noopener noreferrer" onclick="trackLead('open_in_claude');rdt('track','Lead');" style="text-decoration:none; white-space:nowrap;" data-i18n="open_claude_btn">⚡ Open in Claude</a>
-            <button class="copy-btn" id="copy-skill-btn" onclick="navigator.clipboard.writeText('Install skill from https://vibers.onout.org/SKILL.md');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);trackLead('copy_skill_command');rdt('track','Lead');" data-i18n="copy_btn">Copy</button>
-        </div>
+        <div class="setup-label" data-i18n="setup_label">2-click install &nbsp;|&nbsp; Quick Start — tell your AI agent:</div>
+        <code>Install skill from https://vibers.onout.org/SKILL.md</code>
+        <button class="copy-btn" id="copy-skill-btn" onclick="navigator.clipboard.writeText('Install skill from https://vibers.onout.org/SKILL.md');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);trackLead('copy_skill_command');rdt('track','Lead');" data-i18n="copy_btn">Copy</button>
         <p data-i18n="setup_note">No AI agent? <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Write us on Telegram</a> — we'll set it up manually.</p>
     </div>
 
@@ -712,8 +709,7 @@ const ru = {
     contact_telegram: "Telegram: @onoutnoxon",
     contact_email: "Email: i448539@gmail.com",
     contact_career: "Вакансии $$",
-    setup_label: "Быстрый старт — скажите вашему AI-агенту:",
-    open_claude_btn: "⚡ Открыть в Claude",
+    setup_label: "2-click install &nbsp;|&nbsp; Быстрый старт — скажите вашему AI-агенту:",
     copy_btn: "Копировать",
     setup_note: 'Нет AI-агента? <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Напишите в Telegram</a> — настроим вручную.',
     label_summary: "Кратко",
