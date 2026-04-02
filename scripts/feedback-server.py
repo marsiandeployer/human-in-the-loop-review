@@ -10,10 +10,12 @@ Run via PM2.
 
 import hashlib
 import hmac
+import html as _html
 import json
 import os
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -53,8 +55,11 @@ def _load_setup_data() -> dict:
 
 def _save_setup_data(data: dict):
     try:
-        with open(_SETUP_FILE, "w") as f:
-            json.dump(data, f, indent=2)
+        dir_ = os.path.dirname(_SETUP_FILE)
+        with tempfile.NamedTemporaryFile("w", dir=dir_, delete=False, suffix=".tmp") as tf:
+            json.dump(data, tf, indent=2)
+            tmp_path = tf.name
+        os.replace(tmp_path, _SETUP_FILE)  # atomic rename
     except Exception as e:
         print(f"Failed to save setup data: {e}", file=sys.stderr)
 
@@ -503,12 +508,12 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         for iid in sorted(all_ids, key=lambda x: int(x) if x.isdigit() else 0, reverse=True):
             inst = _app_installations.get(int(iid) if iid.isdigit() else iid, {})
             setup = _setup_data.get(str(iid), {})
-            account = inst.get("account") or setup.get("account", "—")
-            repos = ", ".join(inst.get("repos", [])) or "—"
-            spec = setup.get("spec_url", "")
-            figma = setup.get("figma_url", "")
-            tg = setup.get("telegram", "")
-            saved = setup.get("saved_at", "")
+            account = _html.escape(inst.get("account") or setup.get("account", "—"))
+            repos = _html.escape(", ".join(inst.get("repos", [])) or "—")
+            spec = _html.escape(setup.get("spec_url", ""))
+            figma = _html.escape(setup.get("figma_url", ""))
+            tg = _html.escape(setup.get("telegram", ""))
+            saved = _html.escape(setup.get("saved_at", ""))
             spec_html = f'<a href="{spec}" target="_blank">link</a>' if spec else "—"
             figma_html = f'<a href="{figma}" target="_blank">link</a>' if figma else "—"
             rows += f"""<tr>
@@ -563,6 +568,14 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             iid = int(iid_raw) if iid_raw else 0
         except (ValueError, TypeError):
             iid = 0
+
+        # Validate: only accept known installations (verified via webhook)
+        if iid not in _app_installations and str(iid) not in _setup_data:
+            self.send_response(403)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "unknown installation_id"}')
+            return
 
         spec_url = str(data.get("spec_url") or "").strip()[:500]
         figma_url = str(data.get("figma_url") or "").strip()[:500]
