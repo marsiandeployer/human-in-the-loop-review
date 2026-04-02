@@ -510,6 +510,77 @@
 
     <details>
         <summary>
+            <span class="section-label" data-i18n="label_reviewers">Reviewers</span>
+            <span data-i18n="rev_title">Who Reviews Your Code</span>
+        </summary>
+        <div class="details-body">
+            <div style="display:flex; align-items:flex-start; gap:20px; flex-wrap:wrap;">
+                <img src="https://github.com/marsiandeployer.png" alt="marsiandeployer" width="72" height="72" style="border-radius:50%; border:2px solid #e5e5e5; flex-shrink:0;">
+                <div>
+                    <div style="font-weight:600; font-size:15px; margin-bottom:4px;"><a href="https://github.com/marsiandeployer" target="_blank" rel="noopener noreferrer">@marsiandeployer</a></div>
+                    <div style="font-size:13px; color:#555; margin-bottom:10px;" data-i18n="rev_bio">Senior engineers with 10+ years across JavaScript, Python, and distributed systems. Based in Europe. We've worked at startups from seed to Series B — we know what "good enough for now" looks like, and where it hurts later.</div>
+                    <div style="font-size:12px; color:#888;" data-i18n="rev_note">Real people, not another AI layer. When you get a PR from us, a human wrote every line.</div>
+                </div>
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>
+            <span class="section-label" data-i18n="label_security">Security</span>
+            <span data-i18n="sec_title">What Access We Get (and Don't)</span>
+        </summary>
+        <div class="details-body">
+            <div class="two-col">
+                <div class="col-block">
+                    <h4 data-i18n="sec_get_h">What marsiandeployer can do</h4>
+                    <ul class="cv-list check" data-i18n="sec_get_list">
+                        <li>Read your code (clone, pull)</li>
+                        <li>Create branches &amp; open pull requests</li>
+                        <li>Comment on commits</li>
+                    </ul>
+                </div>
+                <div class="col-block">
+                    <h4 data-i18n="sec_not_h">What we cannot do</h4>
+                    <ul class="cv-list cross" data-i18n="sec_not_list">
+                        <li>Merge or push to main without your approval</li>
+                        <li>Access other repos on your account</li>
+                        <li>See private env files beyond what's committed</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="background:#f0faf4; border-left:3px solid #2a9d5c; border-radius:4px; padding:12px 16px; margin-top:16px; font-size:13px;" data-i18n="sec_revoke">
+                <strong>Revoke anytime:</strong> GitHub Settings → Collaborators → Remove. Takes 5 seconds. No lock-in.
+            </div>
+            <p style="font-size:13px; color:#888; margin-top:12px;" data-i18n="sec_nda">NDA available on request for paid reviews.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>
+            <span class="section-label" data-i18n="label_example">Example</span>
+            <span data-i18n="ex_title">What a Real Finding Looks Like</span>
+        </summary>
+        <div class="details-body">
+            <p style="font-size:13px; color:#666; margin-bottom:14px;" data-i18n="ex_intro">From a recent review of a React/Node.js SaaS built by a Cursor agent:</p>
+            <div style="background:#fff8f8; border:1px solid #fcc; border-radius:6px; padding:16px; margin-bottom:16px;">
+                <div style="font-size:12px; font-weight:600; color:#d94f4f; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;" data-i18n="ex_bug_label">Bug found</div>
+                <div style="font-size:13px; color:#333; margin-bottom:10px;" data-i18n="ex_bug_desc">User upload endpoint accepted any file type — an attacker could upload a .php shell disguised as an image. The agent had no content-type validation, only checked the file extension.</div>
+                <pre style="background:#2d2d2d; color:#f8f8f2; padding:12px; border-radius:4px; font-size:12px; overflow-x:auto; margin:0;"><code style="background:none; border:none; padding:0; color:#f8f8f2; font-size:12px;">// Before (agent-written)
+if (file.name.endsWith('.jpg')) { save(file); }
+
+// After (our fix in PR)
+const mime = await fileTypeFromBuffer(buf);
+if (!['image/jpeg','image/png','image/webp'].includes(mime?.mime)) {
+  throw new Error('Invalid file type');
+}</code></pre>
+            </div>
+            <p style="font-size:13px; color:#666;" data-i18n="ex_footer">This took us 12 minutes to spot and fix. The agent had been shipping this endpoint for 3 sprints.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>
             <span class="section-label" data-i18n="label_howto">Process</span>
             <span data-i18n="how_title">How It Works</span>
         </summary>
@@ -763,6 +834,24 @@ const ru = {
     faq5_a: "JavaScript/TypeScript, Python, React, Node.js, Django, Flask, Next.js и большинство популярных веб-фреймворков. Экзотический стек — спросите нас.",
     faq6_q: "Чем это отличается от найма сеньора?",
     faq6_a: "Сеньор стоит $50-150/час. Мы предлагаем бесплатное первое ревью (звезда в GitHub + отзыв), затем $15/час (стандарт), pay-as-you-go. Без контрактов, без подписок. Оставляете вайбкодеров для скорости + наш слой ревью для качества.",
+    label_reviewers: "Ревьюеры",
+    rev_title: "Кто проверяет ваш код",
+    rev_bio: "Сеньор-инженеры с 10+ лет опыта в JavaScript, Python и распределённых системах. Работаем из Европы. Прошли через стартапы от seed до Series B — знаем, как выглядит «достаточно хорошо сейчас» и где это потом аукается.",
+    rev_note: "Живые люди, не ещё один слой AI. Когда вы получаете PR от нас — каждую строку написал человек.",
+    label_security: "Безопасность",
+    sec_title: "Какой доступ мы получаем (и не получаем)",
+    sec_get_h: "Что может marsiandeployer",
+    sec_get_list: "<li>Читать ваш код (clone, pull)</li><li>Создавать ветки и открывать pull request-ы</li><li>Комментировать коммиты</li>",
+    sec_not_h: "Чего мы не можем",
+    sec_not_list: "<li>Мержить или пушить в main без вашего одобрения</li><li>Получить доступ к другим репозиториям аккаунта</li><li>Видеть приватные env-файлы за пределами коммитов</li>",
+    sec_revoke: "<strong>Отозвать в любой момент:</strong> GitHub Settings → Collaborators → Remove. 5 секунд. Никаких привязок.",
+    sec_nda: "NDA доступен по запросу для платных ревью.",
+    label_example: "Пример",
+    ex_title: "Как выглядит реальная находка",
+    ex_intro: "Из недавнего ревью React/Node.js SaaS, написанного агентом Cursor:",
+    ex_bug_label: "Найденный баг",
+    ex_bug_desc: "Эндпоинт загрузки файлов принимал любой тип файла — атакующий мог загрузить .php-шелл под видом изображения. Агент не проверял content-type, только расширение.",
+    ex_footer: "У нас ушло 12 минут чтобы найти и исправить. Агент шипил этот эндпоинт 3 спринта.",
     honest_box: "<strong>Честно о себе:</strong> Мы не security-фирма. Никаких OWASP-пентестов, аудитов архитектуры, профилирования производительности. Мы — обычные люди, которые смотрят на ваш код свежим взглядом: ловят очевидные баги, проверяют что основные сценарии работают, и пишут фикс вместо того чтобы создавать тикет. Думайте об этом как альфа-тестер, который ещё и шлёт PR.",
 };
 
