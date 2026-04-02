@@ -15,6 +15,7 @@ function loadDotEnv(path) {
     }
   } catch (_) {}
 }
+loadDotEnv(require('path').join(__dirname, '.env'));
 loadDotEnv(require('os').homedir() + '/.env');
 
 module.exports = {
@@ -42,6 +43,10 @@ module.exports = {
       TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID || '-5058393445',
       TELEGRAM_REVIEW_CHAT_ID: process.env.TELEGRAM_REVIEW_CHAT_ID || '-5208301843',
       FEEDBACK_PORT: '3847',
+      GH_APP_ID: process.env.GH_APP_ID || '',
+      GH_APP_PRIVATE_KEY_PATH: process.env.GH_APP_PRIVATE_KEY_PATH || '',
+      GH_WEBHOOK_SECRET: process.env.GH_WEBHOOK_SECRET || '',
+      GH_APP_SLUG: process.env.GH_APP_SLUG || 'vibers-review',
     }
   }]
 };

@@ -453,7 +453,7 @@
         <div class="setup-label" data-i18n="setup_label">2-click install &nbsp;|&nbsp; Quick Start — tell your AI agent:</div>
         <code>Install skill from https://vibers.onout.org/SKILL.md</code>
         <button class="copy-btn" id="copy-skill-btn" onclick="navigator.clipboard.writeText('Install skill from https://vibers.onout.org/SKILL.md');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);trackLead('copy_skill_command');rdt('track','Lead');" data-i18n="copy_btn">Copy</button>
-        <p data-i18n="setup_note">No AI agent? <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Write us on Telegram</a> — we'll set it up manually.</p>
+        <p data-i18n="setup_note">No AI agent? <a href="https://github.com/apps/vibers-review/installations/new" target="_blank" rel="noopener noreferrer">Install the GitHub App directly</a> or <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">write us on Telegram</a>.</p>
     </div>
 
     <!-- Sections as collapsible details -->
@@ -464,7 +464,7 @@
             <span data-i18n="sum_title">What We Do</span>
         </summary>
         <div class="details-body">
-            <p data-i18n="sum_body">We review and fix code written by AI vibecoders. Add <code>marsiandeployer</code> to your GitHub, share your spec — we check every commit, catch hallucinations, fix security holes, and send a pull request with working code. You merge, keep shipping.</p>
+            <p data-i18n="sum_body">We review and fix code written by AI vibecoders. Install our GitHub App, share your spec — we check every commit, catch hallucinations, fix security holes, and send a pull request with working code. You merge, keep shipping.</p>
             <div style="background:#fff8e1; border-left: 3px solid #f5a623; border-radius: 4px; padding: 14px 18px; margin-top: 20px; font-size: 14px;" data-i18n="honest_box">
                 <strong>Honest disclaimer:</strong> We're not a security firm. No OWASP penetration tests, no architecture audits, no performance profiling. We're regular people who look at your code with fresh eyes — catch the obvious bugs, check that the main flows actually work, and write the fix instead of filing a ticket. Think alpha tester who also sends a PR.
             </div>
@@ -533,7 +533,7 @@
         <div class="details-body">
             <div class="two-col">
                 <div class="col-block">
-                    <h4 data-i18n="sec_get_h">What marsiandeployer can do</h4>
+                    <h4 data-i18n="sec_get_h">What the Vibers App can do</h4>
                     <ul class="cv-list check" data-i18n="sec_get_list">
                         <li>Read your code (clone, pull)</li>
                         <li>Create branches &amp; open pull requests</li>
@@ -550,7 +550,7 @@
                 </div>
             </div>
             <div style="background:#f0faf4; border-left:3px solid #2a9d5c; border-radius:4px; padding:12px 16px; margin-top:16px; font-size:13px;" data-i18n="sec_revoke">
-                <strong>Revoke anytime:</strong> GitHub Settings → Collaborators → Remove. Takes 5 seconds. No lock-in.
+                <strong>Revoke anytime:</strong> GitHub Settings → Applications → Installed GitHub Apps → Vibers Review → Uninstall. Takes 5 seconds. No lock-in.
             </div>
             <p style="font-size:13px; color:#888; margin-top:12px;" data-i18n="sec_nda">NDA available on request for paid reviews.</p>
         </div>
@@ -597,7 +597,7 @@ if (!['image/jpeg','image/png','image/webp'].includes(mime?.mime)) {
                 <div class="flow-step" data-i18n="flow5">You merge clean code</div>
             </div>
             <ol class="cv-list num" style="margin-top: 16px;" data-i18n="steps_list">
-                <li><strong>Add Us to GitHub</strong> — Add <code>marsiandeployer</code> as collaborator to your repo. That's it.</li>
+                <li><strong>Install the App</strong> — <a href="https://github.com/apps/vibers-review/installations/new" target="_blank" rel="noopener noreferrer">One click on GitHub</a>. Select which repos to give access to. Done.</li>
                 <li><strong>Share Spec (optional)</strong> — Got a Google Doc or Notion page? Share it for better reviews. No spec? No problem — we read the code.</li>
                 <li><strong>We Review &amp; Fix</strong> — We check commits against your spec, find issues, write the actual code fixes.</li>
                 <li><strong>Merge Clean Code</strong> — You get pull requests with working fixes. Review, merge, done.</li>
@@ -738,8 +738,8 @@ if (!['image/jpeg','image/png','image/webp'].includes(mime?.mime)) {
             </details>
 
             <details style="border-bottom: 1px solid #f0f0f0;">
-                <summary style="font-size:14px; font-weight:500; padding: 12px 0; color:#333;" data-i18n="faq3_q">What's <code>marsiandeployer</code>?</summary>
-                <div style="padding: 0 0 12px 0; font-size:14px; color:#555;" data-i18n="faq3_a">Our GitHub account that we use to access your repo, review code, and submit pull requests. You add it as a collaborator with write access.</div>
+                <summary style="font-size:14px; font-weight:500; padding: 12px 0; color:#333;" data-i18n="faq3_q">What's the Vibers GitHub App?</summary>
+                <div style="padding: 0 0 12px 0; font-size:14px; color:#555;" data-i18n="faq3_a">Our official GitHub App for accessing your repo, reviewing code, and submitting pull requests. Install it in one click — you choose exactly which repos to grant access to.</div>
             </details>
 
             <details style="border-bottom: 1px solid #f0f0f0;">
@@ -782,10 +782,10 @@ const ru = {
     contact_career: "Вакансии $$",
     setup_label: "2-click install &nbsp;|&nbsp; Быстрый старт — скажите вашему AI-агенту:",
     copy_btn: "Копировать",
-    setup_note: 'Нет AI-агента? <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Напишите в Telegram</a> — настроим вручную.',
+    setup_note: 'Нет AI-агента? <a href="https://github.com/apps/vibers-review/installations/new" target="_blank" rel="noopener noreferrer">Установите GitHub App напрямую</a> или <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">напишите в Telegram</a>.',
     label_summary: "Кратко",
     sum_title: "Что мы делаем",
-    sum_body: "Мы проверяем и исправляем код, написанный AI-вайбкодерами. Добавьте <code>marsiandeployer</code> в GitHub, поделитесь ТЗ — мы проверяем каждый коммит, ловим галлюцинации, закрываем дыры в безопасности и отправляем pull request с рабочим кодом. Вы мержите и продолжаете шипить.",
+    sum_body: "Мы проверяем и исправляем код, написанный AI-вайбкодерами. Установите наш GitHub App, поделитесь ТЗ — мы проверяем каждый коммит, ловим галлюцинации, закрываем дыры в безопасности и отправляем pull request с рабочим кодом. Вы мержите и продолжаете шипить.",
     m_setup: "Время подключения",
     m_price: "первое ревью (⭐ + отзыв)",
     m_questions: "Уточняющих вопросов",
@@ -803,7 +803,7 @@ const ru = {
     flow3: "Исправляем сами",
     flow4: "Отправляем PR с изменениями",
     flow5: "Вы мержите чистый код",
-    steps_list: "<li><strong>Добавьте нас в GitHub</strong> — Добавьте <code>marsiandeployer</code> как collaborator. Всё.</li><li><strong>Поделитесь ТЗ (необязательно)</strong> — Google Doc или Notion? Пришлите для точных ревью. Нет ТЗ — читаем код сами.</li><li><strong>Мы проверяем и исправляем</strong> — Проверяем коммиты по ТЗ, находим проблемы, пишем реальные исправления.</li><li><strong>Мержите чистый код</strong> — Получаете PR с рабочими исправлениями. Ревьюите, мержите, готово.</li>",
+    steps_list: "<li><strong>Установите приложение</strong> — <a href=\"https://github.com/apps/vibers-review/installations/new\" target=\"_blank\" rel=\"noopener noreferrer\">Один клик на GitHub</a>. Выберите репозитории. Готово.</li><li><strong>Поделитесь ТЗ (необязательно)</strong> — Google Doc или Notion? Пришлите для точных ревью. Нет ТЗ — читаем код сами.</li><li><strong>Мы проверяем и исправляем</strong> — Проверяем коммиты по ТЗ, находим проблемы, пишем реальные исправления.</li><li><strong>Мержите чистый код</strong> — Получаете PR с рабочими исправлениями. Ревьюите, мержите, готово.</li>",
     label_for: "Аудитория",
     who_title: "Для кого это",
     who_list: "<li><strong>Пользователи Claude Code</strong> — Установите наш skill, агент вызывает нас на каждый пуш и получает PR с тем, что пропустил.</li><li><strong>Cursor и Windsurf</strong> — Добавьте в <code>.cursorrules</code> или <code>AGENTS.md</code>. Фоновый ревьюер, не ломающий поток.</li><li><strong>Соло-билдеры</strong> — Некому ревьюить? Мы — вторая пара глаз. Дыры и дрейф от ТЗ ловим до пользователей.</li><li><strong>Небольшие AI-first команды</strong> — Все вайбкодят, никто не ревьюит. Один setup, покрывает пуши каждого.</li>",
@@ -826,8 +826,8 @@ const ru = {
     faq1_a: "Разработчики (часто за $1-5/час с Upwork, Fiverr), которые используют AI — Cursor, Copilot или ChatGPT — чтобы писать код быстро. Быстро и дёшево, но качество очень разное.",
     faq2_q: "Почему не использовать автоматические инструменты код-ревью?",
     faq2_a: "Инструменты типа SonarQube ловят синтаксис. Мы проверяем, соответствует ли код бизнес-требованиям. Мы читаем ваш Google Doc и проверяем, что фича делает то, что вы описали.",
-    faq3_q: 'Что такое <code>marsiandeployer</code>?',
-    faq3_a: "Наш GitHub-аккаунт для доступа к репо, ревью кода и отправки PR. Вы добавляете его как collaborator с правом записи.",
+    faq3_q: 'Что такое Vibers GitHub App?',
+    faq3_a: "Официальное GitHub-приложение для доступа к репозиторию, ревью кода и отправки PR. Устанавливается в один клик — вы сами выбираете, к каким репозиториям давать доступ.",
     faq4_q: "Вы реально исправляете код или просто пишете отчёты?",
     faq4_a: "Мы исправляем. Каждое ревью — это pull request с нашими улучшениями. Вы ревьюите PR и мержите. Никакого пинг-понга с баг-тикетами.",
     faq5_q: "Какие стеки поддерживаете?",
@@ -840,11 +840,11 @@ const ru = {
     rev_note: "Живые люди, не ещё один слой AI. Когда вы получаете PR от нас — каждую строку написал человек.",
     label_security: "Безопасность",
     sec_title: "Какой доступ мы получаем (и не получаем)",
-    sec_get_h: "Что может marsiandeployer",
+    sec_get_h: "Что может Vibers App",
     sec_get_list: "<li>Читать ваш код (clone, pull)</li><li>Создавать ветки и открывать pull request-ы</li><li>Комментировать коммиты</li>",
     sec_not_h: "Чего мы не можем",
     sec_not_list: "<li>Мержить или пушить в main без вашего одобрения</li><li>Получить доступ к другим репозиториям аккаунта</li><li>Видеть приватные env-файлы за пределами коммитов</li>",
-    sec_revoke: "<strong>Отозвать в любой момент:</strong> GitHub Settings → Collaborators → Remove. 5 секунд. Никаких привязок.",
+    sec_revoke: "<strong>Отозвать в любой момент:</strong> GitHub Settings → Applications → Installed GitHub Apps → Vibers Review → Uninstall. 5 секунд. Никаких привязок.",
     sec_nda: "NDA доступен по запросу для платных ревью.",
     label_example: "Пример",
     ex_title: "Как выглядит реальная находка",

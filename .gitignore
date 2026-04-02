@@ -4,6 +4,9 @@
 .claude/
 
 # Runtime state
+scripts/.env
+scripts/*.pem
+*.pem
 scripts/.invite-state.json
 scripts/__pycache__/
 

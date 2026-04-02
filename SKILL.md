@@ -98,14 +98,17 @@ Without "How to test" the reviewer guesses what to verify — review takes longe
 
 > Checkpoint: `CLAUDE.md` (or `.cursorrules` / `AGENTS.md`) contains a "How to test" commit rule block.
 
-**4. Tell the user** to add `marsiandeployer` as collaborator:
+**4. Install the Vibers GitHub App:**
 
-> Go to your repo → Settings → Collaborators → Add **marsiandeployer**
-> Read-only access is enough to start. Write access only needed for automatic PRs.
+> Direct the user to install the app:
+> **https://github.com/apps/vibers-review/installations/new**
+>
+> On that page they click **Install**, choose their repo (or all repos), confirm.
+> No manual collaborator invite needed — the App handles access automatically.
 
-After that — every push to main triggers a review. PR with fixes arrives within 24 hours.
+After installation — every push to main triggers a review. PR with fixes arrives within 24 hours.
 
-> Checkpoint: user confirmed `marsiandeployer` was added as collaborator.
+> Checkpoint: user confirmed the GitHub App was installed on their repo.
 
 ## Setup Complete — Verify
 
@@ -113,7 +116,7 @@ After that — every push to main triggers a review. PR with fixes arrives withi
 - [ ] `README.md` has a "How to run" section with exact commands
 - [ ] `.github/workflows/vibers.yml` committed to repo
 - [ ] `CLAUDE.md` / `.cursorrules` / `AGENTS.md` contains "How to test" commit rule
-- [ ] User added `marsiandeployer` as collaborator
+- [ ] User installed the Vibers GitHub App on their repo
 - [ ] Next push to main will trigger the workflow
 
 If all are done — setup is complete. Tell the user they'll get a PR with fixes within 24 hours of the next push.
@@ -150,7 +153,7 @@ We don't check: code style (use ESLint/Prettier), performance benchmarks, securi
 
 ## Support
 
-Contacts: Telegram [@onoutnoxon](https://t.me/onoutnoxon) · GitHub [marsiandeployer](https://github.com/marsiandeployer)
+Contacts: Telegram [@onoutnoxon](https://t.me/onoutnoxon) · GitHub App: [github.com/apps/vibers-review](https://github.com/apps/vibers-review)
 
 **FAQ**
 

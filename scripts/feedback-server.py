@@ -8,11 +8,14 @@ Body: {"message": "...", "repo": "https://github.com/user/repo"}
 Run via PM2.
 """
 
+import hashlib
+import hmac
 import json
 import os
 import subprocess
 import sys
 import time
+import urllib.request
 from http.server import HTTPServer, BaseHTTPRequestHandler
 # Single-threaded: pyrogram requires main thread event loop
 
@@ -22,6 +25,21 @@ TELEGRAM_SESSION = os.environ.get("TELEGRAM_SESSION_STRING", "")
 TELEGRAM_CHAT_ID = int(os.environ.get("TELEGRAM_CHAT_ID", "-5058393445"))
 TELEGRAM_REVIEW_CHAT_ID = int(os.environ.get("TELEGRAM_REVIEW_CHAT_ID", TELEGRAM_CHAT_ID))
 PORT = int(os.environ.get("FEEDBACK_PORT", "3847"))
+
+# GitHub App credentials
+GH_APP_ID = os.environ.get("GH_APP_ID", "")
+GH_WEBHOOK_SECRET = os.environ.get("GH_WEBHOOK_SECRET", "")
+GH_APP_SLUG = os.environ.get("GH_APP_SLUG", "vibers-review")
+
+_pem_path = os.environ.get("GH_APP_PRIVATE_KEY_PATH", "")
+if _pem_path and os.path.exists(_pem_path):
+    with open(_pem_path) as _f:
+        GH_APP_PRIVATE_KEY = _f.read()
+else:
+    GH_APP_PRIVATE_KEY = os.environ.get("GH_APP_PRIVATE_KEY", "")
+
+# In-memory: installation_id -> {"account": str, "repos": list}
+_app_installations: dict[int, dict] = {}
 
 # Rate limiting: max 5 requests per minute per IP
 RATE_LIMIT = {}
@@ -62,6 +80,46 @@ def send_telegram(text, chat_id=None):
 
 GH_BOT = "marsiandeployer"
 GH_TIMEOUT = 10  # seconds per gh api call
+
+
+# ─── GitHub App helpers ────────────────────────────────────────────────────────
+
+def verify_github_signature(payload: bytes, sig_header: str) -> bool:
+    """Verify X-Hub-Signature-256 from GitHub webhook."""
+    if not GH_WEBHOOK_SECRET:
+        return True  # not configured — skip verification
+    if not sig_header or not sig_header.startswith("sha256="):
+        return False
+    expected = "sha256=" + hmac.new(
+        GH_WEBHOOK_SECRET.encode(), payload, hashlib.sha256
+    ).hexdigest()
+    return hmac.compare_digest(expected, sig_header)
+
+
+def make_github_app_jwt() -> str:
+    """Generate JWT for GitHub App authentication (valid 10 min)."""
+    if not GH_APP_ID or not GH_APP_PRIVATE_KEY:
+        raise RuntimeError("GH_APP_ID or GH_APP_PRIVATE_KEY not configured")
+    import jwt as pyjwt
+    now = int(time.time())
+    payload = {"iat": now - 60, "exp": now + 600, "iss": GH_APP_ID}
+    return pyjwt.encode(payload, GH_APP_PRIVATE_KEY, algorithm="RS256")
+
+
+def get_installation_token(installation_id: int) -> str:
+    """Exchange app JWT for short-lived installation access token."""
+    jwt_token = make_github_app_jwt()
+    url = f"https://api.github.com/app/installations/{installation_id}/access_tokens"
+    req = urllib.request.Request(
+        url, method="POST",
+        headers={
+            "Authorization": f"Bearer {jwt_token}",
+            "Accept": "application/vnd.github+json",
+            "User-Agent": f"vibers-review-app/{GH_APP_SLUG}",
+        }
+    )
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return json.loads(resp.read())["token"]
 
 
 def check_access_status(repo_full_name):
@@ -248,6 +306,8 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             self._handle_feedback()
         elif self.path == "/review":
             self._handle_review()
+        elif self.path == "/github/webhook":
+            self._handle_github_webhook()
         else:
             self.send_response(404)
             self._cors_headers()
@@ -413,6 +473,120 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         tg_text += f"\n\n🔢 **Queue today: #{queue_pos}**"
 
         self._send_and_respond(tg_text, TELEGRAM_REVIEW_CHAT_ID, queue_position=queue_pos)
+
+    def _handle_github_webhook(self):
+        """Handle GitHub App webhook events."""
+        # Read raw body (needed for signature verification)
+        try:
+            content_length = int(self.headers.get("Content-Length", 0))
+        except (ValueError, TypeError):
+            content_length = 0
+
+        if content_length > 200_000:
+            self.send_response(413)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "payload too large"}')
+            return
+
+        raw_body = self.rfile.read(content_length) if content_length > 0 else b""
+
+        # Verify webhook signature
+        sig = self.headers.get("X-Hub-Signature-256", "")
+        if not verify_github_signature(raw_body, sig):
+            self.send_response(401)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "invalid signature"}')
+            return
+
+        event = self.headers.get("X-GitHub-Event", "")
+
+        try:
+            data = json.loads(raw_body) if raw_body else {}
+        except json.JSONDecodeError:
+            self.send_response(400)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "invalid json"}')
+            return
+
+        # Always respond 200 quickly — Telegram send is best-effort
+        self.send_response(200)
+        self._cors_headers()
+        self.end_headers()
+        self.wfile.write(b'{"ok": true}')
+
+        if event == "ping":
+            return  # GitHub sends ping on app install — just ack
+
+        if event == "installation":
+            action = data.get("action", "")
+            installation = data.get("installation", {})
+            installation_id = installation.get("id")
+            account = installation.get("account", {}).get("login", "unknown")
+            repos = [r["full_name"] for r in data.get("repositories", [])]
+
+            if installation_id:
+                if action == "created":
+                    _app_installations[installation_id] = {"account": account, "repos": repos}
+                    repo_list = ", ".join(repos) if repos else "all repos"
+                    msg = (
+                        f"🎉 **New App Installation**\n\n"
+                        f"Account: [{account}](https://github.com/{account})\n"
+                        f"Repos: {repo_list}\n"
+                        f"Installation ID: `{installation_id}`\n"
+                        f"App: https://github.com/apps/{GH_APP_SLUG}"
+                    )
+                elif action == "deleted":
+                    _app_installations.pop(installation_id, None)
+                    msg = (
+                        f"👋 **App Uninstalled**\n\n"
+                        f"Account: [{account}](https://github.com/{account})"
+                    )
+                elif action == "added":
+                    added = [r["full_name"] for r in data.get("repositories_added", [])]
+                    if installation_id in _app_installations:
+                        _app_installations[installation_id]["repos"].extend(added)
+                    msg = (
+                        f"➕ **Repos Added**\n\n"
+                        f"Account: [{account}](https://github.com/{account})\n"
+                        f"Added: {', '.join(added)}"
+                    )
+                elif action == "removed":
+                    removed = [r["full_name"] for r in data.get("repositories_removed", [])]
+                    msg = (
+                        f"➖ **Repos Removed**\n\n"
+                        f"Account: [{account}](https://github.com/{account})\n"
+                        f"Removed: {', '.join(removed)}"
+                    )
+                else:
+                    return  # ignore other sub-actions
+
+                send_telegram(msg)
+            return
+
+        if event == "push":
+            # Minimal push handler via webhook (no rich context like Action provides)
+            repo = data.get("repository", {}).get("full_name", "")
+            pusher = data.get("pusher", {}).get("name", "unknown")
+            ref = data.get("ref", "")
+            head_commit = data.get("head_commit") or {}
+            sha = head_commit.get("id", "")[:8]
+            commit_msg = head_commit.get("message", "").splitlines()[0][:80]
+
+            if not repo or ref not in ("refs/heads/main", "refs/heads/master"):
+                return  # ignore non-default branch pushes
+
+            msg = (
+                f"📦 **Push via App Webhook**\n\n"
+                f"[{repo}](https://github.com/{repo}) — `{sha}`\n"
+                f"Pusher: {pusher}\n"
+                f"Commit: {commit_msg}\n\n"
+                f"_No Action in this repo — limited context_"
+            )
+            send_telegram(msg, TELEGRAM_REVIEW_CHAT_ID)
+            return
 
     def _cors_headers(self):
         self.send_header("Content-Type", "application/json")
