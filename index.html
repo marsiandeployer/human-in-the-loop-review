@@ -6,13 +6,13 @@
     <title>Human-in-the-loop Review — Human-in-the-Loop Code Review for Vibecoded Projects</title>
     <meta name="description" content="We review and fix code after vibecoders. Add marsiandeployer to your GitHub, share your spec — we check commits, fix issues, and send pull requests. Free first review for a GitHub star + feedback.">
     <link rel="canonical" href="https://vibers.onout.org/">
-    <!-- Google Analytics GA4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JNLNCJQBHD"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-JNLNCJQBHD');
+      gtag('config', 'G-LQLZ1SZS26');
     </script>
     <meta property="og:type" content="website">
     <meta property="og:title" content="Human-in-the-loop Review — Code Review & Fixes for Vibecoded Projects">
@@ -439,7 +439,7 @@
     <div class="setup-box">
         <div class="setup-label" data-i18n="setup_label">Quick Start — tell your AI agent:</div>
         <code>Install skill from https://vibers.onout.org/SKILL.md</code>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText('Install skill from https://vibers.onout.org/SKILL.md');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)" data-i18n="copy_btn">Copy</button>
+        <button class="copy-btn" id="copy-skill-btn" onclick="navigator.clipboard.writeText('Install skill from https://vibers.onout.org/SKILL.md');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);trackLead('copy_skill_command')" data-i18n="copy_btn">Copy</button>
         <p data-i18n="setup_note">No AI agent? <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Write us on Telegram</a> — we'll set it up manually.</p>
     </div>
 
@@ -469,6 +469,7 @@
             <span data-i18n="prob_title">What AI Agents Miss</span>
         </summary>
         <div class="details-body">
+            <p style="font-size:15px; font-style:italic; color:#444; margin-bottom:20px; border-left:3px solid #5b44e8; padding-left:14px; line-height:1.6;" data-i18n="prob_insight">The reason AI is particularly terrible at this stage is because the devil is in the details — and the AI doesn't know what those details are, so it makes assumptions. Often incorrect.</p>
             <div class="two-col">
                 <div class="col-block">
                     <h4 data-i18n="prob_h">AI Hallucinations &amp; Gaps</h4>
@@ -706,6 +707,7 @@ const ru = {
     m_questions: "Уточняющих вопросов",
     label_problem: "Проблема",
     prob_title: "Что пропускают AI-агенты",
+    prob_insight: "AI особенно плох именно на этом этапе, потому что дьявол кроется в деталях — а AI этих деталей не знает и строит предположения. Часто неверные.",
     prob_h: "Галлюцинации и пробелы",
     prob_list: "<li>Импорты из библиотек, которых не существует</li><li>API-вызовы с выдуманными эндпоинтами или неверными сигнатурами</li><li>Захардкоженные секреты, нет авторизации, открытый CORS</li><li>Фичи тихо дрейфуют от ТЗ</li><li>Мелкие баги копятся в спринт по чистке</li>",
     sol_h: "Что мы делаем",
@@ -778,5 +780,50 @@ function setLang(lang) {
 </script>
 
 <script src="https://op.wpmix.net/embed.js" data-app="vibers"></script>
+
+<script>
+// Lead tracking — fires once per session per action type
+const _ledFired = {};
+function trackLead(action) {
+    if (_ledFired[action]) return;
+    _ledFired[action] = true;
+    gtag('event', 'generate_lead', {
+        event_category: 'skill_cta',
+        event_label: action
+    });
+}
+
+(function() {
+    var box = document.querySelector('.setup-box');
+    var code = document.querySelector('.setup-box code');
+    if (!box || !code) return;
+
+    // Track click anywhere on setup-box (except copy btn — that fires separately)
+    box.addEventListener('click', function(e) {
+        if (e.target.id !== 'copy-skill-btn') {
+            trackLead('click_skill_box');
+        }
+    });
+
+    // Track text selection inside the skill instruction code
+    code.addEventListener('mouseup', function() {
+        var sel = window.getSelection ? window.getSelection().toString() : '';
+        if (sel && sel.length > 5) {
+            trackLead('select_skill_command');
+        }
+    });
+
+    // Track keyboard copy (Ctrl+C / Cmd+C) while selection is inside code
+    document.addEventListener('copy', function() {
+        var sel = window.getSelection ? window.getSelection() : null;
+        if (!sel || !sel.toString()) return;
+        var node = sel.anchorNode;
+        while (node) {
+            if (node === code) { trackLead('keyboard_copy_skill'); return; }
+            node = node.parentNode;
+        }
+    });
+})();
+</script>
 </body>
 </html>
