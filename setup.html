@@ -154,9 +154,18 @@ function submitSetup() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) throw new Error('Server error');
+      return r.json();
+    })
     .then(() => showSuccess())
-    .catch(() => showSuccess()); // show success anyway — don't block user
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = 'Save & Continue';
+      btn.style.background = '#d94f4f';
+      setTimeout(() => btn.style.background = '', 2000);
+      alert('Could not save — please try again or skip for now.');
+    });
 }
 
 function skipSetup() {

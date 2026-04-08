@@ -132,7 +132,24 @@
         }
         .cv-badge.promo { background: #5b44e8; }
 
-        /* ─── Setup Box (always visible, top CTA) ─── */
+        /* ─── Install Button (primary CTA) ─── */
+        .install-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 14px 24px;
+            background: #5b44e8;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-bottom: 16px;
+            transition: background 0.2s;
+        }
+        .install-btn:hover { background: #4834c8; text-decoration: none; }
+
+        /* ─── Setup Box (secondary CTA) ─── */
         .setup-box {
             background: #f4f2ff;
             border: 1px solid #d0c8ff;
@@ -439,7 +456,7 @@
         <div class="cv-name" data-i18n="cv_name">Human-in-the-loop Review</div>
         <div class="cv-tagline" data-i18n="cv_tagline">
             Human-in-the-loop code review for vibecoded projects
-            <span class="cv-badge promo">⭐ free for a GitHub star + feedback</span>
+            <a href="https://github.com/marsiandeployer/human-in-the-loop-review" target="_blank" rel="noopener noreferrer" class="cv-badge promo" style="text-decoration:none; color:#fff;">⭐ free for a GitHub star + feedback</a>
         </div>
         <!-- TrustBox widget - Micro Review Count -->
         <div class="trustpilot-widget" data-locale="en-US" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="639a2de1b79e39e3f877b277" data-style-height="24px" data-style-width="100%" data-theme="light" data-min-review-count="10" data-without-reviews-preferred-string-id="1" data-style-alignment="center" style="margin-top: 16px;">
@@ -448,12 +465,30 @@
         <!-- End TrustBox widget -->
     </header>
 
-    <!-- Setup CTA (always visible) -->
+    <!-- Above-the-fold summary (always visible) -->
+    <p style="font-size: 16px; color: #333; margin-bottom: 16px; line-height: 1.7;" data-i18n="sum_body">We review and fix code written by AI vibecoders. Install our GitHub App, share your spec — we check every commit, catch hallucinations, fix security holes, and send a pull request with working code. You merge, keep shipping.</p>
+
+    <div class="metrics-row" style="margin-bottom: 24px;">
+        <div class="metric"><div class="metric-value">30s</div><div class="metric-label" data-i18n="m_setup">Setup time</div></div>
+        <div class="metric"><div class="metric-value">Free</div><div class="metric-label" data-i18n="m_price">first review (⭐ + feedback)</div></div>
+        <div class="metric"><div class="metric-value">0</div><div class="metric-label" data-i18n="m_questions">Clarifying questions</div></div>
+    </div>
+
+    <!-- Primary CTA: Install GitHub App -->
+    <a href="https://github.com/apps/vibers-review/installations/new" target="_blank" rel="noopener noreferrer" class="install-btn" onclick="trackLead('click_install_app');rdt('track','Lead');" data-i18n="install_btn">Install GitHub App — Free</a>
+
+    <!-- Secondary CTA: Skill command for AI agent users -->
     <div class="setup-box">
-        <div class="setup-label" data-i18n="setup_label">2-click install &nbsp;|&nbsp; Quick Start — tell your AI agent:</div>
+        <div class="setup-label" data-i18n="setup_label">Using Claude Code, Cursor, or Windsurf? Tell your AI agent:</div>
         <code>Install skill from https://vibers.onout.org/SKILL.md</code>
         <button class="copy-btn" id="copy-skill-btn" onclick="navigator.clipboard.writeText('Install skill from https://vibers.onout.org/SKILL.md');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);trackLead('copy_skill_command');rdt('track','Lead');" data-i18n="copy_btn">Copy</button>
-        <p data-i18n="setup_note">No AI agent? <a href="https://github.com/apps/vibers-review/installations/new" target="_blank" rel="noopener noreferrer">Install the GitHub App directly</a> or <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">write us on Telegram</a>.</p>
+        <p data-i18n="setup_note">Or <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">write us on Telegram</a> if you need help.</p>
+    </div>
+
+    <!-- Real testimonial -->
+    <div style="border-left: 3px solid #5b44e8; padding: 14px 18px; margin-bottom: 24px; background: #f9f8ff; border-radius: 0 6px 6px 0;">
+        <p style="font-size: 14px; color: #333; font-style: italic; margin-bottom: 8px;" data-i18n="testimonial_text">"Installed the app, got a PR with fixes the next day. Found a broken payment flow my Cursor agent had been shipping for weeks."</p>
+        <div style="font-size: 13px; color: #666;" data-i18n="testimonial_author">— <a href="https://github.com/MethasMP/Paycif/pull/2" target="_blank" rel="noopener noreferrer">MethasMP/Paycif</a>, first client from Thailand</div>
     </div>
 
     <!-- Sections as collapsible details -->
@@ -464,19 +499,13 @@
             <span data-i18n="sum_title">What We Do</span>
         </summary>
         <div class="details-body">
-            <p data-i18n="sum_body">We review and fix code written by AI vibecoders. Install our GitHub App, share your spec — we check every commit, catch hallucinations, fix security holes, and send a pull request with working code. You merge, keep shipping.</p>
-            <div style="background:#fff8e1; border-left: 3px solid #f5a623; border-radius: 4px; padding: 14px 18px; margin-top: 20px; font-size: 14px;" data-i18n="honest_box">
+            <div style="background:#fff8e1; border-left: 3px solid #f5a623; border-radius: 4px; padding: 14px 18px; font-size: 14px;" data-i18n="honest_box">
                 <strong>Honest disclaimer:</strong> We're not a security firm. No OWASP penetration tests, no architecture audits, no performance profiling. We're regular people who look at your code with fresh eyes — catch the obvious bugs, check that the main flows actually work, and write the fix instead of filing a ticket. Think alpha tester who also sends a PR.
-            </div>
-            <div class="metrics-row" style="margin-top: 20px;">
-                <div class="metric"><div class="metric-value">30s</div><div class="metric-label" data-i18n="m_setup">Setup time</div></div>
-                <div class="metric"><div class="metric-value">Free</div><div class="metric-label" data-i18n="m_price">first review (⭐ + feedback)</div></div>
-                <div class="metric"><div class="metric-value">0</div><div class="metric-label" data-i18n="m_questions">Clarifying questions</div></div>
             </div>
         </div>
     </details>
 
-    <details>
+    <details open>
         <summary>
             <span class="section-label" data-i18n="label_problem">Problem</span>
             <span data-i18n="prob_title">What AI Agents Miss</span>
@@ -556,7 +585,7 @@
         </div>
     </details>
 
-    <details>
+    <details open>
         <summary>
             <span class="section-label" data-i18n="label_example">Example</span>
             <span data-i18n="ex_title">What a Real Finding Looks Like</span>
@@ -761,8 +790,9 @@ if (!['image/jpeg','image/png','image/webp'].includes(mime?.mime)) {
     </details>
 
     <footer>
-        <p>Human-in-the-loop Review &mdash; by <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/community.html">Community</a> &nbsp;|&nbsp; <a href="/career.html">$$ Career $$</a> &nbsp;|&nbsp; <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a></p>
+        <p>Human-in-the-loop Review &mdash; by <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/community.html">Community</a> &nbsp;|&nbsp; <a href="/career.html">$$ Career $$</a> &nbsp;|&nbsp; <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/privacy.html">Privacy</a></p>
         <p><a href="https://trust-traffic.com/startup/83f937de-aa9d-47e7-96c0-4efb4873ec39" target="_blank" rel="noopener noreferrer" style="border-bottom: none;"><img src="https://trust-traffic.com/badges/Listed_on_trust_traffic.svg" alt="Listed on Trust Traffic" style="height: 20px; vertical-align: middle;"></a></p>
+        <p style="font-size:12px; color:#999; margin-top:8px;">Last updated: April 8, 2026</p>
     </footer>
 
 </div><!-- .page -->
@@ -780,9 +810,12 @@ const ru = {
     contact_telegram: "Telegram: @onoutnoxon",
     contact_email: "Email: support@onout.org",
     contact_career: "Вакансии $$",
-    setup_label: "2-click install &nbsp;|&nbsp; Быстрый старт — скажите вашему AI-агенту:",
+    install_btn: "Установить GitHub App — Бесплатно",
+    setup_label: "Используете Claude Code, Cursor или Windsurf? Скажите AI-агенту:",
     copy_btn: "Копировать",
-    setup_note: 'Нет AI-агента? <a href="https://github.com/apps/vibers-review/installations/new" target="_blank" rel="noopener noreferrer">Установите GitHub App напрямую</a> или <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">напишите в Telegram</a>.',
+    setup_note: 'Или <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">напишите в Telegram</a>, если нужна помощь.',
+    testimonial_text: '&laquo;Установил приложение, на следующий день получил PR с фиксами. Нашли сломанный платёжный флоу, который мой Cursor-агент шипил неделями.&raquo;',
+    testimonial_author: '— <a href="https://github.com/MethasMP/Paycif/pull/2" target="_blank" rel="noopener noreferrer">MethasMP/Paycif</a>, первый клиент из Таиланда',
     label_summary: "Кратко",
     sum_title: "Что мы делаем",
     sum_body: "Мы проверяем и исправляем код, написанный AI-вайбкодерами. Установите наш GitHub App, поделитесь ТЗ — мы проверяем каждый коммит, ловим галлюцинации, закрываем дыры в безопасности и отправляем pull request с рабочим кодом. Вы мержите и продолжаете шипить.",

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ad Copy Library — Human-in-the-loop Review</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f0; color: #1a1a1a; line-height: 1.6; }
+        .page { max-width: 860px; margin: 32px auto; padding: 48px 40px; background: #fff; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .subtitle { color: #666; font-size: 14px; margin-bottom: 40px; }
+        h2 { font-size: 20px; font-weight: 700; color: #5b44e8; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 2px solid #f0eef8; }
+        h3 { font-size: 15px; font-weight: 600; margin: 24px 0 8px; color: #333; }
+        .card { background: #fafaf8; border: 1px solid #e8e8e4; border-radius: 8px; padding: 20px; margin-bottom: 16px; position: relative; }
+        .card:hover { border-color: #d0c8ff; }
+        .tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; margin-bottom: 10px; }
+        .tag.reddit { background: #ff4500; color: #fff; }
+        .tag.cpa { background: #1a1a1a; color: #fff; }
+        .tag.google { background: #4285f4; color: #fff; }
+        .tag.twitter { background: #1da1f2; color: #fff; }
+        .headline { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; line-height: 1.3; }
+        .body-text { font-size: 14px; color: #444; margin-bottom: 10px; }
+        .cta-text { font-size: 13px; font-weight: 600; color: #5b44e8; }
+        .meta { font-size: 12px; color: #999; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+        .copy-btn { position: absolute; top: 16px; right: 16px; background: #eee; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; color: #666; }
+        .copy-btn:hover { background: #5b44e8; color: #fff; }
+        .note { background: #fff8e1; border-left: 3px solid #f5a623; padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: 13px; color: #555; margin: 16px 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+        th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+        th { font-weight: 600; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        @media (max-width: 600px) { .page { padding: 24px 16px; margin: 0; border-radius: 0; } }
+    </style>
+</head>
+<body>
+<div class="page">
+
+<h1>Ad Copy Library</h1>
+<p class="subtitle">Headlines, descriptions, and post templates for CPA networks, Reddit, Google Ads, and Twitter. Internal use only.</p>
+
+<div class="note">
+    <strong>Landing URL:</strong> https://vibers.onout.org/<br>
+    <strong>Target audience:</strong> Solo builders, small AI-first teams, Cursor/Claude Code/Windsurf users<br>
+    <strong>Conversion goal:</strong> GitHub App install (free) or skill command copy<br>
+    <strong>UTM template:</strong> <code>?utm_source={platform}&utm_medium=cpc&utm_campaign={campaign_name}</code>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>Reddit Ads</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<p style="font-size:13px; color:#666; margin-bottom:16px;">Subreddits: r/vibecoding, r/ChatGPTCoding, r/cursor, r/ClaudeAI, r/SideProject, r/webdev, r/startups, r/SaaS</p>
+
+<h3>Ad #1 — Pain Point (Hallucinations)</h3>
+<div class="card">
+    <span class="tag reddit">Reddit</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="headline">Your AI agent confidently ships broken code. Who's checking?</div>
+    <div class="body-text">We've been reviewing vibecoded projects for the past month. Most common finds: imports from libraries that don't exist, hardcoded API keys, and payment flows that silently fail. We read your spec, clone the repo, fix what's broken, and send a PR. Free first review if you star our GitHub + leave feedback. $15/hr after.</div>
+    <div class="cta-text">Install in 30 seconds — one click on GitHub</div>
+    <div class="meta">Format: Text post / Promoted post | CTA: Install GitHub App | Tone: Fellow dev, not salesy</div>
+</div>
+
+<h3>Ad #2 — Social Proof (Real Finding)</h3>
+<div class="card">
+    <span class="tag reddit">Reddit</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="headline">Found a .php shell upload vulnerability in a Cursor-built SaaS. The agent shipped it for 3 sprints.</div>
+    <div class="body-text">Upload endpoint only checked file extension, not content-type. Anyone could upload a PHP shell disguised as .jpg. Took us 12 minutes to find and fix — the AI agent never flagged it. We do human code review for vibecoded projects. Read your spec, clone the repo, send a PR with fixes. Not a security firm — just developers who look with fresh eyes. Free first review for a GitHub star.</div>
+    <div class="cta-text">vibers.onout.org — Human-in-the-loop code review</div>
+    <div class="meta">Format: Story/experience post | CTA: Soft (link in body) | Best for: r/webdev, r/ChatGPTCoding</div>
+</div>
+
+<h3>Ad #3 — Value Prop (Speed)</h3>
+<div class="card">
+    <span class="tag reddit">Reddit</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="headline">We review code after your AI agent — and send PRs with fixes, not tickets</div>
+    <div class="body-text">Tired of SonarQube comments nobody reads? We're different: install our GitHub App, push code, get a PR with actual working fixes within 24h. We read your Google Doc/spec and check if the code matches what you described. No clarifying questions, no back-and-forth. Just a PR you merge. Free for your first review (star our repo + honest feedback). Perfect if you're shipping fast with Cursor/Claude Code and don't have a senior dev reviewing PRs.</div>
+    <div class="cta-text">30-second setup: github.com/apps/vibers-review</div>
+    <div class="meta">Format: Promoted post | CTA: Direct link | Best for: r/SideProject, r/SaaS, r/startups</div>
+</div>
+
+<h3>Ad #4 — Question Post (Engagement)</h3>
+<div class="card">
+    <span class="tag reddit">Reddit</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="headline">Solo devs using AI: who reviews your PRs?</div>
+    <div class="body-text">Genuine question + plug: I've been building solo with Claude Code and realized nobody is reviewing my code. My agent happily merges its own PRs. Started a service where we review vibecoded projects — read your spec, clone, fix issues, send a PR. First review free if you star the repo. Anyone else feel like they need a second pair of eyes?</div>
+    <div class="cta-text">Check it: vibers.onout.org</div>
+    <div class="meta">Format: Organic-feeling text post | CTA: Very soft | Best for: r/vibecoding, r/ClaudeAI, r/cursor</div>
+</div>
+
+<h3>Ad #5 — Comparison (Differentiation)</h3>
+<div class="card">
+    <span class="tag reddit">Reddit</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="headline">SonarQube vs CodeRabbit vs hiring us — honest comparison from someone who built all three</div>
+    <div class="body-text">SonarQube: catches syntax issues, ignores your business logic. CodeRabbit: posts AI comments on PRs, nobody reads them. PullRequest.com: $500+/mo enterprise thing. Us: we read your spec, clone your repo, fix what's broken, send a PR. Free first review, then $15/hr. We're not a security firm — think alpha tester who also codes the fix. If your AI agent is your only dev, we're your second pair of eyes.</div>
+    <div class="cta-text">One-click install: github.com/apps/vibers-review</div>
+    <div class="meta">Format: Comparison/guide post | CTA: Mid-funnel | Best for: r/webdev, r/startups</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>CPA Networks (Banner / Native Ads)</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<p style="font-size:13px; color:#666; margin-bottom:16px;">Networks: PropellerAds, MGID, Taboola, Outbrain. Target: tech/dev content sites, GitHub-related queries.</p>
+
+<h3>Headlines (25-40 chars)</h3>
+<div class="card">
+    <span class="tag cpa">CPA</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <table>
+        <tr><th>#</th><th>Headline</th><th>Chars</th></tr>
+        <tr><td>1</td><td>Your AI writes bugs. We fix them.</td><td>33</td></tr>
+        <tr><td>2</td><td>Who reviews your AI's code?</td><td>27</td></tr>
+        <tr><td>3</td><td>Free code review for AI projects</td><td>32</td></tr>
+        <tr><td>4</td><td>AI code ≠ good code. We help.</td><td>29</td></tr>
+        <tr><td>5</td><td>Cursor ships fast. We fix what breaks.</td><td>37</td></tr>
+        <tr><td>6</td><td>Stop shipping AI hallucinations</td><td>31</td></tr>
+        <tr><td>7</td><td>Human eyes on your AI code — free</td><td>33</td></tr>
+        <tr><td>8</td><td>Code review for vibecoded projects</td><td>34</td></tr>
+        <tr><td>9</td><td>$15/hr senior dev reviews. No contracts.</td><td>40</td></tr>
+        <tr><td>10</td><td>Your AI agent needs a reviewer</td><td>30</td></tr>
+    </table>
+</div>
+
+<h3>Descriptions (60-90 chars)</h3>
+<div class="card">
+    <span class="tag cpa">CPA</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <table>
+        <tr><th>#</th><th>Description</th><th>Chars</th></tr>
+        <tr><td>1</td><td>We review AI-written code, fix issues, and send pull requests. Free first review.</td><td>81</td></tr>
+        <tr><td>2</td><td>Human code review for Cursor, Claude Code, and Windsurf projects. Install in 30s.</td><td>82</td></tr>
+        <tr><td>3</td><td>Your AI agent ships code. We catch hallucinations and send PRs with fixes.</td><td>73</td></tr>
+        <tr><td>4</td><td>Real developers review your vibecoded project. Spec-based. PR with fixes included.</td><td>82</td></tr>
+        <tr><td>5</td><td>No tickets, no reports — just a PR with working code. $15/hr or free for a star.</td><td>80</td></tr>
+    </table>
+</div>
+
+<h3>Native Ad Combos (Headline + Description)</h3>
+<div class="card">
+    <span class="tag cpa">CPA</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="headline">Your AI writes bugs. We fix them.</div>
+    <div class="body-text">We review AI-written code, catch hallucinations, fix security holes, and send a pull request. Not a bot — real developers. Free first review for a GitHub star.</div>
+    <div class="meta">Best for: Taboola/Outbrain native | Image: code diff screenshot</div>
+</div>
+
+<div class="card">
+    <span class="tag cpa">CPA</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="headline">Who reviews your AI's code?</div>
+    <div class="body-text">Cursor, Claude Code, and Windsurf ship fast — but who checks for hallucinated imports, hardcoded secrets, and broken flows? We do. Install our GitHub App, get PRs with fixes.</div>
+    <div class="meta">Best for: MGID/PropellerAds | Image: before/after code block</div>
+</div>
+
+<div class="card">
+    <span class="tag cpa">CPA</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="headline">Stop shipping AI hallucinations</div>
+    <div class="body-text">We found a file upload vulnerability that a Cursor agent shipped for 3 sprints. Install our review app — we read your spec, clone, fix, send a PR. Free first review.</div>
+    <div class="meta">Best for: Dev-focused placements | Image: security warning screenshot</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>Google Ads (Search)</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<p style="font-size:13px; color:#666; margin-bottom:16px;">Keywords: "code review service", "AI code review", "cursor code quality", "vibecoding review", "freelance code reviewer"</p>
+
+<h3>Responsive Search Ad Components</h3>
+<div class="card">
+    <span class="tag google">Google Ads</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <table>
+        <tr><th>Type</th><th>Text</th><th>Chars</th></tr>
+        <tr><td>H1</td><td>Human Code Review for AI Projects</td><td>34</td></tr>
+        <tr><td>H2</td><td>We Fix What Your AI Misses</td><td>26</td></tr>
+        <tr><td>H3</td><td>Free First Review — $15/hr After</td><td>32</td></tr>
+        <tr><td>H4</td><td>PRs With Fixes, Not Bug Tickets</td><td>31</td></tr>
+        <tr><td>H5</td><td>30-Second Setup via GitHub App</td><td>30</td></tr>
+        <tr><td>D1</td><td>Real developers review your Cursor/Claude Code projects. We read your spec, catch hallucinations, fix security holes, and send pull requests.</td><td>143</td></tr>
+        <tr><td>D2</td><td>No contracts, no subscriptions. Free first review for a GitHub star. Then $15/hr pay-as-you-go. Install in 30 seconds.</td><td>113</td></tr>
+    </table>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>Twitter / X Ads</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<h3>Tweet #1 — Hook</h3>
+<div class="card">
+    <span class="tag twitter">Twitter</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="body-text">your AI agent confidently ships broken code and you're the only one checking the PRs<br><br>we review vibecoded projects — read your spec, clone the repo, fix issues, send a PR<br><br>free first review for a github star<br><br>vibers.onout.org</div>
+    <div class="meta">Format: Organic tweet | 246 chars</div>
+</div>
+
+<h3>Tweet #2 — Story</h3>
+<div class="card">
+    <span class="tag twitter">Twitter</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="body-text">reviewed a cursor-built saas last week<br><br>found:<br>- file upload accepting .php shells<br>- 3 hardcoded API keys<br>- payment flow that silently fails on decimal amounts<br><br>the agent shipped all of this for 3 sprints<br><br>we fix this stuff. free first review: vibers.onout.org</div>
+    <div class="meta">Format: Thread starter | 271 chars</div>
+</div>
+
+<h3>Tweet #3 — Comparison</h3>
+<div class="card">
+    <span class="tag twitter">Twitter</span>
+    <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+    <div class="body-text">SonarQube: catches syntax, ignores your business logic<br>CodeRabbit: AI comments on PRs nobody reads<br>Us: read your spec, fix bugs, send a PR with working code<br><br>$15/hr. no contracts. free first review.<br><br>vibers.onout.org</div>
+    <div class="meta">Format: Comparison tweet | 222 chars</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>A/B Test Ideas</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<div class="card">
+    <table>
+        <tr><th>Variable</th><th>Variant A</th><th>Variant B</th></tr>
+        <tr><td>Headline angle</td><td>Pain: "Your AI writes bugs"</td><td>Value: "Free code review for AI projects"</td></tr>
+        <tr><td>CTA</td><td>"Install GitHub App"</td><td>"Get Free Review"</td></tr>
+        <tr><td>Price framing</td><td>"$15/hr — no contracts"</td><td>"Free first review, then pay-as-you-go"</td></tr>
+        <tr><td>Social proof</td><td>Testimonial quote</td><td>"Found 47 bugs in 12 projects" (counter)</td></tr>
+        <tr><td>Landing page</td><td>Current (sections collapsed)</td><td>Long-form (all sections open)</td></tr>
+    </table>
+</div>
+
+</div><!-- .page -->
+
+<script>
+function copyCard(btn) {
+    const card = btn.closest('.card');
+    const h = card.querySelector('.headline');
+    const b = card.querySelector('.body-text');
+    const c = card.querySelector('.cta-text');
+    let text = '';
+    if (h) text += h.textContent + '\n\n';
+    if (b) text += b.textContent + '\n\n';
+    if (c) text += c.textContent;
+    // Fallback: copy table content
+    if (!text.trim()) {
+        const rows = card.querySelectorAll('tr');
+        rows.forEach(r => {
+            const cells = r.querySelectorAll('td, th');
+            text += Array.from(cells).map(c => c.textContent).join(' | ') + '\n';
+        });
+    }
+    navigator.clipboard.writeText(text.trim());
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+}
+</script>
+</body>
+</html>
