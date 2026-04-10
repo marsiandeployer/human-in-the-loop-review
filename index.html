@@ -195,68 +195,6 @@
             margin-top: 10px;
         }
         .setup-box p a { color: #5b44e8; }
-        .fazier-badge-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 14px;
-            flex-wrap: wrap;
-        }
-        .fazier-review-block {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 20px;
-            padding: 14px 16px;
-            border: 1px solid #d9d9d9;
-            border-radius: 8px;
-            background: #fcfcfc;
-        }
-        .fazier-review-copy {
-            font-size: 13px;
-            color: #4d4d4d;
-        }
-        .fazier-review-copy strong {
-            display: block;
-            margin-bottom: 4px;
-            color: #1a1a1a;
-        }
-        .fazier-badge-row a {
-            display: inline-flex;
-            align-items: center;
-            line-height: 0;
-        }
-        .fazier-badge-note {
-            font-size: 12px;
-            color: #666;
-        }
-        .fazier-verification {
-            margin-bottom: 24px;
-            padding: 16px 18px;
-            border: 1px solid #d9d9d9;
-            border-radius: 8px;
-            background: #fcfcfc;
-        }
-        .fazier-verification-title {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-            color: #555;
-            margin-bottom: 8px;
-        }
-        .fazier-verification p {
-            font-size: 14px;
-            color: #444;
-            margin-bottom: 12px;
-        }
-        .fazier-verification a {
-            display: inline-flex;
-            align-items: center;
-            line-height: 0;
-        }
-
         /* ─── Details / Collapsible sections ─── */
         details {
             border-bottom: 1px solid #e5e5e5;
@@ -506,12 +444,6 @@
                 min-height: auto;
             }
         }
-        @media (max-width: 600px) {
-            .fazier-review-block {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
     </style>
 </head>
 <body>
@@ -535,24 +467,6 @@
     <!-- Above-the-fold summary (always visible) -->
     <p style="font-size: 16px; color: #333; margin-bottom: 16px; line-height: 1.7;" data-i18n="sum_body">We review and fix code written by AI vibecoders. Install our GitHub App, share your spec — we check every commit, catch hallucinations, fix security holes, and send a pull request with working code. You merge, keep shipping.</p>
 
-    <div class="fazier-verification">
-        <div class="fazier-verification-title">Fazier launch verification</div>
-        <p>This live page includes the official Fazier launch badge in the initial HTML so their team can review our launch submission.</p>
-        <a href="https://fazier.com" target="_blank">
-            <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width="120" alt="Fazier badge" />
-        </a>
-    </div>
-
-    <div class="fazier-review-block">
-        <div class="fazier-review-copy">
-            <strong>Fazier badge for launch review</strong>
-            This badge is published on the live website so Fazier can verify the launch requirements.
-        </div>
-        <a href="https://fazier.com" target="_blank" rel="noopener noreferrer" aria-label="Fazier launch badge">
-            <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width="120" alt="Fazier badge">
-        </a>
-    </div>
-
     <div class="metrics-row" style="margin-bottom: 24px;">
         <div class="metric"><div class="metric-value">30s</div><div class="metric-label" data-i18n="m_setup">Setup time</div></div>
         <div class="metric"><div class="metric-value">Free</div><div class="metric-label" data-i18n="m_price">first review (⭐ + feedback)</div></div>
@@ -568,12 +482,6 @@
         <code>Install skill from https://onout.org/vibers/SKILL.md</code>
         <button class="copy-btn" id="copy-skill-btn" onclick="navigator.clipboard.writeText('Install skill from https://onout.org/vibers/SKILL.md');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);trackLead('copy_skill_command');rdt('track','Lead');" data-i18n="copy_btn">Copy</button>
         <p data-i18n="setup_note">Or <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">write us on Telegram</a> if you need help.</p>
-        <div class="fazier-badge-row">
-            <a href="https://fazier.com" target="_blank" rel="noopener noreferrer" aria-label="View us on Fazier">
-                <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width="120" alt="Fazier badge">
-            </a>
-            <span class="fazier-badge-note">Fazier launch badge is live on the site for submission review.</span>
-        </div>
     </div>
 
     <!-- Real testimonial -->
@@ -882,8 +790,12 @@ if (!['image/jpeg','image/png','image/webp'].includes(mime?.mime)) {
 
     <footer>
         <p>Human-in-the-loop Review &mdash; by <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/community.html">Community</a> &nbsp;|&nbsp; <a href="/career.html">$$ Career $$</a> &nbsp;|&nbsp; <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/privacy.html">Privacy</a></p>
-        <p><a href="https://trust-traffic.com/startup/83f937de-aa9d-47e7-96c0-4efb4873ec39" target="_blank" rel="noopener noreferrer" style="border-bottom: none;"><img src="https://trust-traffic.com/badges/Listed_on_trust_traffic.svg" alt="Listed on Trust Traffic" style="height: 20px; vertical-align: middle;"></a></p>
-        <p style="font-size:12px; color:#999; margin-top:8px;">Last updated: April 8, 2026</p>
+        <p>
+            <a href="https://trust-traffic.com/startup/83f937de-aa9d-47e7-96c0-4efb4873ec39" target="_blank" rel="noopener noreferrer" style="border-bottom: none;"><img src="https://trust-traffic.com/badges/Listed_on_trust_traffic.svg" alt="Listed on Trust Traffic" style="height: 20px; vertical-align: middle;"></a>
+            &nbsp;&nbsp;
+            <a href="https://fazier.com" target="_blank" rel="noopener noreferrer" style="border-bottom: none;"><img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" alt="Fazier" style="height: 20px; vertical-align: middle;"></a>
+        </p>
+        <p style="font-size:12px; color:#999; margin-top:8px;">Last updated: April 10, 2026</p>
     </footer>
 
 </div><!-- .page -->
