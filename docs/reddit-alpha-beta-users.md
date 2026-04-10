@@ -52,6 +52,6 @@ If anyone wants, I'm happy to try it on a messy repo this week and share results
 ⭐ Star the repo: github.com/marsiandeployer/human-in-the-loop-review
 
 If you use Claude Code / Cursor / Codex, just tell your agent:
-"Install skill from https://vibers.onout.org/SKILL.md"
+"Install skill from https://onout.org/vibers/SKILL.md"
 — it'll set everything up automatically.)
 ```

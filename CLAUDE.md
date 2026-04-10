@@ -12,7 +12,7 @@ Example:
   feat: Add honest disclaimer block to landing
 
   How to test:
-  - Open https://vibers.onout.org/
+  - Open https://onout.org/vibers/
   - Expand "What We Do" section
   - Yellow callout block should appear with honest disclaimer text
   - Switch to RU — same block should appear in Russian

@@ -94,7 +94,7 @@ If there's no live URL yet, describe the flow locally or note "not yet deployed 
 To send a single review without installing the App:
 
 ```bash
-curl -X POST https://vibers.onout.org/feedback \
+curl -X POST https://onout.org/vibers/feedback \
   -H 'Content-Type: application/json' \
   -d '{
     "message": "Please review the payment flow.\n\nHow to test:\n- Open https://myapp.vercel.app/checkout\n- Add item to cart, proceed\n- Enter card 4242 4242 4242 4242 exp 12/26 cvc 123\n- Expected: order confirmation page",
@@ -121,7 +121,7 @@ We don't check: code style (use ESLint/Prettier), performance benchmarks, securi
 
 ## Support
 
-Telegram [@onoutnoxon](https://t.me/onoutnoxon) · GitHub App: [github.com/apps/vibers-review](https://github.com/apps/vibers-review) · Site: [vibers.onout.org](https://vibers.onout.org)
+Telegram [@onoutnoxon](https://t.me/onoutnoxon) · GitHub App: [github.com/apps/vibers-review](https://github.com/apps/vibers-review) · Site: [onout.org/vibers](https://onout.org/vibers)
 
 **FAQ**
 

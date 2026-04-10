@@ -17,7 +17,7 @@ It puts a human in the loop. We look at your code, catch the obvious stuff AI mi
 **Got an AI agent? Just say:**
 
 ```
-Install skill from https://vibers.onout.org/SKILL.md
+Install skill from https://onout.org/vibers/SKILL.md
 ```
 
 Claude Code, Cursor, and Codex will set everything up automatically.
@@ -81,7 +81,7 @@ No subscriptions. No contracts. No minimums.
     telegram_contact: '@your_telegram'
 ```
 
-Full setup guide in [SKILL.md](https://vibers.onout.org/SKILL.md).
+Full setup guide in [SKILL.md](https://onout.org/vibers/SKILL.md).
 
 ---
 
@@ -108,4 +108,4 @@ If this sounds useful — a ⭐ helps others find the project!
 
 [![Star on GitHub](https://img.shields.io/github/stars/marsiandeployer/human-in-the-loop-review?style=social)](https://github.com/marsiandeployer/human-in-the-loop-review)
 
-[Landing page](https://vibers.onout.org) · [Skill file](https://vibers.onout.org/SKILL.md) · [GitHub Action](https://github.com/marsiandeployer/vibers-action) · [Telegram](https://t.me/onoutnoxon)
+[Landing page](https://onout.org/vibers) · [Skill file](https://onout.org/vibers/SKILL.md) · [GitHub Action](https://github.com/marsiandeployer/vibers-action) · [Telegram](https://t.me/onoutnoxon)

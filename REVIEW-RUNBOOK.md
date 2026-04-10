@@ -76,7 +76,7 @@ Fix build errors, push fixes as a PR.
 - Check Telegram chat periodically for missed notifications
 - Health check (requires nginx proxy to be configured):
   ```bash
-  curl https://vibers.onout.org/health
+  curl https://onout.org/vibers/health
   # Expected: {"status": "ok"}
   ```
 - PM2 status:
@@ -86,7 +86,7 @@ Fix build errors, push fixes as a PR.
   ```
 - PM2 start from config (if processes missing):
   ```bash
-  cd /root/vibers.onout.org/scripts && pm2 start ecosystem.config.js
+  cd /root/onout.org/vibers/scripts && pm2 start ecosystem.config.js
   pm2 save
   ```
 - If no notifications for >1 hour, SSH to server and check `pm2 logs vibers-feedback --lines 20`
