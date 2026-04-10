@@ -358,6 +358,8 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             self._handle_github_webhook()
         elif self.path == "/github/setup":
             self._handle_github_setup()
+        elif self.path == "/github/marketplace":
+            self._handle_github_marketplace()
         else:
             self.send_response(404)
             self._cors_headers()
@@ -639,6 +641,67 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         self._cors_headers()
         self.end_headers()
         self.wfile.write(b'{"ok": true}')
+
+    def _handle_github_marketplace(self):
+        """Handle GitHub Marketplace webhook events (purchase, cancellation, etc.)."""
+        try:
+            content_length = int(self.headers.get("Content-Length", 0))
+        except (ValueError, TypeError):
+            content_length = 0
+
+        if content_length > 200_000:
+            self.send_response(413)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "payload too large"}')
+            return
+
+        raw_body = self.rfile.read(content_length) if content_length > 0 else b""
+
+        sig = self.headers.get("X-Hub-Signature-256", "")
+        if not verify_github_signature(raw_body, sig):
+            self.send_response(401)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "invalid signature"}')
+            return
+
+        try:
+            data = json.loads(raw_body) if raw_body else {}
+        except json.JSONDecodeError:
+            self.send_response(400)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "invalid json"}')
+            return
+
+        self.send_response(200)
+        self._cors_headers()
+        self.end_headers()
+        self.wfile.write(b'{"ok": true}')
+
+        action = data.get("action", "unknown")
+        marketplace = data.get("marketplace_purchase", {})
+        account = marketplace.get("account", {}).get("login", "unknown")
+        plan = marketplace.get("plan", {}).get("name", "unknown")
+        sender = data.get("sender", {}).get("login", "unknown")
+
+        emoji = {"purchased": "💰", "cancelled": "❌", "changed": "🔄",
+                 "pending_change": "⏳", "pending_change_cancelled": "↩️"}.get(action, "📦")
+
+        msg = (
+            f"{emoji} **Marketplace: {action}**\n\n"
+            f"Account: [{account}](https://github.com/{account})\n"
+            f"Plan: {plan}\n"
+            f"Sender: {sender}"
+        )
+
+        if action == "purchased":
+            units = marketplace.get("unit_count", 0)
+            if units:
+                msg += f"\nUnits: {units}"
+
+        send_telegram(msg)
 
     def _handle_github_webhook(self):
         """Handle GitHub App webhook events."""
