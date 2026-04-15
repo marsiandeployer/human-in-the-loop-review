@@ -239,7 +239,7 @@
     <strong>46%</strong> — CodeRabbit's bug detection accuracy on real-world codebases (2025 industry benchmarks). It misses approximately one in every two bugs.
   </div>
 
-  <p>That is not a criticism of CodeRabbit specifically — it is a fundamental constraint of static AI analysis. The tool reads code tokens, matches them against known patterns, and flags deviations from within the diff it receives. It has no context beyond that diff. It does not know what your app is supposed to do. It cannot tell whether the checkout flow actually charges the right amount, or whether the permissions check on your admin route matches what your spec describes.</p>
+  <p>On the independent <a href="https://www.martian.ai/blog/code-review-bench" target="_blank" rel="noopener">Martian Code Review Bench</a> (created by researchers from DeepMind, Anthropic, and Meta, February 2026), CodeRabbit ranked last on precision for offline PRs — meaning it produces more false positives per real finding than alternatives like Qodo or BugBot. That is not a criticism of CodeRabbit specifically — it is a fundamental constraint of static AI analysis. The tool reads code tokens, matches them against known patterns, and flags deviations from within the diff it receives. It has no context beyond that diff. It does not know what your app is supposed to do. It cannot tell whether the checkout flow actually charges the right amount, or whether the permissions check on your admin route matches what your spec describes.</p>
 
   <p>The problem is compounded by what the code itself is. CodeRabbit <a href="https://coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report" target="_blank" rel="noopener">published research in December 2025</a> analyzing 470 real-world open-source pull requests — 320 AI co-authored, 150 human-only — and found that AI-generated code introduces <strong>1.7x more defects</strong> than human-written code across every major issue category. The tool designed to review AI code is acknowledging that AI code is significantly more defect-prone.</p>
 
@@ -391,6 +391,15 @@
 
   <h3>GitHub Copilot Code Review (2025) — bundled with Copilot Business</h3>
   <p>In late 2025, GitHub began rolling out Copilot-powered review suggestions directly inside pull requests. This is bundled with Copilot Business ($19/user/month) and represents the lowest-friction option for teams already using GitHub Copilot. Early reports suggest it performs similarly to CodeRabbit on syntax-level issues and shares the same fundamental limitation: no access to your spec or product context. It is a reasonable free-if-you-already-pay baseline, not a replacement for spec-verified review.</p>
+
+  <h3>Aikido — Security-focused alternative with SAST built in</h3>
+  <p><a href="https://www.aikido.dev" target="_blank" rel="noopener">Aikido</a> goes beyond line-by-line code review — it provides in-depth analysis combining code review with security risk detection, coding standards enforcement, and context-aware suggestions that learn from your team's feedback. For teams that need a CodeRabbit alternative with deeper security coverage built in, Aikido covers both review and SAST in a single integration.</p>
+
+  <h3>Cursor BugBot (Macroscope) — precision-first, low noise</h3>
+  <p>If your primary frustration with CodeRabbit is noise — too many comments, too many false positives — <a href="https://www.cursor.com" target="_blank" rel="noopener">BugBot</a> takes the opposite approach. It optimizes for precision over recall: fewer comments, but the ones it makes are more likely to be actionable. BugBot Autofix (February 2026) spawns cloud agents that implement fixes directly, with 35%+ of Autofix changes merged into the base PR. Requires Cursor as your editor.</p>
+
+  <h3>Bito — $15/month, budget CodeRabbit alternative with IDE review</h3>
+  <p><a href="https://bito.ai" target="_blank" rel="noopener">Bito</a> at $15/user/month is 37% cheaper than CodeRabbit. It adds interactive PR chat and pre-PR review in VS Code and JetBrains — catching issues before code reaches GitHub. For founders who want AI review but find $24/user/month steep, Bito covers the basics at a lower price point.</p>
 
   <!-- Section 5: When to use which -->
   <h2>Which CodeRabbit Alternative Is Right for Your Stage?</h2>

@@ -243,6 +243,8 @@
       <br><small>Source: <a href="https://www.augmentcode.com/blog/we-benchmarked-7-ai-code-review-tools-on-real-world-prs-here-are-the-results">Augment Code benchmark, 2025</a></small>
     </div>
 
+    <p>The <a href="https://www.martian.ai/blog/code-review-bench" target="_blank" rel="noopener">Martian Code Review Bench</a> — the first independent benchmark using real developer behavior across nearly 300,000 pull requests, created by researchers from DeepMind, Anthropic, and Meta (February 2026) — confirmed these numbers. CodeRabbit scored highest at 51.2% F1, with roughly one in two comments leading to a code change. Every other tool scored lower.</p>
+
     <p>Understanding <em>which</em> bugs are missed — and why — is the first step toward closing the gap.</p>
 
     <!-- Real incident -->
@@ -277,7 +279,7 @@
     </blockquote>
 
     <!-- Section 3 -->
-    <h2>The 5 Categories of Bugs AI Code Review Consistently Misses</h2>
+    <h2>The 7 Categories of Bugs AI Code Review Consistently Misses</h2>
 
     <p>These are the bug categories that land in production despite passing AI review. Each has a structural reason why pattern matching fails to catch it.</p>
 
@@ -309,6 +311,16 @@
     <div class="stat-box">
       <strong>Key finding from Augment Code benchmark (2025):</strong> "The fundamental problem isn't model capability — it's context retrieval. Tools failed to access dependent modules, type definitions, cross-file call chains, and historical context from prior changes."
       <br><small>Source: <a href="https://www.augmentcode.com/blog/we-benchmarked-7-ai-code-review-tools-on-real-world-prs-here-are-the-results">Augment Code, 2025</a></small>
+    </div>
+
+    <div class="bug-card">
+      <h4>6. Context Window Overflow on Large Diffs</h4>
+      <p>AI reviewers break down when fed too much code at once. A 1,000-line diff overwhelms the context window. The model loses coherence, misses connections between changes, and falls back on pattern matching for superficial issues. The same reviewer that produces useful feedback on small, focused diffs produces noise on large ones. Teams that batch changes into massive PRs — common with AI-generated code — hit this ceiling frequently.</p>
+    </div>
+
+    <div class="bug-card">
+      <h4>7. Same-Model Blind Spots</h4>
+      <p>The AI that wrote the code should not be the one reviewing it. If the model did not catch a security issue while generating the code, it is unlikely to catch it during review — both operations share the same reasoning patterns and the same blind spots. One developer noted that Claude is "incredible at code generation but useless for code review" of its own output, because it "repeatedly let serious issues through" in production-safety assessments. Using a different model or a human reviewer breaks this symmetry.</p>
     </div>
 
     <!-- Section 4 -->

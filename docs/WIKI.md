@@ -116,7 +116,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 - [ ] Добавить оригинальные данные в существующие статьи: реальная статистика багов из наших ревью, benchmarks time-to-fix, примеры найденных уязвимостей
 - [ ] Внедрить SERP Consensus Analysis перед написанием новых статей (анализ топ-10 перед созданием контента)
 - [ ] Добавить экспертную атрибуцию: авторы статей с именами, должностями, ссылками на профили
-- [ ] Entity Audit существующих статей — проверить entity coverage vs конкуренты
+- [x] Entity Audit существующих статей — проверить entity coverage vs конкуренты (done 2026-04-15, see docs/entity-audit-2026-04-15.md)
 - [ ] Добавить QA Gate в seo-content-writer skill (финальная проверка перед публикацией)
 - [ ] Создать proprietary research piece: "50 Real Bugs AI Missed" на основе данных из реальных ревью
 - [ ] Проверить topical focus: не расширяемся ли за пределы code review / vibe coding / AI quality

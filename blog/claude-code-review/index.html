@@ -48,7 +48,7 @@
       "@type": "WebPage",
       "@id": "https://vibers.onout.org/blog/claude-code-review/"
     },
-    "keywords": ["claude code review", "claude code security review", "claude ai code review", "review claude generated code", "claude code issues", "vibe coding review", "AI generated code review"],
+    "keywords": ["claude code review", "claude code security review", "claude ai code review", "review claude generated code", "claude code issues", "vibe coding review", "AI generated code review", "CVE-2025-59536", "claude code vulnerability", "claude code source leak"],
     "articleSection": "Code Review",
     "wordCount": 3200,
     "citation": [
@@ -249,6 +249,12 @@
   <div class="stat-box">
     <strong>1.7x more defects</strong> in AI-generated pull requests vs human-written ones. Security issues are up to <strong>2.74x higher</strong>, and performance problems like excessive I/O operations are <strong>8x more common</strong>. Source: <a href="https://coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report" target="_blank" rel="noopener">CodeRabbit, State of AI vs Human Code Generation Report, December 2025</a> (470 real-world PRs analyzed).
   </div>
+
+  <h3>Real Vulnerabilities in Claude Code Itself (2025–2026)</h3>
+
+  <p>The security risks of Claude-generated code are not hypothetical. Claude Code itself has had confirmed vulnerabilities: <strong>CVE-2025-59536</strong> (CVSS 8.7, code injection) and <strong>CVE-2026-21852</strong> (CVSS 5.3, information disclosure that could exfiltrate API keys). Both were patched by Anthropic. In March 2026, Anthropic accidentally published a debugging JavaScript sourcemap for Claude Code v2.1.88 to npm — exposing 512,000 lines of TypeScript across 1,900 files. Days later, <a href="https://www.securityweek.com/critical-vulnerability-in-claude-code-emerges-days-after-source-leak/" target="_blank" rel="noopener">Adversa AI disclosed a critical permission bypass</a>: deny rules, security validators, and command injection detection could all be skipped under certain conditions. The broader <strong>IDEsaster</strong> research found 30+ CVEs across 10+ AI coding tools, resulting in 24 assigned CVEs.</p>
+
+  <p>In April 2026, Anthropic launched its own <a href="https://claude.com/blog/code-review" target="_blank" rel="noopener">Code Review feature</a> — dispatching specialized agents on every PR. Internally, on large PRs (1,000+ lines), <strong>84% get findings</strong>, averaging 7.5 issues per review. Less than 1% of findings are marked incorrect by engineers. This is Anthropic's acknowledgment that Claude-generated code needs structured review — and their own data confirms the scale of issues that slip through without it.</p>
 
   <p>Here is what Claude Code consistently struggles with:</p>
 

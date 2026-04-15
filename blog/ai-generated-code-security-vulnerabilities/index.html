@@ -150,11 +150,13 @@
     <strong>Why AI skips security checks:</strong> When a prompt says "build an endpoint that returns the user's orders by ID," the model generates code that fetches orders by ID. The prompt never mentioned authorization, so the model never adds it. It is not a bug in the model — it is a gap between what was asked and what secure code actually requires.
   </div>
 
-  <p>Training data compounds the problem. Public GitHub repositories — the primary corpus for most code models — contain enormous amounts of insecure code: tutorials that skip auth, Stack Overflow answers that demonstrate functionality without security hardening, legacy codebases with hardcoded credentials. The model learned from all of it.</p>
+  <p>Training data compounds the problem. Public GitHub repositories — the primary corpus for most code models — contain enormous amounts of insecure code: tutorials that skip auth, Stack Overflow answers that demonstrate functionality without security hardening, legacy codebases with hardcoded credentials. The model learned from all of it. The common vulnerability types map directly to the CWE catalog: <a href="https://cwe.mitre.org/data/definitions/862.html" target="_blank" rel="noopener">CWE-862</a> (missing authorization), <a href="https://cwe.mitre.org/data/definitions/798.html" target="_blank" rel="noopener">CWE-798</a> (hardcoded credentials), <a href="https://cwe.mitre.org/data/definitions/89.html" target="_blank" rel="noopener">CWE-89</a> (SQL injection), <a href="https://cwe.mitre.org/data/definitions/79.html" target="_blank" rel="noopener">CWE-79</a> (cross-site scripting), and <a href="https://cwe.mitre.org/data/definitions/200.html" target="_blank" rel="noopener">CWE-200</a> (exposure of sensitive information).</p>
 
   <div class="stat-box">
     <strong>Research consensus (2025–2026):</strong> AI-generated code has a 2.7x higher vulnerability density compared to human-written code. CVSS 7.0+ vulnerabilities (high severity) appear 2.5x more often in AI-generated repositories than in equivalent human-authored code. Source: multiple studies aggregated by CSA Lab, 2026.
   </div>
+
+  <p>The scale of real-world impact is growing. <strong>25% of startups in Y Combinator's Winter 2025 cohort</strong> reported codebases that were 95% AI-generated. <a href="https://labs.cloudsecurityalliance.org/research/csa-research-note-ai-generated-code-vulnerability-surge-2026/" target="_blank" rel="noopener">Escape.tech found 58% of scanned AI applications</a> had at least one critical vulnerability. And the Moltbook incident proved these risks are not theoretical: on January 28, 2026, a social network built entirely with AI coding tools ("didn't write a single line of code") launched — and within three days, <a href="https://www.wits.ac.za/news/latest-news/opinion/2026/2026-03/securing-vibe-coding-the-hidden-risks-behind-ai-generated-code.html" target="_blank" rel="noopener">security researchers at Wiz discovered</a> it had exposed its entire production database, including 1.5 million API authentication tokens, 35,000 email addresses, and private messages.</p>
 
   <p>The result is a specific vulnerability fingerprint. Syntax is clean. Logic runs. Tests pass. But authorization is missing, inputs are not sanitized, secrets are inline, and external requests are unvalidated. These vulnerabilities are exactly the ones that automated scanners struggle with and that attackers specifically hunt for.</p>
 
@@ -204,7 +206,7 @@ def search_users(username: str):
     query = "SELECT * FROM users WHERE username = ?"
     return db.execute(query, (username,))</code></pre>
 
-  <p>Despite being the most well-known vulnerability class in existence, Veracode found only an 80% security pass rate for SQLi across AI-generated code — meaning 1 in 5 AI-generated database interactions is potentially injectable. For Java specifically, the failure rate exceeded 70%.</p>
+  <p>Despite being the most well-known vulnerability class in existence, Veracode found only an 80% security pass rate for SQLi across AI-generated code — meaning 1 in 5 AI-generated database interactions is potentially injectable. For Java specifically, the failure rate exceeded 70%. Log injection fared even worse — 88% of AI-generated samples failed to defend against it.</p>
 
   <h3>3. Hardcoded Secrets and Credentials (OWASP A02: Cryptographic Failures)</h3>
 
@@ -327,6 +329,10 @@ fastapi==0.104.0
 # pip install -r requirements.txt silently installs the attack payload</code></pre>
 
   <p>One documented case: a single malicious slopsquatted package accumulated over 30,000 downloads in three months before detection. Existing SCA scanners do not catch hallucinated packages — they check known-vulnerable packages, not non-existent ones.</p>
+
+  <h3>Bonus: Prompt Injection in AI Coding Tools Themselves</h3>
+
+  <p>The attack surface extends beyond the code AI generates — to the AI tools themselves. In 2026, <strong>CVE-2025-53773</strong> (CVSS 9.6) revealed that hidden prompt injection in pull request descriptions enabled <strong>remote code execution with GitHub Copilot</strong>. An attacker could embed instructions in a PR description that Copilot would execute when reviewing the code. Similarly, <a href="https://checkmarx.com/blog/security-in-vibe-coding/" target="_blank" rel="noopener">Checkmarx</a> documented how AI coding assistants can be manipulated through adversarial inputs in repository files, CLAUDE.md configurations, and package descriptions — turning the review tool itself into an attack vector.</p>
 
   <!-- Mid-article CTA -->
   <div class="cta-block">
