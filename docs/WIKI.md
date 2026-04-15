@@ -24,6 +24,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [advertising-channels.md](advertising-channels.md) | Полная карта рекламы: каталоги, ad networks, newsletters, стратегия по бюджету |
 | [backlinks/](backlinks/) | Raw SEMrush backlink exports (CodeRabbit 4.6K, Qodo 6K domains) |
 | [topic-research-20260414.xlsx](topic-research-20260414.xlsx) | SEMrush Topic Research — 108 content ideas with volumes, questions, backlinks |
+| [WIKI.md#seo-intelligence](WIKI.md#seo-intelligence-april-2026) | Google March 2026 Core Update итоги + Claude SEO Prompts methodology |
 
 ### Content Plan (from keyword research)
 
@@ -64,6 +65,61 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 - "How often should I be reviewing pull requests?"
 - "How Can You Streamline the Code Review Process?"
 - "What does a detailed code review look like?"
+
+### SEO Intelligence (April 2026)
+
+**Google March 2026 Core Update — итоги (Alex Groberman, @alexgroberman, 2026-04-14)**
+Источник: https://x.com/i/status/2044080004842303818
+
+Ключевые данные:
+- Обновление длилось 12 дней (27 марта — 8 апреля 2026), одно из самых волатильных в истории Google
+- 55%+ отслеживаемых доменов получили измеримые изменения в ранжировании
+- 71% affiliate-сайтов пострадали (тонкие сравнения, шаблонные обзоры, рерайт)
+- Сайты с оригинальными данными/исследованиями получили +22% видимости (анализ 600K+ страниц, JetDigitalPro)
+- Типичное падение проигравших: 20-35%, у сильнейших страниц — более 50%
+- Information Gain теперь прямой ранжирующий фактор: страницы, не добавляющие ничего нового к существующим результатам, проигрывают
+- Topical Authority: сайт на 10 несвязанных тем оценивается хуже, чем сайт на 2 темы с глубиной
+- Пример: HubSpot потерял ~80% органического блог-трафика (14.8M → 2.8M) после расширения в нерелевантные темы
+- Победители: gov/institutional домены, сайты с экспертной атрибуцией, first-hand experience, third-party citations
+
+Что это значит для Vibers:
+- Наш контент уже на правильном пути (узкая ниша code review, экспертный опыт)
+- Нужно усилить: оригинальные данные в статьях (benchmarks из реальных ревью, статистика багов)
+- Прунинг: не расширяться за пределы code review / vibe coding / AI quality
+- Экспертная атрибуция: добавлять авторов, их опыт, ссылки на профили
+
+**10 SEO-промптов для Claude Cowork (Charles Floate, @Charles_SEO, 2026-04-14)**
+Источник: https://x.com/i/status/2044010207458853314
+
+Методология SEO через Claude Projects + Skills:
+1. Prompt Zero — Business Context (загрузить в Project instructions, 30-45 мин на заполнение)
+2. SERP Consensus Analyzer — анализ формата, DR, ссылочных профилей, entity-сигналов топа
+3. Competitor Content Consensus Mapper — структурный анализ контента конкурентов (нужен Firecrawl MCP)
+4. OnPage NLP & Entity Audit — entity relationships, topical completeness, information gain
+5. Money Page Writer — CRO-оптимизация посадочных с учётом SEO-сигналов
+6. Supporting Content Researcher — кластеры поддерживающего контента + internal linking
+7. Supporting Content Writer — драфты на 80-90% готовности (нужен human editor!)
+8. Brand Entity Stack — аудит brand entity signals (Wikipedia, Wikidata, Knowledge Graph)
+9. Link Profile Analyzer — сегментация ссылок по tier/quality/anchor (лучше с Ahrefs MCP)
+10. Link Bait Researcher — реверс-инжиниринг контента с 50+ referring domains в нише
+11. SEO Dashboard Builder — кастомный дашборд как Claude Artifact
+12. Self-Audit QA Gate — финальный QA перед публикацией
+
+Ключевые инсайты для нас:
+- Подход "Claude Project per business" — мы уже так работаем
+- Skills для повторяющихся задач — у нас есть seo-content-writer, можно усилить по его схеме
+- SERP Consensus перед написанием контента — внедрить в наш workflow
+- Entity Audit — проверить наши статьи на entity coverage
+- QA Gate как финальный шаг — добавить в наш seo-content-writer skill
+
+**TODO (из инсайтов выше):**
+- [ ] Добавить оригинальные данные в существующие статьи: реальная статистика багов из наших ревью, benchmarks time-to-fix, примеры найденных уязвимостей
+- [ ] Внедрить SERP Consensus Analysis перед написанием новых статей (анализ топ-10 перед созданием контента)
+- [ ] Добавить экспертную атрибуцию: авторы статей с именами, должностями, ссылками на профили
+- [ ] Entity Audit существующих статей — проверить entity coverage vs конкуренты
+- [ ] Добавить QA Gate в seo-content-writer skill (финальная проверка перед публикацией)
+- [ ] Создать proprietary research piece: "50 Real Bugs AI Missed" на основе данных из реальных ревью
+- [ ] Проверить topical focus: не расширяемся ли за пределы code review / vibe coding / AI quality
 
 ### Existing Blog Articles
 
