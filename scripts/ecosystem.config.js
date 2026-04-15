@@ -21,7 +21,7 @@ loadDotEnv(require('os').homedir() + '/.env');
 module.exports = {
   apps: [{
     name: 'vibers-invite-checker',
-    script: '/root/vibers.onout.org/scripts/check-invites.py',
+    script: '/root/vibers/scripts/check-invites.py',
     interpreter: 'python3',
     autorestart: false,
     cron_restart: '*/1 * * * *',
@@ -33,7 +33,7 @@ module.exports = {
     }
   }, {
     name: 'vibers-feedback',
-    script: '/root/vibers.onout.org/scripts/feedback-server.py',
+    script: '/root/vibers/scripts/feedback-server.py',
     interpreter: 'python3',
     autorestart: true,
     env: {

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude AI Performance Issues: Why Claude Gets Slow, Hits Limits, or Feels Worse Over Time — Vibers Blog</title>
+  <meta name="description" content="Claude AI performance issues usually come from four places: Anthropic incidents, rate limits, long context buildup, and expensive model settings. Official Anthropic docs and status data, with fixes that actually reduce latency.">
+  <link rel="canonical" href="https://onout.org/vibers/blog/claude-ai-performance-issues/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Claude AI Performance Issues: Why Claude Gets Slow, Hits Limits, or Feels Worse Over Time">
+  <meta property="og:description" content="Official Anthropic data shows Claude slowdowns usually come from outages, rate limits, long context windows, or heavy model settings. Here's how to tell which one you're hitting and what to change.">
+  <meta property="og:url" content="https://onout.org/vibers/blog/claude-ai-performance-issues/">
+  <meta property="og:site_name" content="Vibers — Human Code Review">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude AI Performance Issues: Why Claude Gets Slow, Hits Limits, or Feels Worse Over Time">
+  <meta name="twitter:description" content="Anthropic's own status page and docs explain most Claude slowdowns: incidents, rate limits, long context, and inefficient prompt design.">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Claude AI Performance Issues: Why Claude Gets Slow, Hits Limits, or Feels Worse Over Time",
+    "description": "Claude AI performance issues usually come from four places: Anthropic incidents, rate limits, long context buildup, and expensive model settings. Official Anthropic docs and status data, with fixes that actually reduce latency.",
+    "url": "https://onout.org/vibers/blog/claude-ai-performance-issues/",
+    "datePublished": "2026-04-14",
+    "dateModified": "2026-04-14",
+    "author": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://vibers.onout.org/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://vibers.onout.org/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://vibers.onout.org/favicon.svg"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://onout.org/vibers/blog/claude-ai-performance-issues/"
+    },
+    "keywords": ["claude ai performance issues", "claude slow", "claude latency", "anthropic rate limits", "claude context window", "prompt caching claude", "claude outages"],
+    "articleSection": "Claude",
+    "wordCount": 2500,
+    "citation": [
+      {
+        "@type": "CreativeWork",
+        "name": "Claude Status",
+        "url": "https://status.claude.com/"
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Reducing latency - Claude API Docs",
+        "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency"
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Prompt caching - Claude API Docs",
+        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Rate limits - Claude API Docs",
+        "url": "https://platform.claude.com/docs/en/api/rate-limits"
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "How large is the context window on paid Claude plans?",
+        "url": "https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans"
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why is Claude slow today?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There are usually four explanations: Anthropic is having an incident, you hit rate or usage limits, your conversation context has become too large, or you are using a slower model with long outputs. Anthropic's status page is the fastest way to separate provider-side issues from prompt or account issues."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does a bigger context window make Claude slower?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Usually yes. Anthropic's latency docs state that latency depends on prompt size and output size. Larger chats, more files, more tools, and longer conversation history all increase the amount Claude must process before responding."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does prompt caching actually improve Claude performance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Anthropic's docs say prompt caching can reduce latency by up to 80 percent and cost by up to 90 percent for repeated prompt prefixes. It is especially useful for long documents, repetitive system prompts, tool definitions, and multi-turn conversations."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do paid Claude plans remove performance limits?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Paid plans increase usage capacity, but they still have session, weekly, and sometimes feature-specific limits. Anthropic also notes that extra usage and Max plans do not eliminate all capacity controls."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the fastest way to make Claude feel more responsive?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use a faster model for speed-critical tasks, shorten prompts and outputs, enable streaming, start fresh chats when context grows large, and add prompt caching for repeated context. Those changes usually matter more than micro-optimizing wording."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    .definition strong{font-weight:700}
+    .incident-box{background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .incident-box .incident-title{font-size:13px;font-weight:700;color:#9f1239;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
+    .incident-box p{font-size:14px;color:#333;margin-bottom:8px}
+    .incident-box p:last-child{margin-bottom:0}
+    .checklist{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .checklist h3{margin-top:0}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .author-bio{display:flex;gap:16px;align-items:flex-start;background:#fafaf8;border-radius:8px;padding:20px;margin:40px 0;border:1px solid #eee}
+    .author-bio .author-info h4{font-size:15px;font-weight:600;margin-bottom:4px}
+    .author-bio .author-info p{font-size:13px;color:#666;margin:0}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://github.com/apps/vibers-review/installations/new">Install App</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>April 14, 2026</span>
+      <span>Claude</span>
+      <span>10 min read</span>
+    </div>
+
+    <h1>Claude AI Performance Issues: Why Claude Gets Slow, Hits Limits, or Feels Worse Over Time</h1>
+
+    <p class="article-lead">If Claude feels slow, inconsistent, or suddenly starts refusing requests, the root cause is usually not mysterious. Anthropic's own documentation points to four recurring explanations: service incidents, rate or usage limits, context bloat, and expensive model settings. As of April 14, 2026, Anthropic's status page showed 90-day uptime of 98.84% for claude.ai, 99.1% for the API, and 99.27% for Claude Code, alongside multiple incidents in early April 2026. Separate from outages, Anthropic also states that latency rises with model choice, prompt size, and output length. That means many "Claude performance issues" are actually solvable architecture issues in how you use the product.</p>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li>Claude slowdowns usually come from provider incidents, usage limits, oversized context, or a slower model choice.</li>
+        <li>As of April 14, 2026, Anthropic's status page showed 90-day uptime of 98.84% for claude.ai, 99.1% for the API, and 99.27% for Claude Code.</li>
+        <li>Anthropic explicitly says latency depends on model size, prompt complexity, and output length.</li>
+        <li>Prompt caching can reduce latency by up to 80% and costs by up to 90% when repeated prompt prefixes are reused.</li>
+        <li>Cached input tokens usually do not count toward Claude API input-token rate limits, which materially improves effective throughput.</li>
+        <li>Paid Claude plans still have session limits, and Max adds weekly limits; more headroom does not mean no limits.</li>
+        <li>The fastest practical fixes are: check status first, use a faster model, shorten context, enable streaming, and cache repeated prompt prefixes.</li>
+      </ul>
+    </div>
+
+    <h2>What Counts as a Claude AI Performance Issue?</h2>
+
+    <p>Developers use the phrase <em>Claude AI performance issues</em> to describe several different problems at once:</p>
+    <ul>
+      <li>Claude responses are slower than usual.</li>
+      <li>You hit temporary errors, especially during bursts of traffic or at peak usage times.</li>
+      <li>Long chats or large code sessions feel progressively worse over time.</li>
+      <li>Claude Code or claude.ai suddenly tells you that you reached a limit.</li>
+      <li>The model still works, but time-to-first-token is bad enough that the product feels laggy.</li>
+    </ul>
+
+    <p>Those look similar from the outside, but they have different causes and different fixes. Anthropic's own docs make a useful distinction: some problems are service-side, while others are request-shape problems. If the issue is on Anthropic's side, tuning your prompt will not help. If the problem is context size or rate limits, waiting for support also will not help.</p>
+
+    <div class="definition">
+      <strong>Useful mental model:</strong> "Claude is slow" is not one bug. It is a symptom. First identify whether the bottleneck is provider health, account limits, context size, model choice, or your integration.
+    </div>
+
+    <h2>The Official Data: Claude Has Had Real Availability Turbulence</h2>
+
+    <p>Before blaming your prompt, check whether Claude is having a real service event. Anthropic exposes public uptime and incident history on its status page, and that data matters because recent incidents directly affect whether a slowdown is local or global.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>90-day uptime</th>
+            <th>As seen on April 14, 2026</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>claude.ai</td>
+            <td>98.84%</td>
+            <td>Operational</td>
+          </tr>
+          <tr>
+            <td>platform.claude.com</td>
+            <td>99.19%</td>
+            <td>Operational</td>
+          </tr>
+          <tr>
+            <td>Claude API</td>
+            <td>99.1%</td>
+            <td>Degraded Performance</td>
+          </tr>
+          <tr>
+            <td>Claude Code</td>
+            <td>99.27%</td>
+            <td>Operational</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="incident-box">
+      <div class="incident-title">Recent Incident Cluster</div>
+      <p>Anthropic's public incident history listed an unresolved degraded admin API incident on April 14, 2026.</p>
+      <p>On April 13, 2026, Claude.ai and Claude Code logins had elevated errors between 15:31 and 16:19 UTC.</p>
+      <p>On April 10, 2026, Anthropic reported elevated errors on requests to Claude models across products.</p>
+      <p>Earlier in the same period, the status history also shows Sonnet 4.6 and Claude.ai incidents on April 6 and April 7, 2026.</p>
+      <p>The operational conclusion is simple: when performance suddenly drops across multiple workflows, check https://status.claude.com/ before debugging your own stack.</p>
+    </div>
+
+    <div class="stat-box">
+      <strong>Practical rule:</strong> If Claude got slower for everyone at the same time, start with the status page. If only your long-running or file-heavy sessions got slower, start with context and rate-limit analysis.
+    </div>
+
+    <h2>Root Cause 1: You Are Hitting Rate Limits, Not Model "Intelligence" Limits</h2>
+
+    <p>Anthropic's API docs are very direct about this. Claude rate limits are enforced at the organization level, and they are measured across requests per minute, input tokens per minute, and output tokens per minute. On top of the headline limits, Anthropic warns that you can also hit shorter-interval enforcement and separate acceleration limits if your traffic spikes too sharply.</p>
+
+    <div class="stat-box">
+      <strong>Anthropic's warning:</strong> a nominal limit like 60 RPM may still be enforced as roughly 1 request per second, so short bursts can trip 429s even when your per-minute average looks safe.
+    </div>
+
+    <p>That matters because many teams interpret sudden 429s or request failures as evidence that Claude is unstable or "worse today." Sometimes it is simply your traffic shape. Anthropic explicitly recommends ramping up traffic gradually and keeping usage patterns consistent to avoid acceleration limits.</p>
+
+    <p>There is also a second layer: paid Claude chat plans have their own usage ceilings. Anthropic's support docs state that plan usage resets every five hours after you hit the limit, and Max plans still have weekly limits across all models plus a separate weekly Sonnet limit. So paying more improves headroom, but does not mean infinite uninterrupted usage.</p>
+
+    <h3>What to do</h3>
+    <ul>
+      <li>Inspect 429s and the `retry-after` header instead of treating them as generic failures.</li>
+      <li>Smooth bursts instead of sending traffic in sharp spikes.</li>
+      <li>Watch input-token and output-token limits separately.</li>
+      <li>If you use claude.ai or Claude Code on a paid plan, remember that limits reset on a five-hour session cycle.</li>
+    </ul>
+
+    <h2>Root Cause 2: Your Context Is Too Large and Keeps Growing</h2>
+
+    <p>Anthropic's latency guidance says response time depends on prompt size and output size. That is the core reason Claude often feels fine at the start of a task and progressively worse later: every turn, file, tool definition, and prior message increases the amount the system must process. The problem is not that Claude "forgot how to code." The problem is that you are asking it to drag more and more state through every turn.</p>
+
+    <p>Anthropic's support docs for paid plans say Claude's standard paid context window is 200K tokens. In Claude Code, Opus 4.6 and Sonnet 4.6 can reach 1M tokens on paid plans, but extra usage may need to be enabled depending on plan type. Bigger windows are useful, but they do not make requests free. They increase how much work Claude can do, and often how long it takes to start doing it.</p>
+
+    <div class="stat-box">
+      <strong>Counterintuitive point:</strong> a larger context window improves capacity, not necessarily speed. If you keep stuffing more history, files, and tool state into the conversation, latency still rises.
+    </div>
+
+    <p>Anthropic also notes that projects and stored files count toward context when used in conversations, and that tools and connectors are token-intensive. If you have a bloated chat plus multiple tools plus large project files, poor responsiveness is expected.</p>
+
+    <h3>What to do</h3>
+    <ul>
+      <li>Start a fresh conversation for a new problem instead of carrying months of history forward.</li>
+      <li>Keep project instructions concise; Anthropic explicitly recommends this.</li>
+      <li>Use projects and retrieval well, instead of pasting entire documents into every prompt.</li>
+      <li>Disable or reduce unnecessary tools and connectors in long sessions.</li>
+      <li>Use token counting before large requests on the API side.</li>
+    </ul>
+
+    <h2>Root Cause 3: You Chose a Slower Model or Asked for Too Much Output</h2>
+
+    <p>Anthropic's latency documentation recommends picking the right model for the job and specifically points to Claude Haiku 4.5 for speed-critical use cases. It also says the most straightforward way to reduce latency is to minimize prompt tokens and expected output length. Many teams do the opposite: they run a heavier model than needed, ask for enormous answers, then complain that Claude is slow.</p>
+
+    <p>This is especially common in coding workflows. Teams ask for full-file rewrites, explanations, tests, security review, migration advice, and deployment notes in one pass, then wonder why Claude is slow. In those cases the model may be behaving exactly as configured.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Symptom</th>
+            <th>Likely cause</th>
+            <th>High-probability fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Slow first token on every request</td>
+            <td>Large prompt, heavy model, large context</td>
+            <td>Use Haiku or a lighter Sonnet workflow; shorten prompt prefix</td>
+          </tr>
+          <tr>
+            <td>Claude gets slower as the chat grows</td>
+            <td>Accumulated history, files, tool results</td>
+            <td>Start a fresh chat, compact context, move docs into projects</td>
+          </tr>
+          <tr>
+            <td>Intermittent 429s or sudden refusals</td>
+            <td>Rate limits or acceleration limits</td>
+            <td>Throttle bursts, inspect headers, spread requests over time</td>
+          </tr>
+          <tr>
+            <td>Paid plan still stops you</td>
+            <td>Session or weekly usage caps</td>
+            <td>Wait for reset, enable extra usage, or move heavy work to API</td>
+          </tr>
+          <tr>
+            <td>Long documents are expensive and sluggish</td>
+            <td>Repeatedly reprocessing the same context</td>
+            <td>Use prompt caching and reuse prompt prefixes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Root Cause 4: You Are Not Using Anthropic's Main Latency Features</h2>
+
+    <p>Anthropic already ships the two biggest practical latency levers: streaming and prompt caching.</p>
+
+    <p>Streaming improves perceived responsiveness because Claude can start returning tokens before the entire response is complete. Anthropic explicitly recommends it as a way to make applications feel more interactive and responsive. If your user experience waits for a complete answer before rendering anything, you are choosing avoidable slowness.</p>
+
+    <p>Prompt caching is the bigger structural win. Anthropic says prompt caching can reduce latency by up to 80% and cost by up to 90%. The docs also explain why it helps throughput: for most active Claude models, cached input tokens do not count toward input-token-per-minute limits. That means caching is not just a cost optimization. It is also a rate-limit optimization.</p>
+
+    <div class="stat-box">
+      <strong>Up to 80%</strong> latency reduction and <strong>up to 90%</strong> cost reduction are the official Anthropic claims for prompt caching on reusable prompt prefixes.
+    </div>
+
+    <p>Anthropic's docs recommend prompt caching for:</p>
+    <ul>
+      <li>large context documents</li>
+      <li>system instructions and repeated prompt scaffolding</li>
+      <li>tool definitions</li>
+      <li>multi-turn conversations</li>
+    </ul>
+
+    <p>If your workflow repeatedly re-sends a long codebase summary, large document, or policy block, and you are not caching it, the performance problem is partly self-inflicted.</p>
+
+    <h3>5-minute vs 1-hour cache</h3>
+
+    <p>Anthropic's standard cache lasts five minutes and refreshes each time it is used. There is also a one-hour cache TTL for cases where the follow-up request may land later, such as agentic side tasks or longer human review loops. Anthropic notes that both TTLs behave the same with respect to latency, and that the one-hour mode is mainly useful when follow-up prompts arrive outside the default five-minute window.</p>
+
+    <h2>Claude.ai and Claude Code Have Their Own Performance Rules</h2>
+
+    <p>Some advice changes depending on whether you are on the API or on the hosted product.</p>
+
+    <p>In paid Claude plans, Anthropic says automatic context management can summarize earlier messages when a conversation approaches the context window limit, allowing long chats to continue in most cases. But there are caveats: this requires code execution to be enabled, and Anthropic still notes that rare edge cases can hit context limits anyway. If you are deep into Claude Code and performance suddenly degrades, it is worth asking whether you are relying on automatic context management to save an overgrown session.</p>
+
+    <p>Anthropic also advises paid users to start fresh conversations for new topics, because it minimizes context size. That is blunt advice, but it is probably the most underused fix for Claude sluggishness.</p>
+
+    <div class="checklist">
+      <h3>Fast Triage Checklist</h3>
+      <ol>
+        <li>Open https://status.claude.com/ and rule out a live incident.</li>
+        <li>If you use the API, inspect rate-limit headers and recent 429s.</li>
+        <li>If you use claude.ai or Claude Code, check whether you hit session or weekly plan limits.</li>
+        <li>Measure prompt size, not just output speed.</li>
+        <li>Switch to a faster model if the task does not require your heaviest one.</li>
+        <li>Enable streaming so users see progress immediately.</li>
+        <li>Cache repeated prompt prefixes, tool definitions, and large context documents.</li>
+        <li>Start a new conversation when the task changes or the context has become bloated.</li>
+      </ol>
+    </div>
+
+    <h2>The Most Common Misdiagnosis</h2>
+
+    <p>The biggest mistake teams make is collapsing all of this into one story: "Claude got worse." Sometimes that is true and Anthropic's status page will confirm it. But a lot of the time the model is doing exactly what Anthropic's docs say it will do:</p>
+    <ul>
+      <li>larger prompts take longer</li>
+      <li>larger outputs take longer</li>
+      <li>heavier models take longer</li>
+      <li>bursty traffic triggers limits</li>
+      <li>repeated long context should be cached</li>
+    </ul>
+
+    <p>If you built a coding workflow on top of Claude and never added streaming, caching, throttling, token counting, or chat reset logic, the resulting lag is not really a mysterious Claude performance issue. It is an integration design issue.</p>
+
+    <h2>If Claude Wrote the App, the Performance Problem May Be Your Code Instead</h2>
+
+    <p>There is one more confusion worth clearing up: Claude itself being slow is not the same as the application Claude generated being slow. Those are separate failure modes. If a vibe-coded app is slow because the generated code does too much I/O, sends redundant API calls, or ships inefficient queries, Anthropic's status page will tell you nothing about that. For that side of the problem, you need an application review, not an LLM status check.</p>
+
+    <p>We covered the production side separately in <a href="/vibers/blog/vibe-coded-app-production-ready/">How to Make a Vibe-Coded App Production-Ready</a> and <a href="/vibers/blog/review-vibe-coded-app-before-launch/">How to Review a Vibe-Coded App Before Launch</a>.</p>
+
+    <div class="cta-block">
+      <h3>Claude can write code. Someone still has to verify it.</h3>
+      <p>If Claude built the feature and you are unsure whether the slowdown is Anthropic, your prompt design, or the generated code itself, we review the repo and send fixes as a PR.</p>
+      <a class="cta-btn" href="https://github.com/apps/vibers-review/installations/new">Install Vibers</a>
+    </div>
+
+    <h2>FAQ</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Why is Claude slow today?</div>
+      <div class="faq-a">Check the status page first. Anthropic's public incident history has recently included login errors, elevated request errors, and model-specific error spikes. If the status page looks clean, the next suspects are context size, model choice, or rate limits.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Does a bigger context window make Claude slower?</div>
+      <div class="faq-a">Usually yes in practice. Anthropic says latency depends on prompt and output size, so bigger working sets tend to increase response time even if the model supports them.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Does Max remove Claude limits?</div>
+      <div class="faq-a">No. Anthropic says Max plans raise usage substantially, but still keep weekly limits and may impose other caps to manage capacity fairly.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Does prompt caching really help Claude performance?</div>
+      <div class="faq-a">Yes. Anthropic documents prompt caching as a latency and cost feature, and also explains that cached input tokens usually do not count against input-token-per-minute limits for active models.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Is starting a new chat still worth it?</div>
+      <div class="faq-a">Yes. Anthropic's own support guidance recommends starting fresh conversations for new topics because it reduces context load and keeps the working set smaller.</div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://status.claude.com/">Claude Status</a></li>
+      <li><a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency">Anthropic Docs: Reducing latency</a></li>
+      <li><a href="https://platform.claude.com/docs/en/api/rate-limits">Anthropic Docs: Rate limits</a></li>
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Anthropic Docs: Prompt caching</a></li>
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">Anthropic Docs: Context windows</a></li>
+      <li><a href="https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans">Claude Help Center: Context window on paid plans</a></li>
+      <li><a href="https://support.claude.com/en/articles/11049741-what-is-the-max-plan">Claude Help Center: What is the Max plan?</a></li>
+      <li><a href="https://support.claude.com/en/articles/12429409-manage-extra-usage-for-paid-claude-plans">Claude Help Center: Manage extra usage for paid Claude plans</a></li>
+    </ul>
+
+    <div class="author-bio">
+      <div class="author-info">
+        <h4>About Vibers</h4>
+        <p>We review AI-generated code for founders and AI-first teams. When Claude, Cursor, or Copilot ships code that "works" but feels suspicious in production, we read the repo and send fix PRs.</p>
+      </div>
+    </div>
+
+    <div class="related-posts">
+      <h3>Related Posts</h3>
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/blog/review-vibe-coded-app-before-launch/">How to Review a Vibe-Coded App Before Launch</a>
+          <p>Checklist for catching broken flows, auth gaps, and production blockers before users do.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/blog/vibe-coded-app-production-ready/">How to Make a Vibe-Coded App Production-Ready</a>
+          <p>The production-readiness layer most AI-generated MVPs skip.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/blog/ai-code-review-bots-miss-bugs/">Why AI Code Review Bots Miss 50% of Bugs</a>
+          <p>Where AI review stops and human verification still matters.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers · <a href="/vibers/">vibers.onout.org</a></span>
+    <span><a href="https://github.com/apps/vibers-review/installations/new">Install GitHub App</a> · <a href="/vibers/blog/">Blog</a></span>
+  </footer>
+</div>
+</body>
+</html>

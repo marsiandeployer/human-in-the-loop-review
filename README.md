@@ -20,6 +20,7 @@
   <a href="https://onout.org/vibers/">Website</a> &bull;
   <a href="https://onout.org/vibers/blog/">Blog</a> &bull;
   <a href="https://onout.org/vibers/SKILL.md">AI Agent Skill</a> &bull;
+  <a href="docs/WIKI.md">Wiki</a> &bull;
   <a href="https://t.me/VibersReview">Telegram</a> &bull;
   <a href="https://www.reddit.com/r/VibeCodeReview">Reddit</a>
 </p>

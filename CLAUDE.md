@@ -1,5 +1,11 @@
 # Human-in-the-loop Review — Project Instructions
 
+## Wiki
+
+Вся документация, аналитика, маркетинг, keyword research, конкуренты — в `docs/WIKI.md`.
+Новые доки создавать в `docs/`, добавлять ссылку в Wiki.
+README.md — только public-facing для GitHub.
+
 ## Commit messages
 
 Every commit should include a "How to test" section in the body:
