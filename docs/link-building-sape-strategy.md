@@ -107,3 +107,56 @@ Arендные ссылки (Sape) нужны для усиления позиц
 4. [ ] Выбрать 1-2 донора на каждую страницу, не больше
 5. [ ] Анкор: branded или partial match (не exact)
 6. [ ] Через 4 недели: проверить индексацию ссылок через Google `site:donor.com`
+
+---
+
+## Готовые тексты ссылок для Sape (формат #a#...#/a#)
+
+Gist с полным списком (30 текстов, 1 на строку): https://gist.github.com/marsiandeployer/e375f4e4c0843775391ae83f0df1c4b9
+
+### СТРАНИЦА 1 — https://onout.org/vibers/
+(branded 40%, naked 20%, partial 25%, generic 15%)
+
+#a#Vibers#/a#
+#a#Vibers Code Review#/a#
+Try #a#Vibers#/a# for human-in-the-loop code review
+#a#Vibers#/a# — real developers review your AI code
+#u#
+#url#
+Human #a#code review service#/a# for AI-generated projects
+AI code with #a#human review#/a# before deploy
+Get a #a#human code review#/a# — fast turnaround
+#a#Check it out#/a#
+
+### СТРАНИЦА 2 — https://onout.org/vibers/blog/best-ai-code-review-tools/
+(ключ: best ai code review tools)
+
+#a#Best AI code review tools#/a# in 2026
+Compare the #a#best AI code review tools#/a# here
+#a#AI code review tools#/a# — full comparison
+Top #a#AI code review tools#/a# reviewed
+#a#Read the comparison#/a#
+
+### СТРАНИЦА 3 — https://onout.org/vibers/blog/coderabbit-alternative-human-review/
+(ключ: coderabbit alternative)
+
+Looking for a #a#CodeRabbit alternative#/a#?
+#a#CodeRabbit alternative#/a# with human reviewers
+#a#Human review#/a# as a CodeRabbit alternative
+Best #a#CodeRabbit alternative#/a# for production code
+
+### СТРАНИЦА 4 — https://onout.org/vibers/blog/claude-code-review/
+(ключ: claude code review)
+
+#a#Claude code review#/a# — what to expect
+#a#Claude AI code review#/a# guide 2026
+How to do #a#Claude code review#/a# properly
+#a#Code review for Claude#/a# output — tips
+
+### СТРАНИЦА 5 — https://onout.org/vibers/blog/code-review-as-a-service/
+(ключ: code review as a service)
+
+#a#Code review as a service#/a# for startups
+Outsource your #a#code review#/a# as a service
+#a#Code review service#/a# — human + AI
+Try #a#code review as a service#/a#

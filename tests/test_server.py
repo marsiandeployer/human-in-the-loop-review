@@ -52,7 +52,7 @@ def _load_secret():
     # Try both relative (run from repo root) and absolute path
     _candidates = [
         "scripts/.env",
-        "/root/vibers.onout.org/scripts/.env",
+        "/root/vibers/scripts/.env",
     ]
     for path in _candidates:
         try:
