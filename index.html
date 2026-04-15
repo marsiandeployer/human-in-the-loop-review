@@ -945,6 +945,32 @@
                         </div>
                         <p class="example-footer" data-i18n="ex_case_4_footer">Result: the chosen poster now renders fully in the preview, the selected state is obvious, and the responsive flow feels complete instead of broken.</p>
                     </article>
+
+                    <article class="example-card">
+                        <div class="example-card-head">
+                            <div>
+                                <div class="example-kicker" data-i18n="ex_case_5_badge">Live UI Fix</div>
+                                <h3 data-i18n="ex_case_5_title">Floor Map Edge Slots</h3>
+                            </div>
+                            <a href="https://skr.sh/savQXT22pzU" target="_blank" rel="noopener noreferrer" class="example-link" data-i18n="ex_case_5_link">Open issue capture</a>
+                        </div>
+                        <p class="example-desc" data-i18n="ex_case_5_desc">On the responsive floor map, the outermost slots drifted outside the light charcoal map background. The layout looked broken on mobile and created a clear UX/UI issue around the map edges.</p>
+                        <div class="example-gallery">
+                            <figure class="example-shot">
+                                <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
+                                <img src="https://skrinshoter.ru/s/080426/QXT22pzU.png?view=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-08-04-2026%2006:28:41.png" alt="Floor map before fix with edge slots rendered outside the background area">
+                            </figure>
+                            <figure class="example-shot">
+                                <div class="example-shot-label" data-i18n="ex_after_label">After</div>
+                                <img src="https://i.wpmix.net/image/photo/photo_1776267112556.jpg" alt="Floor map after fix with edge slots aligned inside the background area">
+                            </figure>
+                        </div>
+                        <div class="example-prompt-wrap">
+                            <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
+                            <pre class="example-prompt"><code>Fix the responsive floor map layout on the page shown in the linked capture. Right now the outermost slots sit outside the light charcoal map background on mobile, so the composition looks broken and creates a visible UX/UI bug. Rework the mobile sizing and positioning so every slot stays inside the map surface, the edge spacing is consistent, and the floor map remains visually aligned without regressing the desktop layout.</code></pre>
+                        </div>
+                        <p class="example-footer" data-i18n="ex_case_5_footer">Result: the mobile floor map layout was corrected, the edge slots now stay inside the background, and the responsive UX/UI bug was removed on the reported screen.</p>
+                    </article>
                 </div>
             </div>
         </div>
@@ -1247,6 +1273,11 @@ const ru = {
     ex_case_4_title: "Превью выбранного постера",
     ex_case_4_desc: "В адаптиве выбранный постер подгружался в превью не полностью, поэтому пользователь видел обрезанный или незавершённый результат вместо целого изображения.",
     ex_case_4_footer: "Результат: выбранный постер показывается целиком, состояние выбора считывается сразу, а адаптивный сценарий больше не выглядит сломанным.",
+    ex_case_5_badge: "Live UI fix",
+    ex_case_5_title: "Крайние слоты floor map",
+    ex_case_5_desc: "В адаптивной floor map самые крайние слоты уезжали за пределы светло-чёрного фона. Из-за этого мобильная вёрстка выглядела сломанной и создавала явный UX/UI баг по краям карты.",
+    ex_case_5_footer: "Результат: мобильная вёрстка floor map поправлена, крайние слоты снова находятся внутри фона, а адаптивный UX/UI баг на проблемном экране устранён.",
+    ex_case_5_link: "Открыть capture проблемы",
     ex_open_pr: "Открыть PR #3",
     honest_box: "<strong>Честно о себе:</strong> Мы не security-фирма. Никаких OWASP-пентестов, аудитов архитектуры, профилирования производительности. Мы — обычные люди, которые смотрят на ваш код свежим взглядом: ловят очевидные баги, проверяют что основные сценарии работают, и пишут фикс вместо того чтобы создавать тикет. Думайте об этом как альфа-тестер, который ещё и шлёт PR.",
     site_label: "Нет GitHub? Не проблема",

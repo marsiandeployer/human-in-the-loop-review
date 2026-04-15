@@ -17,11 +17,14 @@ Optional fields:
 - `proof` — PR, commit, issue, or live page link
 - `notes` — short implementation note if the landing copy needs context
 
+If a bug is hard to reproduce later, keep the exact capture or page link in `proof` so the example still points to the concrete screen where the issue was seen.
+
 Current examples:
 
 - `mobile-floor-map-fix.md`
 - `paycif-mobile-layout.md`
 - `chat-message-wrapping.md`
 - `poster-preview-loading.md`
+- `floor-map-edge-slots.md`
 
 Asset files that are not already public can be stored in `docs/examples/assets/`.
