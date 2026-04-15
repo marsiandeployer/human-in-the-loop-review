@@ -3,7 +3,7 @@
 ## Wiki
 
 Вся документация, аналитика, маркетинг, keyword research, конкуренты — в `docs/WIKI.md`.
-Новые доки создавать в `docs/`, добавлять ссылку в Wiki.
+Новые доки создавать в `docs/`, добавлять ссылку в Wiki. При добавлении новой статьи в вики или документацию прееписывай и переиндексируй другие части, чтоб было более компактно, но без потери важных деталей, и консистентно все.
 README.md — только public-facing для GitHub.
 
 ## Commit messages
@@ -22,3 +22,4 @@ Example:
   - Expand "What We Do" section
   - Yellow callout block should appear with honest disclaimer text
   - Switch to RU — same block should appear in Russian
+
