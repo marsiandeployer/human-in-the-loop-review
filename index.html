@@ -510,6 +510,17 @@
         <p data-i18n="setup_note">Or <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">write us on Telegram</a> if you need help.</p>
     </div>
 
+    <!-- Tertiary CTA: Just share your site URL -->
+    <div class="site-review-box" style="background: #f0faf4; border: 1px solid #b8e6c8; border-radius: 6px; padding: 20px 24px; margin-bottom: 16px;">
+        <div style="font-size: 12px; font-weight: 600; color: #2a9d5c; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;" data-i18n="site_label">No GitHub? No problem</div>
+        <p style="font-size: 14px; color: #333; margin-bottom: 14px;" data-i18n="site_desc">Not ready to connect GitHub yet? Just share your site URL — we'll test it manually and send you a report with what we find.</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <input type="url" id="site-url-input" placeholder="https://your-app.com" style="flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #b8e6c8; border-radius: 6px; font-size: 14px; outline: none; background: #fff;" onfocus="this.style.borderColor='#2a9d5c'" onblur="this.style.borderColor='#b8e6c8'">
+            <button id="site-submit-btn" onclick="submitSiteUrl()" style="padding: 10px 20px; background: #2a9d5c; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap;" data-i18n="site_btn">Send for review</button>
+        </div>
+        <p style="font-size: 12px; color: #888; margin-top: 10px;" data-i18n="site_note">We'll look at your site, check the main flows, and reach out with findings. Free for the first review.</p>
+    </div>
+
     <!-- Real testimonial -->
     <div style="border-left: 3px solid #5b44e8; padding: 14px 18px; margin-bottom: 24px; background: #f9f8ff; border-radius: 0 6px 6px 0;">
         <p style="font-size: 14px; color: #333; font-style: italic; margin-bottom: 8px;" data-i18n="testimonial_text">"Installed the app, got a PR with fixes the next day. Found a broken payment flow my Cursor agent had been shipping for weeks."</p>
@@ -930,6 +941,10 @@ const ru = {
     ex_bug_desc: "Карточки не стекались в колонку на мобиле — вёрстка ломалась. GSAP-анимация давала тёмный оверлей на втором экране на мобильных. Агент не добавил mobile breakpoints для нового grid-лейаута.",
     ex_footer: "Починили и отправили <a href=\"https://github.com/MethasMP/Paycif/pull/3\" target=\"_blank\" rel=\"noopener noreferrer\">PR #3</a> за одну сессию. Клиент смёрджил в тот же день.",
     honest_box: "<strong>Честно о себе:</strong> Мы не security-фирма. Никаких OWASP-пентестов, аудитов архитектуры, профилирования производительности. Мы — обычные люди, которые смотрят на ваш код свежим взглядом: ловят очевидные баги, проверяют что основные сценарии работают, и пишут фикс вместо того чтобы создавать тикет. Думайте об этом как альфа-тестер, который ещё и шлёт PR.",
+    site_label: "Нет GitHub? Не проблема",
+    site_desc: "Не готовы подключать GitHub? Просто укажите URL вашего сайта — мы протестируем вручную и пришлём отчёт с находками.",
+    site_btn: "Отправить на ревью",
+    site_note: "Мы посмотрим сайт, проверим основные сценарии и напишем что нашли. Первое ревью бесплатно.",
 };
 
 let savedEn = {};
@@ -1003,6 +1018,41 @@ function trackLead(action) {
         }
     });
 })();
+
+// Site URL review submission
+function submitSiteUrl() {
+    var input = document.getElementById('site-url-input');
+    var btn = document.getElementById('site-submit-btn');
+    var url = input.value.trim();
+    if (!url) { input.focus(); return; }
+    if (!/^https?:\/\/.+\..+/.test(url)) {
+        input.style.borderColor = '#d94f4f';
+        setTimeout(function() { input.style.borderColor = '#b8e6c8'; }, 2000);
+        return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    trackLead('submit_site_url');
+    rdt('track', 'Lead');
+
+    fetch('/github/setup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ site_url: url, source: 'landing_site_review' }),
+    })
+    .then(function(r) {
+        btn.textContent = 'Sent!';
+        btn.style.background = '#2a9d5c';
+        input.value = '';
+        input.placeholder = 'Thanks! We\'ll be in touch.';
+        input.disabled = true;
+    })
+    .catch(function() {
+        btn.disabled = false;
+        btn.textContent = 'Send for review';
+        window.open('https://t.me/onoutnoxon?text=' + encodeURIComponent('Review my site: ' + url), '_blank');
+    });
+}
 </script>
 </body>
 </html>
