@@ -920,6 +920,31 @@
                         </div>
                         <p class="example-footer" data-i18n="ex_case_3_footer">Result: long messages wrap cleanly inside the bubble, horizontal overflow is gone, and the chat stays readable across screen sizes.</p>
                     </article>
+
+                    <article class="example-card">
+                        <div class="example-card-head">
+                            <div>
+                                <div class="example-kicker" data-i18n="ex_case_4_badge">Live UI Fix</div>
+                                <h3 data-i18n="ex_case_4_title">Selected Poster Preview</h3>
+                            </div>
+                        </div>
+                        <p class="example-desc" data-i18n="ex_case_4_desc">On the responsive layout, the selected poster did not load fully in the preview area, so users saw an incomplete image instead of the full poster they picked.</p>
+                        <div class="example-gallery">
+                            <figure class="example-shot">
+                                <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
+                                <img src="https://skrinshoter.ru/s/080426/GeYapKeQ.png?view=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-08-04-2026%2006:32:55.png" alt="Poster selection UI before fix with the chosen poster not fully loading">
+                            </figure>
+                            <figure class="example-shot">
+                                <div class="example-shot-label" data-i18n="ex_after_label">After</div>
+                                <img src="https://i.wpmix.net/image/photo/photo_1776266454605.jpg" alt="Poster selection UI after fix with the chosen poster fully visible">
+                            </figure>
+                        </div>
+                        <div class="example-prompt-wrap">
+                            <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
+                            <pre class="example-prompt"><code>Fix the selected poster preview in the responsive UI. Right now when a user picks a poster, the preview does not render the full chosen image on smaller screens, so the result looks incomplete. Update the preview container and image sizing logic so the selected poster loads fully, keeps its aspect ratio, and stays clearly visible without breaking the existing desktop layout.</code></pre>
+                        </div>
+                        <p class="example-footer" data-i18n="ex_case_4_footer">Result: the chosen poster now renders fully in the preview, the selected state is obvious, and the responsive flow feels complete instead of broken.</p>
+                    </article>
                 </div>
             </div>
         </div>
@@ -1218,6 +1243,10 @@ const ru = {
     ex_case_3_title: "Перенос длинных сообщений в чате",
     ex_case_3_desc: "В чате длинное сообщение не переносилось на следующую строку, оставалось в одну линию и вылезало за пределы контейнера. Из-за этого диалог было неудобно читать.",
     ex_case_3_footer: "Результат: длинные сообщения аккуратно переносятся внутри bubble, горизонтальный выезд исчезает, а чат остаётся читаемым на всех размерах экрана.",
+    ex_case_4_badge: "Live UI fix",
+    ex_case_4_title: "Превью выбранного постера",
+    ex_case_4_desc: "В адаптиве выбранный постер подгружался в превью не полностью, поэтому пользователь видел обрезанный или незавершённый результат вместо целого изображения.",
+    ex_case_4_footer: "Результат: выбранный постер показывается целиком, состояние выбора считывается сразу, а адаптивный сценарий больше не выглядит сломанным.",
     ex_open_pr: "Открыть PR #3",
     honest_box: "<strong>Честно о себе:</strong> Мы не security-фирма. Никаких OWASP-пентестов, аудитов архитектуры, профилирования производительности. Мы — обычные люди, которые смотрят на ваш код свежим взглядом: ловят очевидные баги, проверяют что основные сценарии работают, и пишут фикс вместо того чтобы создавать тикет. Думайте об этом как альфа-тестер, который ещё и шлёт PR.",
     site_label: "Нет GitHub? Не проблема",
