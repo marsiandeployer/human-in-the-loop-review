@@ -117,7 +117,7 @@ Each example should keep the same structure:
 - English prompt that could realistically produce the fix
 - optional proof link: PR, commit, issue, or live page
 
-Current cases are the mobile floor map label fix, the Paycif mobile pricing card fix, a chat message wrapping fix for long conversation bubbles, a responsive poster preview loading fix, and a floor map edge-slot alignment fix on mobile.
+Current cases are the mobile floor map label fix, the Paycif mobile pricing card fix, a chat message wrapping fix for long conversation bubbles, a responsive poster preview loading fix, a floor map edge-slot alignment fix on mobile, and a Brand identity Screen 1/1 orientation fix in Stand settings.
 
 When a UI bug is intermittent or stops reproducing later, we keep the exact screenshot or page link in the example so the case still points to the concrete screen where the issue was observed.
 

@@ -26,5 +26,6 @@ Current examples:
 - `chat-message-wrapping.md`
 - `poster-preview-loading.md`
 - `floor-map-edge-slots.md`
+- `brand-identity-screen-orientation.md`
 
 Asset files that are not already public can be stored in `docs/examples/assets/`.
