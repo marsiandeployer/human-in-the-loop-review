@@ -12,7 +12,7 @@
 
 | Приоритет | URL | Ключевик | Объём |
 |-----------|-----|----------|-------|
-| 1 | https://vibers.onout.org/ | vibers code review / human code review | бренд |
+| 1 | https://onout.org/vibers/ | vibers code review / human code review | бренд |
 | 2 | /blog/best-ai-code-review-tools/ | best ai code review tools | 170/mo |
 | 3 | /blog/coderabbit-alternative-human-review/ | coderabbit alternative | ~200/mo |
 | 4 | /blog/claude-code-review/ | claude code review | 320/mo |
@@ -44,7 +44,7 @@
 | Тип | Доля | Примеры |
 |-----|------|---------|
 | Branded | 40% | "Vibers", "Vibers Review", "Vibers Code Review" |
-| Naked URL | 20% | https://vibers.onout.org/ |
+| Naked URL | 20% | https://onout.org/vibers/ |
 | Partial match | 25% | "human code review", "code review service" |
 | Natural / generic | 15% | "this tool", "learn more", "check it out" |
 

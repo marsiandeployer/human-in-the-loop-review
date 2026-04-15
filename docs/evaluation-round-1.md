@@ -1,9 +1,9 @@
-# Evaluation Round 1 — vibers.onout.org
+# Evaluation Round 1 — onout.org/vibers
 
 **Evaluator:** Independent prototype reviewer (never saw this before)
 **Date:** 2026-04-08
 **Prototype:** Human-in-the-loop Review landing page
-**Live URL:** https://vibers.onout.org/
+**Live URL:** https://onout.org/vibers/
 
 ---
 
@@ -30,8 +30,8 @@ A clean, professional-looking page styled as a "CV" that explains the service we
 | Community link in footer | OK — 200 |
 | Career link in footer | OK — 200 |
 | **Privacy page linked from landing?** | **NO** — no link to privacy.html anywhere on the landing page |
-| Privacy page back-link | **BROKEN** — points to `/vibers/` which returns 404 on `vibers.onout.org` (should be `/`) |
-| Privacy page canonical URL | **WRONG** — `https://onout.org/vibers/privacy.html` instead of `https://vibers.onout.org/privacy.html` |
+| Privacy page back-link | **BROKEN** — points to `/vibers/` which returns 404 on `onout.org/vibers` (should be `/`) |
+| Privacy page canonical URL | **WRONG** — `https://onout.org/vibers/privacy.html` instead of `https://onout.org/vibers/privacy.html` |
 | Trustpilot widget | Loads, shows "See our reviews on Trustpilot" — but Trustpilot itself returns 403 for `onout.org` review page |
 | OG image | OK — 200 |
 | Trust Traffic badge | OK — renders small "Verified on Trust Traffic" text |
@@ -45,7 +45,7 @@ A clean, professional-looking page styled as a "CV" that explains the service we
 **Evidence:**
 - The heading "Human-in-the-loop Review" and tagline "Human-in-the-loop code review for vibecoded projects" are clear to insiders but use jargon ("vibecoded") that many visitors won't know.
 - The core value proposition — "we review and fix code written by AI vibecoders" — is buried inside a collapsed `<details>` section ("What We Do"). A first-time visitor sees only 10 collapsed section headers and a code snippet to paste into an AI agent.
-- The primary CTA `Install skill from https://vibers.onout.org/SKILL.md` assumes the visitor already has an AI coding agent and knows what "Install skill" means. This is a niche-of-a-niche.
+- The primary CTA `Install skill from https://onout.org/vibers/SKILL.md` assumes the visitor already has an AI coding agent and knows what "Install skill" means. This is a niche-of-a-niche.
 
 **Fix:** Move the first paragraph of "What We Do" above the fold, visible without clicking. Replace the jargon-heavy tagline with a plain-English benefit statement like "We catch the bugs your AI misses and send you a PR with fixes."
 
@@ -74,7 +74,7 @@ A clean, professional-looking page styled as a "CV" that explains the service we
 ### 4. CTA Effectiveness — 5/10
 
 **Evidence:**
-- The primary CTA is a purple box saying "Install skill from https://vibers.onout.org/SKILL.md" with a Copy button. This is meaningful only to the ~5% of visitors who use Claude Code and know what "Install skill" means.
+- The primary CTA is a purple box saying "Install skill from https://onout.org/vibers/SKILL.md" with a Copy button. This is meaningful only to the ~5% of visitors who use Claude Code and know what "Install skill" means.
 - The fallback ("No AI agent? Install the GitHub App directly or write us on Telegram") is in 13px grey text below the code snippet — easy to miss.
 - There is no prominent "Install GitHub App" button. The GitHub App install link appears only as inline text in 3 places (setup box, How It Works steps list, and the FAQ).
 - The page has **no email capture**, no "get notified", no secondary CTA for visitors who aren't ready to install. You either install right now or you bounce.

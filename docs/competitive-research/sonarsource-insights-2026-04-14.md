@@ -1,6 +1,6 @@
 # SonarSource Ad Insights for Vibers (2026-04-14)
 
-Source archive: [sonarsource-ads-2026-04-14.md](/root/vibers.onout.org/docs/competitive-research/sonarsource-ads-2026-04-14.md)
+Source archive: [sonarsource-ads-2026-04-14.md](/root/onout.org/vibers/docs/competitive-research/sonarsource-ads-2026-04-14.md)
 
 Snapshot scope:
 - The provided gist contains 92 SonarSource/SonarQube ads.

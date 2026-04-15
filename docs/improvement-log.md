@@ -1,4 +1,4 @@
-# Improvement Log — vibers.onout.org Prototype Evaluation
+# Improvement Log — onout.org/vibers Prototype Evaluation
 
 ## Score Tracking
 
@@ -16,7 +16,7 @@
 ## Changes Applied (not yet re-evaluated on live)
 
 ### Round 1 → Round 2 (bug fixes)
-- privacy.html: canonical URL fixed (`vibers.onout.org` instead of `onout.org/vibers/`)
+- privacy.html: canonical URL fixed (`onout.org/vibers` instead of `onout.org/vibers/`)
 - privacy.html: back-link changed from `/vibers/` to `/`
 - setup.html: `.catch(() => showSuccess())` → shows error alert
 - index.html footer: added Privacy link

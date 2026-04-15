@@ -1,4 +1,4 @@
-# Prototyping Criteria — Landing Page (vibers.onout.org)
+# Prototyping Criteria — Landing Page (onout.org/vibers)
 
 ## Universal Criteria
 

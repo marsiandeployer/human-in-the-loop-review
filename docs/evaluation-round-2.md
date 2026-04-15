@@ -1,8 +1,8 @@
-# Evaluation Round 2 — vibers.onout.org
+# Evaluation Round 2 — onout.org/vibers
 
 **Evaluator:** Independent prototype evaluator (never saw this page before)
 **Date:** 2026-04-08
-**Live URL:** https://vibers.onout.org/ (redirects to https://onout.org/vibers/)
+**Live URL:** https://onout.org/vibers/ (redirects to https://onout.org/vibers/)
 
 ---
 
@@ -16,7 +16,7 @@ A clean, CV-style landing page that communicates the service competently but bur
 
 | Check | Status | Notes |
 |-------|--------|-------|
-| Page loads | PASS | 301 redirect vibers.onout.org -> onout.org/vibers/ (adds ~200ms latency) |
+| Page loads | PASS | 301 redirect onout.org/vibers -> onout.org/vibers/ (adds ~200ms latency) |
 | Console errors | PASS | Zero JS errors |
 | Collapsible `<details>` sections (10) | PASS | All open/close correctly, +/- indicator toggles |
 | Copy button (skill command) | PASS | `navigator.clipboard.writeText()` fires correctly |
@@ -39,7 +39,7 @@ A clean, CV-style landing page that communicates the service competently but bur
 
 **Broken/problematic:**
 - Footer "Email" link gets Cloudflare email obfuscation (`/cdn-cgi/l/email-protection#...`) -- this is cosmetic, the link still works in browsers, but it looks ugly in source view and may fail in some email clients
-- The 301 redirect from `vibers.onout.org` to `onout.org/vibers/` means the canonical domain is not serving content directly. Footer links use relative paths (`/privacy.html`, `/community.html`) which resolve to `onout.org/privacy.html` and `onout.org/community.html` -- not the vibers subdirectory. This works only because those pages exist at the onout.org root level too.
+- The 301 redirect from `onout.org/vibers` to `onout.org/vibers/` means the canonical domain is not serving content directly. Footer links use relative paths (`/privacy.html`, `/community.html`) which resolve to `onout.org/privacy.html` and `onout.org/community.html` -- not the vibers subdirectory. This works only because those pages exist at the onout.org root level too.
 
 ---
 
