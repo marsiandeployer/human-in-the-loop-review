@@ -384,7 +384,7 @@ async function processPayment(orderId, amount) {
   <pre class="code-bad"><code># Claude creates .env with real-looking placeholder secrets
 DATABASE_URL=postgres://admin:password123@localhost:5432/myapp
 JWT_SECRET=super-secret-key-change-in-production
-STRIPE_SECRET_KEY=sk_test_4eC39HqLyjWDarjtT1zdp7dc
+STRIPE_SECRET_KEY=sk_test_EXAMPLE_KEY_REPLACE_ME
 SENDGRID_API_KEY=SG.xxxxx</code></pre>
 
   <p>If this gets committed — even once — the secrets are in your git history permanently. GitHub's secret scanning catches some patterns, but not custom secrets like database URLs or JWT signing keys. Always verify: <code>git log --all --diff-filter=A -- .env</code> will show you if <code>.env</code> was ever committed.</p>
