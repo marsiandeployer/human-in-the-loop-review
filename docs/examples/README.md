@@ -1,8 +1,10 @@
 # Landing Examples
 
-This folder is the source of truth for examples shown in the `/vibers/` landing page slider.
+This folder is the source of truth for examples shown in the `/vibers/` landing page examples accordion.
 
 Use one file per case.
+
+On the landing page, each case appears as a collapsed summary row with its own arrow and expands into the full before/after block on demand.
 
 Required structure for every case:
 

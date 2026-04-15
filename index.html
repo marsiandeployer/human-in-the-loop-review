@@ -375,80 +375,45 @@
         .compare-table .td-partial { color: #999; }
         .compare-table .td-vibers { color: #5b44e8; font-weight: 600; }
 
-        /* ─── Examples slider ─── */
+        /* ─── Examples accordion ─── */
         .examples-shell {
             margin-top: 8px;
-        }
-        .examples-toolbar {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 16px;
         }
         .examples-copy {
             font-size: 13px;
             color: #666;
-            max-width: 520px;
+            max-width: 640px;
+            margin-bottom: 16px;
         }
-        .examples-nav {
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-        .examples-nav button {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #d8d3ff;
-            border-radius: 999px;
-            background: #f7f4ff;
-            color: #3d2dcc;
-            font-size: 20px;
-            line-height: 1;
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s, transform 0.2s;
-        }
-        .examples-nav button:hover {
-            background: #ede7ff;
-            border-color: #bdb1ff;
-            transform: translateY(-1px);
-        }
-        .examples-track {
-            display: flex;
-            gap: 18px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            padding: 4px 4px 10px;
-            margin: 0 -4px;
-            scrollbar-gutter: stable;
-        }
-        .examples-track::-webkit-scrollbar {
-            height: 10px;
-        }
-        .examples-track::-webkit-scrollbar-track {
-            background: #f2f0ff;
-            border-radius: 999px;
-        }
-        .examples-track::-webkit-scrollbar-thumb {
-            background: #cfc5ff;
-            border-radius: 999px;
+        .examples-list {
+            display: grid;
+            gap: 14px;
         }
         .example-card {
-            flex: 0 0 min(640px, calc(100vw - 64px));
-            scroll-snap-align: start;
-            border: 1px solid #e7e1ff;
-            border-radius: 18px;
-            background: linear-gradient(180deg, #fcfbff 0%, #f6f2ff 100%);
-            padding: 22px;
-            box-shadow: 0 18px 35px rgba(61, 45, 204, 0.08);
+            scroll-margin-top: 16px;
+            border: 1px solid rgba(91, 68, 232, 0.12);
+            border-radius: 22px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(247, 243, 255, 0.84) 100%);
+            box-shadow: 0 18px 36px rgba(61, 45, 204, 0.06);
+            backdrop-filter: blur(14px);
+            overflow: hidden;
         }
-        .example-card-head {
+        .example-toggle {
+            width: 100%;
             display: flex;
             align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 16px;
+            border: none;
+            background: none;
+            padding: 20px 22px;
+            text-align: left;
+            cursor: pointer;
+            color: inherit;
+            font: inherit;
+        }
+        .example-toggle-copy {
+            flex: 1;
+            min-width: 0;
         }
         .example-kicker {
             display: inline-block;
@@ -463,32 +428,52 @@
             border-radius: 999px;
             margin-bottom: 10px;
         }
-        .example-card h3 {
+        .example-title {
+            display: block;
             font-size: 22px;
             line-height: 1.15;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             letter-spacing: -0.02em;
         }
-        .example-link {
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
         .example-desc {
+            display: block;
             font-size: 14px;
             color: #49455a;
+        }
+        .example-toggle-arrow {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(91, 68, 232, 0.14);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.78);
+            color: #3d2dcc;
+            font-size: 24px;
+            line-height: 1;
+            transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+        }
+        .example-card.is-open .example-toggle-arrow {
+            transform: rotate(90deg);
+            background: #ede7ff;
+            border-color: #bdb1ff;
+        }
+        .example-body {
+            padding: 0 22px 22px;
+            border-top: 1px solid rgba(91, 68, 232, 0.08);
         }
         .example-gallery {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin: 18px 0;
+            margin: 18px 0 16px;
         }
         .example-shot {
-            border: 1px solid #e9e3ff;
-            border-radius: 14px;
+            border: 1px solid rgba(91, 68, 232, 0.1);
+            border-radius: 16px;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.74);
         }
         .example-shot-label,
         .example-prompt-label {
@@ -507,18 +492,18 @@
             background: #fff;
         }
         .example-prompt-wrap {
-            border: 1px solid #231c49;
+            border: 1px solid rgba(91, 68, 232, 0.12);
             border-radius: 16px;
-            background: linear-gradient(180deg, #2d2753 0%, #1d1835 100%);
+            background: linear-gradient(180deg, rgba(244, 240, 255, 0.92) 0%, rgba(255, 255, 255, 0.9) 100%);
             padding: 14px;
         }
         .example-prompt-label {
-            color: #bfb6ff;
+            color: #6f6690;
             margin-bottom: 10px;
         }
         .example-prompt {
             margin: 0;
-            color: #f7f4ff;
+            color: #2f2a45;
             font-size: 12px;
             line-height: 1.65;
             white-space: pre-wrap;
@@ -538,6 +523,21 @@
             font-size: 13px;
             color: #615b78;
             margin-top: 14px;
+        }
+        .example-link-row {
+            margin-top: 12px;
+        }
+        .example-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border: 1px solid rgba(91, 68, 232, 0.14);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
         }
 
         /* ─── Code inline ─── */
@@ -633,16 +633,19 @@
             .flow-step { text-align: center; }
             .flow-arrow { transform: rotate(90deg); text-align: center; }
 
-            .examples-toolbar { flex-direction: column; }
             .examples-copy { max-width: none; }
-            .examples-nav { width: 100%; justify-content: flex-end; }
-            .example-card {
-                flex-basis: calc(100vw - 48px);
+            .example-toggle {
                 padding: 18px;
+                gap: 14px;
             }
-            .example-card h3 { font-size: 19px; }
+            .example-title { font-size: 19px; }
+            .example-toggle-arrow {
+                width: 38px;
+                height: 38px;
+                font-size: 22px;
+            }
+            .example-body { padding: 0 18px 18px; }
             .example-gallery { grid-template-columns: 1fr; }
-            .example-card-head { flex-direction: column; }
 
             .price-row { grid-template-columns: 1fr; }
             .price-block { padding: 16px; }
@@ -837,169 +840,187 @@
     <details open>
         <summary>
             <span class="section-label" data-i18n="label_example">Examples</span>
-            <span data-i18n="ex_title">Scrollable Before / After Fixes</span>
+            <span data-i18n="ex_title">Before / After Fixes You Can Open</span>
         </summary>
         <div class="details-body">
             <div class="examples-shell">
-                <div class="examples-toolbar">
-                    <p class="examples-copy" data-i18n="ex_intro">Every case follows the same pattern: bug summary, before shot, after shot, and the English prompt we used to steer the fix. Swipe horizontally when more examples are added.</p>
-                    <div class="examples-nav" aria-label="Examples navigation">
-                        <button type="button" onclick="scrollExamples(-1)" aria-label="Scroll examples left">‹</button>
-                        <button type="button" onclick="scrollExamples(1)" aria-label="Scroll examples right">›</button>
-                    </div>
-                </div>
-                <div class="examples-track" id="examples-track">
-                    <article class="example-card">
-                        <div class="example-card-head">
-                            <div>
-                                <div class="example-kicker" data-i18n="ex_case_1_badge">Live UI Fix</div>
-                                <h3 data-i18n="ex_case_1_title">Mobile Floor Map Labels</h3>
+                <p class="examples-copy" data-i18n="ex_intro">Each case stays collapsed until you open it, so the section scales cleanly as more fixes are added. Open any card to inspect the bug summary, before/after shots, prompt, and result.</p>
+                <div class="examples-list">
+                    <article class="example-card" id="example-floor-map-labels">
+                        <button type="button" class="example-toggle" onclick="toggleExample(this)" aria-expanded="false">
+                            <span class="example-toggle-copy">
+                                <span class="example-kicker" data-i18n="ex_case_1_badge">Live UI Fix</span>
+                                <span class="example-title" data-i18n="ex_case_1_title">Mobile Floor Map Labels</span>
+                                <span class="example-desc" data-i18n="ex_case_1_desc">A floor map shipped with both the desktop slot label and the shorter mobile label visible at once. On phones the text overlapped, so the slot names were hard to read.</span>
+                            </span>
+                            <span class="example-toggle-arrow" aria-hidden="true">›</span>
+                        </button>
+                        <div class="example-body" hidden>
+                            <div class="example-gallery">
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
+                                    <img src="https://i.wpmix.net/image/photo/photo_1776264507338.jpg" alt="Floor map before fix with overlapping desktop and mobile labels">
+                                </figure>
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_after_label">After</div>
+                                    <img src="https://i.wpmix.net/image/photo/photo_1776264504185.jpg" alt="Floor map after fix with readable mobile slot labels">
+                                </figure>
                             </div>
+                            <div class="example-prompt-wrap">
+                                <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
+                                <pre class="example-prompt"><code>Fix the mobile floor map labels. Right now both the desktop label and the short mobile label render for each slot, so the text overlaps and becomes unreadable on small screens. Show only one label variant per breakpoint, keep the short label on mobile, preserve slot alignment, and make sure every slot name stays readable without overlap.</code></pre>
+                            </div>
+                            <p class="example-footer" data-i18n="ex_case_1_footer">Result: clean mobile slot labels, readable map cards, and a reusable prompt pattern for similar responsive bugs.</p>
                         </div>
-                        <p class="example-desc" data-i18n="ex_case_1_desc">A floor map shipped with both the desktop slot label and the shorter mobile label visible at once. On phones the text overlapped, so the slot names were hard to read.</p>
-                        <div class="example-gallery">
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
-                                <img src="https://i.wpmix.net/image/photo/photo_1776264507338.jpg" alt="Floor map before fix with overlapping desktop and mobile labels">
-                            </figure>
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_after_label">After</div>
-                                <img src="https://i.wpmix.net/image/photo/photo_1776264504185.jpg" alt="Floor map after fix with readable mobile slot labels">
-                            </figure>
-                        </div>
-                        <div class="example-prompt-wrap">
-                            <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
-                            <pre class="example-prompt"><code>Fix the mobile floor map labels. Right now both the desktop label and the short mobile label render for each slot, so the text overlaps and becomes unreadable on small screens. Show only one label variant per breakpoint, keep the short label on mobile, preserve slot alignment, and make sure every slot name stays readable without overlap.</code></pre>
-                        </div>
-                        <p class="example-footer" data-i18n="ex_case_1_footer">Result: clean mobile slot labels, readable map cards, and a reusable prompt pattern for similar responsive bugs.</p>
                     </article>
 
-                    <article class="example-card">
-                        <div class="example-card-head">
-                            <div>
-                                <div class="example-kicker" data-i18n="ex_case_2_badge">Real PR</div>
-                                <h3 data-i18n="ex_case_2_title">Paycif Mobile Pricing Cards</h3>
+                    <article class="example-card" id="example-paycif-pricing">
+                        <button type="button" class="example-toggle" onclick="toggleExample(this)" aria-expanded="false">
+                            <span class="example-toggle-copy">
+                                <span class="example-kicker" data-i18n="ex_case_2_badge">Real PR</span>
+                                <span class="example-title" data-i18n="ex_case_2_title">Paycif Mobile Pricing Cards</span>
+                                <span class="example-desc" data-i18n="ex_case_2_desc">In the Paycif landing page, the pricing cards stayed in columns on mobile because the new grid shipped without a small-screen breakpoint. We added the missing mobile rules and shipped the fix in a real PR.</span>
+                            </span>
+                            <span class="example-toggle-arrow" aria-hidden="true">›</span>
+                        </button>
+                        <div class="example-body" hidden>
+                            <div class="example-gallery">
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
+                                    <img src="https://i.wpmix.net/image/photo/photo_1774439739463.jpg" alt="Paycif before fix with pricing cards broken on mobile">
+                                </figure>
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_after_label">After</div>
+                                    <img src="docs/examples/assets/paycif-mobile-after.png" alt="Paycif after fix with pricing cards stacked on mobile">
+                                </figure>
                             </div>
-                            <a href="https://github.com/MethasMP/Paycif/pull/3" target="_blank" rel="noopener noreferrer" class="example-link" data-i18n="ex_open_pr">Open PR #3</a>
+                            <div class="example-prompt-wrap">
+                                <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
+                                <pre class="example-prompt"><code>Fix the fee-card section on mobile. The pricing cards still render in columns at small widths and the section feels cramped. Add a mobile breakpoint that collapses the grid to one column, remove decorative transforms that break spacing on small screens, and keep the desktop layout unchanged.</code></pre>
+                            </div>
+                            <p class="example-footer" data-i18n="ex_case_2_footer">Result: the cards stack cleanly on mobile, the section becomes readable again, and the shipped fix is documented in a public PR.</p>
+                            <div class="example-link-row">
+                                <a href="https://github.com/MethasMP/Paycif/pull/3" target="_blank" rel="noopener noreferrer" class="example-link" data-i18n="ex_open_pr">Open PR #3</a>
+                            </div>
                         </div>
-                        <p class="example-desc" data-i18n="ex_case_2_desc">In the Paycif landing page, the pricing cards stayed in columns on mobile because the new grid shipped without a small-screen breakpoint. We added the missing mobile rules and shipped the fix in a real PR.</p>
-                        <div class="example-gallery">
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
-                                <img src="https://i.wpmix.net/image/photo/photo_1774439739463.jpg" alt="Paycif before fix with pricing cards broken on mobile">
-                            </figure>
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_after_label">After</div>
-                                <img src="docs/examples/assets/paycif-mobile-after.png" alt="Paycif after fix with pricing cards stacked on mobile">
-                            </figure>
-                        </div>
-                        <div class="example-prompt-wrap">
-                            <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
-                            <pre class="example-prompt"><code>Fix the fee-card section on mobile. The pricing cards still render in columns at small widths and the section feels cramped. Add a mobile breakpoint that collapses the grid to one column, remove decorative transforms that break spacing on small screens, and keep the desktop layout unchanged.</code></pre>
-                        </div>
-                        <p class="example-footer" data-i18n="ex_case_2_footer">Result: the cards stack cleanly on mobile, the section becomes readable again, and the shipped fix is documented in a public PR.</p>
                     </article>
 
-                    <article class="example-card">
-                        <div class="example-card-head">
-                            <div>
-                                <div class="example-kicker" data-i18n="ex_case_3_badge">Live UI Fix</div>
-                                <h3 data-i18n="ex_case_3_title">Chat Message Wrapping</h3>
+                    <article class="example-card" id="example-chat-message-wrapping">
+                        <button type="button" class="example-toggle" onclick="toggleExample(this)" aria-expanded="false">
+                            <span class="example-toggle-copy">
+                                <span class="example-kicker" data-i18n="ex_case_3_badge">Live UI Fix</span>
+                                <span class="example-title" data-i18n="ex_case_3_title">Chat Message Wrapping</span>
+                                <span class="example-desc" data-i18n="ex_case_3_desc">Long chat messages stayed on a single line instead of wrapping, so the conversation UI overflowed horizontally and became hard to read.</span>
+                            </span>
+                            <span class="example-toggle-arrow" aria-hidden="true">›</span>
+                        </button>
+                        <div class="example-body" hidden>
+                            <div class="example-gallery">
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
+                                    <img src="https://skrinshoter.ru/s/080426/imGIniKz.png?view=1" alt="Chat UI before fix with a long message overflowing in one line">
+                                </figure>
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_after_label">After</div>
+                                    <img src="https://s3.wpmix.net/main/SCR-20260415-pxq.png" alt="Chat UI after fix with long messages wrapping onto the next line">
+                                </figure>
                             </div>
+                            <div class="example-prompt-wrap">
+                                <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
+                                <pre class="example-prompt"><code>Fix long chat message wrapping in the conversation UI. Right now oversized messages stay on one line, overflow the container, and hurt readability. Update the message bubble styles so long text wraps onto the next line, preserves normal spacing, and stays fully readable on both desktop and mobile without changing the rest of the chat layout.</code></pre>
+                            </div>
+                            <p class="example-footer" data-i18n="ex_case_3_footer">Result: long messages wrap cleanly inside the bubble, horizontal overflow is gone, and the chat stays readable across screen sizes.</p>
                         </div>
-                        <p class="example-desc" data-i18n="ex_case_3_desc">Long chat messages stayed on a single line instead of wrapping, so the conversation UI overflowed horizontally and became hard to read.</p>
-                        <div class="example-gallery">
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
-                                <img src="https://skrinshoter.ru/s/080426/imGIniKz.png?view=1" alt="Chat UI before fix with a long message overflowing in one line">
-                            </figure>
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_after_label">After</div>
-                                <img src="https://s3.wpmix.net/main/SCR-20260415-pxq.png" alt="Chat UI after fix with long messages wrapping onto the next line">
-                            </figure>
-                        </div>
-                        <div class="example-prompt-wrap">
-                            <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
-                            <pre class="example-prompt"><code>Fix long chat message wrapping in the conversation UI. Right now oversized messages stay on one line, overflow the container, and hurt readability. Update the message bubble styles so long text wraps onto the next line, preserves normal spacing, and stays fully readable on both desktop and mobile without changing the rest of the chat layout.</code></pre>
-                        </div>
-                        <p class="example-footer" data-i18n="ex_case_3_footer">Result: long messages wrap cleanly inside the bubble, horizontal overflow is gone, and the chat stays readable across screen sizes.</p>
                     </article>
 
-                    <article class="example-card">
-                        <div class="example-card-head">
-                            <div>
-                                <div class="example-kicker" data-i18n="ex_case_4_badge">Live UI Fix</div>
-                                <h3 data-i18n="ex_case_4_title">Selected Poster Preview</h3>
+                    <article class="example-card" id="example-poster-preview">
+                        <button type="button" class="example-toggle" onclick="toggleExample(this)" aria-expanded="false">
+                            <span class="example-toggle-copy">
+                                <span class="example-kicker" data-i18n="ex_case_4_badge">Live UI Fix</span>
+                                <span class="example-title" data-i18n="ex_case_4_title">Selected Poster Preview</span>
+                                <span class="example-desc" data-i18n="ex_case_4_desc">On the responsive layout, the selected poster did not load fully in the preview area, so users saw an incomplete image instead of the full poster they picked.</span>
+                            </span>
+                            <span class="example-toggle-arrow" aria-hidden="true">›</span>
+                        </button>
+                        <div class="example-body" hidden>
+                            <div class="example-gallery">
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
+                                    <img src="https://skrinshoter.ru/s/080426/GeYapKeQ.png?view=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-08-04-2026%2006:32:55.png" alt="Poster selection UI before fix with the chosen poster not fully loading">
+                                </figure>
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_after_label">After</div>
+                                    <img src="https://i.wpmix.net/image/photo/photo_1776266708284.jpg" alt="Poster selection UI after fix with the chosen poster fully visible">
+                                </figure>
                             </div>
+                            <div class="example-prompt-wrap">
+                                <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
+                                <pre class="example-prompt"><code>Fix the selected poster preview in the responsive UI. Right now when a user picks a poster, the preview does not render the full chosen image on smaller screens, so the result looks incomplete. Update the preview container and image sizing logic so the selected poster loads fully, keeps its aspect ratio, and stays clearly visible without breaking the existing desktop layout.</code></pre>
+                            </div>
+                            <p class="example-footer" data-i18n="ex_case_4_footer">Result: the chosen poster now renders fully in the preview, the selected state is obvious, and the responsive flow feels complete instead of broken.</p>
                         </div>
-                        <p class="example-desc" data-i18n="ex_case_4_desc">On the responsive layout, the selected poster did not load fully in the preview area, so users saw an incomplete image instead of the full poster they picked.</p>
-                        <div class="example-gallery">
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
-                                <img src="https://skrinshoter.ru/s/080426/GeYapKeQ.png?view=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-08-04-2026%2006:32:55.png" alt="Poster selection UI before fix with the chosen poster not fully loading">
-                            </figure>
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_after_label">After</div>
-                                <img src="https://i.wpmix.net/image/photo/photo_1776266708284.jpg" alt="Poster selection UI after fix with the chosen poster fully visible">
-                            </figure>
-                        </div>
-                        <div class="example-prompt-wrap">
-                            <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
-                            <pre class="example-prompt"><code>Fix the selected poster preview in the responsive UI. Right now when a user picks a poster, the preview does not render the full chosen image on smaller screens, so the result looks incomplete. Update the preview container and image sizing logic so the selected poster loads fully, keeps its aspect ratio, and stays clearly visible without breaking the existing desktop layout.</code></pre>
-                        </div>
-                        <p class="example-footer" data-i18n="ex_case_4_footer">Result: the chosen poster now renders fully in the preview, the selected state is obvious, and the responsive flow feels complete instead of broken.</p>
                     </article>
 
-                    <article class="example-card">
-                        <div class="example-card-head">
-                            <div>
-                                <div class="example-kicker" data-i18n="ex_case_5_badge">Live UI Fix</div>
-                                <h3 data-i18n="ex_case_5_title">Floor Map Edge Slots</h3>
+                    <article class="example-card" id="example-floor-map-edge-slots">
+                        <button type="button" class="example-toggle" onclick="toggleExample(this)" aria-expanded="false">
+                            <span class="example-toggle-copy">
+                                <span class="example-kicker" data-i18n="ex_case_5_badge">Live UI Fix</span>
+                                <span class="example-title" data-i18n="ex_case_5_title">Floor Map Edge Slots</span>
+                                <span class="example-desc" data-i18n="ex_case_5_desc">On the responsive floor map, the outermost slots drifted outside the light charcoal map background. The layout looked broken on mobile and created a clear UX/UI issue around the map edges.</span>
+                            </span>
+                            <span class="example-toggle-arrow" aria-hidden="true">›</span>
+                        </button>
+                        <div class="example-body" hidden>
+                            <div class="example-gallery">
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
+                                    <img src="https://skrinshoter.ru/s/080426/QXT22pzU.png?view=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-08-04-2026%2006:28:41.png" alt="Floor map before fix with edge slots rendered outside the background area">
+                                </figure>
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_after_label">After</div>
+                                    <img src="https://i.wpmix.net/image/photo/photo_1776267112556.jpg" alt="Floor map after fix with edge slots aligned inside the background area">
+                                </figure>
                             </div>
-                            <a href="https://skr.sh/savQXT22pzU" target="_blank" rel="noopener noreferrer" class="example-link" data-i18n="ex_case_5_link">Open issue capture</a>
+                            <div class="example-prompt-wrap">
+                                <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
+                                <pre class="example-prompt"><code>Fix the responsive floor map layout on the page shown in the linked capture. Right now the outermost slots sit outside the light charcoal map background on mobile, so the composition looks broken and creates a visible UX/UI bug. Rework the mobile sizing and positioning so every slot stays inside the map surface, the edge spacing is consistent, and the floor map remains visually aligned without regressing the desktop layout.</code></pre>
+                            </div>
+                            <p class="example-footer" data-i18n="ex_case_5_footer">Result: the mobile floor map layout was corrected, the edge slots now stay inside the background, and the responsive UX/UI bug was removed on the reported screen.</p>
+                            <div class="example-link-row">
+                                <a href="https://skr.sh/savQXT22pzU" target="_blank" rel="noopener noreferrer" class="example-link" data-i18n="ex_case_5_link">Open issue capture</a>
+                            </div>
                         </div>
-                        <p class="example-desc" data-i18n="ex_case_5_desc">On the responsive floor map, the outermost slots drifted outside the light charcoal map background. The layout looked broken on mobile and created a clear UX/UI issue around the map edges.</p>
-                        <div class="example-gallery">
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
-                                <img src="https://skrinshoter.ru/s/080426/QXT22pzU.png?view=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-08-04-2026%2006:28:41.png" alt="Floor map before fix with edge slots rendered outside the background area">
-                            </figure>
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_after_label">After</div>
-                                <img src="https://i.wpmix.net/image/photo/photo_1776267112556.jpg" alt="Floor map after fix with edge slots aligned inside the background area">
-                            </figure>
-                        </div>
-                        <div class="example-prompt-wrap">
-                            <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
-                            <pre class="example-prompt"><code>Fix the responsive floor map layout on the page shown in the linked capture. Right now the outermost slots sit outside the light charcoal map background on mobile, so the composition looks broken and creates a visible UX/UI bug. Rework the mobile sizing and positioning so every slot stays inside the map surface, the edge spacing is consistent, and the floor map remains visually aligned without regressing the desktop layout.</code></pre>
-                        </div>
-                        <p class="example-footer" data-i18n="ex_case_5_footer">Result: the mobile floor map layout was corrected, the edge slots now stay inside the background, and the responsive UX/UI bug was removed on the reported screen.</p>
                     </article>
 
-                    <article class="example-card">
-                        <div class="example-card-head">
-                            <div>
-                                <div class="example-kicker" data-i18n="ex_case_6_badge">Live UI Fix</div>
-                                <h3 data-i18n="ex_case_6_title">Brand Identity Screen 1/1</h3>
+                    <article class="example-card" id="example-brand-identity-screen">
+                        <button type="button" class="example-toggle" onclick="toggleExample(this)" aria-expanded="false">
+                            <span class="example-toggle-copy">
+                                <span class="example-kicker" data-i18n="ex_case_6_badge">Live UI Fix</span>
+                                <span class="example-title" data-i18n="ex_case_6_title">Brand Identity Screen 1/1</span>
+                                <span class="example-desc" data-i18n="ex_case_6_desc">In Stand settings, the Brand identity content inside Screen 1/1 was flipped in the wrong direction, so the preview looked reversed instead of matching the intended layout.</span>
+                            </span>
+                            <span class="example-toggle-arrow" aria-hidden="true">›</span>
+                        </button>
+                        <div class="example-body" hidden>
+                            <div class="example-gallery">
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
+                                    <img src="https://skrinshoter.ru/s/080426/jvIKsdLg.png?view=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-08-04-2026%2005:51:00.png" alt="Stand settings before fix with Brand identity Screen 1/1 content flipped the wrong way">
+                                </figure>
+                                <figure class="example-shot">
+                                    <div class="example-shot-label" data-i18n="ex_after_label">After</div>
+                                    <img src="https://s3.wpmix.net/main/SCR-20260415-r09.png" alt="Stand settings after fix with Brand identity Screen 1/1 content oriented correctly">
+                                </figure>
                             </div>
-                            <a href="https://skr.sh/savPSY9MyhJ" target="_blank" rel="noopener noreferrer" class="example-link" data-i18n="ex_case_6_link">Open extra capture</a>
+                            <div class="example-prompt-wrap">
+                                <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
+                                <pre class="example-prompt"><code>Fix the Brand identity view in Stand settings for Screen 1/1. Right now the content inside the screen is flipped in the wrong direction, so the preview looks reversed and does not match the intended stand layout. Correct the orientation logic so the content renders in the proper direction, stays centered within the screen area, and preserves the existing layout on responsive breakpoints.</code></pre>
+                            </div>
+                            <p class="example-footer" data-i18n="ex_case_6_footer">Result: Screen 1/1 now shows the brand content in the correct orientation, the preview matches the intended layout, and the stand settings screen no longer looks reversed.</p>
+                            <div class="example-link-row">
+                                <a href="https://skr.sh/savPSY9MyhJ" target="_blank" rel="noopener noreferrer" class="example-link" data-i18n="ex_case_6_link">Open extra capture</a>
+                            </div>
                         </div>
-                        <p class="example-desc" data-i18n="ex_case_6_desc">In Stand settings, the Brand identity content inside Screen 1/1 was flipped in the wrong direction, so the preview looked reversed instead of matching the intended layout.</p>
-                        <div class="example-gallery">
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_before_label">Before</div>
-                                <img src="https://skrinshoter.ru/s/080426/jvIKsdLg.png?view=1&name=%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82-08-04-2026%2005:51:00.png" alt="Stand settings before fix with Brand identity Screen 1/1 content flipped the wrong way">
-                            </figure>
-                            <figure class="example-shot">
-                                <div class="example-shot-label" data-i18n="ex_after_label">After</div>
-                                <img src="https://s3.wpmix.net/main/SCR-20260415-r09.png" alt="Stand settings after fix with Brand identity Screen 1/1 content oriented correctly">
-                            </figure>
-                        </div>
-                        <div class="example-prompt-wrap">
-                            <div class="example-prompt-label" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
-                            <pre class="example-prompt"><code>Fix the Brand identity view in Stand settings for Screen 1/1. Right now the content inside the screen is flipped in the wrong direction, so the preview looks reversed and does not match the intended stand layout. Correct the orientation logic so the content renders in the proper direction, stays centered within the screen area, and preserves the existing layout on responsive breakpoints.</code></pre>
-                        </div>
-                        <p class="example-footer" data-i18n="ex_case_6_footer">Result: Screen 1/1 now shows the brand content in the correct orientation, the preview matches the intended layout, and the stand settings screen no longer looks reversed.</p>
                     </article>
                 </div>
             </div>
@@ -1282,8 +1303,8 @@ const ru = {
     sec_revoke: "<strong>Отозвать в любой момент:</strong> GitHub Settings → Applications → Installed GitHub Apps → Vibers Review → Uninstall. 5 секунд. Никаких привязок.",
     sec_nda: "NDA доступен по запросу для платных ревью.",
     label_example: "Примеры",
-    ex_title: "Слайдер real before / after фиксов",
-    ex_intro: "Каждый кейс теперь собран по одной схеме: краткое описание бага, скрин до, скрин после и English prompt, которым мы вели исправление. Новые кейсы можно просто докидывать в этот горизонтальный ряд.",
+    ex_title: "Before / after кейсы с раскрытием по стрелке",
+    ex_intro: "Каждый кейс теперь свернут до клика, поэтому блок спокойно масштабируется по мере добавления новых работ. Открой нужную карточку и сразу увидишь суть бага, до/после, English prompt и итог фикса.",
     ex_before_label: "До",
     ex_after_label: "После",
     ex_prompt_label: "Промпт, который дал такой результат",
@@ -1362,12 +1383,31 @@ function setLang(lang) {
 <script src="https://op.wpmix.net/embed.js" data-app="vibers"></script>
 
 <script>
-function scrollExamples(direction) {
-    const track = document.getElementById('examples-track');
-    if (!track) return;
-    const amount = Math.min(track.clientWidth * 0.9, 540) * direction;
-    track.scrollBy({ left: amount, behavior: 'smooth' });
+function toggleExample(trigger) {
+    const card = trigger.closest('.example-card');
+    if (!card) return;
+
+    const body = card.querySelector('.example-body');
+    const isOpen = card.classList.toggle('is-open');
+
+    trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (body) body.hidden = !isOpen;
 }
+
+(function() {
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    const target = document.querySelector(hash);
+    if (!target || !target.classList.contains('example-card')) return;
+
+    const trigger = target.querySelector('.example-toggle');
+    const body = target.querySelector('.example-body');
+
+    target.classList.add('is-open');
+    if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    if (body) body.hidden = false;
+})();
 
 // Lead tracking — fires once per session per action type
 const _ledFired = {};
