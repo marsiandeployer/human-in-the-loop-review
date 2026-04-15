@@ -101,6 +101,8 @@ Here's a real PR we sent to [MethasMP/Paycif](https://github.com/MethasMP/Paycif
 
 > **[PR #2: Bug fixes and improvements](https://github.com/MethasMP/Paycif/pull/2)** — Found 5 bugs including broken payment flow, missing error handling, and UI issues. All fixed with working code.
 
+Recent UI example from the landing page: on a mobile floor map, both the desktop slot label and the short mobile label rendered at once, causing unreadable overlap. Vibers turned that into a concrete fix prompt and a clean before/after result.
+
 This is what every review looks like: not just comments, but actual working fixes in a PR.
 
 ## Vibers vs Alternatives

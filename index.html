@@ -657,38 +657,27 @@
     <details open>
         <summary>
             <span class="section-label" data-i18n="label_example">Example</span>
-            <span data-i18n="ex_title">Real PR: MethasMP/Paycif</span>
+            <span data-i18n="ex_title">Before / After: Mobile Floor Map Fix</span>
         </summary>
         <div class="details-body">
-            <p style="font-size:13px; color:#666; margin-bottom:14px;" data-i18n="ex_intro">Client from Thailand, AI-built Paycif app (Claude Code). Our reviewer spotted mobile layout issues:</p>
+            <p style="font-size:13px; color:#666; margin-bottom:14px;" data-i18n="ex_intro">A client shipped a mobile floor map where two label variants rendered at once. The desktop label and the short mobile label overlapped, so slot names became unreadable on small screens.</p>
             <div style="background:#fff8f8; border:1px solid #fcc; border-radius:6px; padding:16px; margin-bottom:16px;">
-                <div style="font-size:12px; font-weight:600; color:#d94f4f; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;" data-i18n="ex_bug_label">Issues found (2)</div>
-                <div style="font-size:13px; color:#333; margin-bottom:12px;" data-i18n="ex_bug_desc">Fee cards didn't stack on mobile — layout broke. GSAP animation caused a dark overlay on the second screen on mobile. The agent added no mobile breakpoints for the new layout grid.</div>
+                <div style="font-size:12px; font-weight:600; color:#d94f4f; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;" data-i18n="ex_bug_label">Bug found</div>
+                <div style="font-size:13px; color:#333; margin-bottom:12px;" data-i18n="ex_bug_desc">The responsive logic showed both the desktop slot caption and the shorter mobile caption on the same floor map card. Text stacked on top of itself, making the slot label hard to read and breaking the mobile UI.</div>
                 <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
                     <div style="flex:1; min-width:140px;">
-                        <div style="font-size:11px; color:#999; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">Before — columns broken</div>
-                        <img src="https://i.wpmix.net/image/photo/photo_1774439739460.jpg" alt="Mobile layout broken" style="width:100%; display:block; border-radius:4px; border:1px solid #eee;">
+                        <div style="font-size:11px; color:#999; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;" data-i18n="ex_before_label">Before — overlapping labels</div>
+                        <img src="https://i.wpmix.net/image/photo/photo_1776264507338.jpg" alt="Floor map before fix with overlapping desktop and mobile labels" style="width:100%; display:block; border-radius:4px; border:1px solid #eee;">
                     </div>
                     <div style="flex:1; min-width:140px;">
-                        <div style="font-size:11px; color:#999; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">Before — dark overlay</div>
-                        <img src="https://i.wpmix.net/image/photo/photo_1774439739463.jpg" alt="GSAP dark overlay on mobile" style="width:100%; display:block; border-radius:4px; border:1px solid #eee;">
+                        <div style="font-size:11px; color:#999; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;" data-i18n="ex_after_label">After — one clean mobile label</div>
+                        <img src="https://i.wpmix.net/image/photo/photo_1776264504185.jpg" alt="Floor map after fix with readable mobile slot labels" style="width:100%; display:block; border-radius:4px; border:1px solid #eee;">
                     </div>
                 </div>
-                <pre style="background:#2d2d2d; color:#f8f8f2; padding:12px; border-radius:4px; font-size:12px; overflow-x:auto; margin:0;"><code style="background:none; border:none; padding:0; color:#f8f8f2; font-size:12px;">/* Before — agent wrote no mobile breakpoints */
-.freedom-grid { grid-template-columns: repeat(3, 1fr); }
-
-/* After — our fix in PR */
-@media (max-width: 768px) {
-  .freedom-grid { grid-template-columns: 1fr; }
-  .fee-card.magical { transform: none; }
-}
-
-// GSAP overlay fix
-if (window.innerWidth > 768) {
-  gsap.to('#device-mockup', { opacity: 0.3, ... });
-}</code></pre>
+                <div style="font-size:11px; color:#999; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;" data-i18n="ex_prompt_label">Prompt used to get from before to after</div>
+                <pre style="background:#2d2d2d; color:#f8f8f2; padding:12px; border-radius:4px; font-size:12px; overflow-x:auto; margin:0;"><code style="background:none; border:none; padding:0; color:#f8f8f2; font-size:12px;">Fix the mobile floor map labels. Right now both the desktop label and the short mobile label are rendered for each slot, so the text overlaps and becomes unreadable on small screens. Show only one label variant per breakpoint, keep the short label on mobile, preserve slot alignment, and make sure every slot name is readable without overlap.</code></pre>
             </div>
-            <p style="font-size:13px; color:#666;" data-i18n="ex_footer">Fixed and sent as <a href="https://github.com/MethasMP/Paycif/pull/3" target="_blank" rel="noopener noreferrer">PR #3</a> in one session. Client merged same day.</p>
+            <p style="font-size:13px; color:#666;" data-i18n="ex_footer">Typical Vibers outcome: one clear bug report, a concrete prompt for the agent, and a visible before/after result the client can ship.</p>
         </div>
     </details>
 
@@ -968,11 +957,14 @@ const ru = {
     sec_revoke: "<strong>Отозвать в любой момент:</strong> GitHub Settings → Applications → Installed GitHub Apps → Vibers Review → Uninstall. 5 секунд. Никаких привязок.",
     sec_nda: "NDA доступен по запросу для платных ревью.",
     label_example: "Пример",
-    ex_title: "Реальный PR: MethasMP/Paycif",
-    ex_intro: "Клиент из Таиланда, приложение Paycif собрано агентом (Claude Code). Наш ревьюер нашёл проблемы с мобильной вёрсткой:",
-    ex_bug_label: "Найдено проблем (2)",
-    ex_bug_desc: "Карточки не стекались в колонку на мобиле — вёрстка ломалась. GSAP-анимация давала тёмный оверлей на втором экране на мобильных. Агент не добавил mobile breakpoints для нового grid-лейаута.",
-    ex_footer: "Починили и отправили <a href=\"https://github.com/MethasMP/Paycif/pull/3\" target=\"_blank\" rel=\"noopener noreferrer\">PR #3</a> за одну сессию. Клиент смёрджил в тот же день.",
+    ex_title: "Before / After: фикс mobile floor map",
+    ex_intro: "Клиент выкатил mobile floor map, где одновременно рендерились два варианта подписи. Десктопная подпись и короткая мобильная подпись накладывались друг на друга, из-за чего названия слотов становились нечитаемыми на маленьком экране.",
+    ex_bug_label: "Найден баг",
+    ex_bug_desc: "Адаптивная логика показывала и десктопную подпись слота, и сокращённую мобильную подпись в одной и той же карточке floor map. Текст накладывался сам на себя, ломал мобильный UI и мешал прочитать название слота.",
+    ex_before_label: "До — подписи налезают друг на друга",
+    ex_after_label: "После — одна чистая мобильная подпись",
+    ex_prompt_label: "Промпт, который дал такой результат",
+    ex_footer: "Типичный результат Vibers: один понятный баг-репорт, конкретный промпт для агента и наглядный before/after, который клиент может сразу выкатывать.",
     honest_box: "<strong>Честно о себе:</strong> Мы не security-фирма. Никаких OWASP-пентестов, аудитов архитектуры, профилирования производительности. Мы — обычные люди, которые смотрят на ваш код свежим взглядом: ловят очевидные баги, проверяют что основные сценарии работают, и пишут фикс вместо того чтобы создавать тикет. Думайте об этом как альфа-тестер, который ещё и шлёт PR.",
     site_label: "Нет GitHub? Не проблема",
     site_desc: "Не готовы подключать GitHub? Просто укажите URL вашего сайта — мы протестируем вручную и пришлём отчёт с находками.",
