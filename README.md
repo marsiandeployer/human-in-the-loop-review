@@ -125,6 +125,8 @@ On the landing page, each case now stays collapsed behind its own downward arrow
 
 Brand assets now use `assets/vibers-logo-source.jpg` as the source file for README, favicon, share previews, and the remaining internal page headers so the repo and site stay in sync.
 
+For quick synthetic inspector screenshots, `demo/visual-bug.html` contains a deliberately exaggerated action-button bug where the label spills outside a fixed-width button body, so the defect reads immediately in a single frame.
+
 ## Vibers vs Alternatives
 
 | Feature | Vibers | CodeRabbit | SonarQube | PullRequest.com |

@@ -76,6 +76,7 @@
   }
 
   table { width: 100%; border-collapse: collapse; }
+  .action-column { width: 220px; }
   th {
     text-align: left; font-size: 12px; font-weight: 600;
     color: #94a3b8; text-transform: uppercase; letter-spacing: .04em;
@@ -98,19 +99,38 @@
 
   /* ══════════════════════════════════════════
      🐛 VISUAL BUG: action button with overflow
-     The button has a fixed narrow width but a
-     long label — text overflows without ellipsis
+     The button is intentionally far too narrow
+     and forces a long label to spill outside
+     the blue button body on a single line
   ══════════════════════════════════════════ */
   .btn-action {
-    width: 72px;               /* too narrow */
+    display: inline-block;
+    width: 64px;               /* intentionally too narrow */
+    height: 30px;
     background: #2d3a8c;
-    color: #fff;
-    border: none;
     border-radius: 6px;
-    padding: 5px 8px;
+    vertical-align: middle;
+    position: relative;
+  }
+
+  .action-cell {
+    position: relative;
+    width: 220px;
+    min-width: 220px;
+    overflow: visible;
+  }
+
+  .btn-action__label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
     font-size: 13px;
-    cursor: pointer;
-    /* missing: overflow:hidden + text-overflow:ellipsis + white-space:nowrap */
+    font-weight: 700;
+    line-height: 1.15;
+    white-space: nowrap;
+    color: #1f2f73;
+    z-index: 1;
   }
 
   /* ── Export button (normal, for contrast) ── */
@@ -166,13 +186,20 @@
       <button class="btn-export">Export CSV</button>
     </div>
     <table>
+      <colgroup>
+        <col>
+        <col>
+        <col>
+        <col>
+        <col class="action-column">
+      </colgroup>
       <thead>
         <tr>
           <th>Order ID</th>
           <th>Customer</th>
           <th>Amount</th>
           <th>Status</th>
-          <th>Action</th>
+          <th class="action-cell">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -181,28 +208,28 @@
           <td>Maria Kowalski</td>
           <td>$320.00</td>
           <td><span class="badge success">Completed</span></td>
-          <td><button class="btn-action">View details</button></td>
+          <td class="action-cell"><span class="btn-action" aria-hidden="true"></span><span class="btn-action__label">View transaction details</span></td>
         </tr>
         <tr>
           <td>#10040</td>
           <td>James Carter</td>
           <td>$85.50</td>
           <td><span class="badge pending">Pending</span></td>
-          <td><button class="btn-action">View details</button></td>
+          <td class="action-cell"><span class="btn-action" aria-hidden="true"></span><span class="btn-action__label">View transaction details</span></td>
         </tr>
         <tr>
           <td>#10039</td>
           <td>Yuki Tanaka</td>
           <td>$1,200.00</td>
           <td><span class="badge failed">Failed</span></td>
-          <td><button class="btn-action">View details</button></td>
+          <td class="action-cell"><span class="btn-action" aria-hidden="true"></span><span class="btn-action__label">View transaction details</span></td>
         </tr>
         <tr>
           <td>#10038</td>
           <td>Oliver Schmidt</td>
           <td>$540.00</td>
           <td><span class="badge success">Completed</span></td>
-          <td><button class="btn-action">View details</button></td>
+          <td class="action-cell"><span class="btn-action" aria-hidden="true"></span><span class="btn-action__label">View transaction details</span></td>
         </tr>
       </tbody>
     </table>
