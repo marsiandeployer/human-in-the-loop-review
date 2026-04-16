@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — Acme SaaS</title>
+<title>op.wpmix.net — Vibers Demo</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -12,112 +12,73 @@
     background: #f4f6fa;
     color: #1a1a2e;
     min-height: 100vh;
-  }
-
-  /* ── Top nav ── */
-  nav {
-    background: #fff;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 0 32px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  nav .logo { font-weight: 700; font-size: 18px; color: #2d3a8c; }
-  nav .nav-links { display: flex; gap: 24px; font-size: 14px; color: #64748b; }
-  nav .avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-  }
-
-  /* ── Main layout ── */
-  .container {
-    max-width: 960px;
-    margin: 40px auto;
-    padding: 0 24px;
-  }
-
-  h1 { font-size: 24px; font-weight: 600; margin-bottom: 24px; }
-
-  /* ── Cards grid ── */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 32px;
-  }
-
-  .card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #e2e8f0;
-  }
-  .card .label { font-size: 13px; color: #94a3b8; margin-bottom: 6px; }
-  .card .value { font-size: 28px; font-weight: 700; }
-  .card .delta { font-size: 12px; color: #22c55e; margin-top: 4px; }
-
-  /* ── Table ── */
-  .table-section {
-    background: #fff;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
     overflow: hidden;
   }
-  .table-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid #e2e8f0;
-    font-weight: 600;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
 
-  table { width: 100%; border-collapse: collapse; }
-  .action-column { width: 220px; }
-  th {
-    text-align: left; font-size: 12px; font-weight: 600;
-    color: #94a3b8; text-transform: uppercase; letter-spacing: .04em;
-    padding: 10px 20px; background: #f8fafc;
+  /* ── Full-screen iframe wrapper ── */
+  .site-frame {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
   }
-  td { padding: 14px 20px; font-size: 14px; border-top: 1px solid #f1f5f9; }
-  tr:hover td { background: #fafbff; }
-
-  /* ── Status badge ── */
-  .badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 99px;
-    font-size: 12px;
-    font-weight: 500;
-  }
-  .badge.success { background: #dcfce7; color: #16a34a; }
-  .badge.pending { background: #fef9c3; color: #a16207; }
-  .badge.failed  { background: #fee2e2; color: #dc2626; }
 
   /* ══════════════════════════════════════════
-     🐛 VISUAL BUG: action button with overflow
-     The button is intentionally far too narrow
-     and forces a long label to spill outside
-     the blue button body on a single line
+     🐛 VISUAL BUG OVERLAY: floating broken button
+     Positioned over the iframe to simulate a
+     real UI bug on the live product
   ══════════════════════════════════════════ */
-  .btn-action {
-    display: inline-block;
-    width: 64px;               /* intentionally too narrow */
-    height: 30px;
-    background: #2d3a8c;
-    border-radius: 6px;
-    vertical-align: middle;
-    position: relative;
+  .bug-overlay {
+    position: fixed;
+    top: 200px;
+    left: 320px;
+    z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
   }
 
-  .action-cell {
+  /* The broken element — button too narrow, text overflows */
+  .broken-widget {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.10);
     position: relative;
-    width: 220px;
-    min-width: 220px;
-    overflow: visible;
+    width: 240px;
+  }
+
+  .broken-widget__title {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 10px;
+  }
+
+  .broken-widget__value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+  }
+
+  /* ── BUG: intentionally too narrow button ── */
+  .btn-action-wrap {
+    position: relative;
+    height: 32px;
+  }
+
+  .btn-action {
+    display: inline-block;
+    width: 68px;               /* intentionally too narrow */
+    height: 32px;
+    background: #2d3a8c;
+    border-radius: 6px;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 
   .btn-action__label {
@@ -125,114 +86,32 @@
     top: 50%;
     left: 10px;
     transform: translateY(-50%);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
-    line-height: 1.15;
     white-space: nowrap;
     color: #1f2f73;
     z-index: 1;
-  }
-
-  /* ── Export button (normal, for contrast) ── */
-  .btn-export {
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 7px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
   }
 </style>
 </head>
 <body>
 
-<nav>
-  <span class="logo">AcmeSaaS</span>
-  <div class="nav-links">
-    <span>Dashboard</span>
-    <span>Reports</span>
-    <span>Users</span>
-    <span>Settings</span>
-  </div>
-  <div class="avatar"></div>
-</nav>
+<!-- Real product as background -->
+<iframe
+  class="site-frame"
+  src="https://op.wpmix.net"
+  title="op.wpmix.net"
+></iframe>
 
-<div class="container">
-  <h1>Overview</h1>
-
-  <div class="cards">
-    <div class="card">
-      <div class="label">Total Revenue</div>
-      <div class="value">$48,210</div>
-      <div class="delta">↑ 12.4% this month</div>
+<!-- Visual bug overlay on top -->
+<div class="bug-overlay">
+  <div class="broken-widget">
+    <div class="broken-widget__title">Monthly Revenue</div>
+    <div class="broken-widget__value">$48,210</div>
+    <div class="btn-action-wrap">
+      <span class="btn-action" aria-hidden="true"></span>
+      <span class="btn-action__label">View transaction details</span>
     </div>
-    <div class="card">
-      <div class="label">Active Users</div>
-      <div class="value">3,842</div>
-      <div class="delta">↑ 8.1% this month</div>
-    </div>
-    <div class="card">
-      <div class="label">Open Tickets</div>
-      <div class="value">127</div>
-      <div class="delta" style="color:#f59e0b">→ same as last week</div>
-    </div>
-  </div>
-
-  <div class="table-section">
-    <div class="table-header">
-      Recent Transactions
-      <button class="btn-export">Export CSV</button>
-    </div>
-    <table>
-      <colgroup>
-        <col>
-        <col>
-        <col>
-        <col>
-        <col class="action-column">
-      </colgroup>
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Customer</th>
-          <th>Amount</th>
-          <th>Status</th>
-          <th class="action-cell">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>#10041</td>
-          <td>Maria Kowalski</td>
-          <td>$320.00</td>
-          <td><span class="badge success">Completed</span></td>
-          <td class="action-cell"><span class="btn-action" aria-hidden="true"></span><span class="btn-action__label">View transaction details</span></td>
-        </tr>
-        <tr>
-          <td>#10040</td>
-          <td>James Carter</td>
-          <td>$85.50</td>
-          <td><span class="badge pending">Pending</span></td>
-          <td class="action-cell"><span class="btn-action" aria-hidden="true"></span><span class="btn-action__label">View transaction details</span></td>
-        </tr>
-        <tr>
-          <td>#10039</td>
-          <td>Yuki Tanaka</td>
-          <td>$1,200.00</td>
-          <td><span class="badge failed">Failed</span></td>
-          <td class="action-cell"><span class="btn-action" aria-hidden="true"></span><span class="btn-action__label">View transaction details</span></td>
-        </tr>
-        <tr>
-          <td>#10038</td>
-          <td>Oliver Schmidt</td>
-          <td>$540.00</td>
-          <td><span class="badge success">Completed</span></td>
-          <td class="action-cell"><span class="btn-action" aria-hidden="true"></span><span class="btn-action__label">View transaction details</span></td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </div>
 
