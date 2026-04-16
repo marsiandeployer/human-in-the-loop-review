@@ -125,7 +125,7 @@ On the landing page, each case now stays collapsed behind its own downward arrow
 
 Brand assets now use `assets/vibers-logo-source.jpg` as the source file for README, favicon, share previews, and the remaining internal page headers so the repo and site stay in sync.
 
-For quick synthetic inspector screenshots, `demo/visual-bug.html` contains a deliberately exaggerated action-button bug where the label spills outside a fixed-width button body, so the defect reads immediately in a single frame.
+For quick synthetic inspector screenshots, `demo/visual-bug.html` contains a deliberately exaggerated action-button bug where the label spills outside a fixed-width button body, and `demo/visual-fix.html` shows the corrected state. Run `scripts/build-demo-store-assets.sh` to regenerate the full captures plus the store-ready `demo/chrome-store-before-after-640x400.png` and `demo/chrome-store-before-after-1280x800.png` assets for Chrome Web Store uploads.
 
 ## Vibers vs Alternatives
 

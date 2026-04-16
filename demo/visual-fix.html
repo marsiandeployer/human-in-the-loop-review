@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Revenue Dashboard — Fixed (Vibers Demo)</title>
+  <title>Revenue Dashboard — After Fix (Vibers Demo)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -19,9 +19,11 @@
       border: 1px solid rgba(255,255,255,0.45) !important;
     }
 
-    /* ── FIXED: button width fits text ── */
+    /* ── FIXED: button grows with its label ── */
     .btn-fixed {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       margin-top: 12px;
       padding: 6px 12px;
       background: #2d3a8c;
@@ -31,6 +33,7 @@
       white-space: nowrap;
       color: #fff;
       cursor: pointer;
+      line-height: 1;
     }
   </style>
 </head>
@@ -64,7 +67,7 @@
     <!-- KPI Cards -->
     <div class="grid grid-cols-4 gap-5 mb-8">
 
-      <!-- Card 1: Total Revenue — HAS THE BUG -->
+      <!-- Card 1: Total Revenue — fixed state -->
       <div class="kpi-card rounded-xl p-5 shadow-sm">
         <div class="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Monthly Revenue</div>
         <div class="text-3xl font-bold text-gray-900">$48,210</div>
