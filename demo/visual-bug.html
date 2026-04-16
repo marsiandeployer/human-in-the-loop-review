@@ -8,10 +8,15 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { overflow: hidden; }
+    .main-content {
+      background: url('dashboard-bg.jpg') center/cover no-repeat fixed !important;
+    }
+    .bg-gray-50, .bg-gray-100 { background: transparent !important; }
     .kpi-card {
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.68) !important;
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.5);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.45) !important;
     }
 
     /* ── BUG: button too narrow, text overflows ── */
@@ -59,7 +64,7 @@
 <div class="flex h-screen">
 
   <!-- Sidebar -->
-  <aside class="w-56 bg-gray-900 text-white flex flex-col p-5 flex-shrink-0">
+  <aside class="w-56 text-white flex flex-col p-5 flex-shrink-0" style="background: linear-gradient(rgba(17,24,39,0.88),rgba(17,24,39,0.94)), url('dashboard-bg.jpg') center/cover no-repeat">
     <div class="text-lg font-bold mb-8 text-white">📊 Revenue</div>
     <nav class="space-y-1">
       <div class="px-3 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium">Overview</div>
@@ -71,7 +76,7 @@
   </aside>
 
   <!-- Main Content -->
-  <main class="flex-1 p-8 overflow-auto bg-gray-50">
+  <main class="flex-1 p-8 overflow-auto main-content">
 
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold text-gray-800">Overview</h1>
