@@ -1,105 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>op.wpmix.net — Vibers Demo</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revenue Dashboard — Vibers Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { overflow: hidden; }
+    .kpi-card {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #f4f6fa;
-    color: #1a1a2e;
-    min-height: 100vh;
-    overflow: hidden;
-  }
-
-/* ══════════════════════════════════════════
-     🐛 VISUAL BUG OVERLAY: floating broken button
-     Positioned over the iframe to simulate a
-     real UI bug on the live product
-  ══════════════════════════════════════════ */
-  .bug-overlay {
-    position: fixed;
-    top: 200px;
-    left: 320px;
-    z-index: 10;
-    display: flex;
-    align-items: flex-start;
-    gap: 0;
-  }
-
-  /* The broken element — button too narrow, text overflows */
-  .broken-widget {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 16px 18px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.10);
-    position: relative;
-    width: 240px;
-  }
-
-  .broken-widget__title {
-    font-size: 13px;
-    color: #64748b;
-    margin-bottom: 10px;
-  }
-
-  .broken-widget__value {
-    font-size: 26px;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin-bottom: 12px;
-  }
-
-  /* ── BUG: intentionally too narrow button ── */
-  .btn-action-wrap {
-    position: relative;
-    height: 32px;
-  }
-
-  .btn-action {
-    display: inline-block;
-    width: 68px;               /* intentionally too narrow */
-    height: 32px;
-    background: #2d3a8c;
-    border-radius: 6px;
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-
-  .btn-action__label {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    font-size: 12px;
-    font-weight: 700;
-    white-space: nowrap;
-    color: #1f2f73;
-    z-index: 1;
-  }
-</style>
+    /* ── BUG: button too narrow, text overflows ── */
+    .btn-broken-wrap {
+      position: relative;
+      height: 32px;
+      margin-top: 12px;
+    }
+    .btn-broken {
+      display: inline-block;
+      width: 72px; /* intentionally too narrow */
+      height: 32px;
+      background: #2d3a8c;
+      border-radius: 6px;
+      position: absolute;
+      left: 0; top: 0;
+    }
+    .btn-broken__label {
+      position: absolute;
+      top: 50%; left: 10px;
+      transform: translateY(-50%);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      color: #1f2f73;
+      z-index: 2;
+    }
+    /* red overflow highlight */
+    .btn-broken-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 210px; height: 32px;
+      border: 2px solid #ef4444;
+      border-radius: 6px;
+      pointer-events: none;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-gray-100" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
 
 <!-- op.wpmix.net embed widget -->
 <script src="https://op.wpmix.net/embed.js"></script>
 
-<!-- Visual bug overlay on top -->
-<div class="bug-overlay">
-  <div class="broken-widget">
-    <div class="broken-widget__title">Monthly Revenue</div>
-    <div class="broken-widget__value">$48,210</div>
-    <div class="btn-action-wrap">
-      <span class="btn-action" aria-hidden="true"></span>
-      <span class="btn-action__label">View transaction details</span>
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-56 bg-gray-900 text-white flex flex-col p-5 flex-shrink-0">
+    <div class="text-lg font-bold mb-8 text-white">📊 Revenue</div>
+    <nav class="space-y-1">
+      <div class="px-3 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium">Overview</div>
+      <div class="px-3 py-2 rounded-lg text-gray-400 hover:text-white text-sm cursor-pointer">Transactions</div>
+      <div class="px-3 py-2 rounded-lg text-gray-400 hover:text-white text-sm cursor-pointer">Customers</div>
+      <div class="px-3 py-2 rounded-lg text-gray-400 hover:text-white text-sm cursor-pointer">Reports</div>
+      <div class="px-3 py-2 rounded-lg text-gray-400 hover:text-white text-sm cursor-pointer">Settings</div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 overflow-auto bg-gray-50">
+
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Overview</h1>
+      <div class="text-sm text-gray-500">Last 7 days</div>
     </div>
-  </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-4 gap-5 mb-8">
+
+      <!-- Card 1: Total Revenue — HAS THE BUG -->
+      <div class="kpi-card rounded-xl p-5 shadow-sm">
+        <div class="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Monthly Revenue</div>
+        <div class="text-3xl font-bold text-gray-900">$48,210</div>
+        <div class="text-green-600 text-xs mt-1">↑ 12.4% vs last month</div>
+        <!-- BUG: button too narrow -->
+        <div class="btn-broken-wrap">
+          <span class="btn-broken"></span>
+          <span class="btn-broken__label">View transaction details</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Normal -->
+      <div class="kpi-card rounded-xl p-5 shadow-sm">
+        <div class="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">New Customers</div>
+        <div class="text-3xl font-bold text-blue-600">1,284</div>
+        <div class="text-gray-500 text-xs mt-1">↑ 8.2% vs last month</div>
+        <button class="mt-3 px-4 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-md">View all</button>
+      </div>
+
+      <!-- Card 3: Normal -->
+      <div class="kpi-card rounded-xl p-5 shadow-sm">
+        <div class="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Conversion Rate</div>
+        <div class="text-3xl font-bold text-purple-600">3.8%</div>
+        <div class="text-gray-500 text-xs mt-1">↓ 0.3% vs last month</div>
+        <button class="mt-3 px-4 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-md">Analytics</button>
+      </div>
+
+      <!-- Card 4: Normal -->
+      <div class="kpi-card rounded-xl p-5 shadow-sm">
+        <div class="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Avg. Order Value</div>
+        <div class="text-3xl font-bold text-emerald-600">$124</div>
+        <div class="text-green-600 text-xs mt-1">↑ 5.1% vs last month</div>
+        <button class="mt-3 px-4 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-md">Details</button>
+      </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="grid grid-cols-2 gap-5 mb-5">
+      <div class="kpi-card rounded-xl p-5 shadow-sm">
+        <h3 class="font-semibold text-gray-700 mb-4 text-sm">Revenue by Day</h3>
+        <canvas id="revenueChart" height="110"></canvas>
+      </div>
+      <div class="kpi-card rounded-xl p-5 shadow-sm">
+        <h3 class="font-semibold text-gray-700 mb-4 text-sm">Traffic Sources</h3>
+        <canvas id="sourceChart" height="110"></canvas>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="kpi-card rounded-xl shadow-sm overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-100">
+        <h3 class="font-semibold text-gray-700 text-sm">Recent Transactions</h3>
+      </div>
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+          <tr>
+            <th class="px-5 py-3 text-left">Customer</th>
+            <th class="px-5 py-3 text-left">Product</th>
+            <th class="px-5 py-3 text-right">Amount</th>
+            <th class="px-5 py-3 text-right">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="px-5 py-3 font-medium">Alex Johnson</td>
+            <td class="px-5 py-3 text-gray-500">Pro Plan</td>
+            <td class="px-5 py-3 text-right font-semibold">$299</td>
+            <td class="px-5 py-3 text-right"><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">Paid</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-5 py-3 font-medium">Maria García</td>
+            <td class="px-5 py-3 text-gray-500">Starter Plan</td>
+            <td class="px-5 py-3 text-right font-semibold">$49</td>
+            <td class="px-5 py-3 text-right"><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">Paid</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-5 py-3 font-medium">David Chen</td>
+            <td class="px-5 py-3 text-gray-500">Enterprise</td>
+            <td class="px-5 py-3 text-right font-semibold">$1,200</td>
+            <td class="px-5 py-3 text-right"><span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-xs">Pending</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-5 py-3 font-medium">Sarah Williams</td>
+            <td class="px-5 py-3 text-gray-500">Pro Plan</td>
+            <td class="px-5 py-3 text-right font-semibold">$299</td>
+            <td class="px-5 py-3 text-right"><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">Paid</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
 </div>
 
+<script>
+  // Revenue chart
+  new Chart(document.getElementById('revenueChart'), {
+    type: 'line',
+    data: {
+      labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets: [{
+        data: [6200, 5800, 7100, 6900, 8400, 5200, 8600],
+        borderColor: '#3B82F6',
+        backgroundColor: 'rgba(59,130,246,0.08)',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { x: { grid: { display: false } }, y: { grid: { color: '#f3f4f6' } } }
+    }
+  });
+
+  // Sources doughnut
+  new Chart(document.getElementById('sourceChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Organic','Paid','Referral','Direct'],
+      datasets: [{
+        data: [38, 27, 20, 15],
+        backgroundColor: ['#3B82F6','#8B5CF6','#10B981','#F59E0B'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } }
+    }
+  });
+</script>
 </body>
 </html>
