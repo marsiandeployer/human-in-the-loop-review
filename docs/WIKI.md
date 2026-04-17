@@ -21,6 +21,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [keywords/](keywords/) | SEMrush keyword exports (6 CSV files, 2026-04-14) |
 | [reddit-alpha-beta-users.md](reddit-alpha-beta-users.md) | Reddit strategy for finding alpha/beta users |
 | [backlink-opportunities.md](backlink-opportunities.md) | 13 directories + 6 dev blogs + media pitch targets |
+| [COMPETITORS.md#markerio-markerio](COMPETITORS.md) | Marker.io — adjacent competitor (website feedback/UAT tool, $39/mo, tooling only — не чинит). Их UAT-контент: https://marker.io/blog/user-acceptance-testing-template |
 | [advertising-channels.md](advertising-channels.md) | Полная карта рекламы: каталоги, ad networks, newsletters, стратегия по бюджету |
 | [backlinks/](backlinks/) | Raw SEMrush backlink exports (CodeRabbit 4.6K, Qodo 6K domains) |
 | [topic-research-20260414.xlsx](topic-research-20260414.xlsx) | SEMrush Topic Research — 108 content ideas with volumes, questions, backlinks |

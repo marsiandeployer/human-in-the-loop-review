@@ -103,6 +103,15 @@
 - **Comparison pages:** Tabnine vs Copilot, Amazon Q vs Copilot, Perplexity vs ChatGPT for coding, "Cody AI alternatives", "CodeRabbit alternatives", "Mintlify alternatives"
 - **vs Vibers:** Coding agents. Не прямой конкурент
 
+### Marker.io (marker.io)
+- **Что:** Website feedback & bug reporting tool — визуальные аннотации на живом сайте, session replay, автогенерация багов с техническими метаданными (browser, URL, console, network)
+- **Цены:** от $39/mo, 15-day trial без карты
+- **ЦА:** продуктовые/дизайн/QA команды, агентства с клиентами, UAT процессы
+- **Фишки:** two-way интеграции с Jira/Trello/Asana/GitHub/ClickUp (20+), data masking, analytics по resolution rate
+- **Контент:** сильный SEO на UAT-тематику (пример: `/blog/user-acceptance-testing-template` — 17 шаблонов под Jira/Asana/GitHub/Excel и т.д.), позиционирование как "essential для команд, шипящих сайты"
+- **vs Vibers:** Инструмент для репортинга багов самими клиентами/QA — **не ревьюит и не чинит**. Vibers = люди находят баги и присылают PR. Marker.io = инфраструктура, чтобы команда зарепортила баги сама. Пересекается в UAT/pre-launch сценариях, но разная модель (tooling vs service).
+- **Возможности:** взять их UAT-шаблоны как входную точку в контент ("UAT is not enough — here's what human reviewers catch that checklists miss"), сравнительная страница "Marker.io vs Vibers: report bugs vs fix bugs"
+
 ### Aikido (aikido.dev)
 - **Что:** Unified AppSec platform (SAST, SCA, secrets, containers, cloud, runtime)
 - **Цены:** Free tier → Basic/Pro/Advanced/Enterprise. Startup discounts 30%
