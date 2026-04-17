@@ -48,5 +48,18 @@ module.exports = {
       GH_WEBHOOK_SECRET: process.env.GH_WEBHOOK_SECRET || '',
       GH_APP_SLUG: process.env.GH_APP_SLUG || 'vibers-review',
     }
+  }, {
+    name: 'vibers-ga-daily-report',
+    script: '/root/vibers/scripts/ga4-daily-report.py',
+    interpreter: 'python3',
+    autorestart: false,
+    cron_restart: '0 9 * * *',
+    env: {
+      TELEGRAM_API_ID: process.env.TELEGRAM_API_ID || '',
+      TELEGRAM_SESSION_STRING: process.env.TELEGRAM_SESSION_STRING || '',
+      TELEGRAM_API_HASH: process.env.TELEGRAM_API_HASH || '',
+      VIBERS_REPORT_CHAT_ID: process.env.VIBERS_REPORT_CHAT_ID || '-5100588378',
+      GA_REPORT_DAYS: '1',
+    }
   }]
 };
