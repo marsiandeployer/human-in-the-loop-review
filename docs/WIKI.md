@@ -17,16 +17,21 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 
 **Positioning:** "Website Feedback & Fix Tool" — отличие от конкурентов: не просто репортит баг, а чинит (PR).
 
-**Direct competitors:**
+**Direct competitors (visual feedback tools):**
 
 | Tool | Pricing | Target | Key diff vs VibeCheck |
 |------|---------|--------|----------------------|
-| **Feedbucket** | 14-day trial, paid plans | Agencies + clients | Reports only, no dev fixes. No extension required for clients (widget). |
-| **Marker.io** | $39/mo+ | Agencies, QA teams | Reports only. Session replay, AI-features, 20+ integrations. No fixes. |
-| **Markup.io** | Trial, tiered | Creative/design teams | Adjacent — PDFs, images, videos (not live-site code). Not direct competitor. |
-| **Userback** | Freemium + paid | Product teams, SaaS | Full feedback loop (NPS, surveys, session replay, roadmap). No code fixes. 20K+ teams. |
+| **Marker.io** | $39/mo+ | Agencies, QA teams | Reports only. Session replay, console logs, 20+ integrations. No fixes, no PR. |
+| **BugHerd** | $50/mo+ (5 seats) | Web agencies, UAT | "Sticky notes on a webpage." Client-friendly Kanban, no login for clients. No code fixes. G2 4.8/5 |
+| **Usersnap** | $39-249/mo | Product/SaaS teams, PM | Enterprise: AI sentiment, surveys, SDK, 50+ integrations. No code access. |
+| **Feedbucket** | 14-day trial, paid | Agencies + clients | Reports only, no dev fixes. Widget (no extension). |
+| **Userback** | Freemium + paid | Product teams, SaaS | NPS, surveys, session replay, roadmap. No code fixes. 20K+ teams. |
 
-**Key message:** Marker.io/Feedbucket → ticket. VibeCheck → PR.
+**Key message:** All of them → ticket. VibeCheck → PR. All paid, VibeCheck free (BYOK).
+
+**SEO opportunities:** `/markerio-alternative/`, `/bugherd-alternative/`, `/usersnap-alternative/` — commercial intent, low competition.
+
+→ Полный анализ + "alternative to" messaging: [COMPETITORS.md#visual-feedback-tools](COMPETITORS.md#visual-feedback-tools-vibecheck-специфичные-конкуренты)
 
 ## Marketing & SEO
 

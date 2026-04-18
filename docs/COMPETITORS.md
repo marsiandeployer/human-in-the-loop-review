@@ -148,6 +148,120 @@
 
 ---
 
+## Visual Feedback Tools (VibeCheck-специфичные конкуренты)
+
+Эти инструменты конкурируют с **VibeCheck** (Chrome Extension), а не с Vibers как сервисом ревью. Все трое решают задачу «собрать баг-репорт», но ни один не решает задачу «починить баг».
+
+### Marker.io (marker.io) — краткий профиль
+
+> Подробный анализ выше в разделе «Adjacent конкуренты».
+
+- **Цены:** от $39/mo, 15-day trial
+- **ЦА:** Агентства, QA/UAT команды, product teams
+- **Фишки:** Аннотации на живом сайте, session replay, 20+ интеграций (Jira, GitHub, Linear, Asana, ClickUp), console/network logs в тикете, data masking
+- **Органика:** strong SEO на UAT-тематику, топ-5 статей суммарно ~4.5K uniques/mo
+- **Не делает:** нет фиксов, нет PR, нет code access, нет AI-анализа кода
+- **vs VibeCheck:** Marker.io → тикет. VibeCheck → PR. Marker.io платный, VibeCheck бесплатный (BYOK)
+
+### Usersnap (usersnap.com)
+
+- **Что:** Visual feedback & in-app survey platform — «PM's #1 user feedback platform». Full-cycle: Discover → Analyze → Act → Engage
+- **Цены:** Free (20 items) → Starter ~$39/mo (5 seats) → Growth ~$69/mo (10 seats) → Professional ~$129/mo (20 seats) → Premium ~$249/mo (50 seats) → Enterprise custom
+- **ЦА:** Product managers, SaaS teams, QA/UAT, support teams, агентства. Клиенты: Microsoft, Facebook, Canva, Talkdesk
+- **Фишки:**
+  - AI-powered sentiment analysis + auto-labeling фидбека
+  - Скриншоты, screen recording (видео + голос)
+  - 30+ шаблонов для опросов и виджетов, conditional logic
+  - Mobile SDK (нативные приложения)
+  - Customer request portal с upvote
+  - 50+ интеграций: Jira, Azure DevOps, Linear, Zendesk, Slack, GitHub, Power BI
+- **Не делает:** нет code fixes, нет PR, нет доступа к коду — чистый сбор фидбека
+- **SEO:** G2 High Performer, Capterra-присутствие, content в нише "in-app feedback"
+- **vs VibeCheck:** Usersnap = enterprise платформа для сбора фидбека от пользователей продукта. VibeCheck = легковесный Chrome extension для разработчиков, работающих с чужим кодом. Usersnap дорог ($39-129/mo), требует SDK/widget установки, нет связи с кодовой базой. VibeCheck бесплатен, работает на любом сайте без установки на стороне сервера
+
+### BugHerd (bugherd.com)
+
+- **Что:** «Like sticky-notes on a webpage» — visual feedback для клиентских проектов агентств и UAT. Не таск-трекер, а мост клиент↔разработчик
+- **Цены:** Standard $50/mo ($42 annual, 5 seats) → Studio $80/mo ($67, 10 seats) → Premium $150/mo ($125, 25 seats) → Enterprise custom. Доп. юзеры $8/mo. 14-day trial + 60-day money-back
+- **ЦА:** Веб-агентства, in-house QA, фрилансеры, нетехнические стейкхолдеры. G2: 4.8/5 (158+ отзывов)
+- **Фишки:**
+  - Pin comments прямо на живых страницах (не только скриншот)
+  - Автосбор метаданных: браузер, ОС, разрешение, CSS selector
+  - Встроенная Kanban-доска для UAT (отдельная от dev-инструментов, чтобы клиент не путался)
+  - Клиентам не нужен логин для оставления фидбека
+  - Screen recording + video feedback
+  - Figma/PDF/image feedback
+  - Публичный виджет для посетителей сайта
+- **Интеграции (21):** Jira, Asana, Linear, ClickUp, Monday.com, GitHub, Slack, MS Teams, WordPress, Zapier/Make
+- **Не делает:** нет console/network logs (в отличие от Marker.io), нет session replay, нет code fixes, нет PR
+- **vs VibeCheck:** BugHerd заточен под клиент-агентский workflow (клиент тычет пальцем, разработчик чинит сам). VibeCheck — для ситуации, когда разработчик хочет, чтобы кто-то другой сделал PR. BugHerd дороже ($50+/mo), требует установки widget на сайт. VibeCheck бесплатен, работает без изменений на сайте
+
+---
+
+## VibeCheck как альтернатива конкурентам
+
+Эта секция — основа для SEO-страниц и comparison landing pages.
+
+### Ключевое отличие VibeCheck от всех трёх
+
+| Что хочет пользователь | Marker.io / Usersnap / BugHerd | VibeCheck |
+|------------------------|-------------------------------|-----------|
+| Зафиксировать баг | ✅ Отличный тикет с метаданными | ✅ Аннотация + контекст DOM/CSS |
+| Передать в трекер (Jira, Linear) | ✅ 20-50 интеграций | ➡ Опционально (через AI или ревьюер) |
+| Получить исправленный код | ❌ Только тикет | ✅ PR в GitHub (через AI бесплатно или Vibers ревьюер) |
+| Работать на чужом сайте | ❌ Нужна установка widget/SDK | ✅ Chrome extension, ничего не надо устанавливать |
+| Бесплатно | ❌ $39-150/mo | ✅ Бесплатно (BYOK) |
+| WordPress без GitHub | ❌ Нет | ✅ Vibers деплоит через FTP/SSH |
+
+**Одна фраза:** Marker.io/BugHerd/Usersnap → тикет. VibeCheck → PR.
+
+### "VibeCheck as alternative to Marker.io"
+
+**Почему переходят:** платят $39+/mo только за репортинг, а фикс всё равно надо делать самим или нанимать разработчика отдельно.
+
+**Messaging:**
+> "Marker.io создаёт идеальный тикет. VibeCheck создаёт pull request. Если ваша команда всё равно тратит часы на каждый баг после получения тикета — вы платите дважды: за инструмент и за разработчика. VibeCheck объединяет шаг 'поймать баг' и шаг 'починить баг' в один флоу."
+
+**Landing page angle:** `/vibecheck-vs-markerio/` или `/markerio-alternative/`
+- H1: "Marker.io Alternative That Actually Fixes Bugs"
+- Angle: Report → PR в один клик vs report → ticket → dev queue → fix (3-5 дней)
+
+### "VibeCheck as alternative to BugHerd"
+
+**Почему переходят:** BugHerd решает «как клиенту легко оставить фидбек», но не решает «кто это починит». Агентства платят $50-150/mo и всё равно нанимают разработчика.
+
+**Messaging:**
+> "BugHerd отлично показывает клиентам, как оставлять фидбек. VibeCheck идёт дальше — превращает этот фидбек в pull request. Не нужно объяснять разработчику что сломано: контекст (DOM, CSS, URL, скриншот) уже в тикете, а фикс приходит как PR."
+
+**Landing page angle:** `/bugherd-alternative/`
+- H1: "BugHerd Alternative That Sends Pull Requests, Not Just Tickets"
+- Angle: для агентств, которые хотят автоматизировать не только сбор фидбека, но и его реализацию
+
+### "VibeCheck as alternative to Usersnap"
+
+**Почему переходят:** Usersnap — мощная платформа для product feedback от конечных пользователей. VibeCheck — для разработчиков/стейкхолдеров, которые сами находят проблемы на сайте и хотят быстрый фикс.
+
+**Messaging:**
+> "Usersnap идеален, когда вам нужно собирать NPS и in-app опросы от тысяч пользователей. VibeCheck нужен, когда ВЫ смотрите на сайт, видите баг и хотите PR сегодня — не через 3 итерации в Jira."
+
+**Landing page angle:** `/usersnap-alternative/`
+- H1: "Usersnap Alternative for Teams That Want Fixes, Not Just Feedback"
+- Angle: lightweight (no SDK install) + free + code-connected vs enterprise feedback platform
+
+### SEO-возможности (visual feedback ниша)
+
+| Keyword | Оценка intent | Действие |
+|---------|--------------|---------|
+| `marker.io alternative` | Commercial | Landing `/markerio-alternative/` |
+| `bugherd alternative` | Commercial | Landing `/bugherd-alternative/` |
+| `usersnap alternative` | Commercial | Landing `/usersnap-alternative/` |
+| `visual feedback tool` | Informational | Listicle: "Best visual feedback tools 2025" — Vibers в конце как "if you want fixes, not just reports" |
+| `website feedback tool free` | Commercial | VibeCheck = FREE angle |
+| `bug reporting tool for agencies` | Commercial | BugHerd/Marker.io аудитория — landing с agency angle |
+| `markerio vs bugherd` | Comparison | "Marker.io vs BugHerd vs VibeCheck: which one actually fixes bugs?" |
+
+---
+
 ## Крупные игроки (из SEMrush data)
 
 | Домен | Paid Traffic | Organic | Категория |
