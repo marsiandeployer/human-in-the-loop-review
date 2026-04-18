@@ -276,23 +276,202 @@
     }
     .btn-white:hover { background: #f0eeff; text-decoration: none; }
 
+    /* ── HTML Demo Banner ── */
     .demo-banner {
       margin: 0 -40px 40px;
+      background: #0f0f0f;
+      border-top: 1px solid #2a2a2a;
+      border-bottom: 1px solid #2a2a2a;
+      padding: 0;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .browser-chrome {
+      background: #1e1e1e;
+      border-bottom: 1px solid #333;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .browser-dots { display: flex; gap: 5px; }
+    .browser-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #28c840; }
+    .browser-url {
+      flex: 1;
+      background: #2a2a2a;
+      border-radius: 4px;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: #aaa;
+      margin: 0 8px;
+    }
+    .browser-ext-icon {
+      width: 18px; height: 18px;
+      background: #FF6B35;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #fff;
+      font-weight: 700;
+    }
+    .demo-viewport {
+      display: flex;
+      min-height: 220px;
       position: relative;
     }
-    .demo-banner img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-top: 1px solid #e8e8e8;
-      border-bottom: 1px solid #e8e8e8;
+    .demo-site {
+      flex: 1;
+      background: #f8f8f8;
+      padding: 20px 24px;
+      min-width: 0;
+    }
+    .demo-site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .demo-site-logo {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .demo-site-nav {
+      display: flex;
+      gap: 12px;
+    }
+    .demo-site-nav span {
+      font-size: 11px;
+      color: #666;
+    }
+    .demo-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .demo-kpi {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .demo-kpi-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.4px; }
+    .demo-kpi-value { font-size: 18px; font-weight: 700; color: #1a1a1a; margin: 2px 0; }
+    .demo-kpi-btn {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 3px 8px;
+      font-size: 9px;
+      font-weight: 600;
+      border-radius: 3px;
+      background: #2d3a8c;
+      color: #fff;
+      white-space: nowrap;
+    }
+    /* highlighted element - orange border */
+    .demo-kpi.highlighted {
+      border: 2px solid #FF6B35;
+      box-shadow: 0 0 0 3px rgba(255,107,53,0.15);
+      position: relative;
+    }
+    .demo-kpi.highlighted::after {
+      content: "👆";
+      position: absolute;
+      bottom: -18px;
+      right: 4px;
+      font-size: 14px;
+      animation: cursor-bob 1.2s ease-in-out infinite;
+    }
+    @keyframes cursor-bob {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .demo-panel {
+      width: 200px;
+      flex-shrink: 0;
+      background: #1a1a1a;
+      border-left: 1px solid #333;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .panel-logo {
+      font-size: 11px;
+      font-weight: 700;
+      color: #FF6B35;
+      letter-spacing: 0.3px;
+    }
+    .panel-badge {
+      font-size: 9px;
+      background: #FF6B35;
+      color: #fff;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
+    .panel-element {
+      background: #2a2a2a;
+      border-radius: 4px;
+      padding: 8px 10px;
+    }
+    .panel-element-label { font-size: 9px; color: #888; margin-bottom: 2px; }
+    .panel-element-tag { font-size: 10px; color: #7dd3fc; font-family: monospace; }
+    .panel-element-text { font-size: 10px; color: #d1d5db; margin-top: 2px; }
+    .panel-element-path { font-size: 9px; color: #6b7280; margin-top: 3px; font-family: monospace; }
+    .panel-btn-fix {
+      background: #FF6B35;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      letter-spacing: 0.2px;
+      animation: pulse-btn 2s ease-in-out infinite;
+    }
+    @keyframes pulse-btn {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(255,107,53,0); }
+    }
+    .panel-btn-comment {
+      background: transparent;
+      border: 1px solid #444;
+      color: #aaa;
+      border-radius: 5px;
+      padding: 7px 14px;
+      font-size: 11px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .panel-hint {
+      font-size: 9px;
+      color: #555;
+      line-height: 1.4;
+      text-align: center;
     }
     .demo-banner-caption {
       text-align: center;
-      font-size: 12px;
-      color: #888;
-      margin-top: 8px;
-      padding: 0 40px;
+      font-size: 11px;
+      color: #555;
+      padding: 8px 40px;
+      background: #0f0f0f;
     }
 
     .what-fixes {
@@ -337,8 +516,11 @@
       .case-grid { grid-template-columns: 1fr; }
       .vs-table { font-size: 12px; }
       .demo-banner { margin: 0 -20px 32px; }
-      .demo-banner-caption { padding: 0 20px; }
+      .demo-banner-caption { padding: 8px 20px; }
       .fixes-grid { grid-template-columns: 1fr; }
+      .demo-panel { width: 160px; }
+      .demo-kpi-row { grid-template-columns: 1fr; }
+      .demo-kpi:not(.highlighted) { display: none; }
     }
   </style>
 </head>
@@ -362,13 +544,70 @@
   </header>
 
   <div class="demo-banner">
-    <picture>
-      <source media="(max-width: 600px)" srcset="/vibers/demo/chrome-store-before-after-640x400.png">
-      <img src="/vibers/demo/chrome-store-before-after-1280x800.png"
-           alt="VibeCheck before/after: visual bug spotted and fixed via Fix It button"
-           width="1280" height="800" loading="lazy">
-    </picture>
-    <p class="demo-banner-caption">Before &amp; after — broken button layout spotted with VibeCheck, PR merged in 2 hours</p>
+    <!-- Browser chrome -->
+    <div class="browser-chrome">
+      <div class="browser-dots">
+        <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+      </div>
+      <div class="browser-url">onout.org/vibers/</div>
+      <div class="browser-ext-icon">V</div>
+    </div>
+    <!-- Viewport: site + panel -->
+    <div class="demo-viewport">
+      <!-- Mock website -->
+      <div class="demo-site">
+        <div class="demo-site-header">
+          <div class="demo-site-logo">📊 Revenue Dashboard</div>
+          <div class="demo-site-nav">
+            <span>Overview</span><span>Reports</span><span>Settings</span>
+          </div>
+        </div>
+        <div class="demo-kpi-row">
+          <div class="demo-kpi highlighted">
+            <div class="demo-kpi-label">Monthly Revenue</div>
+            <div class="demo-kpi-value">$48,210</div>
+            <div style="font-size:9px;color:#16a34a;margin-top:2px;">↑ 12.4%</div>
+            <span class="demo-kpi-btn">View transaction details</span>
+          </div>
+          <div class="demo-kpi">
+            <div class="demo-kpi-label">New Customers</div>
+            <div class="demo-kpi-value" style="color:#2563eb;">1,284</div>
+            <div style="font-size:9px;color:#888;margin-top:2px;">↑ 8.2%</div>
+          </div>
+          <div class="demo-kpi">
+            <div class="demo-kpi-label">Conversion Rate</div>
+            <div class="demo-kpi-value" style="color:#7c3aed;">3.8%</div>
+            <div style="font-size:9px;color:#888;margin-top:2px;">↓ 0.3%</div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;">
+          <div style="font-size:10px;color:#888;margin-bottom:8px;">Recent Transactions</div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;border-bottom:1px solid #f0f0f0;">
+            <span>Alex Johnson</span><span style="color:#16a34a;font-weight:600;">$299</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;">
+            <span>Maria García</span><span style="color:#16a34a;font-weight:600;">$49</span>
+          </div>
+        </div>
+      </div>
+      <!-- VibeCheck panel -->
+      <div class="demo-panel">
+        <div class="panel-header">
+          <span class="panel-logo">VibeCheck</span>
+          <span class="panel-badge">active</span>
+        </div>
+        <div class="panel-element">
+          <div class="panel-element-label">Selected element</div>
+          <div class="panel-element-tag">&lt;span class="demo-kpi-btn"&gt;</div>
+          <div class="panel-element-text">"View transaction details"</div>
+          <div class="panel-element-path">.kpi-card &gt; span.btn</div>
+        </div>
+        <button class="panel-btn-fix">Fix It →</button>
+        <button class="panel-btn-comment">Add comment</button>
+        <div class="panel-hint">Fix It sends the element + your codebase to a reviewer who ships a PR</div>
+      </div>
+    </div>
+    <p class="demo-banner-caption">Hover any element &rarr; click Fix It &rarr; get a PR within hours</p>
   </div>
 
   <section class="what-fixes">
@@ -537,5 +776,7 @@
   </footer>
 
 </div>
+
+<script src="https://op.wpmix.net/embed.js" data-app="vibers"></script>
 </body>
 </html>
