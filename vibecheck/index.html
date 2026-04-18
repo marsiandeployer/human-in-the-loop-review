@@ -63,11 +63,14 @@
       font-size: 15px;
     }
     .page {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 48px 40px;
+      width: 100%;
       background: #fff;
       min-height: 100vh;
+    }
+    .content-wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 40px;
     }
     a { color: #5b44e8; text-decoration: none; }
     a:hover { text-decoration: underline; }
@@ -82,7 +85,7 @@
 
     .hero {
       border-bottom: 2px solid #1a1a1a;
-      padding-bottom: 32px;
+      padding: 48px 0 32px;
       margin-bottom: 40px;
     }
     .hero-badge {
@@ -303,7 +306,7 @@
 
     /* ── HTML Demo Banner ── */
     .demo-banner {
-      margin: 0 -40px 40px;
+      margin: 0 0 40px;
       background: #0f0f0f;
       border-top: 1px solid #2a2a2a;
       border-bottom: 1px solid #2a2a2a;
@@ -564,7 +567,7 @@
       h1 { font-size: 26px; }
       .case-grid { grid-template-columns: 1fr; }
       .vs-table { font-size: 12px; }
-      .demo-banner { margin: 0 -20px 32px; }
+      .content-wrap { padding: 0 20px; }
       .demo-banner-caption { padding: 8px 20px; }
       .fixes-grid { grid-template-columns: 1fr; }
       .demo-panel { width: 160px; }
@@ -576,10 +579,7 @@
 <body>
 <div class="page">
 
-  <nav class="site-nav">
-    <a href="/vibers/">Vibers</a> &rsaquo; VibeCheck
-  </nav>
-
+  <div class="content-wrap">
   <header class="hero">
     <div class="hero-badge">Chrome Extension &mdash; Early Access</div>
     <h1>VibeCheck</h1>
@@ -591,6 +591,7 @@
     </div>
     <p class="beta-note">Beta &mdash; free first fix for early users. No credit card.</p>
   </header>
+  </div><!-- /content-wrap hero -->
 
   <div class="demo-banner">
     <!-- Tab bar -->
@@ -744,6 +745,7 @@
     <p class="demo-banner-caption" id="demo-caption">Bug spotted — Fix It sends element + codebase to reviewer → PR in hours</p>
   </div>
 
+  <div class="content-wrap">
   <section class="what-fixes">
     <h2>What VibeCheck can fix</h2>
     <div class="fixes-grid">
@@ -908,6 +910,7 @@
   <footer>
     <p>VibeCheck is a product by <a href="/vibers/">Vibers</a> &mdash; Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Blog</a> &nbsp;|&nbsp; <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a></p>
   </footer>
+  </div><!-- /content-wrap main -->
 
 </div>
 
