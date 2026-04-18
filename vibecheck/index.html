@@ -831,7 +831,7 @@
   <header class="hero">
     <div class="hero-badge" data-i18n="badge">Chrome Extension &mdash; Early Access</div>
     <h1>VibeCheck</h1>
-    <p class="hero-sub" data-i18n="hero-sub">Click any issue on your website. AI fixes it and ships a real PR. Free Chrome extension — plug in your own AI, or get a Vibers reviewer to write the fix for you.</p>
+    <p class="hero-sub" data-i18n="hero-sub">Click a bug on your site — get a pull request with the fix. Free Chrome extension plugs into your AI (Claude Code, Codex, Cursor). No AI? A Vibers developer writes the code for you.</p>
     <div class="cta-group">
       <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'vibecheck',event_label:'join_waitlist'});" data-i18n="cta-primary">Join Early Access</a>
       <a href="/vibers/" class="btn-secondary" data-i18n="cta-secondary">Learn about Vibers &rarr;</a>
@@ -1556,7 +1556,7 @@ switchTab(TAB_DATA[initTab] ? initTab : 'bug');
 <script>
 var ru = {
   'badge':               'Chrome Расширение — Ранний доступ',
-  'hero-sub':            'Кликни по любой проблеме на сайте. AI исправит и задеплоит.<br>Бесплатное Chrome-расширение — или Vibers-ревьюер пришлёт настоящий PR.',
+  'hero-sub':            'Кликаешь на баг прямо на сайте — получаешь pull request с фиксом.<br>Бесплатное Chrome-расширение подключается к твоему AI (Claude Code, Codex, Cursor). Нет своего AI — наш разработчик напишет код за тебя.',
   'cta-primary':         'Получить ранний доступ',
   'cta-secondary':       'Узнать о Vibers →',
   'beta-note':           'Бесплатно с вашим AI (Claude Code, Codex, Cursor). Ревью руками от $15/ч — <a href="/vibers/" style="color:#888;">подробнее</a>.',
@@ -1576,10 +1576,10 @@ var ru = {
 };
 
 TAB_DESC_RU = {
-  bug:     '(1) Кликни на любой элемент с багом. (2) Опиши проблему обычными словами. (3) Fix It — отправит контекст твоему AI бесплатно или Vibers-ревьюер откроет PR.',
-  feature: '(1) Кликни на нужный элемент. (2) Опиши, что хочешь добавить. (3) Add Feature — AI предложит реализацию бесплатно, или Vibers-разработчик сделает и откроет PR.',
-  improve: '(1) Кликни на заголовок или любой текст. (2) Объясни, что не так — тон, смысл, конверсия. (3) Improve — AI перепишет бесплатно или человек-копирайтер сделает сам.',
-  wp:      '(1) Кликни на любой элемент WordPress-сайта. (2) Опиши, что сломано. (3) Fix It — Vibers-ревьюер правит файлы напрямую по FTP/SSH. GitHub не нужен.'
+  bug:     '(1) Кликаешь на сломанный элемент. (2) Описываешь баг обычными словами. (3) Жмёшь Fix It — твой AI присылает PR бесплатно, либо наш разработчик пишет фикс за тебя.',
+  feature: '(1) Кликаешь туда, где нужна новая фича. (2) Описываешь, что должно появиться. (3) Жмёшь Add Feature — AI предложит код бесплатно, либо наш разработчик реализует и откроет PR.',
+  improve: '(1) Кликаешь на любой текст — заголовок, кнопку, абзац. (2) Говоришь, что не так: тон, смысл, конверсия. (3) Жмёшь Improve — AI перепишет бесплатно, либо живой копирайтер сделает за тебя.',
+  wp:      '(1) Кликаешь на любой элемент WordPress-сайта. (2) Описываешь, что сломано. (3) Жмёшь Fix It — наш разработчик правит файлы напрямую по FTP/SSH. GitHub не нужен.'
 };
 
 // TAB_DESC_RU and currentLang declared in main script above
