@@ -228,6 +228,16 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [evaluation-round-1.md](evaluation-round-1.md) | First evaluation round results |
 | [evaluation-round-2.md](evaluation-round-2.md) | Second evaluation round results |
 | [improvement-log.md](improvement-log.md) | Log of improvements made |
+| [vibecheck-usage-analysis/INSIGHTS.md](vibecheck-usage-analysis/INSIGHTS.md) | **Opinion — not direction** (2026-04-18). Анализ 93 реальных Fix-It-ов (tamara/maria/julia, 8 дней) joined к .entire-сессиям Claude. Выводы: non-dev shipper = ICP, deployed fix (не PR) = deliverable, full-stack (JS+Python) = scope, issue-anchored Claude session = истинная природа продукта. **Гипотезы, не утверждённое направление.** |
+| [../../../office-hours-designs/2026-04-18-vibecheck-split-positioning-design.md](../../../office-hours-designs/2026-04-18-vibecheck-split-positioning-design.md) | **Opinion — not direction.** /office-hours дизайн-док по split-positioning (`/vibecheck/` team + `/vibecheck/solo/`) и issue-anchoring feature. Premise review, 4 personas (QA, editor, solo non-dev, manager-client), assignment = ship issue-auto-link Phase 1 на claritycult. Не утверждено, ждёт решения. |
+
+### VibeCheck usage analysis — raw data (2026-04-18)
+
+**Статус: гипотезы/мнение, не решение.** Перед действием — второй клиент + разговор с Tamara.
+
+- `/root/op.wpmix.net/prompt-logs/` — historical + live prompt persistence (JSONL per day)
+- `/root/vibers/docs/vibecheck-usage-analysis/` — INSIGHTS.md, joined-sessions.jsonl, outcomes.jsonl
+- Surfaced persona mismatch (лендинг vs реальность), potentially killer feature (issue-auto-link), new ICP breadth (команды + solo + manager-client)
 
 ## Community
 
