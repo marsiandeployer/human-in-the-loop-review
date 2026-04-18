@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bug Report Template (2026): Free Markdown + Word Format</title>
+  <meta name="description" content="Free copy-pasteable bug report template in Markdown and plain text. 8 essential fields, severity rubric, examples — plus a way to skip templates entirely.">
+  <link rel="canonical" href="https://onout.org/vibers/blog/bug-report-template/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bug Report Template (2026): Free Markdown + Word Format That Actually Gets Bugs Fixed">
+  <meta property="og:description" content="Free copy-pasteable bug report template in Markdown and plain text. 8 essential fields, severity rubric, examples — plus a way to skip templates entirely.">
+  <meta property="og:url" content="https://onout.org/vibers/blog/bug-report-template/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="800">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Bug Report Template (2026): Free Markdown + Word Format That Actually Gets Bugs Fixed",
+    "description": "Free copy-pasteable bug report template in Markdown and plain text. 8 essential fields, severity rubric, examples — plus a way to skip templates entirely.",
+    "url": "https://onout.org/vibers/blog/bug-report-template/",
+    "datePublished": "2026-04-18",
+    "dateModified": "2026-04-18",
+    "author": {
+      "@type": "Person",
+      "name": "Alex Noxon",
+      "url": "https://onout.org/vibers/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/blog/bug-report-template/" },
+    "keywords": ["bug report template", "bug report sample", "software bug report template", "bug template", "how to write a bug report", "bug report format", "markdown bug report", "vibecheck"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What should a bug report include?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A complete bug report includes 8 fields: a clear title (what broke + where), environment (URL, browser, OS, app version), exact steps to reproduce numbered 1-2-3, expected behavior, actual behavior, a screenshot or screen recording, severity (S1 critical to S4 trivial), and console errors or stack traces. Reports missing any of these usually bounce back to the reporter with 'cannot reproduce' or sit in the backlog while a developer guesses what was meant."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between a bug report and a defect report?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In practice, the terms are used interchangeably. Formally, a 'defect' is a deviation from the specification (something the software was built to do but does incorrectly), while a 'bug' is a broader category that includes defects plus issues like performance regressions, UX problems, and edge cases not covered by the spec. ISO/IEC 25010 uses 'defect.' Most engineering teams use 'bug.' The reporting template is identical for both."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I write a bug report for a non-technical team?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use the simplified 5-field plain-text version: what page or screen, what you did, what happened, what you expected, screenshot. Drop technical fields like console errors, stack traces, and browser version — the QA lead or developer can fill those in later if needed. The goal for non-technical reporters is capturing the user-visible problem clearly enough that someone technical can reproduce it. Even better, give them a tool like VibeCheck that auto-captures the technical fields from a single click."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a free bug report template I can copy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes — both versions in this article are free to copy. The Markdown version is designed for GitHub Issues, Linear, Jira (with Markdown enabled), and any developer-facing tracker. The plain-text version is for clients, support agents, and stakeholders who don't write Markdown. No signup required, no PDF download, no email gate. Copy the code block and paste it into your issue tracker as a template."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I auto-generate bug reports?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Tools like VibeCheck (free Chrome extension), Marker.io ($39/mo), BugHerd, and Usersnap let a reporter click an element on the page and auto-capture the URL, screenshot, browser, OS, viewport, console errors, and DOM path. The reporter only types the description. This eliminates 6-7 of the 8 template fields and removes the most common failure mode of bug reporting: missing or incorrect environment data."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What format is best — Markdown, Word, or PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For internal engineering teams: Markdown, every time. It pastes cleanly into GitHub, Linear, Jira, and Slack, renders well in any text editor, and is version-controllable. For external clients without technical tooling: plain text or a simple Word doc. Avoid PDF — it forces the reader to retype information into the issue tracker, which is where most data loss happens. The bug report format should match the workflow of the people who fix bugs, not the people who file them."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    blockquote{border-left:3px solid #5b44e8;padding:12px 16px;margin:20px 0;color:#444;font-style:italic}
+    blockquote cite{font-size:12px;color:#888;font-style:normal;display:block;margin-top:6px}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    .definition strong{font-weight:700}
+    /* Code blocks — for the actual templates */
+    .code-wrap{position:relative;margin:20px 0 28px}
+    .code-wrap .code-label{position:absolute;top:-10px;left:16px;background:#5b44e8;color:#fff;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;padding:2px 10px;border-radius:4px}
+    .code-wrap .copy-hint{position:absolute;top:10px;right:14px;font-size:11px;color:#888;font-family:'Inter',sans-serif}
+    pre{background:#0f1117;color:#e8eaf0;border-radius:8px;padding:24px 22px 22px;overflow-x:auto;font-size:13px;line-height:1.65;border:1px solid #1f2330}
+    pre code{font-family:'JetBrains Mono','Menlo','Consolas',monospace;color:inherit;background:transparent;white-space:pre}
+    code{font-family:'JetBrains Mono','Menlo','Consolas',monospace;background:#f1eefe;color:#2d2080;padding:1px 6px;border-radius:3px;font-size:13px}
+    pre code .c-h{color:#a78bfa;font-weight:600}
+    pre code .c-k{color:#f59e0b}
+    pre code .c-s{color:#86efac}
+    pre code .c-m{color:#93c5fd}
+    pre code .c-x{color:#fca5a5}
+    pre code .c-d{color:#9ca3af;font-style:italic}
+    /* Anti-pattern boxes */
+    .antipattern{background:#fef2f2;border-left:4px solid #ef4444;padding:14px 18px;margin:16px 0;border-radius:0 6px 6px 0}
+    .antipattern .ap-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#991b1b;margin-bottom:4px}
+    .antipattern .ap-bad{font-size:14px;color:#7f1d1d;font-family:'JetBrains Mono',monospace;margin-bottom:6px}
+    .antipattern .ap-fix{font-size:14px;color:#166534}
+    /* Scenario banners */
+    .scenario-banner{border:1px solid #e5e7eb;border-radius:8px;padding:20px 24px;margin:24px 0;background:#fafaf8}
+    .scenario-banner .scenario-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#888;margin-bottom:8px}
+    .scenario-banner .scenario-title{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:10px}
+    .scenario-banner .scenario-body{font-size:14px;color:#444;line-height:1.6;margin:0}
+    .scenario-banner .scenario-result{margin-top:12px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:13px;font-weight:600;color:#166534}
+    .scenario-banner .scenario-marker{font-size:13px;color:#991b1b;margin-top:4px}
+    /* Side-by-side comparison */
+    .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0 28px}
+    @media(max-width:600px){.vs-grid{grid-template-columns:1fr}}
+    .vs-card{border:1px solid #e5e7eb;border-radius:8px;padding:18px}
+    .vs-card.bad{background:#fef2f2;border-color:#fecaca}
+    .vs-card.good{background:#f0fdf4;border-color:#bbf7d0}
+    .vs-card h4{font-size:14px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+    .vs-card.bad h4{color:#991b1b}
+    .vs-card.good h4{color:#166534}
+    .vs-card ul{padding-left:18px;margin:0}
+    .vs-card li{font-size:13px;margin-bottom:5px;color:#333}
+    /* CTA */
+    .cta-block{background:linear-gradient(135deg,#5b44e8 0%,#2d2080 100%);color:#fff;border-radius:10px;padding:32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:22px;font-weight:700;margin-bottom:10px;color:#fff}
+    .cta-block p{color:#e0d8ff;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#fff;color:#2d2080;padding:13px 30px;border-radius:6px;font-weight:700;font-size:15px}
+    .cta-btn:hover{background:#f4f2ff;text-decoration:none}
+    .cta-secondary{display:inline-block;margin-left:12px;color:#e0d8ff;font-size:14px;padding:13px 0}
+    .cta-secondary:hover{color:#fff;text-decoration:underline}
+    .faq-section h2{border-top:none;padding-top:0}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .author-bio{display:flex;gap:16px;align-items:flex-start;background:#fafaf8;border-radius:8px;padding:20px;margin:40px 0;border:1px solid #eee}
+    .author-bio .author-info h4{font-size:15px;font-weight:600;margin-bottom:4px}
+    .author-bio .author-info p{font-size:13px;color:#666;margin:0}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px;transition:border-color .2s}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="/vibers/vibecheck/">VibeCheck Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <div class="article-meta">
+    <span>April 18, 2026</span>
+    <span>11 min read</span>
+    <span><a href="/vibers/blog/">Blog</a> · QA &amp; Bug Reporting</span>
+  </div>
+
+  <h1>Bug Report Template (2026): Free Markdown + Word Format That Actually Gets Bugs Fixed</h1>
+
+  <p class="article-lead">Most bug report templates floating around the internet are PDFs from 2014 with fields like "Tester ID" and "Module Name." This is a working bug report template for 2026 — Markdown for engineering teams, plain text for non-technical clients, with a real severity rubric and examples. Plus an honest note: if your team uses GitHub or Linear, you can probably skip the template entirely and let a tool capture the same data automatically.</p>
+
+  <div class="key-takeaways">
+    <h3>Key Takeaways</h3>
+    <ul>
+      <li>A good bug report has <strong>8 fields</strong>: title, environment, repro steps, expected, actual, screenshot, severity, console errors. Missing any one of them costs the developer 10–30 minutes of guesswork.</li>
+      <li>The Markdown version below pastes directly into <strong>GitHub Issues, Linear, and Jira</strong>. The plain-text version is for non-technical reporters.</li>
+      <li>Severity rubric: <strong>S1</strong> (production down) → <strong>S4</strong> (cosmetic). Without a rubric, every bug becomes "high priority."</li>
+      <li>Or skip the template entirely — <a href="/vibers/vibecheck/">VibeCheck</a> auto-captures URL, screenshot, browser, console errors, and DOM element from a single click. Reporter just types the description.</li>
+    </ul>
+  </div>
+
+  <h2>What Makes a Good Bug Report</h2>
+
+  <p>A bug report is a contract between the person who saw the bug and the person who has to fix it. Every field exists for one reason: the developer can reproduce the issue locally without going back to ask follow-up questions. If a developer has to ping the reporter for a clarification, the report failed. The eight fields below are the minimum that prevents that ping.</p>
+
+  <ol>
+    <li><strong>Title</strong> — one sentence. What broke + where. Not "login broken" but "Login button shows 500 error after submitting valid credentials on /signin."</li>
+    <li><strong>Environment</strong> — URL, browser + version, OS, app version or build hash, user role if relevant. The same code can pass on Chrome 138 and fail on Chrome 145.</li>
+    <li><strong>Steps to reproduce</strong> — numbered, atomic, deterministic. "Click X, then Y, then Z." If a developer can't reproduce in 3 minutes following the steps, the steps are wrong.</li>
+    <li><strong>Expected behavior</strong> — what should have happened. Sometimes the "bug" is actually the spec being unclear. Stating expected behavior surfaces that.</li>
+    <li><strong>Actual behavior</strong> — what did happen. Be precise. "Page is white" vs. "Page renders blank with 500 error in console" are different bugs.</li>
+    <li><strong>Screenshot or screen recording</strong> — visual proof. For UI bugs, attach a screenshot. For interaction bugs, a 10-second screen recording (Loom, Cleanshot, OS-native) is worth 200 words of description.</li>
+    <li><strong>Severity</strong> — S1/S2/S3/S4 from the rubric below. Without a rubric, severity becomes opinion and everything ends up "high."</li>
+    <li><strong>Console errors / stack traces</strong> — open DevTools, copy red text. For backend bugs, paste the relevant log lines or error response. This single field saves the most time.</li>
+  </ol>
+
+  <p>This 8-field structure is the foundation for every bug report format we'll cover below — <em>Markdown, plain text, and the auto-generated version</em>. The fields are the same; only the syntax and who fills them in changes.</p>
+
+  <h2>The Template (Markdown)</h2>
+
+  <p>Copy this and paste it into a GitHub Issue, Linear ticket, Jira description (with Markdown enabled), or a <code>.github/ISSUE_TEMPLATE/bug.md</code> file. It's the canonical software bug report template for any engineering team that lives in a Git-based tracker.</p>
+
+  <div class="code-wrap">
+    <span class="code-label">Markdown — for GitHub / Linear / Jira</span>
+    <span class="copy-hint">Select all + copy</span>
+<pre><code><span class="c-h">## Title</span>
+<span class="c-d">&lt;One sentence: what broke + where. Example: "Checkout button returns 500 on /cart when cart contains a deleted product."&gt;</span>
+
+<span class="c-h">## Environment</span>
+- <span class="c-k">URL:</span>          https://app.example.com/cart
+- <span class="c-k">Browser:</span>      Chrome 145.0.7341.92 (arm64)
+- <span class="c-k">OS:</span>           macOS 15.2 (Sequoia)
+- <span class="c-k">Viewport:</span>     1440 × 900
+- <span class="c-k">App version:</span>  v2.18.4 (commit a3f9e21)
+- <span class="c-k">User role:</span>    authenticated, plan=pro
+- <span class="c-k">First seen:</span>   2026-04-18 14:22 UTC
+
+<span class="c-h">## Steps to reproduce</span>
+1. Log in as <span class="c-s">test+pro@example.com</span>
+2. Add product SKU <span class="c-s">DEMO-42</span> to cart
+3. In another tab, soft-delete SKU DEMO-42 from admin panel
+4. Return to cart tab and click <span class="c-s">"Checkout"</span>
+
+<span class="c-h">## Expected</span>
+Cart should refresh and show "This product is no longer available — remove from cart?" with a Remove button. Checkout flow should not start.
+
+<span class="c-h">## Actual</span>
+Page POSTs to <span class="c-s">/api/checkout/create</span>, server returns <span class="c-x">500 Internal Server Error</span>. UI shows generic "Something went wrong" toast. Cart is left in a broken state — refreshing the page reproduces the same error.
+
+<span class="c-h">## Screenshot / Recording</span>
+&lt;attach screenshot or paste Loom URL&gt;
+
+<span class="c-h">## Severity</span>
+<span class="c-x">S2 — Major</span> (blocks checkout for any cart containing a deleted product; affects revenue but workaround exists: clear cart and re-add)
+
+<span class="c-h">## Console / Logs</span>
+<span class="c-d">// Browser console</span>
+<span class="c-x">POST https://app.example.com/api/checkout/create 500 (Internal Server Error)</span>
+<span class="c-x">Uncaught (in promise) TypeError: Cannot read properties of null (reading 'price')</span>
+    at CartSummary.render (CartSummary.tsx:84)
+    at processChild (react-dom.js:3108)
+
+<span class="c-d">// Server log (correlation id 7f3a-9e21)</span>
+<span class="c-x">[ERROR] CheckoutService: product DEMO-42 returned null from ProductRepository.findActive()</span>
+<span class="c-x">at CheckoutService.calculateTotal (checkout.service.ts:127)</span>
+
+<span class="c-h">## Additional context</span>
+- Reproduces 100% of the time with any soft-deleted SKU
+- Did not exist before deploy a3f9e21 (yesterday)
+- Likely related to PR #412 (refactored ProductRepository)
+</code></pre>
+  </div>
+
+  <h3>Severity rubric (use this — don't make it up per ticket)</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Severity</th><th>Definition</th><th>Example</th><th>Response time</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>S1 — Critical</strong></td><td>Production down, data loss, security breach, or no workaround for any user</td><td>Login broken for all users; payment double-charges; database leak</td><td>Drop everything &lt; 1 hr</td></tr>
+        <tr><td><strong>S2 — Major</strong></td><td>Core feature broken for many users, or any user with no easy workaround</td><td>Checkout fails on certain carts; export to CSV produces empty file</td><td>Same day</td></tr>
+        <tr><td><strong>S3 — Minor</strong></td><td>Non-core feature broken, or core feature broken with easy workaround</td><td>Search returns wrong order; tooltip text wrong; date picker broken in Safari only</td><td>Within sprint</td></tr>
+        <tr><td><strong>S4 — Trivial</strong></td><td>Cosmetic; no functional impact</td><td>Button is 2px off-center; placeholder text has typo; hover color slightly off</td><td>When convenient</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>The Template (Plain Text version for non-technical clients)</h2>
+
+  <p>For a client, support agent, or stakeholder who shouldn't have to learn what a "stack trace" is. Five fields, no jargon. Anyone can fill it out in two minutes.</p>
+
+  <div class="code-wrap">
+    <span class="code-label">Plain text — for clients / support / non-tech</span>
+<pre><code><span class="c-h">WHAT PAGE OR SCREEN</span>
+<span class="c-d">(paste the URL or describe where you were — "the cart page", "the dashboard")</span>
+
+<span class="c-h">WHAT YOU DID</span>
+<span class="c-d">(in your own words, what you clicked, typed, or tried to do)</span>
+
+<span class="c-h">WHAT HAPPENED</span>
+<span class="c-d">(what you actually saw — error message, blank screen, wrong result, etc.)</span>
+
+<span class="c-h">WHAT YOU EXPECTED</span>
+<span class="c-d">(what you thought should happen instead)</span>
+
+<span class="c-h">SCREENSHOT</span>
+<span class="c-d">(attach a screenshot if you can — Cmd+Shift+4 on Mac, Win+Shift+S on Windows)</span>
+</code></pre>
+  </div>
+
+  <p>That's it. The QA lead, support engineer, or developer who picks up the ticket can fill in the technical fields (browser, console errors, severity) afterwards if they need to. The point of the plain-text version is to lower the friction for the reporter — a five-field form gets filled in; an eight-field form gets abandoned or filled in badly.</p>
+
+  <h2>Where Bug Reports Go Wrong</h2>
+
+  <p>After reading thousands of bug reports across client projects, the same five anti-patterns appear over and over. Every one of them eats developer time and forces a follow-up "can you give me more detail?" message that the reporter sees three days later.</p>
+
+  <div class="antipattern">
+    <div class="ap-label">Anti-pattern 1 — Vague title</div>
+    <div class="ap-bad">"Bug in checkout"</div>
+    <div class="ap-fix"><strong>Fix:</strong> "Checkout returns 500 when cart contains a soft-deleted product." Title should let a triager guess severity and area without opening the ticket.</div>
+  </div>
+
+  <div class="antipattern">
+    <div class="ap-label">Anti-pattern 2 — No reproduction steps</div>
+    <div class="ap-bad">"Sometimes the page just doesn't load."</div>
+    <div class="ap-fix"><strong>Fix:</strong> Numbered steps that anyone can follow. If "sometimes" is genuinely true, document the conditions: which user, which time, what was clicked just before, how often (1-in-5? 1-in-100?).</div>
+  </div>
+
+  <div class="antipattern">
+    <div class="ap-label">Anti-pattern 3 — "It doesn't work"</div>
+    <div class="ap-bad">"The export doesn't work."</div>
+    <div class="ap-fix"><strong>Fix:</strong> Separate <em>expected</em> and <em>actual</em>. "Export should download a CSV. Actually downloads a 0-byte file." The developer needs to know which of the ten possible failure modes happened.</div>
+  </div>
+
+  <div class="antipattern">
+    <div class="ap-label">Anti-pattern 4 — Screenshot without URL</div>
+    <div class="ap-bad">An image attached to a Slack message with no context.</div>
+    <div class="ap-fix"><strong>Fix:</strong> Always include the URL or route in the report. A screenshot of <code>/admin/users/482/settings</code> looks identical to <code>/admin/users/483/settings</code>, but the bug only exists on user 482.</div>
+  </div>
+
+  <div class="antipattern">
+    <div class="ap-label">Anti-pattern 5 — Missing browser / OS info</div>
+    <div class="ap-bad">"Button is broken." (Reporter is on Safari 14; team only tests Chrome.)</div>
+    <div class="ap-fix"><strong>Fix:</strong> Always capture browser + version + OS. A bug that reproduces in Safari but not Chrome is a different bug than one that reproduces in both. Without environment data, the developer wastes an hour failing to reproduce on the wrong browser.</div>
+  </div>
+
+  <h2>Skip the Template: Use VibeCheck Instead</h2>
+
+  <p>Here is the honest part. If your team uses GitHub, Linear, or any modern tracker, the bug report template above is solving a 2010s problem. The 2026 version is: a tool that captures all 8 fields automatically when the reporter clicks the broken element.</p>
+
+  <div class="definition">
+    <strong><a href="/vibers/vibecheck/">VibeCheck</a></strong> is a free Chrome extension. The reporter opens the broken page, clicks the broken element, types one sentence describing the issue. VibeCheck auto-captures the URL, screenshot, browser, OS, viewport, console errors, DOM path of the clicked element, and any active network errors. The output is a structured bug report with all 8 template fields filled in — without the reporter ever seeing a form.</div>
+
+  <div class="scenario-banner">
+    <div class="scenario-label">Scenario — Real-world bug capture</div>
+    <div class="scenario-title">Client opens site → clicks broken button → 30 seconds later, perfect bug report exists</div>
+    <p class="scenario-body">A client testing a staging build notices the "Add to cart" button overflows on her iPhone. With the template approach, she'd need to: take a screenshot, open Notion, copy the template, paste it, fill in 8 fields including browser version (which she has to look up), describe the steps, write expected vs actual, classify severity, then send it to the dev team. Realistic time: <strong>10–15 minutes</strong>, and she'll likely skip the technical fields. With VibeCheck: she clicks the button, types <em>"this overflows on mobile"</em>, hits submit. URL, viewport (375×812), browser (Safari 18.2 iOS), screenshot of the button, DOM path (<code>div.product-card &gt; button.add-to-cart</code>), and any console warnings are auto-attached.</p>
+    <div class="scenario-result">Result: bug report with all 8 fields populated, sent to GitHub Issues. Total time: 30 seconds.</div>
+  </div>
+
+  <p>The side-by-side is stark. Templates are a workaround for the absence of tooling. When tooling exists, the workaround is no longer needed.</p>
+
+  <div class="vs-grid">
+    <div class="vs-card bad">
+      <h4>Template by hand</h4>
+      <ul>
+        <li>Reporter opens template doc</li>
+        <li>Copy-pastes URL manually</li>
+        <li>Looks up browser version in Help → About</li>
+        <li>Opens DevTools to find console errors (if technical)</li>
+        <li>Writes title, repro steps, expected, actual</li>
+        <li>Picks severity (often wrong)</li>
+        <li>Attaches screenshot from Downloads folder</li>
+        <li><strong>Time: 10–15 min per report</strong></li>
+        <li><strong>Failure rate: ~40% missing fields</strong></li>
+      </ul>
+    </div>
+    <div class="vs-card good">
+      <h4>VibeCheck (auto)</h4>
+      <ul>
+        <li>Reporter clicks the broken element</li>
+        <li>Types one-line description</li>
+        <li>URL, viewport, browser, OS auto-captured</li>
+        <li>Screenshot auto-attached</li>
+        <li>Console errors auto-pulled</li>
+        <li>DOM path of clicked element captured</li>
+        <li>Submits to GitHub / Linear / your tracker</li>
+        <li><strong>Time: 30 seconds per report</strong></li>
+        <li><strong>Failure rate: ~0% missing fields</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <p>The template still has its place. If your reporter doesn't have Chrome, or you need a paper trail in a Word doc for compliance, or your client refuses to install extensions, the Markdown and plain-text templates above are the right tool. For everyone else: skip the template, install <a href="/vibers/vibecheck/">VibeCheck</a>.</p>
+
+  <h2>Tools That Use This Template</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>How fields are filled</th>
+          <th>Pricing</th>
+          <th>Best for</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>GitHub Issues</strong></td><td>Manual via <code>ISSUE_TEMPLATE/bug.md</code></td><td>Free</td><td>Open source, dev-facing repos</td></tr>
+        <tr><td><strong>Linear</strong></td><td>Manual via templates</td><td>$8/user/mo</td><td>Product teams that already live in Linear</td></tr>
+        <tr><td><strong>Jira</strong></td><td>Manual + plugins (Marker.io, Bugasura, etc.)</td><td>$8.15/user/mo + plugin cost</td><td>Enterprise QA workflows</td></tr>
+        <tr><td><strong><a href="/vibers/blog/markerio-alternative/">Marker.io</a></strong></td><td>Semi-auto: click element, fills env + screenshot, manual description</td><td>$39/mo (Essential)</td><td>Agencies doing client UAT</td></tr>
+        <tr><td><strong><a href="/vibers/vibecheck/">VibeCheck</a></strong></td><td>Fully auto: click element, all 8 fields filled, manual one-line description</td><td>Free</td><td>Devs and PMs who want fixes, not tickets</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Compare alternatives in detail: <a href="/vibers/blog/bugherd-alternative/">BugHerd alternatives</a>, <a href="/vibers/blog/usersnap-alternative/">Usersnap alternatives</a>, and <a href="/vibers/blog/markerio-vs-vibers/">Marker.io vs Vibers</a>.</p>
+
+  <div class="stat-box">
+    <strong>According to the 2025 State of Software Quality report,</strong> 38% of bug reports filed by non-technical reporters are returned to the reporter for missing information at least once. Auto-capture tools eliminate this round-trip entirely.
+  </div>
+
+  <h2>FAQ</h2>
+
+  <div class="faq-section">
+    <div class="faq-item">
+      <p class="faq-q">What should a bug report include?</p>
+      <p class="faq-a">A complete bug report includes 8 fields: a clear title (what broke + where), environment (URL, browser, OS, app version), exact steps to reproduce numbered 1-2-3, expected behavior, actual behavior, a screenshot or screen recording, severity (S1 critical to S4 trivial), and console errors or stack traces. Reports missing any of these usually bounce back to the reporter with "cannot reproduce" or sit in the backlog while a developer guesses what was meant.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What's the difference between a bug report and a defect report?</p>
+      <p class="faq-a">In practice, the terms are used interchangeably. Formally, a "defect" is a deviation from the specification (something the software was built to do but does incorrectly), while a "bug" is a broader category that includes defects plus issues like performance regressions, UX problems, and edge cases not covered by the spec. ISO/IEC 25010 uses "defect." Most engineering teams use "bug." The reporting template is identical for both.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">How do I write a bug report for a non-technical team?</p>
+      <p class="faq-a">Use the simplified 5-field plain-text version above: what page or screen, what you did, what happened, what you expected, screenshot. Drop technical fields like console errors, stack traces, and browser version — the QA lead or developer can fill those in later if needed. The goal for non-technical reporters is capturing the user-visible problem clearly enough that someone technical can reproduce it. Even better, give them a tool like VibeCheck that auto-captures the technical fields from a single click.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Is there a free bug report template I can copy?</p>
+      <p class="faq-a">Yes — both versions in this article are free to copy. The Markdown bug report template is designed for GitHub Issues, Linear, Jira (with Markdown enabled), and any developer-facing tracker. The plain-text version is for clients, support agents, and stakeholders who don't write Markdown. No signup required, no PDF download, no email gate. Copy the code block and paste it into your issue tracker as a template.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Can I auto-generate bug reports?</p>
+      <p class="faq-a">Yes. Tools like VibeCheck (free Chrome extension), Marker.io ($39/mo), BugHerd, and Usersnap let a reporter click an element on the page and auto-capture the URL, screenshot, browser, OS, viewport, console errors, and DOM path. The reporter only types the description. This eliminates 6–7 of the 8 template fields and removes the most common failure mode of bug reporting: missing or incorrect environment data.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What format is best — Markdown, Word, or PDF?</p>
+      <p class="faq-a">For internal engineering teams: Markdown, every time. It pastes cleanly into GitHub, Linear, Jira, and Slack, renders well in any text editor, and is version-controllable. For external clients without technical tooling: plain text or a simple Word doc. Avoid PDF — it forces the reader to retype information into the issue tracker, which is where most data loss happens. The bug report format should match the workflow of the people who fix bugs, not the people who file them.</p>
+    </div>
+  </div>
+
+  <div class="cta-block">
+    <h3>Stop writing bug reports by hand.</h3>
+    <p>VibeCheck captures URL, browser, OS, screenshot, console errors, and DOM element from a single click. Reporter types one sentence. Free Chrome extension, no subscription, works on any URL.</p>
+    <a href="/vibers/vibecheck/" class="cta-btn">Try VibeCheck Free</a>
+    <a href="/vibers/" class="cta-secondary">Or get human review →</a>
+  </div>
+
+  <div class="author-bio">
+    <div class="author-info">
+      <h4>Alex Noxon — Vibers founder</h4>
+      <p>Building Vibers — human-in-the-loop code review and visual feedback that ships fixes, not tickets. Previously shipped production systems reviewed by a combined 40,000+ hours of senior developer time. Writes about the gap between reporting bugs and actually fixing them.</p>
+    </div>
+  </div>
+
+  <div class="related-posts">
+    <h3>Related Articles</h3>
+    <div class="related-grid">
+      <div class="related-card">
+        <a href="/vibers/blog/markerio-alternative/">Marker.io Alternative That Actually Fixes Bugs</a>
+        <p>Same annotation step, but routes to a fix instead of a Jira ticket.</p>
+      </div>
+      <div class="related-card">
+        <a href="/vibers/blog/bugherd-alternative/">BugHerd Alternative</a>
+        <p>Visual feedback without the per-seat pricing or website widget.</p>
+      </div>
+      <div class="related-card">
+        <a href="/vibers/blog/usersnap-alternative/">Usersnap Alternative</a>
+        <p>Capture bugs from any URL without a JS snippet on the target site.</p>
+      </div>
+      <div class="related-card">
+        <a href="/vibers/blog/markerio-vs-vibers/">Marker.io vs Vibers</a>
+        <p>Report bugs vs fix bugs — which tool fits which workflow.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — Human Code Review</span>
+    <span><a href="/vibers/">Home</a> · <a href="/vibers/blog/">Blog</a> · <a href="/vibers/vibecheck/">VibeCheck Extension</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
