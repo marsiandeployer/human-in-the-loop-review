@@ -112,6 +112,31 @@
 - **vs Vibers:** Инструмент для репортинга багов самими клиентами/QA — **не ревьюит и не чинит**. Vibers = люди находят баги и присылают PR. Marker.io = инфраструктура, чтобы команда зарепортила баги сама. Пересекается в UAT/pre-launch сценариях, но разная модель (tooling vs service).
 - **Возможности:** взять их UAT-шаблоны как входную точку в контент ("UAT is not enough — here's what human reviewers catch that checklists miss"), сравнительная страница "Marker.io vs Vibers: report bugs vs fix bugs"
 
+**Топ-5 статей блога (traffic share, 2026-04):**
+
+| URL | Unique Visitors | Pageviews | Share |
+|-----|----------------:|----------:|------:|
+| `/blog/user-acceptance-testing-template` | 1,600 | 2,500 | 33.8% |
+| `/blog/user-acceptance-testing-tools` | 929 | 929 | 11.9% |
+| `/blog/google-chrome-screenshot-extensions` | 774 | 886 | 11.9% |
+| `/blog/bug-report-template` | 748 | 748 | 10.1% |
+| `/blog/website-project-plan-template` | 449 | 603 | 8.1% |
+
+**Паттерн контента Marker.io (анализ топ-1 UAT-template статьи — 4,500-5,000 слов):**
+- **Template hubs** — не "что такое X", а "17 готовых шаблонов X под Jira/Asana/GitHub/Excel/Google Docs". Полезный actionable ресурс, а не теория.
+- **Platform × Format матрица** — одна статья закрывает long-tail `[keyword] template [tool]` (UAT template Jira, UAT template Excel, bug report template GitHub итд).
+- **Внутренняя перелинковка** — каждая платформенная секция ведёт на соответствующую integration page (`/jira-bug-tracking-tool`, `/github-bug-tracking`).
+- **CTA density** — "Start free trial" 4+ раз в одной статье, каждая секция заканчивается конверсией.
+- **Freshness** — последнее обновление 2026-04-16 (актуализируется постоянно, не "написали и забыли").
+- **Utility content как tripwire** — `/google-chrome-screenshot-extensions` (774 visitors) вообще не про них, но захватывает смежную интент-аудиторию "screenshot for bug report".
+
+**Takeaways для Vibers:**
+1. **Template-hub формат работает** — создать аналоги под нашу нишу: "AI Code Review Checklist Templates (GitHub PR / GitLab MR / Jira / Notion / Confluence)" — один long-form пост закрывает 5-8 long-tail запросов.
+2. **Platform × Format матрица** — наши сущности: { GitHub PR, GitLab MR, Bitbucket PR, Azure DevOps } × { Cursor, Claude Code, Copilot, Bolt, Lovable, v0 } = десятки long-tail комбинаций в одной статье.
+3. **Utility tripwire** — написать "Best Chrome extensions for reviewing AI-generated code" или "Best VSCode extensions for AI code review" — смежная аудитория, естественный переход к Vibers.
+4. **Living documents** — помечать дату обновления на топ-статьях и реально апдейтить раз в квартал (бонус от Google March 2026 Core Update — freshness + information gain).
+5. **Resource hub masquerading as educational** — наш `/blog/best-ai-code-review-tools` надо перестроить по этой модели: не просто listicle, а hub с внутренними ссылками на каждый tool comparison.
+
 ### Aikido (aikido.dev)
 - **Что:** Unified AppSec platform (SAST, SCA, secrets, containers, cloud, runtime)
 - **Цены:** Free tier → Basic/Pro/Advanced/Enterprise. Startup discounts 30%
