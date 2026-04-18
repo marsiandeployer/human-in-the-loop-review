@@ -520,6 +520,44 @@
       0%,100% { opacity: 1; }
       50% { opacity: 0; }
     }
+
+    /* ── Fix animation states ── */
+    .panel-btn-fix.sending {
+      background: #444 !important;
+      cursor: default;
+      opacity: 0.8;
+    }
+    .panel-success {
+      display: none;
+      background: #0d2b1a;
+      border: 1px solid #16a34a;
+      border-radius: 5px;
+      padding: 8px 10px;
+      font-size: 10px;
+      color: #4ade80;
+      line-height: 1.5;
+      animation: fadeIn .4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fix-applied {
+      animation: fixGlow .6s ease forwards !important;
+    }
+    @keyframes fixGlow {
+      0%   { box-shadow: 0 0 0 0 rgba(22,163,74,0); border-color: #FF6B35; }
+      40%  { box-shadow: 0 0 0 6px rgba(22,163,74,0.35); border-color: #16a34a; }
+      100% { box-shadow: 0 0 0 3px rgba(22,163,74,0.15); border-color: #16a34a; }
+    }
+    .text-fade {
+      animation: textSwap .5s ease;
+    }
+    @keyframes textSwap {
+      0%   { opacity: 1; }
+      40%  { opacity: 0; }
+      100% { opacity: 1; }
+    }
     .demo-banner-caption {
       text-align: center;
       font-size: 11px;
@@ -625,7 +663,7 @@
             <div class="demo-kpi-label">Monthly Revenue</div>
             <div class="demo-kpi-value">$48,210</div>
             <div style="font-size:9px;color:#16a34a;margin-top:2px;">↑ 12.4%</div>
-            <span class="demo-kpi-btn">View transaction details</span>
+            <span class="demo-kpi-btn" id="mock-btn-bug">View transaction details</span>
           </div>
           <div class="demo-kpi">
             <div class="demo-kpi-label">New Customers</div>
@@ -657,7 +695,8 @@
           <div class="panel-comment-label">Comment</div>
           <div class="panel-comment-box"><span class="tw" id="tw-bug"></span><span class="type-cursor">|</span></div>
         </div>
-        <button class="panel-btn-fix">Fix It →</button>
+        <button class="panel-btn-fix" id="fix-btn-bug">Fix It →</button>
+        <div class="panel-success" id="ps-bug"></div>
       </div>
     </div>
 
@@ -666,9 +705,8 @@
       <div class="demo-site">
         <div class="demo-site-header">
           <div class="demo-site-logo">📊 Revenue Dashboard</div>
-          <div class="demo-site-nav" style="border:2px solid #FF6B35;border-radius:5px;padding:2px 6px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;">
+          <div class="demo-site-nav">
             <span>Overview</span><span>Reports</span><span>Settings</span>
-            <span style="position:absolute;bottom:-18px;right:2px;font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
           </div>
         </div>
         <div class="demo-kpi-row">
@@ -685,8 +723,17 @@
             <div class="demo-kpi-value" style="color:#7c3aed;">3.8%</div>
           </div>
         </div>
-        <div style="background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;">
-          <div style="font-size:10px;color:#888;margin-bottom:8px;">Recent Transactions</div>
+        <div id="mock-txn-feature" style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:10px 12px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="font-size:10px;color:#888;">Recent Transactions</div>
+            <span style="font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;position:relative;top:1px;">👆</span>
+          </div>
+          <div id="filter-bar-feature" style="display:none;margin-bottom:7px;animation:fadeIn .4s ease;">
+            <div style="display:flex;gap:5px;align-items:center;">
+              <div style="flex:1;display:flex;align-items:center;gap:4px;background:#f9f9f9;border:1px solid #d1d5db;border-radius:4px;padding:3px 7px;font-size:9px;color:#666;">🔍 <span>Search transactions…</span></div>
+              <div style="background:#f9f9f9;border:1px solid #d1d5db;border-radius:4px;padding:3px 7px;font-size:9px;color:#666;white-space:nowrap;">Date ▾</div>
+            </div>
+          </div>
           <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;border-bottom:1px solid #f0f0f0;"><span>Alex Johnson</span><span style="color:#16a34a;font-weight:600;">$299</span></div>
           <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;"><span>Maria García</span><span style="color:#16a34a;font-weight:600;">$49</span></div>
         </div>
@@ -698,15 +745,16 @@
         </div>
         <div class="panel-element">
           <div class="panel-element-label">Selected element</div>
-          <div class="panel-element-tag">&lt;nav class="site-nav"&gt;</div>
-          <div class="panel-element-text">Overview · Reports · Settings</div>
-          <div class="panel-element-path">header &gt; nav.site-nav</div>
+          <div class="panel-element-tag">&lt;div class="transactions"&gt;</div>
+          <div class="panel-element-text">Recent Transactions</div>
+          <div class="panel-element-path">main &gt; section.transactions</div>
         </div>
         <div class="panel-comment-wrap">
           <div class="panel-comment-label">Comment</div>
           <div class="panel-comment-box"><span class="tw" id="tw-feature"></span><span class="type-cursor">|</span></div>
         </div>
-        <button class="panel-btn-fix" style="background:#7c3aed;">Add Feature →</button>
+        <button class="panel-btn-fix" id="fix-btn-feature" style="background:#7c3aed;">Add Feature →</button>
+        <div class="panel-success" id="ps-feature"></div>
       </div>
     </div>
 
@@ -716,7 +764,7 @@
         <div style="padding:16px 0 10px;">
           <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Landing page hero</div>
           <div style="border:2px solid #FF6B35;border-radius:6px;padding:14px 16px;box-shadow:0 0 0 3px rgba(255,107,53,.12);position:relative;">
-            <div style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.25;margin-bottom:6px;">Automate your financial reporting</div>
+            <div id="mock-hero-title" style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.25;margin-bottom:6px;">Automate your financial reporting</div>
             <div style="font-size:10px;color:#555;margin-bottom:10px;">Connect your accounts and get instant insights on your revenue.</div>
             <span style="display:inline-block;background:#1a1a1a;color:#fff;font-size:9px;font-weight:700;padding:5px 12px;border-radius:4px;">Get started</span>
             <span style="position:absolute;bottom:-20px;right:8px;font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
@@ -742,7 +790,8 @@
           <div class="panel-comment-label">Comment</div>
           <div class="panel-comment-box"><span class="tw" id="tw-improve"></span><span class="type-cursor">|</span></div>
         </div>
-        <button class="panel-btn-fix" style="background:#16a34a;">Improve →</button>
+        <button class="panel-btn-fix" id="fix-btn-improve" style="background:#16a34a;">Improve →</button>
+        <div class="panel-success" id="ps-improve"></div>
       </div>
     </div>
 
@@ -923,56 +972,130 @@ var TAB_DATA = {
   bug: {
     url: 'onout.org/dashboard/',
     text: "button text cuts off on mobile — maybe shorten to 'View details'?",
-    caption: 'Bug spotted — Fix It sends element + codebase to reviewer → PR in hours'
+    caption: '✓ PR #247 merged — button copy fixed in 2 hours'
   },
   feature: {
     url: 'onout.org/dashboard/',
     text: "can we add a search bar here? users keep asking how to filter transactions by date",
-    caption: 'Feature request → developer gets context + codebase → PR with new feature'
+    caption: '✓ PR #248 merged — search filter added to nav'
   },
   improve: {
     url: 'onout.org/landing/',
     text: "headline feels too generic — 'See exactly where your money goes' might convert better",
-    caption: 'Copy/UX improvement → AI + human reviewer rewrites and ships the change'
+    caption: '✓ PR #249 merged — hero copy rewritten, CTR +18%'
   }
 };
 
 var currentTab = 'bug';
 var typeTimer = null;
 
-function typeText(elId, text, delay) {
+function typeText(elId, text, delay, onDone) {
   var el = document.getElementById(elId);
   if (!el) return;
   el.textContent = '';
   var i = 0;
   function go() {
-    if (i >= text.length) return;
+    if (i >= text.length) { if (onDone) onDone(); return; }
     el.textContent += text[i];
     i++;
-    var d = 50 + Math.random() * 55;
-    if (text[i-1] === ' ') d += 25;
-    if ('.,—?!'.indexOf(text[i-1]) !== -1) d += 160;
+    var d = 48 + Math.random() * 52;
+    if (text[i-1] === ' ') d += 22;
+    if ('.,—?!'.indexOf(text[i-1]) !== -1) d += 150;
     typeTimer = setTimeout(go, d);
   }
-  setTimeout(go, delay);
+  typeTimer = setTimeout(go, delay);
+}
+
+function applyFix(tab) {
+  var btn = document.getElementById('fix-btn-' + tab);
+  var ps  = document.getElementById('ps-' + tab);
+
+  // 1. Button enters "sending" state
+  if (btn) { btn.classList.add('sending'); btn.textContent = '⏳ Sending…'; }
+
+  setTimeout(function() {
+    // 2. Magic transformation in mock site
+    if (tab === 'bug') {
+      var mockBtn = document.getElementById('mock-btn-bug');
+      var kpiCard = mockBtn && mockBtn.closest('.demo-kpi');
+      if (mockBtn) {
+        mockBtn.classList.add('text-fade');
+        setTimeout(function() { mockBtn.textContent = 'View details'; }, 200);
+      }
+      if (kpiCard) kpiCard.classList.add('fix-applied');
+    }
+    if (tab === 'feature') {
+      var nav = document.getElementById('mock-txn-feature');
+      if (nav) {
+        nav.classList.add('fix-applied');
+        var search = document.getElementById('filter-bar-feature');
+        if (search) search.style.display = 'block';
+      }
+    }
+    if (tab === 'improve') {
+      var title = document.getElementById('mock-hero-title');
+      if (title) {
+        title.classList.add('text-fade');
+        setTimeout(function() { title.textContent = 'See exactly where your money goes'; }, 200);
+        title.closest('div[style*="border:2px"]') && title.closest('div[style*="border:2px"]').classList.add('fix-applied');
+      }
+    }
+
+    // 3. Panel → success state
+    setTimeout(function() {
+      if (btn) { btn.style.display = 'none'; }
+      if (ps) {
+        var msgs = {
+          bug:     '✓ PR #247 opened\nbranch: fix/button-overflow\nReviewer: @alex — merged in 1h 52m',
+          feature: '✓ PR #248 opened\nbranch: feat/transaction-search\nReviewer: @marina — merged in 3h 10m',
+          improve: '✓ PR #249 opened\nbranch: copy/hero-headline\nReviewer: @alex — merged in 47m'
+        };
+        ps.style.display = 'block';
+        ps.style.whiteSpace = 'pre-line';
+        ps.textContent = msgs[tab];
+      }
+      // update caption
+      var cap = document.getElementById('demo-caption');
+      if (cap) cap.textContent = TAB_DATA[tab].caption;
+    }, 700);
+  }, 900);
+}
+
+function resetTab(tab) {
+  var btn = document.getElementById('fix-btn-' + tab);
+  var ps  = document.getElementById('ps-' + tab);
+  if (btn) { btn.classList.remove('sending'); btn.style.display = ''; btn.textContent = tab === 'bug' ? 'Fix It →' : tab === 'feature' ? 'Add Feature →' : 'Improve →'; }
+  if (ps)  { ps.style.display = 'none'; ps.textContent = ''; }
+  // reset mock elements
+  var mockBtn = document.getElementById('mock-btn-bug');
+  if (mockBtn) { mockBtn.textContent = 'View transaction details'; mockBtn.classList.remove('text-fade'); }
+  var bugCard = mockBtn && mockBtn.closest('.demo-kpi');
+  if (bugCard) bugCard.classList.remove('fix-applied');
+  var nav = document.getElementById('mock-txn-feature');
+  if (nav) nav.classList.remove('fix-applied');
+  var filterBar = document.getElementById('filter-bar-feature');
+  if (filterBar) filterBar.style.display = 'none';
+  var title = document.getElementById('mock-hero-title');
+  if (title) { title.textContent = 'Automate your financial reporting'; title.classList.remove('text-fade'); var heroWrap = title.closest('div[style*="border:2px"]'); if (heroWrap) heroWrap.classList.remove('fix-applied'); }
 }
 
 function switchTab(tab) {
   if (typeTimer) clearTimeout(typeTimer);
-  // update tabs
+  ['bug','feature','improve'].forEach(function(t) { resetTab(t); });
   document.querySelectorAll('.demo-tab').forEach(function(b) {
     b.classList.toggle('active', b.dataset.tab === tab);
   });
-  // show/hide viewports
   ['bug','feature','improve'].forEach(function(t) {
     document.getElementById('tab-' + t).style.display = t === tab ? 'flex' : 'none';
   });
   // update url + caption
   var data = TAB_DATA[tab];
   document.getElementById('demo-url').textContent = data.url;
-  document.getElementById('demo-caption').textContent = data.caption;
-  // restart typewriter
-  typeText('tw-' + tab, data.text, 1200);
+  document.getElementById('demo-caption').textContent = '⏳ Sending feedback…';
+  // typewriter → then apply fix
+  typeText('tw-' + tab, data.text, 1200, function() {
+    setTimeout(function() { applyFix(tab); }, 500);
+  });
   currentTab = tab;
 }
 
