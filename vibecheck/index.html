@@ -324,6 +324,16 @@
     }
     .demo-tab:hover { background: #f5f5f5; border-color: #bbb; color: #333; }
     .demo-tab.active { background: #FF6B35; border-color: #FF6B35; color: #fff; }
+    .tab-desc-wrap {
+      max-width: 740px;
+      margin: 10px auto 14px;
+    }
+    .tab-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+      padding: 0 4px;
+    }
     .badge-bug    { background: #dc2626 !important; }
     .badge-feature { background: #7c3aed !important; }
     .badge-improve { background: #16a34a !important; }
@@ -677,8 +687,11 @@
     <span class="demo-scenario-label">Try a scenario:</span>
     <button class="demo-tab active" data-tab="bug" onclick="switchTab('bug')">🐛 Bug fix</button>
     <button class="demo-tab" data-tab="feature" onclick="switchTab('feature')">✨ Feature request</button>
-    <button class="demo-tab" data-tab="improve" onclick="switchTab('improve')">💡 Copy / UX</button>
+    <button class="demo-tab" data-tab="improve" onclick="switchTab('improve')">💡 Copywriting / UX</button>
     <button class="demo-tab" data-tab="wp" onclick="switchTab('wp')">🔌 WordPress</button>
+  </div>
+  <div class="tab-desc-wrap">
+    <p class="tab-desc" id="tab-desc"></p>
   </div>
 
   <div class="demo-banner">
@@ -1064,21 +1077,25 @@
 var TAB_DATA = {
   bug: {
     url: 'onout.org/dashboard/',
+    desc: 'A button label overflows its container. Click Fix It — reviewer finds the CSS root cause and opens a PR within hours.',
     text: "the 'View transaction details' label overflows the card width — shorten to 'View details'",
     caption: '✓ PR #247 merged — button copy fixed in 2 hours'
   },
   feature: {
     url: 'onout.org/dashboard/',
+    desc: 'Users keep asking for a search filter but there is none. Leave a feature comment — reviewer adds it to the codebase and sends a PR.',
     text: "can we add a search bar here? users keep asking how to filter transactions by date",
     caption: '✓ PR #248 merged — search filter added to nav'
   },
   improve: {
     url: 'onout.org/landing/',
+    desc: 'Your hero headline is generic and not converting. A copywriter + developer rewrites it and ships the change as a PR.',
     text: "headline feels too generic — 'See exactly where your money goes' might convert better",
     caption: '✓ PR #249 merged — hero copy rewritten, CTR +18%'
   },
   wp: {
     url: 'mystore.com/shop/',
+    desc: 'A WooCommerce product shows "Unavailable" even though it\'s in stock. Fix is deployed directly to WordPress via FTP — no GitHub needed.',
     text: "the Camera Lens product shows 'Unavailable' but it's in stock — looks like a WooCommerce status bug",
     caption: '✓ Fix deployed to WordPress via FTP — product back on sale in 1 hour'
   }
@@ -1228,6 +1245,8 @@ function switchTab(tab, skipHistory) {
   var data = TAB_DATA[tab];
   document.getElementById('demo-url').textContent = data.url;
   document.getElementById('demo-caption').textContent = '⏳ Sending feedback…';
+  var descEl = document.getElementById('tab-desc');
+  if (descEl) descEl.textContent = data.desc;
   typeText('tw-' + tab, data.text, 1200, gen, function() {
     setTimeout(function() { applyFix(tab, gen); }, 500);
   });
