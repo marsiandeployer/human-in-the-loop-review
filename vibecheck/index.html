@@ -831,12 +831,12 @@
   <header class="hero">
     <div class="hero-badge" data-i18n="badge">Chrome Extension &mdash; Early Access</div>
     <h1>VibeCheck</h1>
-    <p class="hero-sub" data-i18n="hero-sub">Click a bug on your site — get a pull request with the fix. Free Chrome extension plugs into your AI (Claude Code, Codex, Cursor). No AI? A Vibers developer writes the code for you.</p>
+    <p class="hero-sub" data-i18n="hero-sub">Click any issue on your website. AI fixes it and ships it.</p>
     <div class="cta-group">
       <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'vibecheck',event_label:'join_waitlist'});" data-i18n="cta-primary">Join Early Access</a>
-      <a href="/vibers/" class="btn-secondary" data-i18n="cta-secondary">Learn about Vibers &rarr;</a>
+      <a href="#how-it-works" class="btn-secondary" data-i18n="cta-secondary">How it works &rarr;</a>
     </div>
-    <p class="beta-note" data-i18n="beta-note">Free to use with your own AI (Claude Code, Codex, Cursor). Human review from $15/hr — <a href="/vibers/" style="color:#888;">learn more</a>.</p>
+    <p class="beta-note" data-i18n="beta-note">Use your own AI — Claude Code, Codex, or Cursor. No AI? <a href="/vibers/" style="color:#888;">Vibers can handle it for you.</a></p>
   </header>
   </div><!-- /content-wrap hero -->
 
@@ -1177,7 +1177,7 @@
     </p>
   </section>
 
-  <section class="how-it-works">
+  <section class="how-it-works" id="how-it-works">
     <h2 data-i18n="h2-how">How VibeCheck works</h2>
     <div class="steps">
       <div class="step">
@@ -1532,10 +1532,10 @@ switchTab(TAB_DATA[initTab] ? initTab : 'bug');
 <script>
 var ru = {
   'badge':               'Chrome Расширение — Ранний доступ',
-  'hero-sub':            'Кликаешь на баг прямо на сайте — получаешь pull request с фиксом.<br>Бесплатное Chrome-расширение подключается к твоему AI (Claude Code, Codex, Cursor). Нет своего AI — наш разработчик напишет код за тебя.',
+  'hero-sub':            'Кликаешь на любую проблему на сайте. AI фиксит и отправляет PR.',
   'cta-primary':         'Получить ранний доступ',
-  'cta-secondary':       'Узнать о Vibers →',
-  'beta-note':           'Бесплатно с вашим AI (Claude Code, Codex, Cursor). Ревью руками от $15/ч — <a href="/vibers/" style="color:#888;">подробнее</a>.',
+  'cta-secondary':       'Как это работает →',
+  'beta-note':           'Используй свой AI — Claude Code, Codex или Cursor. Нет AI? <a href="/vibers/" style="color:#888;">Vibers сделают за тебя.</a>',
   'try-scenario':        'Попробуй сценарий:',
   'tab-bug':             '🐛 Баг-фикс',
   'tab-feature':         '✨ Фича',
