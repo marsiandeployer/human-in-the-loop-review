@@ -29,9 +29,10 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 
 **Key message:** All of them → ticket. VibeCheck → PR. All paid, VibeCheck free (BYOK).
 
-**SEO opportunities:** `/markerio-alternative/`, `/bugherd-alternative/`, `/usersnap-alternative/` — commercial intent, low competition.
+**Alternative-статьи (опубликованы 2026-04-18):** `/blog/markerio-alternative/`, `/blog/bugherd-alternative/`, `/blog/usersnap-alternative/`. Все таргетят low-KD KWs (KD 1-4) + "free X" intent.
 
 → Полный анализ + "alternative to" messaging: [COMPETITORS.md#visual-feedback-tools](COMPETITORS.md#visual-feedback-tools-vibecheck-специфичные-конкуренты)
+→ Marker.io keyword intelligence (4431 KW): [marker-io-keyword-insights.md](marker-io-keyword-insights.md)
 
 ## Marketing & SEO
 
@@ -46,6 +47,9 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [advertising-channels.md](advertising-channels.md) | Полная карта рекламы: каталоги, ad networks, newsletters, стратегия по бюджету |
 | [backlinks/](backlinks/) | Raw SEMrush backlink exports (CodeRabbit 4.6K, Qodo 6K domains); `submission-targets-from-competitor-backlinks.csv` — каталоги из бэклинков конкурентов |
 | [topic-research-20260414.xlsx](topic-research-20260414.xlsx) | SEMrush Topic Research — 108 content ideas with volumes, questions, backlinks |
+| [google-2026-content-strategy.md](google-2026-content-strategy.md) | **NEW** Google March 2026 правила: что банят (scaled abuse), что поднимают (Information Gain). Наша стратегия. |
+| [bug-cluster-research.md](bug-cluster-research.md) | **NEW** 30 багов из SO + GitHub, классифицированы по VibeCheck fit и Noxon expertise. Roadmap на 5-10 статей. |
+| [marker-io-keyword-insights.md](marker-io-keyword-insights.md) | **NEW** Анализ marker.io 4431 KW: топ-кластеры, "free" intent, чего НЕ копировать. |
 | [WIKI.md#seo-intelligence](WIKI.md#seo-intelligence-april-2026) | Google March 2026 Core Update итоги + Claude SEO Prompts methodology |
 
 ### Directory Submission Targets (из бэклинков конкурентов, 2026-04-18)
@@ -87,45 +91,44 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | 19 | pageproofer.com | Page proofing tool |
 | 44 | featurebase.app | Feature request board |
 
-### Content Plan (from keyword research)
+### Content Strategy (rebuilt 2026-04-18 after Google March 2026 analysis)
 
-**Priority 1 — Landing pages (KD < 5):**
-- [x] `/blog/code-review-as-a-service/` — "code review as a service" (110 vol, KD=1)
+**Главное правило:** см. [google-2026-content-strategy.md](google-2026-content-strategy.md). Не делать кластерный спам — Google режет scaled content abuse. Каждая статья = original data + first-hand expertise + Information Gain.
 
-**Priority 2 — Blog listicles (KD < 30):**
-- [x] `/blog/best-ai-code-review-tools/` — "best ai code review tools" (170 vol, KD=26)
-- [x] `/blog/claude-code-review/` — "claude code review" (320 vol, KD=25)
-- [ ] "code review checklist" (390 vol, KD=24) — lead magnet, human+AI checklist
-- [ ] "secure code review" (480 vol, KD=25) — security angle
-- [ ] "automated code review tools" (260 vol, KD=27) — comparison
-- [ ] "best code review tools" (110 vol, KD=16) — listicle
+**Стратегия — bug-cluster:** owning 3 узких ниш где у нас demonstrable expertise (см. [bug-cluster-research.md](bug-cluster-research.md)):
 
-**Priority 3 — High-volume from Topic Research (2026-04-14):**
-- [ ] "how to review pull requests" (2900 vol, KD=38) — guide for AI-generated PRs
-- [ ] "code review best practices" (590 vol, KD=47) — with AI+human angle
-- [ ] "improve code quality" (70 vol, KD=15) — contrarian: "Why code reviews don't improve quality anymore"
-- [ ] "why ai code review is not enough" — hot take / link bait (top backlinked format)
+1. **WordPress/WooCommerce visual + checkout bugs** — Noxon NFTsy plugin moat
+2. **React state/effect bugs в AI-coded apps** — MultiCurrencyWallet (540⭐) expertise
+3. **Web3 wallet/DEX UX bugs** — unifactory, MCW, definance expertise
 
-**Priority 4 — Platform-specific:**
-- [ ] "gitlab ai code review" (170 vol, KD=24)
-- [ ] "bitbucket ai code review" (110 vol, KD=16)
+Каждая статья: 1 конкретный баг + интерактивный live-баннер с демкой бага + наш PR-fix flow + реальная отсылка к коду из Noxon-репо.
 
-**Priority 5 — Comparison pages:**
-- [x] `/blog/coderabbit-alternative-human-review/`
-- [x] `/blog/coderabbit-vs-human-review/`
-- [ ] "Vibers vs Qodo"
-- [ ] "Human vs AI Code Review: 50 Real Bugs Benchmark"
+**Опубликовано в bug-cluster (2026-04-18):**
+- [x] `/blog/react-usestate-not-updating/` — vol ~929k SO views, KD high. С live-баннером (broken counter → VibeCheck → fixed counter)
 
-**Priority 6 — Programmatic SEO (шаблонные страницы):**
-- [ ] `/review/cursor-code`, `/review/claude-code`, `/review/copilot-code`
-- [ ] `/review/bolt-code`, `/review/v0-code`, `/review/lovable-code`, `/review/replit-code`
+**Опубликовано в alternative-кластере (2026-04-18):**
+- [x] `/blog/markerio-alternative/` — KD 1-3, "free alternative" intent
+- [x] `/blog/bugherd-alternative/` — KD 2
+- [x] `/blog/usersnap-alternative/` — KD 4
+- [x] `/blog/bug-report-template/` — vol 720, KD 33 (Marker.io top blog page)
 
-**Priority 7 — Template hubs & utility content (вдохновлено Marker.io паттерном):**
-- [ ] "AI Code Review Checklist Templates" — long-form (4-5K слов) с шаблонами под GitHub PR / GitLab MR / Jira / Notion / Confluence / Google Docs (аналог `/blog/user-acceptance-testing-template` — 1.6K uniques/mo у них)
-- [ ] "Code Review Bug Report Templates" — шаблоны под { GitHub, Jira, Linear, Asana, Notion } × { critical bug, security, perf, logic } (аналог `/blog/bug-report-template`)
-- [x] "Best Chrome Extensions for AI Code Review" — utility tripwire (смежная аудитория, аналог `/blog/google-chrome-screenshot-extensions` — 774 uniques/mo)
-- [ ] "AI Code Review Tools" — перестроить `best-ai-code-review-tools` как resource hub: каждый tool → внутренняя ссылка на "vs" comparison
-- [ ] Добавить visible "Last updated" даты на топ-статьи + квартальный апдейт-цикл (freshness signal)
+**Backlog (next, по приоритету ROI):**
+- [ ] React useEffect missing dependency (vol ~1.25M SO views) — pattern 2 in bug-cluster
+- [ ] React useEffect runs twice / StrictMode (598k views) — wallet connect example
+- [ ] React Hydration failed (687k views)
+- [ ] WooCommerce add to cart not working — A-tier visual demo
+- [ ] WordPress white screen of death — common WP nightmare
+- [ ] MetaMask connect wallet does nothing — Web3 cluster opener
+
+**Существующие, нужно усилить (Information Gain refresh — каждые 60-90 дней):**
+- [ ] Все статьи: добавить original data — реальные PR-кейсы, time-to-fix, конкретные diffs
+- [ ] Все статьи: добавить E-E-A-T author bio с github.com/noxonsu, MCW 540⭐
+- [ ] `code-review-as-a-service`, `claude-code-review` — обновить с реальными бенчмарками
+
+**ANTI-roadmap (НЕ делать — выйдем за core expertise):**
+- ❌ UAT software/template hub (147k vol суммарно, но не наша ниша)
+- ❌ Voice of customer template, design review software, tree testing — adjacent но не наше
+- ❌ Programmatic SEO `/review/{tool}-code` — выглядит как scaled abuse в глазах Google March 2026
 
 **People Also Ask (для FAQ-секций):**
 - "What is the best free website for code reviews?"
@@ -191,26 +194,31 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 
 ### Existing Blog Articles
 
-| Slug | Target Keyword | Status |
-|------|---------------|--------|
-| `code-review-as-a-service` | code review as a service | NEW |
-| `best-ai-code-review-tools` | best ai code review tools | NEW |
-| `claude-code-review` | claude code review | NEW |
-| `best-chrome-extensions-ai-code-review` | best chrome extensions for ai code review | Published |
-| `markerio-vs-vibers` | marker.io vs vibers | Published |
-| `coderabbit-alternative-human-review` | coderabbit alternative | Published |
-| `coderabbit-vs-human-review` | coderabbit vs human review | Published |
-| `ai-code-review-bots-miss-bugs` | ai code review bots miss bugs | Published |
-| `human-in-the-loop-code-review-teams` | human in the loop code review | Published |
-| `ai-generated-code-security-vulnerabilities` | ai generated code security vulnerabilities | Published |
-| `review-cursor-generated-code` | review cursor generated code | Published |
-| `how-to-test-ai-generated-code` | how to test ai generated code | Published |
-| `ai-writes-code-who-verifies` | ai writes code who verifies | Published |
-| `review-vibe-coded-app-before-launch` | review vibe coded app before launch | Published |
-| `vibe-coded-app-production-ready` | vibe coded app production ready | Published |
-| `vibe-coding-mistakes-production` | vibe coding mistakes production | Published |
-| `vibe-coding-security-risks` | vibe coding security risks | Published |
-| `claude-ai-performance-issues` | claude ai performance issues | Published |
+| Slug | Target Keyword | Cluster |
+|------|---------------|---------|
+| `react-usestate-not-updating` | react usestate not updating | **Bug-cluster (NEW 2026-04-18, live banner)** |
+| `bug-report-template` | bug report template | Template (NEW 2026-04-18) |
+| `markerio-alternative` | marker.io alternative / free | Alternative (NEW 2026-04-18) |
+| `bugherd-alternative` | bugherd alternative | Alternative (NEW 2026-04-18) |
+| `usersnap-alternative` | usersnap alternatives | Alternative (NEW 2026-04-18) |
+| `markerio-vs-vibers` | marker.io vs vibers | Comparison |
+| `coderabbit-alternative-human-review` | coderabbit alternative | Alternative |
+| `coderabbit-vs-human-review` | coderabbit vs human review | Comparison |
+| `code-review-as-a-service` | code review as a service | Landing |
+| `best-ai-code-review-tools` | best ai code review tools | Listicle |
+| `claude-code-review` | claude code review | Landing |
+| `best-chrome-extensions-ai-code-review` | best chrome extensions for ai code review | Listicle |
+| `ai-code-review-bots-miss-bugs` | ai code review bots miss bugs | Hot take |
+| `human-in-the-loop-code-review-teams` | human in the loop code review | Landing |
+| `ai-generated-code-security-vulnerabilities` | ai generated code security vulnerabilities | Security |
+| `review-cursor-generated-code` | review cursor generated code | Landing |
+| `how-to-test-ai-generated-code` | how to test ai generated code | Guide |
+| `ai-writes-code-who-verifies` | ai writes code who verifies | Hot take |
+| `review-vibe-coded-app-before-launch` | review vibe coded app before launch | Landing |
+| `vibe-coded-app-production-ready` | vibe coded app production ready | Landing |
+| `vibe-coding-mistakes-production` | vibe coding mistakes production | Listicle |
+| `vibe-coding-security-risks` | vibe coding security risks | Security |
+| `claude-ai-performance-issues` | claude ai performance issues | Issue guide |
 
 ## Product Evaluation
 
