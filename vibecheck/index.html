@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VibeCheck — Website Feedback & Fix Tool (Chrome Extension)</title>
-  <meta name="description" content="VibeCheck is a Chrome extension that turns website feedback into real pull requests. Click any element, leave a comment, hit Fix It — a human developer sends you a PR within hours.">
+  <meta name="description" content="Free Chrome extension for website feedback. Click any element, leave a comment — use your own AI (Claude Code, Cursor) for free, or have a Vibers reviewer send you a real PR within hours.">
   <link rel="canonical" href="https://onout.org/vibers/vibecheck/">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:title" content="VibeCheck — Website Feedback & Fix Tool">
-  <meta property="og:description" content="Click any element on your website, leave a comment, hit Fix It — a human developer sends you a PR within hours. Not just a screenshot tool.">
+  <meta property="og:description" content="Free Chrome extension for website feedback. Use your own AI for free (Claude Code, Cursor) — or have a Vibers reviewer send you a real PR. Not just a screenshot tool.">
   <meta property="og:url" content="https://onout.org/vibers/vibecheck/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta property="og:image:width" content="800">
@@ -31,11 +31,14 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "VibeCheck",
-    "description": "Chrome extension that turns website feedback into real pull requests. Click any element, leave a comment, hit Fix It — a human developer sends you a PR.",
+    "description": "Free Chrome extension for website feedback. Click any element, leave a comment — use your own AI for free, or have a Vibers reviewer send you a real PR.",
     "url": "https://onout.org/vibers/vibecheck/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Chrome",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free early access" },
+    "offers": [
+      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Chrome extension — free to use with your own AI (bring your own AI)" },
+      { "@type": "Offer", "price": "15", "priceCurrency": "USD", "description": "Human code review by Vibers — from $15/hr, includes PR" }
+    ],
     "publisher": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" }
   }
   </script>
@@ -44,8 +47,8 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {"@type": "Question", "name": "How is VibeCheck different from Marker.io or Feedbucket?", "acceptedAnswer": {"@type": "Answer", "text": "Marker.io and Feedbucket create bug reports. VibeCheck creates bug fixes. When you click Fix It, a human developer reviews the element, writes the code, and sends you a pull request. You don't just get a ticket — you get working code."}},
-      {"@type": "Question", "name": "Do I need a developer on my team to use VibeCheck?", "acceptedAnswer": {"@type": "Answer", "text": "No. That's the point. VibeCheck is for teams that use AI tools like Cursor or Claude to build their product. You spot the visual issue, VibeCheck routes it to a human reviewer who sends the PR."}},
+      {"@type": "Question", "name": "How is VibeCheck different from Marker.io or Feedbucket?", "acceptedAnswer": {"@type": "Answer", "text": "Marker.io and Feedbucket create bug reports. VibeCheck creates bug fixes. When you click Fix It, a Vibers reviewer digs into your repo, writes the fix, and sends you a pull request. You don't just get a ticket — you get working code."}},
+      {"@type": "Question", "name": "Do I need a developer on my team to use VibeCheck?", "acceptedAnswer": {"@type": "Answer", "text": "No. That's the point. VibeCheck is for teams that use AI tools like Cursor or Claude to build their product. You spot the visual issue, VibeCheck routes it to a Vibers reviewer who sends the PR."}},
       {"@type": "Question", "name": "What does the Fix It button actually do?", "acceptedAnswer": {"@type": "Answer", "text": "Clicking Fix It captures the selected element, its CSS, the surrounding DOM context, and your comment. This is sent to a Vibers reviewer who diagnoses the root cause in your codebase and submits a pull request with the actual fix — not a screenshot, not a ticket."}},
       {"@type": "Question", "name": "How long does a fix take?", "acceptedAnswer": {"@type": "Answer", "text": "Most visual fixes are reviewed within a few hours on business days. Complex logic bugs may take longer. You'll get a PR on GitHub you can review and merge at any time."}},
       {"@type": "Question", "name": "Is it free?", "acceptedAnswer": {"@type": "Answer", "text": "The Chrome extension is free to use with your own AI (Claude Code, Codex, Cursor). If you want a Vibers reviewer to do the work for you — find the root cause in your code and open a PR — that's the paid service, from $15/hr."}}
@@ -941,7 +944,7 @@
         <div class="step-num">1</div>
         <div class="step-content">
           <h3>Install the Chrome Extension</h3>
-          <p>Add VibeCheck to Chrome in one click. Works on any website — staging, production, localhost.</p>
+          <p>Add VibeCheck to Chrome in one click. Works on any code-accessible site — staging, production, localhost. Not for closed no-code platforms (Webflow, Wix).</p>
         </div>
       </div>
       <div class="step">
@@ -955,15 +958,15 @@
         <div class="step-num">3</div>
         <div class="step-content">
           <h3>Leave a comment or hit <span class="fix-it-badge">Fix It</span></h3>
-          <p><strong>Comment</strong> — creates a structured bug report with screenshot, browser info, and element selector.<br>
-          <strong>Fix It</strong> — routes the issue directly to a Vibers reviewer who digs into your code and sends a PR.</p>
+          <p><strong>Fix It (free)</strong> — captures element + DOM context and routes it to your own AI (Claude Code, Cursor, Codex).<br>
+          <strong>Fix It → Vibers (paid)</strong> — a Vibers reviewer digs into your repo, finds the root cause, and sends you a PR.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-content">
           <h3>Get a pull request, not a ticket</h3>
-          <p>Your reviewer finds the root cause in your codebase, writes the fix, and opens a GitHub PR. You review and merge.</p>
+          <p>The Vibers reviewer finds the root cause in your repo, writes the fix, and opens a PR on GitHub. You review and merge — or deploy via FTP/SSH if it's WordPress.</p>
         </div>
       </div>
     </div>
@@ -1045,11 +1048,11 @@
     <h2 data-i18n="h2-faq">FAQ</h2>
     <div class="faq-item">
       <div class="faq-q">How is VibeCheck different from Marker.io or Feedbucket?</div>
-      <div class="faq-a">Marker.io and Feedbucket create bug reports. VibeCheck creates bug fixes. When you click Fix It, a human developer reviews the element, writes the code, and sends you a pull request. You don't just get a ticket — you get working code.</div>
+      <div class="faq-a">Marker.io and Feedbucket create bug reports. VibeCheck creates bug fixes. When you click Fix It, a Vibers reviewer digs into your repo, writes the fix, and sends you a pull request. You don't just get a ticket — you get working code.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Do I need a developer on my team to use VibeCheck?</div>
-      <div class="faq-a">No. That's the point. VibeCheck is built for teams that use AI tools like Cursor or Claude to build. You spot the visual issue, VibeCheck routes it to a human reviewer who sends the PR.</div>
+      <div class="faq-a">No. That's the point. VibeCheck is built for teams that use AI tools like Cursor or Claude to build. You spot the visual issue, VibeCheck routes it to a Vibers reviewer who sends the PR.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">What does the Fix It button actually do?</div>
@@ -1061,13 +1064,13 @@
     </div>
     <div class="faq-item">
       <div class="faq-q">Is it free?</div>
-      <div class="faq-a">The Chrome extension is free — install it and use it with your own AI (Claude Code, Codex, Cursor). No account needed. If you want a Vibers human reviewer to dig into your repo and send you a PR, that's the paid part — from $15/hr.</div>
+      <div class="faq-a">The Chrome extension is free — install it and use it with your own AI (Claude Code, Codex, Cursor). No account needed. If you want a Vibers reviewer to dig into your repo and send you a PR, that's the paid part — from $15/hr.</div>
     </div>
   </section>
 
   <div class="cta-box">
     <h2 data-i18n="h2-cta">Get early access to VibeCheck</h2>
-    <p data-i18n="cta-sub">Beta is open. First fix is free. Works with any GitHub-hosted project.</p>
+    <p data-i18n="cta-sub">Early access is open. First fix is free. Works with GitHub, WordPress (FTP/SSH), and any code-accessible site.</p>
     <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-white" onclick="gtag('event','generate_lead',{event_category:'vibecheck',event_label:'join_waitlist_bottom'});" data-i18n="cta-primary-bottom">Join Early Access &rarr;</a>
   </div>
 
@@ -1100,7 +1103,7 @@ var TAB_DATA = {
   },
   improve: {
     url: 'onout.org/landing/',
-    desc: 'Flag copy or UX that\'s not working. Your AI rewrites it for free (BYOK) — or a human copywriter + developer rewrites, tests, and ships the change for you.',
+    desc: 'Flag copy or UX that\'s not working. Your AI rewrites it for free (bring your own AI) — or a human copywriter + developer rewrites, tests, and ships the change for you.',
     text: "headline feels too generic — 'See exactly where your money goes' might convert better",
     caption: '✓ PR #249 merged — hero copy rewritten, CTR +18%'
   },
@@ -1304,14 +1307,14 @@ var ru = {
   'h2-who':              'Кто использует VibeCheck',
   'h2-faq':              'Частые вопросы',
   'h2-cta':              'Получить ранний доступ к VibeCheck',
-  'cta-sub':             'Бета открыта. Первое исправление бесплатно. Работает с любым GitHub-проектом.',
+  'cta-sub':             'Ранний доступ открыт. Первое исправление бесплатно. GitHub, WordPress (FTP/SSH) и любой сайт с доступом к коду.',
   'cta-primary-bottom':  'Получить ранний доступ →'
 };
 
 TAB_DESC_RU = {
   bug:     'Заметил визуальный баг — инструмент захватывает DOM + CSS и отправляет вашему AI (бесплатно, BYOK) или Vibers-ревьюеру, который разберётся в коде и откроет PR (платно).',
   feature: 'Оставь запрос фичи на любом элементе. Твой AI (Claude Code, Codex) предложит реализацию бесплатно — или Vibers-разработчик сделает всё за тебя и откроет PR.',
-  improve: 'Отметь текст или UX, который не конвертит. AI перепишет бесплатно (BYOK) — или человек-копирайтер + разработчик сделают это за тебя.',
+  improve: 'Отметь текст или UX, который не конвертит. AI перепишет бесплатно (bring your own AI) — или человек-копирайтер + разработчик сделают это за тебя.',
   wp:      'Работает с WordPress — GitHub не нужен. Бесплатный инструмент собирает проблему; Vibers-ревьюер фиксит в wp-content и деплоит через FTP/SSH.'
 };
 
