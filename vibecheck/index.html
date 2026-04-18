@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VibeCheck — Website Feedback & Fix Tool (Chrome Extension)</title>
+  <meta name="description" content="VibeCheck is a Chrome extension that turns website feedback into real pull requests. Click any element, leave a comment, hit Fix It — a human developer sends you a PR within hours.">
+  <link rel="canonical" href="https://onout.org/vibers/vibecheck/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="VibeCheck — Website Feedback & Fix Tool">
+  <meta property="og:description" content="Click any element on your website, leave a comment, hit Fix It — a human developer sends you a PR within hours. Not just a screenshot tool.">
+  <meta property="og:url" content="https://onout.org/vibers/vibecheck/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="800">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VibeCheck — Website Feedback & Fix Tool">
+  <meta name="twitter:description" content="Turn website feedback into real PRs. Click, comment, fix.">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "VibeCheck",
+    "description": "Chrome extension that turns website feedback into real pull requests. Click any element, leave a comment, hit Fix It — a human developer sends you a PR.",
+    "url": "https://onout.org/vibers/vibecheck/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Chrome",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free early access" },
+    "publisher": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "How is VibeCheck different from Marker.io or Feedbucket?", "acceptedAnswer": {"@type": "Answer", "text": "Marker.io and Feedbucket create bug reports. VibeCheck creates bug fixes. When you click Fix It, a human developer reviews the element, writes the code, and sends you a pull request. You don't just get a ticket — you get working code."}},
+      {"@type": "Question", "name": "Do I need a developer on my team to use VibeCheck?", "acceptedAnswer": {"@type": "Answer", "text": "No. That's the point. VibeCheck is for teams that use AI tools like Cursor or Claude to build their product. You spot the visual issue, VibeCheck routes it to a human reviewer who sends the PR."}},
+      {"@type": "Question", "name": "What does the Fix It button actually do?", "acceptedAnswer": {"@type": "Answer", "text": "Clicking Fix It captures the selected element, its CSS, the surrounding DOM context, and your comment. This is sent to a Vibers reviewer who diagnoses the root cause in your codebase and submits a pull request with the actual fix — not a screenshot, not a ticket."}},
+      {"@type": "Question", "name": "How long does a fix take?", "acceptedAnswer": {"@type": "Answer", "text": "Most visual fixes are reviewed within a few hours on business days. Complex logic bugs may take longer. You'll get a PR on GitHub you can review and merge at any time."}},
+      {"@type": "Question", "name": "Is it free?", "acceptedAnswer": {"@type": "Answer", "text": "Early access is free. We're currently in beta. Sign up to get notified and receive your first fix at no cost."}}
+    ]
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #fafaf8;
+      color: #1a1a1a;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 40px;
+      background: #fff;
+      min-height: 100vh;
+    }
+    a { color: #5b44e8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .site-nav {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 40px;
+    }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .site-nav a:hover { color: #5b44e8; border-color: #5b44e8; text-decoration: none; }
+
+    .hero {
+      border-bottom: 2px solid #1a1a1a;
+      padding-bottom: 32px;
+      margin-bottom: 40px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: #5b44e8;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 3px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .hero-sub {
+      font-size: 18px;
+      color: #444;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .cta-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .btn-primary:hover { background: #333; text-decoration: none; }
+    .btn-secondary {
+      display: inline-block;
+      color: #1a1a1a;
+      font-size: 14px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 1px;
+    }
+    .beta-note {
+      font-size: 12px;
+      color: #888;
+      margin-top: 10px;
+    }
+
+    .how-it-works {
+      margin: 40px 0;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: -0.2px;
+    }
+    .steps {
+      display: grid;
+      gap: 16px;
+    }
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: #1a1a1a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-content h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+    }
+    .fix-it-badge {
+      display: inline-block;
+      background: #5b44e8;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .vs-section {
+      margin: 40px 0;
+      padding: 28px;
+      background: #f8f7ff;
+      border: 1px solid #e0dcff;
+      border-radius: 8px;
+    }
+    .vs-section h2 { margin-bottom: 16px; }
+    .vs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .vs-table th {
+      text-align: left;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-bottom: 2px solid #1a1a1a;
+      background: transparent;
+    }
+    .vs-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
+    }
+    .vs-table tr:last-child td { border-bottom: none; }
+    .check { color: #16a34a; font-weight: 700; }
+    .cross { color: #dc2626; }
+    .col-vibers { background: #f0eeff; }
+
+    .use-cases {
+      margin: 40px 0;
+    }
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .case-card {
+      padding: 20px;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+    }
+    .case-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .case-card p {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .faq-section { margin: 40px 0; }
+    .faq-item { border-bottom: 1px solid #e8e8e8; padding: 16px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+    .faq-a { font-size: 14px; color: #444; line-height: 1.6; }
+
+    .cta-box {
+      margin: 40px 0;
+      padding: 32px;
+      background: #1a1a1a;
+      color: #fff;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .cta-box h2 { color: #fff; margin-bottom: 12px; }
+    .cta-box p { color: #aaa; margin-bottom: 24px; font-size: 14px; }
+    .btn-white {
+      display: inline-block;
+      background: #fff;
+      color: #1a1a1a;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .btn-white:hover { background: #f0eeff; text-decoration: none; }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid #e8e8e8;
+      font-size: 13px;
+      color: #888;
+    }
+    footer a { color: #888; }
+    footer a:hover { color: #5b44e8; }
+
+    @media (max-width: 600px) {
+      .page { padding: 24px 20px; }
+      h1 { font-size: 26px; }
+      .case-grid { grid-template-columns: 1fr; }
+      .vs-table { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <nav class="site-nav">
+    <a href="/vibers/">Vibers</a> &rsaquo; VibeCheck
+  </nav>
+
+  <header class="hero">
+    <div class="hero-badge">Chrome Extension &mdash; Early Access</div>
+    <h1>VibeCheck</h1>
+    <p class="hero-sub">Website Feedback &amp; Fix Tool.<br>
+    Click any element &rarr; leave a comment &rarr; hit <strong>Fix It</strong> &rarr; get a real pull request.</p>
+    <div class="cta-group">
+      <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'vibecheck',event_label:'join_waitlist'});">Join Early Access</a>
+      <a href="/vibers/" class="btn-secondary">Learn about Vibers &rarr;</a>
+    </div>
+    <p class="beta-note">Beta &mdash; free first fix for early users. No credit card.</p>
+  </header>
+
+  <section class="how-it-works">
+    <h2>How VibeCheck works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Install the Chrome Extension</h3>
+          <p>Add VibeCheck to Chrome in one click. Works on any website — staging, production, localhost.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Click any element on your site</h3>
+          <p>Hover any button, layout block, text, or image. VibeCheck highlights it and captures the DOM context automatically.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Leave a comment or hit <span class="fix-it-badge">Fix It</span></h3>
+          <p><strong>Comment</strong> — creates a structured bug report with screenshot, browser info, and element selector.<br>
+          <strong>Fix It</strong> — routes the issue directly to a Vibers reviewer who digs into your code and sends a PR.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Get a pull request, not a ticket</h3>
+          <p>Your reviewer finds the root cause in your codebase, writes the fix, and opens a GitHub PR. You review and merge.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="vs-section">
+    <h2>VibeCheck vs feedback-only tools</h2>
+    <table class="vs-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Marker.io / Feedbucket</th>
+          <th class="col-vibers">VibeCheck</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Visual feedback on live site</td>
+          <td><span class="check">Yes</span></td>
+          <td class="col-vibers"><span class="check">Yes</span></td>
+        </tr>
+        <tr>
+          <td>Screenshot + element context</td>
+          <td><span class="check">Yes</span></td>
+          <td class="col-vibers"><span class="check">Yes</span></td>
+        </tr>
+        <tr>
+          <td>Creates a bug ticket</td>
+          <td><span class="check">Yes</span></td>
+          <td class="col-vibers"><span class="check">Yes</span></td>
+        </tr>
+        <tr>
+          <td>Someone actually fixes the bug</td>
+          <td><span class="cross">No</span></td>
+          <td class="col-vibers"><span class="check">Yes — real PR</span></td>
+        </tr>
+        <tr>
+          <td>Works with AI-generated codebases</td>
+          <td><span class="cross">No</span></td>
+          <td class="col-vibers"><span class="check">Yes — built for vibecoding</span></td>
+        </tr>
+        <tr>
+          <td>Root-cause analysis in code</td>
+          <td><span class="cross">No</span></td>
+          <td class="col-vibers"><span class="check">Yes</span></td>
+        </tr>
+        <tr>
+          <td>Pricing</td>
+          <td>$39–$89/mo (tool only)</td>
+          <td class="col-vibers">Free first fix, then $15/hr</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="use-cases">
+    <h2>Who uses VibeCheck</h2>
+    <div class="case-grid">
+      <div class="case-card">
+        <h3>Solo founders with Cursor/Bolt apps</h3>
+        <p>You shipped something, but the button is misaligned on mobile and the form breaks on Safari. You don't want to spend 2 hours debugging CSS — hit Fix It.</p>
+      </div>
+      <div class="case-card">
+        <h3>Agencies doing client QA</h3>
+        <p>Your client spots 12 visual issues before launch. Instead of exporting a ticket spreadsheet, send each one to Fix It and get PRs by morning.</p>
+      </div>
+      <div class="case-card">
+        <h3>Non-technical founders</h3>
+        <p>You know exactly what looks wrong but can't explain it in code. Click it, describe it in plain English, we translate it to a working fix.</p>
+      </div>
+      <div class="case-card">
+        <h3>Vibe-coded apps going to production</h3>
+        <p>AI-generated frontends often have silent bugs. VibeCheck lets you walk through the app, mark everything suspicious, and get fixes before users hit them.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>FAQ</h2>
+    <div class="faq-item">
+      <div class="faq-q">How is VibeCheck different from Marker.io or Feedbucket?</div>
+      <div class="faq-a">Marker.io and Feedbucket create bug reports. VibeCheck creates bug fixes. When you click Fix It, a human developer reviews the element, writes the code, and sends you a pull request. You don't just get a ticket — you get working code.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need a developer on my team to use VibeCheck?</div>
+      <div class="faq-a">No. That's the point. VibeCheck is built for teams that use AI tools like Cursor or Claude to build. You spot the visual issue, VibeCheck routes it to a human reviewer who sends the PR.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What does the Fix It button actually do?</div>
+      <div class="faq-a">Clicking Fix It captures the selected element, its CSS, the surrounding DOM context, and your comment. This is sent to a Vibers reviewer who diagnoses the root cause in your codebase and submits a pull request with the actual fix — not a screenshot, not a ticket.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How long does a fix take?</div>
+      <div class="faq-a">Most visual fixes are reviewed within a few hours on business days. Complex logic bugs may take longer. You'll get a PR on GitHub you can review and merge at any time.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is it free?</div>
+      <div class="faq-a">Early access is free. We're in beta. Join the waitlist to get first access and your first fix at no cost.</div>
+    </div>
+  </section>
+
+  <div class="cta-box">
+    <h2>Get early access to VibeCheck</h2>
+    <p>Beta is open. First fix is free. Works with any GitHub-hosted project.</p>
+    <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-white" onclick="gtag('event','generate_lead',{event_category:'vibecheck',event_label:'join_waitlist_bottom'});">Join Early Access &rarr;</a>
+  </div>
+
+  <p style="font-size:14px; color:#555; margin: 32px 0 16px;">
+    Read more: <a href="/vibers/blog/markerio-vs-vibers/">Marker.io vs Vibers: Report Bugs vs Fix Bugs</a> &mdash;
+    <a href="/vibers/blog/best-chrome-extensions-ai-code-review/">Best Chrome Extensions for AI Code Review</a> &mdash;
+    <a href="/vibers/blog/vibe-coded-app-production-ready/">Is your vibe-coded app production-ready?</a>
+  </p>
+
+  <footer>
+    <p>VibeCheck is a product by <a href="/vibers/">Vibers</a> &mdash; Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Blog</a> &nbsp;|&nbsp; <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

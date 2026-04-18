@@ -11,6 +11,21 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [../SKILL.md](../SKILL.md) | AI Agent skill — client-facing quickstart (English) |
 | [../REVIEW-RUNBOOK.md](../REVIEW-RUNBOOK.md) | Step-by-step review workflow for reviewers |
 | [../CLAUDE.md](../CLAUDE.md) | Claude Code project instructions |
+| [../vibecheck/index.html](../vibecheck/index.html) | **VibeCheck** — Chrome Extension "Website Feedback & Fix Tool". Click element → Fix It → real PR. Beta, free first fix. Landing at `/vibers/vibecheck/` |
+
+### VibeCheck — Visual Feedback & Fix Chrome Extension
+
+**Positioning:** "Website Feedback & Fix Tool" — отличие от конкурентов: не просто репортит баг, а чинит (PR).
+
+**Direct competitors:**
+
+| Tool | Pricing | Target | Key diff vs VibeCheck |
+|------|---------|--------|----------------------|
+| **Feedbucket** | 14-day trial, paid plans | Agencies + clients | Reports only, no dev fixes. No extension required for clients (widget). |
+| **Marker.io** | $39/mo+ | Agencies, QA teams | Reports only. Session replay, AI-features, 20+ integrations. No fixes. |
+| **Markup.io** | Trial, tiered | Creative/design teams | Adjacent — PDFs, images, videos (not live-site code). Not direct competitor. |
+
+**Key message:** Marker.io/Feedbucket → ticket. VibeCheck → PR.
 
 ## Marketing & SEO
 
@@ -21,7 +36,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [keywords/](keywords/) | SEMrush keyword exports (6 CSV files, 2026-04-14) |
 | [reddit-alpha-beta-users.md](reddit-alpha-beta-users.md) | Reddit strategy for finding alpha/beta users |
 | [backlink-opportunities.md](backlink-opportunities.md) | 13 directories + 6 dev blogs + media pitch targets |
-| [COMPETITORS.md#markerio-markerio](COMPETITORS.md) | Marker.io — adjacent competitor ($39/mo, tooling only — не чинит). Топ-5 статей + контент-паттерн (template hubs, platform × format matrix, utility tripwire, living docs) разобраны в секции Marker.io |
+| [COMPETITORS.md#markerio-markerio](COMPETITORS.md) | Marker.io ($39/mo) + **Feedbucket** (agency feedback tool) + Markup.io (design, adjacent) — прямые конкуренты VibeCheck. Marker.io: контент-паттерн (template hubs, utility tripwire) в COMPETITORS.md |
 | [advertising-channels.md](advertising-channels.md) | Полная карта рекламы: каталоги, ad networks, newsletters, стратегия по бюджету |
 | [backlinks/](backlinks/) | Raw SEMrush backlink exports (CodeRabbit 4.6K, Qodo 6K domains) |
 | [topic-research-20260414.xlsx](topic-research-20260414.xlsx) | SEMrush Topic Research — 108 content ideas with volumes, questions, backlinks |
