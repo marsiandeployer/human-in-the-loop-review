@@ -1041,16 +1041,16 @@
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <!-- wireframe product card 1 -->
-          <div class="wf-kpi" style="padding:10px;border-radius:6px;">
-            <div class="wf-block" style="height:58px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#bbb;">🎧</div>
-            <div class="wf-line" style="width:80%;margin-bottom:6px;height:10px;"></div>
-            <div class="wf-line" style="width:38%;height:11px;margin-bottom:10px;"></div>
-            <div class="wf-block" style="height:24px;border-radius:3px;"></div>
+          <div class="wf-kpi" style="padding:8px;border-radius:6px;aspect-ratio:1;box-sizing:border-box;display:flex;flex-direction:column;">
+            <div class="wf-block" style="flex:1;border-radius:4px;margin-bottom:6px;"></div>
+            <div class="wf-line" style="width:80%;margin-bottom:4px;height:8px;"></div>
+            <div class="wf-line" style="width:38%;height:8px;margin-bottom:6px;"></div>
+            <div class="wf-block" style="height:18px;border-radius:3px;"></div>
           </div>
           <!-- highlighted product card -->
-          <div id="mock-wp-card" style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:10px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;">
-            <div style="background:linear-gradient(135deg,#1a2a4a 0%,#2d4a7a 100%);height:58px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;">
-              <svg width="32" height="24" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div id="mock-wp-card" style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:8px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;aspect-ratio:1;box-sizing:border-box;display:flex;flex-direction:column;overflow:hidden;">
+            <div style="background:linear-gradient(135deg,#1a2a4a 0%,#2d4a7a 100%);flex:1;border-radius:4px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;">
+              <svg width="28" height="22" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="6" width="28" height="16" rx="2" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
                 <circle cx="16" cy="14" r="5" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" fill="none"/>
                 <circle cx="16" cy="14" r="2.5" fill="rgba(255,255,255,0.5)"/>
@@ -1058,25 +1058,27 @@
                 <circle cx="26" cy="9" r="1.5" fill="rgba(255,255,255,0.6)"/>
               </svg>
             </div>
-            <div style="font-size:10px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">Camera Lens 50mm</div>
-            <div style="font-size:11px;color:#e44;font-weight:700;">$349.00</div>
-            <div style="font-size:9px;color:#46b450;font-weight:600;margin-top:3px;">In stock</div>
-            <div id="mock-wp-btn" style="margin-top:5px;background:#ccc;color:#999;font-size:9px;font-weight:700;padding:4px 8px;border-radius:3px;text-align:center;cursor:not-allowed;">Unavailable</div>
-            <span style="position:absolute;bottom:-18px;right:6px;font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
+            <div style="font-size:9px;font-weight:700;color:#1a1a1a;margin-bottom:2px;">Camera Lens 50mm</div>
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+              <span style="font-size:10px;color:#e44;font-weight:700;">$349.00</span>
+              <span style="font-size:8px;color:#46b450;font-weight:600;">In stock</span>
+            </div>
+            <div id="mock-wp-btn" style="background:#ccc;color:#999;font-size:8px;font-weight:700;padding:3px 6px;border-radius:3px;text-align:center;cursor:not-allowed;">Unavailable</div>
+            <span style="position:absolute;bottom:-16px;right:6px;font-size:13px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
           </div>
           <!-- wireframe product card 3 -->
-          <div class="wf-kpi" style="padding:10px;border-radius:6px;">
-            <div class="wf-block" style="height:58px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#bbb;">⌚</div>
-            <div class="wf-line" style="width:65%;margin-bottom:6px;height:10px;"></div>
-            <div class="wf-line" style="width:38%;height:11px;margin-bottom:10px;"></div>
-            <div class="wf-block" style="height:24px;border-radius:3px;"></div>
+          <div class="wf-kpi" style="padding:8px;border-radius:6px;aspect-ratio:1;box-sizing:border-box;display:flex;flex-direction:column;">
+            <div class="wf-block" style="flex:1;border-radius:4px;margin-bottom:6px;"></div>
+            <div class="wf-line" style="width:65%;margin-bottom:4px;height:8px;"></div>
+            <div class="wf-line" style="width:38%;height:8px;margin-bottom:6px;"></div>
+            <div class="wf-block" style="height:18px;border-radius:3px;"></div>
           </div>
           <!-- wireframe product card 4 -->
-          <div class="wf-kpi" style="padding:10px;border-radius:6px;">
-            <div class="wf-block" style="height:58px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#bbb;">🔌</div>
-            <div class="wf-line" style="width:75%;margin-bottom:6px;height:10px;"></div>
-            <div class="wf-line" style="width:38%;height:11px;margin-bottom:10px;"></div>
-            <div class="wf-block" style="height:24px;border-radius:3px;"></div>
+          <div class="wf-kpi" style="padding:8px;border-radius:6px;aspect-ratio:1;box-sizing:border-box;display:flex;flex-direction:column;">
+            <div class="wf-block" style="flex:1;border-radius:4px;margin-bottom:6px;"></div>
+            <div class="wf-line" style="width:75%;margin-bottom:4px;height:8px;"></div>
+            <div class="wf-line" style="width:38%;height:8px;margin-bottom:6px;"></div>
+            <div class="wf-block" style="height:18px;border-radius:3px;"></div>
           </div>
         </div>
       </div>
