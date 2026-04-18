@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VibeCheck — Website Feedback & Fix Tool (Chrome Extension)</title>
-  <meta name="description" content="Free Chrome extension for website feedback. Click any element, leave a comment — use your own AI (Claude Code, Cursor) for free, or have a Vibers reviewer send you a real PR within hours.">
+  <meta name="description" content="Chrome extension for website feedback. Click any element, leave a comment — the extension sends it to an AI agent that opens a real Pull Request, not just a screenshot.">
   <link rel="canonical" href="https://onout.org/vibers/vibecheck/">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:title" content="VibeCheck — Website Feedback & Fix Tool">
-  <meta property="og:description" content="Free Chrome extension for website feedback. Use your own AI for free (Claude Code, Cursor) — or have a Vibers reviewer send you a real PR. Not just a screenshot tool.">
+  <meta property="og:description" content="Chrome extension for website feedback. Click any element, send it off — get a real Pull Request from an AI agent. Not just a screenshot tool.">
   <meta property="og:url" content="https://onout.org/vibers/vibecheck/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta property="og:image:width" content="800">
@@ -31,7 +31,7 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "VibeCheck",
-    "description": "Free Chrome extension for website feedback. Click any element, leave a comment — use your own AI for free, or have a Vibers reviewer send you a real PR.",
+    "description": "Chrome extension for website feedback. Click any element, leave a comment — an AI agent turns it into a real Pull Request.",
     "url": "https://onout.org/vibers/vibecheck/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Chrome",
@@ -47,12 +47,12 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {"@type": "Question", "name": "How is VibeCheck different from Marker.io or other feedback tools?", "acceptedAnswer": {"@type": "Answer", "text": "Most feedback tools stop at screenshots and bug reports. VibeCheck captures the issue and helps turn it into a real code fix — either via your own AI agent (free) or by us (paid)."}},
-      {"@type": "Question", "name": "Do I need my own AI agent?", "acceptedAnswer": {"@type": "Answer", "text": "No. You can use VibeCheck in two ways: free with your own AI agent (Claude Code, Codex, Cursor), or paid if you want us to fix it for you."}},
-      {"@type": "Question", "name": "What does the Fix It button do?", "acceptedAnswer": {"@type": "Answer", "text": "VibeCheck captures the selected element, its DOM context, and your comment. You can send it to your own AI agent for free, or pay us to review the code and deliver the fix."}},
+      {"@type": "Question", "name": "How is VibeCheck different from Marker.io or other feedback tools?", "acceptedAnswer": {"@type": "Answer", "text": "Most feedback tools stop at screenshots and bug reports. VibeCheck turns the issue into a real code fix — a Pull Request, not a ticket."}},
+      {"@type": "Question", "name": "Do I need my own AI agent?", "acceptedAnswer": {"@type": "Answer", "text": "Not required. The extension routes the captured context to an AI agent (Claude Code, Codex, Cursor) which writes the fix as a Pull Request."}},
+      {"@type": "Question", "name": "What does the Send It Off button do?", "acceptedAnswer": {"@type": "Answer", "text": "It captures the selected element, its DOM context, and your comment, then routes everything to an AI agent that opens a Pull Request."}},
       {"@type": "Question", "name": "What kinds of sites does it work on?", "acceptedAnswer": {"@type": "Answer", "text": "VibeCheck works on any code-accessible site, including React, Vue, Next.js, WordPress, plain HTML/CSS, and legacy codebases. It does not work on closed no-code platforms without file access."}},
-      {"@type": "Question", "name": "How long does a paid fix take?", "acceptedAnswer": {"@type": "Answer", "text": "Most visual fixes land within a few hours on business days. Complex logic bugs may take longer. You receive a Pull Request on GitHub — or a deploy on WordPress via FTP/SSH — to review and merge at any time."}},
-      {"@type": "Question", "name": "Is it free?", "acceptedAnswer": {"@type": "Answer", "text": "The Chrome extension is free. Using it with your own AI agent is also free. If you want us to fix it for you, that's the paid part — from $15/hr."}}
+      {"@type": "Question", "name": "How long does a fix take?", "acceptedAnswer": {"@type": "Answer", "text": "Most visual fixes land within a few hours on business days. Complex logic bugs may take longer. You receive a Pull Request on GitHub — or a deploy on WordPress via FTP/SSH — to review and merge at any time."}},
+      {"@type": "Question", "name": "How much does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "The Chrome extension is free. If a Vibers reviewer is in the loop, it's $15/hr — the first fix is on us."}}
     ]
   }
   </script>
@@ -980,8 +980,8 @@
         </div>
         <div class="panel-btn-wrap">
           <span class="step-badge step-badge-panel tip-left" data-tip="Step 3: Send it off and get a Pull Request">3</span>
-          <button class="panel-btn-fix" id="fix-btn-bug">Send to my AI →</button>
-          <button class="panel-btn-paid" id="paid-btn-bug" type="button">Fix it for me</button>
+          <button class="panel-btn-fix" id="fix-btn-bug">Send it off →</button>
+          
         </div>
         <div class="panel-success" id="ps-bug"></div>
         <div class="panel-deploy" id="pd-bug"></div>
@@ -1056,8 +1056,8 @@
         </div>
         <div class="panel-btn-wrap">
           <span class="step-badge step-badge-panel tip-left" data-tip="Step 3: Send it off and get a Pull Request">3</span>
-          <button class="panel-btn-fix" id="fix-btn-feature" style="background:#7c3aed;">Send to my AI →</button>
-          <button class="panel-btn-paid" id="paid-btn-feature" type="button">Fix it for me</button>
+          <button class="panel-btn-fix" id="fix-btn-feature" style="background:#7c3aed;">Send it off →</button>
+          
         </div>
         <div class="panel-success" id="ps-feature"></div>
         <div class="panel-deploy" id="pd-feature"></div>
@@ -1130,8 +1130,8 @@
         </div>
         <div class="panel-btn-wrap">
           <span class="step-badge step-badge-panel tip-left" data-tip="Step 3: Send it off and get a Pull Request">3</span>
-          <button class="panel-btn-fix" id="fix-btn-improve" style="background:#16a34a;">Send to my AI →</button>
-          <button class="panel-btn-paid" id="paid-btn-improve" type="button">Fix it for me</button>
+          <button class="panel-btn-fix" id="fix-btn-improve" style="background:#16a34a;">Send it off →</button>
+          
         </div>
         <div class="panel-success" id="ps-improve"></div>
         <div class="panel-deploy" id="pd-improve"></div>
@@ -1216,8 +1216,8 @@
         </div>
         <div class="panel-btn-wrap">
           <span class="step-badge step-badge-panel tip-left" data-tip="Step 3: Send it off — PR or FTP/SSH deploy">3</span>
-          <button class="panel-btn-fix" id="fix-btn-wp" style="background:#21759b;">Send to my AI →</button>
-          <button class="panel-btn-paid" id="paid-btn-wp" type="button">Fix it for me</button>
+          <button class="panel-btn-fix" id="fix-btn-wp" style="background:#21759b;">Send it off →</button>
+          
         </div>
         <div class="panel-success" id="ps-wp"></div>
         <div class="panel-deploy" id="pd-wp"></div>
@@ -1341,7 +1341,7 @@
       </div>
       <div class="case-card">
         <h3>Agencies doing client QA</h3>
-        <p>Your client spots 12 visual issues before launch. Instead of exporting a ticket spreadsheet, send each one to your AI or to us and get PRs by morning.</p>
+        <p>Your client spots 12 visual issues before launch. Instead of exporting a ticket spreadsheet, send each one off and get PRs by morning.</p>
       </div>
       <div class="case-card">
         <h3>Non-technical founders</h3>
@@ -1366,7 +1366,7 @@
     </div>
     <div class="faq-item">
       <div class="faq-q">What does the Fix It button do?</div>
-      <div class="faq-a">VibeCheck captures the selected element, its DOM context, and your comment, then sends it off &mdash; to your own AI agent or to us &mdash; to be turned into a Pull Request.</div>
+      <div class="faq-a">It captures the selected element, its DOM context, and your comment, then routes everything to an AI agent that opens a Pull Request.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">What kinds of sites does it work on?</div>
@@ -1378,7 +1378,7 @@
     </div>
     <div class="faq-item">
       <div class="faq-q">How much does it cost?</div>
-      <div class="faq-a">The Chrome extension is free. If you use our AI/review instead of your own, it&rsquo;s $15/hr &mdash; the first fix is on us.</div>
+      <div class="faq-a">The Chrome extension is free. If a Vibers reviewer is in the loop, it&rsquo;s $15/hr &mdash; the first fix is on us.</div>
     </div>
   </section>
 
@@ -1549,7 +1549,7 @@ function applyFix(tab, gen) {
 function resetTab(tab) {
   var btn = document.getElementById('fix-btn-' + tab);
   var ps  = document.getElementById('ps-' + tab);
-  if (btn) { btn.classList.remove('sending'); btn.style.display = ''; btn.textContent = 'Send to my AI →'; }
+  if (btn) { btn.classList.remove('sending'); btn.style.display = ''; btn.textContent = 'Send it off →'; }
   var paidBtn = document.getElementById('paid-btn-' + tab);
   if (paidBtn) paidBtn.style.display = '';
   if (ps)  { ps.style.display = 'none'; ps.textContent = ''; }
