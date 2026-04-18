@@ -58,13 +58,25 @@
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html {
+      text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #fafaf8;
       color: #1a1a1a;
       line-height: 1.6;
-      font-size: 15px;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
+    button, input, select, textarea, table, pre, code { font-family: inherit; }
+    pre, code, .panel-element-tag, .panel-element-path { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    h1, h2, h3 { text-wrap: balance; }
+    p { text-wrap: pretty; }
     .page {
       width: 100%;
       background: #fff;
@@ -98,29 +110,39 @@
     }
     .hero-badge {
       display: inline-block;
-      background: #5b44e8;
-      color: #fff;
-      font-size: 11px;
+      color: #5b44e8;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      padding: 3px 10px;
-      border-radius: 3px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+    }
+    .hero-badge::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #5b44e8;
+      margin-right: 8px;
+      vertical-align: middle;
+      transform: translateY(-1px);
     }
     h1 {
-      font-size: 36px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      line-height: 1.1;
-      margin-bottom: 12px;
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      line-height: 1.02;
+      margin-bottom: 16px;
     }
     .hero-sub {
-      font-size: 18px;
-      color: #444;
-      margin-bottom: 24px;
-      line-height: 1.5;
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 28px;
+      line-height: 1.45;
+      max-width: 640px;
     }
+    .hero-sub strong { font-weight: 600; color: #1a1a1a; }
     .cta-group {
       display: flex;
       gap: 12px;
@@ -128,37 +150,57 @@
       align-items: center;
     }
     .btn-primary {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
       background: #1a1a1a;
       color: #fff;
       font-size: 15px;
       font-weight: 600;
-      padding: 12px 24px;
-      border-radius: 6px;
+      padding: 12px 26px;
+      border-radius: 8px;
       text-decoration: none;
+      transition: background .15s, transform .1s;
     }
     .btn-primary:hover { background: #333; text-decoration: none; }
+    .btn-primary:active { transform: translateY(1px); }
+    .btn-primary:focus-visible { outline: 2px solid #5b44e8; outline-offset: 3px; }
     .btn-secondary {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
       color: #1a1a1a;
-      font-size: 14px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 1px;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border-radius: 8px;
+      border: 1px solid #d8d8d8;
+      background: #fff;
+      transition: border-color .15s, background .15s;
     }
+    .btn-secondary:hover { border-color: #1a1a1a; background: #fafafa; text-decoration: none; }
+    .btn-secondary:focus-visible { outline: 2px solid #5b44e8; outline-offset: 3px; }
     .beta-note {
-      font-size: 12px;
-      color: #888;
-      margin-top: 10px;
+      font-size: 13px;
+      color: #666;
+      margin-top: 16px;
+      line-height: 1.6;
+      max-width: 580px;
     }
+    .beta-note a { color: #5b44e8; border-bottom: 1px solid rgba(91,68,232,0.3); }
+    .beta-note a:hover { border-bottom-color: #5b44e8; text-decoration: none; }
 
     .how-it-works {
       margin: 40px 0;
     }
     h2 {
-      font-size: 22px;
+      font-size: 30px;
       font-weight: 700;
       margin-bottom: 20px;
-      letter-spacing: -0.2px;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
     }
     .steps {
       display: grid;
@@ -186,14 +228,15 @@
       justify-content: center;
     }
     .step-content h3 {
-      font-size: 15px;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
     }
     .step-content p {
-      font-size: 14px;
+      font-size: 15px;
       color: #555;
-      line-height: 1.5;
+      line-height: 1.55;
     }
     .fix-it-badge {
       display: inline-block;
@@ -249,21 +292,22 @@
       border-radius: 8px;
     }
     .case-card h3 {
-      font-size: 14px;
+      font-size: 17px;
       font-weight: 600;
       margin-bottom: 8px;
+      letter-spacing: -0.2px;
     }
     .case-card p {
-      font-size: 13px;
+      font-size: 14px;
       color: #555;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .faq-section { margin: 40px 0; }
     .faq-item { border-bottom: 1px solid #e8e8e8; padding: 16px 0; }
     .faq-item:last-child { border-bottom: none; }
-    .faq-q { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
-    .faq-a { font-size: 14px; color: #444; line-height: 1.6; }
+    .faq-q { font-weight: 600; font-size: 17px; margin-bottom: 8px; letter-spacing: -0.1px; }
+    .faq-a { font-size: 15px; color: #444; line-height: 1.65; }
 
     .cta-box {
       margin: 40px 0;
@@ -273,8 +317,8 @@
       border-radius: 8px;
       text-align: center;
     }
-    .cta-box h2 { color: #fff; margin-bottom: 12px; }
-    .cta-box p { color: #aaa; margin-bottom: 24px; font-size: 14px; }
+    .cta-box h2 { color: #fff; margin-bottom: 12px; font-size: 32px; }
+    .cta-box p { color: #d0d0d0; margin-bottom: 24px; font-size: 15px; }
     .btn-white {
       display: inline-block;
       background: #fff;
@@ -304,17 +348,19 @@
     .demo-tab {
       background: #fff;
       border: 1.5px solid #e0e0e0;
-      color: #555;
-      font-size: 12px;
+      color: #444;
+      font-size: 14px;
       font-weight: 600;
-      padding: 6px 16px;
-      border-radius: 20px;
+      padding: 10px 18px;
+      min-height: 40px;
+      border-radius: 22px;
       cursor: pointer;
-      transition: background .15s, color .15s;
+      transition: background .15s, color .15s, border-color .15s;
       font-family: inherit;
     }
-    .demo-tab:hover { background: #f5f5f5; border-color: #bbb; color: #333; }
-    .demo-tab.active { background: #FF6B35; border-color: #FF6B35; color: #fff; }
+    .demo-tab:hover { background: #f5f5f5; border-color: #bbb; color: #1a1a1a; }
+    .demo-tab.active { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
+    .demo-tab:focus-visible { outline: 2px solid #5b44e8; outline-offset: 2px; }
     .tab-desc-wrap {
       max-width: 820px;
       margin: 10px auto 14px;
@@ -436,8 +482,8 @@
       background: #fff;
       border: 1px solid #c8c8c8;
       border-radius: 4px;
-      padding: 3px 10px;
-      font-size: 11px;
+      padding: 4px 12px;
+      font-size: 13px;
       color: #444;
       margin: 0 8px;
     }
@@ -470,7 +516,7 @@
       margin-bottom: 16px;
     }
     .demo-site-logo {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 700;
       color: #1a1a1a;
     }
@@ -479,7 +525,7 @@
       gap: 12px;
     }
     .demo-site-nav span {
-      font-size: 11px;
+      font-size: 13px;
       color: #666;
     }
     .demo-kpi-row {
@@ -494,13 +540,13 @@
       border-radius: 6px;
       padding: 10px 12px;
     }
-    .demo-kpi-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.4px; }
-    .demo-kpi-value { font-size: 18px; font-weight: 700; color: #1a1a1a; margin: 2px 0; }
+    .demo-kpi-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.4px; }
+    .demo-kpi-value { font-size: 22px; font-weight: 700; color: #1a1a1a; margin: 2px 0; }
     .demo-kpi-btn {
       display: inline-block;
       margin-top: 6px;
-      padding: 3px 8px;
-      font-size: 9px;
+      padding: 4px 10px;
+      font-size: 11px;
       font-weight: 600;
       border-radius: 3px;
       background: #2d3a8c;
@@ -541,13 +587,13 @@
       gap: 6px;
     }
     .panel-logo {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
       color: #FF6B35;
       letter-spacing: 0.3px;
     }
     .panel-badge {
-      font-size: 9px;
+      font-size: 11px;
       background: #FF6B35;
       color: #fff;
       padding: 1px 5px;
@@ -560,17 +606,17 @@
       border-radius: 4px;
       padding: 8px 10px;
     }
-    .panel-element-label { font-size: 9px; color: #888; margin-bottom: 2px; }
-    .panel-element-tag { font-size: 10px; color: #0070f3; font-family: monospace; }
-    .panel-element-text { font-size: 10px; color: #333; margin-top: 2px; }
-    .panel-element-path { font-size: 9px; color: #888; margin-top: 3px; font-family: monospace; }
+    .panel-element-label { font-size: 11px; color: #888; margin-bottom: 3px; }
+    .panel-element-tag { font-size: 12px; color: #0070f3; font-family: monospace; }
+    .panel-element-text { font-size: 12px; color: #333; margin-top: 3px; }
+    .panel-element-path { font-size: 11px; color: #888; margin-top: 4px; font-family: monospace; }
     .panel-btn-fix {
       background: #FF6B35;
       color: #fff;
       border: none;
       border-radius: 5px;
-      padding: 9px 14px;
-      font-size: 12px;
+      padding: 10px 16px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       text-align: center;
@@ -586,8 +632,8 @@
       border: 1px solid #d0d0d0;
       color: #666;
       border-radius: 5px;
-      padding: 7px 14px;
-      font-size: 11px;
+      padding: 8px 14px;
+      font-size: 13px;
       text-align: center;
       cursor: pointer;
     }
@@ -604,18 +650,18 @@
       transform: translateY(-50%);
     }
     .panel-comment-label {
-      font-size: 9px;
+      font-size: 11px;
       color: #888;
     }
     .panel-comment-box {
       background: #fff;
       border: 1px solid #d0d0d0;
       border-radius: 4px;
-      padding: 7px 8px;
-      font-size: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
       color: #333;
       line-height: 1.5;
-      min-height: 52px;
+      min-height: 58px;
     }
     .type-cursor {
       display: inline-block;
@@ -640,8 +686,8 @@
       background: #f0faf4;
       border: 1px solid #86efac;
       border-radius: 5px;
-      padding: 8px 10px;
-      font-size: 10px;
+      padding: 9px 12px;
+      font-size: 12px;
       color: #166534;
       line-height: 1.5;
       animation: fadeIn .4s ease;
@@ -651,8 +697,8 @@
       background: #eff6ff;
       border: 1px solid #93c5fd;
       border-radius: 5px;
-      padding: 8px 10px;
-      font-size: 10px;
+      padding: 9px 12px;
+      font-size: 12px;
       color: #1e40af;
       line-height: 1.5;
       animation: fadeIn .4s ease;
@@ -679,7 +725,7 @@
     }
     .demo-banner-caption {
       text-align: center;
-      font-size: 11px;
+      font-size: 13px;
       color: #666;
       padding: 10px 40px;
       background: #f5f5f5;
@@ -699,11 +745,12 @@
       margin-top: 16px;
     }
     .fix-item {
-      font-size: 14px;
+      font-size: 15px;
       color: #333;
       display: flex;
       align-items: baseline;
       gap: 8px;
+      line-height: 1.55;
     }
     .fix-item::before {
       content: "→";
@@ -722,13 +769,20 @@
     footer a { color: #888; }
     footer a:hover { color: #5b44e8; }
 
+    @media (max-width: 768px) {
+      h1 { font-size: 38px; letter-spacing: -0.8px; }
+      h2 { font-size: 24px; }
+      .cta-box h2 { font-size: 24px; }
+      .hero-sub { font-size: 17px; }
+      .hero { padding: 32px 0 28px; }
+    }
     @media (max-width: 600px) {
-      .page { padding: 24px 20px; }
-      h1 { font-size: 26px; }
-      .case-grid { grid-template-columns: 1fr; }
-      .vs-table { font-size: 12px; }
       .page { padding: 0 10px; }
       .content-wrap { padding: 0 10px; }
+      h1 { font-size: 32px; }
+      .case-grid { grid-template-columns: 1fr; }
+      .vs-table { font-size: 13px; }
+      .vs-table th, .vs-table td { padding: 8px 8px; }
       .demo-banner { border-radius: 6px; }
       .step-badge { display: none; }
       .demo-banner-caption { padding: 8px 16px; }
@@ -737,6 +791,12 @@
       .demo-kpi-row { grid-template-columns: 1fr; }
       .demo-kpi:not(.highlighted) { display: none; }
       .wf-kpi { display: none; }
+      .demo-tab { min-height: 44px; padding: 11px 16px; }
+      .btn-primary, .btn-secondary { min-height: 48px; width: 100%; }
+      .cta-group { flex-direction: column; align-items: stretch; width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
     }
     #lang-switch {
       display: none;
@@ -771,8 +831,7 @@
   <header class="hero">
     <div class="hero-badge" data-i18n="badge">Chrome Extension &mdash; Early Access</div>
     <h1>VibeCheck</h1>
-    <p class="hero-sub" data-i18n="hero-sub">Click any issue on your website. AI fixes it and ships it.<br>
-    Free Chrome extension &mdash; or have a Vibers reviewer send you a real PR.</p>
+    <p class="hero-sub" data-i18n="hero-sub">Click any issue on your website. AI fixes it and ships a real PR. Free Chrome extension — plug in your own AI, or get a Vibers reviewer to write the fix for you.</p>
     <div class="cta-group">
       <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'vibecheck',event_label:'join_waitlist'});" data-i18n="cta-primary">Join Early Access</a>
       <a href="/vibers/" class="btn-secondary" data-i18n="cta-secondary">Learn about Vibers &rarr;</a>
@@ -801,7 +860,7 @@
         <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
       </div>
       <div class="browser-url" id="demo-url">onout.org/dashboard/</div>
-      <div style="display:flex;align-items:center;gap:5px;background:#fff3ee;border:1px solid #FF6B35;border-radius:5px;padding:2px 8px;font-size:10px;color:#c94b1a;font-weight:600;white-space:nowrap;">
+      <div style="display:flex;align-items:center;gap:5px;background:#fff3ee;border:1px solid #FF6B35;border-radius:5px;padding:3px 10px;font-size:12px;color:#c94b1a;font-weight:600;white-space:nowrap;">
         <span>👁</span> VibeCheck
       </div>
     </div>
@@ -826,7 +885,7 @@
           <div class="demo-kpi highlighted">
             <div class="demo-kpi-label">Monthly Revenue</div>
             <div class="demo-kpi-value">$48,210</div>
-            <div style="font-size:9px;color:#16a34a;margin-top:2px;">↑ 12.4%</div>
+            <div style="font-size:11px;color:#16a34a;margin-top:3px;font-weight:600;">↑ 12.4%</div>
             <span class="demo-kpi-btn" id="mock-btn-bug">View transaction details</span>
           </div>
           <!-- wireframe KPI cards -->
@@ -912,18 +971,18 @@
         </div>
         <div id="mock-txn-feature" style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:10px 12px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <div style="font-size:10px;color:#888;">Recent Transactions</div>
+            <div style="font-size:12px;color:#888;font-weight:600;">Recent Transactions</div>
             <span style="font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;position:relative;top:1px;">👆</span>
           </div>
           <div id="filter-bar-feature" style="display:none;margin-bottom:7px;animation:fadeIn .4s ease;">
             <div style="display:flex;gap:5px;align-items:center;">
-              <div style="flex:1;display:flex;align-items:center;gap:4px;background:#f9f9f9;border:1px solid #d1d5db;border-radius:4px;padding:3px 7px;font-size:9px;color:#666;">🔍 <span>Search transactions…</span></div>
-              <div style="background:#f9f9f9;border:1px solid #d1d5db;border-radius:4px;padding:3px 7px;font-size:9px;color:#666;white-space:nowrap;">Date ▾</div>
+              <div style="flex:1;display:flex;align-items:center;gap:4px;background:#f9f9f9;border:1px solid #d1d5db;border-radius:4px;padding:4px 9px;font-size:11px;color:#666;">🔍 <span>Search transactions…</span></div>
+              <div style="background:#f9f9f9;border:1px solid #d1d5db;border-radius:4px;padding:4px 9px;font-size:11px;color:#666;white-space:nowrap;">Date ▾</div>
             </div>
           </div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;border-bottom:1px solid #f0f0f0;"><span>Alex Johnson</span><span style="color:#16a34a;font-weight:600;">$299</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;border-bottom:1px solid #f0f0f0;"><span>Maria García</span><span style="color:#16a34a;font-weight:600;">$49</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;"><span>Sam Park</span><span style="color:#16a34a;font-weight:600;">$129</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#444;padding:5px 0;border-bottom:1px solid #f0f0f0;"><span>Alex Johnson</span><span style="color:#16a34a;font-weight:600;">$299</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#444;padding:5px 0;border-bottom:1px solid #f0f0f0;"><span>Maria García</span><span style="color:#16a34a;font-weight:600;">$49</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#444;padding:5px 0;"><span>Sam Park</span><span style="color:#16a34a;font-weight:600;">$129</span></div>
         </div>
         <!-- wireframe summary row -->
         <div style="margin-top:10px;display:flex;gap:8px;">
@@ -979,11 +1038,11 @@
           </div>
         </div>
         <!-- highlighted hero section -->
-        <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Landing page hero</div>
-        <div style="border:2px solid #FF6B35;border-radius:6px;padding:14px 16px;box-shadow:0 0 0 3px rgba(255,107,53,.12);position:relative;">
-          <div id="mock-hero-title" style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.25;margin-bottom:6px;">Automate your financial reporting</div>
-          <div style="font-size:10px;color:#555;margin-bottom:10px;">Connect your accounts and get instant insights on your revenue.</div>
-          <span style="display:inline-block;background:#1a1a1a;color:#fff;font-size:9px;font-weight:700;padding:5px 12px;border-radius:4px;">Get started</span>
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Landing page hero</div>
+        <div style="border:2px solid #FF6B35;border-radius:6px;padding:16px 18px;box-shadow:0 0 0 3px rgba(255,107,53,.12);position:relative;">
+          <div id="mock-hero-title" style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.2;margin-bottom:8px;letter-spacing:-0.3px;">Automate your financial reporting</div>
+          <div style="font-size:13px;color:#555;margin-bottom:12px;line-height:1.5;">Connect your accounts and get instant insights on your revenue.</div>
+          <span style="display:inline-block;background:#1a1a1a;color:#fff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:4px;">Get started</span>
           <span style="position:absolute;bottom:-20px;right:8px;font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
         </div>
         <!-- wireframe features block -->
@@ -1069,12 +1128,12 @@
                 <circle cx="26" cy="9" r="1.5" fill="rgba(255,255,255,0.6)"/>
               </svg>
             </div>
-            <div style="font-size:9px;font-weight:700;color:#1a1a1a;margin-bottom:2px;">Camera Lens 50mm</div>
-            <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
-              <span style="font-size:10px;color:#e44;font-weight:700;">$349.00</span>
-              <span style="font-size:8px;color:#46b450;font-weight:600;">In stock</span>
+            <div style="font-size:11px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">Camera Lens 50mm</div>
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;">
+              <span style="font-size:12px;color:#e44;font-weight:700;">$349.00</span>
+              <span style="font-size:10px;color:#46b450;font-weight:600;">In stock</span>
             </div>
-            <div id="mock-wp-btn" style="background:#ccc;color:#999;font-size:8px;font-weight:700;padding:3px 6px;border-radius:3px;text-align:center;cursor:not-allowed;">Unavailable</div>
+            <div id="mock-wp-btn" style="background:#ccc;color:#999;font-size:10px;font-weight:700;padding:4px 8px;border-radius:3px;text-align:center;cursor:not-allowed;">Unavailable</div>
             <span style="position:absolute;bottom:-16px;right:6px;font-size:13px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
           </div>
           <!-- wireframe product card 3 -->
