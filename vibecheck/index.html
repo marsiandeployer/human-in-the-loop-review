@@ -289,7 +289,7 @@
 
     /* ── Demo Scenario Selector ── */
     .demo-scenario-bar {
-      max-width: 740px;
+      max-width: 820px;
       margin: 0 auto 12px;
       display: flex;
       align-items: center;
@@ -316,7 +316,7 @@
     .demo-tab:hover { background: #f5f5f5; border-color: #bbb; color: #333; }
     .demo-tab.active { background: #FF6B35; border-color: #FF6B35; color: #fff; }
     .tab-desc-wrap {
-      max-width: 740px;
+      max-width: 820px;
       margin: 10px auto 14px;
     }
     .tab-desc {
@@ -330,15 +330,91 @@
     .badge-improve { background: #16a34a !important; }
 
     /* ── HTML Demo Banner ── */
-    .demo-banner {
-      max-width: 740px;
+    .demo-banner-outer {
+      max-width: 820px;
       margin: 0 auto 48px;
+    }
+    /* Step badges — overlaid directly on the demo viewport */
+    .step-badge {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(26,26,26,0.85);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: help;
+      z-index: 15;
+      transition: background .15s, transform .15s;
+      backdrop-filter: blur(2px);
+    }
+    .step-badge:hover { background: #FF6B35; transform: scale(1.15); }
+    /* Tooltip — right side by default */
+    .step-badge::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 11px;
+      line-height: 1.4;
+      padding: 5px 9px;
+      border-radius: 5px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s;
+      z-index: 25;
+    }
+    .step-badge::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-right-color: #1a1a1a;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s;
+    }
+    /* Tooltip — left side for badges near right edge */
+    .step-badge.tip-left::after {
+      left: auto;
+      right: 30px;
+    }
+    .step-badge.tip-left::before {
+      left: auto;
+      right: 22px;
+      border-right-color: transparent;
+      border-left-color: #1a1a1a;
+    }
+    .step-badge:hover::after,
+    .step-badge:hover::before { opacity: 1; }
+    .demo-banner {
       background: #0f0f0f;
       border-radius: 10px;
       overflow: hidden;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       box-shadow: 0 4px 32px rgba(0,0,0,0.18);
     }
+    /* Wireframe skeleton blocks */
+    .wf-kpi {
+      background: #ebebeb;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .wf-kpi .wf-label { background: #d8d8d8; border-radius: 2px; height: 7px; width: 55%; margin-bottom: 8px; }
+    .wf-kpi .wf-value { background: #d0d0d0; border-radius: 3px; height: 18px; width: 65%; }
+    .wf-block { background: #e8e8e8; border-radius: 4px; }
+    .wf-line  { background: #dedede; border-radius: 3px; height: 8px; }
     .browser-chrome {
       background: #e8e8e8;
       border-bottom: 1px solid #d0d0d0;
@@ -378,7 +454,7 @@
     }
     .demo-viewport {
       display: flex;
-      min-height: 220px;
+      min-height: 280px;
       position: relative;
     }
     .demo-site {
@@ -647,11 +723,13 @@
       .page { padding: 0 10px; }
       .content-wrap { padding: 0 10px; }
       .demo-banner { border-radius: 6px; }
+      .step-badge { display: none; }
       .demo-banner-caption { padding: 8px 16px; }
       .fixes-grid { grid-template-columns: 1fr; }
       .demo-panel { width: 160px; }
       .demo-kpi-row { grid-template-columns: 1fr; }
       .demo-kpi:not(.highlighted) { display: none; }
+      .wf-kpi { display: none; }
     }
     #lang-switch {
       display: none;
@@ -708,6 +786,7 @@
     <p class="tab-desc" id="tab-desc"></p>
   </div>
 
+  <div class="demo-banner-outer">
   <div class="demo-banner">
     <!-- Browser chrome -->
     <div class="browser-chrome">
@@ -722,10 +801,21 @@
 
     <!-- TAB: Bug -->
     <div class="demo-viewport" id="tab-bug">
+      <span class="step-badge" style="top:44px;left:14px;" data-tip="Step 1: Click any element on the page to select it">1</span>
+      <span class="step-badge tip-left" style="top:104px;right:195px;" data-tip="Step 2: Describe the issue in plain words">2</span>
+      <span class="step-badge tip-left" style="top:164px;right:195px;" data-tip="Step 3: Fix It — routes to your AI (free) or Vibers reviewer (paid)">3</span>
       <div class="demo-site">
-        <div class="demo-site-header">
-          <div class="demo-site-logo">📊 Revenue Dashboard</div>
-          <div class="demo-site-nav"><span>Overview</span><span>Reports</span><span>Settings</span></div>
+        <!-- wireframe header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="wf-block" style="width:16px;height:16px;border-radius:3px;"></div>
+            <div class="wf-line" style="width:100px;"></div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div class="wf-line" style="width:44px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
+          </div>
         </div>
         <div class="demo-kpi-row">
           <div class="demo-kpi highlighted">
@@ -734,19 +824,38 @@
             <div style="font-size:9px;color:#16a34a;margin-top:2px;">↑ 12.4%</div>
             <span class="demo-kpi-btn" id="mock-btn-bug">View transaction details</span>
           </div>
-          <div class="demo-kpi">
-            <div class="demo-kpi-label">New Customers</div>
-            <div class="demo-kpi-value" style="color:#2563eb;">1,284</div>
+          <!-- wireframe KPI cards -->
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+        </div>
+        <!-- wireframe table -->
+        <div style="background:#ebebeb;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;margin-bottom:10px;">
+          <div class="wf-line" style="width:35%;margin-bottom:10px;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #ddd;">
+            <div class="wf-line" style="width:38%;"></div><div class="wf-line" style="width:20%;"></div>
           </div>
-          <div class="demo-kpi">
-            <div class="demo-kpi-label">Conversion Rate</div>
-            <div class="demo-kpi-value" style="color:#7c3aed;">3.8%</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #ddd;">
+            <div class="wf-line" style="width:42%;"></div><div class="wf-line" style="width:18%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;">
+            <div class="wf-line" style="width:30%;"></div><div class="wf-line" style="width:20%;"></div>
           </div>
         </div>
-        <div style="background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;">
-          <div style="font-size:10px;color:#888;margin-bottom:8px;">Recent Transactions</div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;border-bottom:1px solid #f0f0f0;"><span>Alex Johnson</span><span style="color:#16a34a;font-weight:600;">$299</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;"><span>Maria García</span><span style="color:#16a34a;font-weight:600;">$49</span></div>
+        <!-- wireframe chart block -->
+        <div style="background:#ebebeb;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <div class="wf-line" style="width:28%;"></div>
+            <div class="wf-line" style="width:18%;"></div>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:4px;height:32px;">
+            <div class="wf-block" style="flex:1;height:40%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:70%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:55%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:90%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:60%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:80%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:45%;border-radius:2px 2px 0 0;"></div>
+          </div>
         </div>
       </div>
       <div class="demo-panel">
@@ -772,26 +881,27 @@
 
     <!-- TAB: Feature -->
     <div class="demo-viewport" id="tab-feature" style="display:none">
+      <span class="step-badge" style="top:98px;left:14px;" data-tip="Step 1: Click the transactions block to select it">1</span>
+      <span class="step-badge tip-left" style="top:104px;right:195px;" data-tip="Step 2: Describe what feature you need">2</span>
+      <span class="step-badge tip-left" style="top:164px;right:195px;" data-tip="Step 3: Add Feature — Vibers reviewer implements it and sends a PR">3</span>
       <div class="demo-site">
-        <div class="demo-site-header">
-          <div class="demo-site-logo">📊 Revenue Dashboard</div>
-          <div class="demo-site-nav">
-            <span>Overview</span><span>Reports</span><span>Settings</span>
+        <!-- wireframe header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="wf-block" style="width:16px;height:16px;border-radius:3px;"></div>
+            <div class="wf-line" style="width:100px;"></div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div class="wf-line" style="width:44px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
           </div>
         </div>
+        <!-- wireframe KPI row -->
         <div class="demo-kpi-row">
-          <div class="demo-kpi">
-            <div class="demo-kpi-label">Monthly Revenue</div>
-            <div class="demo-kpi-value">$48,210</div>
-          </div>
-          <div class="demo-kpi">
-            <div class="demo-kpi-label">New Customers</div>
-            <div class="demo-kpi-value" style="color:#2563eb;">1,284</div>
-          </div>
-          <div class="demo-kpi">
-            <div class="demo-kpi-label">Conversion Rate</div>
-            <div class="demo-kpi-value" style="color:#7c3aed;">3.8%</div>
-          </div>
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
         </div>
         <div id="mock-txn-feature" style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:10px 12px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -805,7 +915,19 @@
             </div>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;border-bottom:1px solid #f0f0f0;"><span>Alex Johnson</span><span style="color:#16a34a;font-weight:600;">$299</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;"><span>Maria García</span><span style="color:#16a34a;font-weight:600;">$49</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;border-bottom:1px solid #f0f0f0;"><span>Maria García</span><span style="color:#16a34a;font-weight:600;">$49</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:#444;padding:4px 0;"><span>Sam Park</span><span style="color:#16a34a;font-weight:600;">$129</span></div>
+        </div>
+        <!-- wireframe summary row -->
+        <div style="margin-top:10px;display:flex;gap:8px;">
+          <div style="flex:1;background:#ebebeb;border:1px solid #e0e0e0;border-radius:5px;padding:8px 10px;">
+            <div class="wf-line" style="width:50%;margin-bottom:6px;"></div>
+            <div class="wf-line" style="width:35%;height:12px;"></div>
+          </div>
+          <div style="flex:1;background:#ebebeb;border:1px solid #e0e0e0;border-radius:5px;padding:8px 10px;">
+            <div class="wf-line" style="width:55%;margin-bottom:6px;"></div>
+            <div class="wf-line" style="width:30%;height:12px;"></div>
+          </div>
         </div>
       </div>
       <div class="demo-panel">
@@ -831,18 +953,50 @@
 
     <!-- TAB: Improve -->
     <div class="demo-viewport" id="tab-improve" style="display:none">
+      <span class="step-badge" style="top:58px;left:14px;" data-tip="Step 1: Click the hero section to select it">1</span>
+      <span class="step-badge tip-left" style="top:104px;right:195px;" data-tip="Step 2: Explain the copy problem or what tone to use">2</span>
+      <span class="step-badge tip-left" style="top:164px;right:195px;" data-tip="Step 3: Improve — copywriter rewrites and sends a PR">3</span>
       <div class="demo-site">
-        <div style="padding:16px 0 10px;">
-          <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Landing page hero</div>
-          <div style="border:2px solid #FF6B35;border-radius:6px;padding:14px 16px;box-shadow:0 0 0 3px rgba(255,107,53,.12);position:relative;">
-            <div id="mock-hero-title" style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.25;margin-bottom:6px;">Automate your financial reporting</div>
-            <div style="font-size:10px;color:#555;margin-bottom:10px;">Connect your accounts and get instant insights on your revenue.</div>
-            <span style="display:inline-block;background:#1a1a1a;color:#fff;font-size:9px;font-weight:700;padding:5px 12px;border-radius:4px;">Get started</span>
-            <span style="position:absolute;bottom:-20px;right:8px;font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
+        <!-- wireframe nav bar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="wf-block" style="width:16px;height:16px;border-radius:3px;"></div>
+            <div class="wf-line" style="width:90px;"></div>
           </div>
-          <div style="margin-top:24px;background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;">
-            <div style="font-size:10px;color:#888;margin-bottom:6px;">Key features</div>
-            <div style="font-size:10px;color:#444;">✓ Real-time sync &nbsp; ✓ Multi-currency &nbsp; ✓ CSV export</div>
+          <div style="display:flex;gap:8px;">
+            <div class="wf-line" style="width:36px;"></div>
+            <div class="wf-line" style="width:36px;"></div>
+            <div class="wf-block" style="width:64px;height:22px;border-radius:4px;"></div>
+          </div>
+        </div>
+        <!-- highlighted hero section -->
+        <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Landing page hero</div>
+        <div style="border:2px solid #FF6B35;border-radius:6px;padding:14px 16px;box-shadow:0 0 0 3px rgba(255,107,53,.12);position:relative;">
+          <div id="mock-hero-title" style="font-size:16px;font-weight:700;color:#1a1a1a;line-height:1.25;margin-bottom:6px;">Automate your financial reporting</div>
+          <div style="font-size:10px;color:#555;margin-bottom:10px;">Connect your accounts and get instant insights on your revenue.</div>
+          <span style="display:inline-block;background:#1a1a1a;color:#fff;font-size:9px;font-weight:700;padding:5px 12px;border-radius:4px;">Get started</span>
+          <span style="position:absolute;bottom:-20px;right:8px;font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
+        </div>
+        <!-- wireframe features block -->
+        <div style="margin-top:20px;background:#ebebeb;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;margin-bottom:10px;">
+          <div class="wf-line" style="width:28%;margin-bottom:8px;"></div>
+          <div style="display:flex;gap:10px;">
+            <div class="wf-line" style="width:80px;"></div>
+            <div class="wf-line" style="width:80px;"></div>
+            <div class="wf-line" style="width:70px;"></div>
+          </div>
+        </div>
+        <!-- wireframe testimonials -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:#ebebeb;border:1px solid #e0e0e0;border-radius:5px;padding:9px 10px;">
+            <div class="wf-line" style="width:80%;margin-bottom:5px;height:7px;"></div>
+            <div class="wf-line" style="width:65%;margin-bottom:8px;height:7px;"></div>
+            <div style="display:flex;align-items:center;gap:5px;"><div class="wf-block" style="width:14px;height:14px;border-radius:50%;"></div><div class="wf-line" style="width:55%;"></div></div>
+          </div>
+          <div style="background:#ebebeb;border:1px solid #e0e0e0;border-radius:5px;padding:9px 10px;">
+            <div class="wf-line" style="width:75%;margin-bottom:5px;height:7px;"></div>
+            <div class="wf-line" style="width:70%;margin-bottom:8px;height:7px;"></div>
+            <div style="display:flex;align-items:center;gap:5px;"><div class="wf-block" style="width:14px;height:14px;border-radius:50%;"></div><div class="wf-line" style="width:50%;"></div></div>
           </div>
         </div>
       </div>
@@ -869,27 +1023,59 @@
 
     <!-- TAB: WordPress -->
     <div class="demo-viewport" id="tab-wp" style="display:none">
+      <span class="step-badge" style="top:96px;left:14px;" data-tip="Step 1: Click the WooCommerce product button to select it">1</span>
+      <span class="step-badge tip-left" style="top:104px;right:195px;" data-tip="Step 2: Describe the issue — e.g. button should be enabled">2</span>
+      <span class="step-badge tip-left" style="top:164px;right:195px;" data-tip="Step 3: Fix It — reviewer updates WooCommerce code via SSH/FTP">3</span>
       <div class="demo-site">
-        <div class="demo-site-header" style="border-bottom:1px solid #eee;padding-bottom:10px;margin-bottom:14px;">
-          <div class="demo-site-logo" style="display:flex;align-items:center;gap:6px;">
-            <span style="background:#21759b;color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;">WP</span>
-            My Online Store
+        <!-- wireframe header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e4e4e4;padding-bottom:10px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="wf-block" style="width:22px;height:16px;border-radius:3px;"></div>
+            <div class="wf-line" style="width:80px;"></div>
           </div>
-          <div class="demo-site-nav"><span>Shop</span><span>About</span><span>Cart (2)</span></div>
+          <div style="display:flex;gap:8px;">
+            <div class="wf-line" style="width:32px;"></div>
+            <div class="wf-line" style="width:32px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
+          </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div style="background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:10px;">
-            <div style="background:#f3f3f3;height:60px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:20px;">🎧</div>
-            <div style="font-size:10px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">Wireless Headphones</div>
-            <div style="font-size:11px;color:#e44;font-weight:700;">$89.00</div>
-            <div style="margin-top:7px;background:#96588a;color:#fff;font-size:9px;font-weight:700;padding:4px 8px;border-radius:3px;text-align:center;">Add to cart</div>
+          <!-- wireframe product card 1 -->
+          <div class="wf-kpi" style="padding:10px;border-radius:6px;">
+            <div class="wf-block" style="height:58px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#bbb;">🎧</div>
+            <div class="wf-line" style="width:80%;margin-bottom:6px;height:10px;"></div>
+            <div class="wf-line" style="width:38%;height:11px;margin-bottom:10px;"></div>
+            <div class="wf-block" style="height:24px;border-radius:3px;"></div>
           </div>
+          <!-- highlighted product card -->
           <div id="mock-wp-card" style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:10px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;">
-            <div style="background:#f3f3f3;height:60px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:20px;">📷</div>
+            <div style="background:linear-gradient(135deg,#1a2a4a 0%,#2d4a7a 100%);height:58px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;">
+              <svg width="32" height="24" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="6" width="28" height="16" rx="2" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+                <circle cx="16" cy="14" r="5" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" fill="none"/>
+                <circle cx="16" cy="14" r="2.5" fill="rgba(255,255,255,0.5)"/>
+                <rect x="6" y="3" width="8" height="4" rx="1" fill="rgba(255,255,255,0.5)"/>
+                <circle cx="26" cy="9" r="1.5" fill="rgba(255,255,255,0.6)"/>
+              </svg>
+            </div>
             <div style="font-size:10px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">Camera Lens 50mm</div>
             <div style="font-size:11px;color:#e44;font-weight:700;">$349.00</div>
             <div id="mock-wp-btn" style="margin-top:7px;background:#ccc;color:#999;font-size:9px;font-weight:700;padding:4px 8px;border-radius:3px;text-align:center;cursor:not-allowed;">Unavailable</div>
             <span style="position:absolute;bottom:-18px;right:6px;font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
+          </div>
+          <!-- wireframe product card 3 -->
+          <div class="wf-kpi" style="padding:10px;border-radius:6px;">
+            <div class="wf-block" style="height:58px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#bbb;">⌚</div>
+            <div class="wf-line" style="width:65%;margin-bottom:6px;height:10px;"></div>
+            <div class="wf-line" style="width:38%;height:11px;margin-bottom:10px;"></div>
+            <div class="wf-block" style="height:24px;border-radius:3px;"></div>
+          </div>
+          <!-- wireframe product card 4 -->
+          <div class="wf-kpi" style="padding:10px;border-radius:6px;">
+            <div class="wf-block" style="height:58px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#bbb;">🔌</div>
+            <div class="wf-line" style="width:75%;margin-bottom:6px;height:10px;"></div>
+            <div class="wf-line" style="width:38%;height:11px;margin-bottom:10px;"></div>
+            <div class="wf-block" style="height:24px;border-radius:3px;"></div>
           </div>
         </div>
       </div>
@@ -915,7 +1101,8 @@
     </div>
 
     <p class="demo-banner-caption" id="demo-caption">Bug spotted — Fix It sends element + codebase to reviewer → PR in hours</p>
-  </div>
+  </div><!-- /demo-banner -->
+  </div><!-- /demo-banner-outer -->
   </div><!-- /hero-wrap -->
 
   <div class="content-wrap">
@@ -1091,19 +1278,19 @@
 var TAB_DATA = {
   bug: {
     url: 'onout.org/dashboard/',
-    desc: 'Spot a visual bug on any element. The tool captures DOM + CSS context and sends it to your AI (free) — or to a Vibers reviewer who digs into your repo and opens a PR (paid).',
+    desc: 'Spot a visual bug on any element. Click Fix It — VibeCheck sends the context to your AI for free, or a Vibers reviewer digs into your repo and opens a PR (paid).',
     text: "the 'View transaction details' label overflows the card width — shorten to 'View details'",
     caption: '✓ PR #247 merged — button copy fixed in 2 hours'
   },
   feature: {
     url: 'onout.org/dashboard/',
-    desc: 'Leave a feature request on any element. Route it to your own AI (Claude Code, Codex) for a free suggestion — or let a Vibers developer build it and open a PR.',
+    desc: 'Leave a feature request on any element. Route it to your own AI for a free implementation suggestion — or let a Vibers developer build it and open a PR.',
     text: "can we add a search bar here? users keep asking how to filter transactions by date",
     caption: '✓ PR #248 merged — search filter added to nav'
   },
   improve: {
     url: 'onout.org/landing/',
-    desc: 'Flag copy or UX that\'s not working. Your AI rewrites it for free (bring your own AI) — or a human copywriter + developer rewrites, tests, and ships the change for you.',
+    desc: 'Flag copy or UX that\'s not working. Your AI rewrites it for free — or a human copywriter + developer rewrites, tests, and ships the change for you.',
     text: "headline feels too generic — 'See exactly where your money goes' might convert better",
     caption: '✓ PR #249 merged — hero copy rewritten, CTR +18%'
   },
@@ -1196,7 +1383,7 @@ function applyFix(tab, gen) {
           bug:     '✓ PR #247 opened\nbranch: fix/button-overflow\nReviewer: @alex — merged in 1h 52m',
           feature: '✓ PR #248 opened\nbranch: feat/transaction-search\nReviewer: @marina — merged in 3h 10m',
           improve: '✓ PR #249 opened\nbranch: copy/hero-headline\nReviewer: @alex — merged in 47m',
-          wp:      '✓ Fix ready\nbranch: fix/product-stock-status\nReviewer: @alex — ready in 58m'
+          wp:      '✓ Fix ready\nMethod: FTP → wp-content/plugins/woocommerce\nReviewer: @alex — ready in 58m'
         };
         ps.style.display = 'block';
         ps.style.whiteSpace = 'pre-line';
@@ -1312,10 +1499,10 @@ var ru = {
 };
 
 TAB_DESC_RU = {
-  bug:     'Заметил визуальный баг — инструмент захватывает DOM + CSS и отправляет вашему AI (бесплатно, BYOK) или Vibers-ревьюеру, который разберётся в коде и откроет PR (платно).',
-  feature: 'Оставь запрос фичи на любом элементе. Твой AI (Claude Code, Codex) предложит реализацию бесплатно — или Vibers-разработчик сделает всё за тебя и откроет PR.',
-  improve: 'Отметь текст или UX, который не конвертит. AI перепишет бесплатно (bring your own AI) — или человек-копирайтер + разработчик сделают это за тебя.',
-  wp:      'Работает с WordPress — GitHub не нужен. Бесплатный инструмент собирает проблему; Vibers-ревьюер фиксит в wp-content и деплоит через FTP/SSH.'
+  bug:     'Заметил визуальный баг — нажми Fix It. Контекст уйдёт твоему AI бесплатно, или Vibers-ревьюер разберётся в коде и откроет PR (платно).',
+  feature: 'Оставь запрос на улучшение на любом элементе. AI предложит реализацию бесплатно — или Vibers-разработчик сделает всё за тебя и откроет PR.',
+  improve: 'Отметь текст или UX, который не конвертит. AI перепишет бесплатно — или человек-копирайтер + разработчик сделают это за тебя.',
+  wp:      'Работает с WordPress — GitHub не нужен. Опиши проблему, и Vibers-ревьюер исправит её напрямую в файлах сайта.'
 };
 
 // TAB_DESC_RU and currentLang declared in main script above
