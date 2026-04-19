@@ -182,6 +182,51 @@
     }
     .btn-secondary:hover { border-color: #1a1a1a; background: #fafafa; text-decoration: none; }
     .btn-secondary:focus-visible { outline: 2px solid #5b44e8; outline-offset: 3px; }
+    .flow-banner {
+      width: 128px; height: 128px; flex-shrink: 0; align-self: center;
+      background: #0d1117; border-radius: 16px; padding: 9px;
+      box-sizing: border-box; display: flex; flex-direction: column;
+      gap: 5px;
+    }
+    .fb-step {
+      border-radius: 5px; background: #161b26; border: 1px solid #30363d;
+      padding: 4px 6px; display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+    }
+    .fb-step--ai  { border-color: #7c3aed; }
+    .fb-step--fix { border-color: #238636; }
+    .fb-dots { display: flex; gap: 3px; flex-shrink: 0; }
+    .fb-dots span { width: 4px; height: 4px; border-radius: 50%; }
+    .fb-dots span:nth-child(1) { background: #ff5f57; }
+    .fb-dots span:nth-child(2) { background: #febc2e; }
+    .fb-dots span:nth-child(3) { background: #28c840; }
+    .fb-bug-el {
+      flex: 1; border: 1px solid #ff4444; border-radius: 3px;
+      padding: 2px 4px; display: flex; flex-direction: column; gap: 2px;
+    }
+    .fb-line { height: 3px; border-radius: 2px; background: #30363d; }
+    .fb-line--red { background: rgba(255,68,68,0.5); width: 70%; }
+    .fb-cursor { font-size: 10px; flex-shrink: 0; line-height: 1; }
+    .fb-arrow { text-align: center; font-size: 8px; color: #444c56; line-height: 1; flex-shrink: 0; }
+    .fb-ai-icon {
+      width: 14px; height: 14px; border-radius: 3px; background: rgba(124,58,237,0.2);
+      color: #d97757; font-size: 9px; font-weight: 700; display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0; font-family: sans-serif;
+    }
+    .fb-chat { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+    .fb-chat-line { height: 3px; border-radius: 2px; }
+    .fb-chat-line--purple { background: rgba(124,58,237,0.7); width: 90%; }
+    .fb-chat-line--gray   { background: #30363d; width: 60%; }
+    .fb-diff { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+    .fb-diff-line { height: 3px; border-radius: 2px; display: flex; align-items: center; gap: 3px; }
+    .fb-diff-line::before { content: ''; width: 3px; height: 3px; border-radius: 1px; flex-shrink: 0; }
+    .fb-diff-line--rm::before { background: #ff4444; }
+    .fb-diff-line--rm { background: rgba(255,68,68,0.2); width: 65%; }
+    .fb-diff-line--add::before { background: #238636; }
+    .fb-diff-line--add { background: rgba(35,134,54,0.25); width: 85%; }
+    .fb-check {
+      font-size: 13px; flex-shrink: 0; line-height: 1;
+      color: #238636; font-weight: 700; font-family: sans-serif;
+    }
     .beta-note {
       font-size: 13px;
       color: #666;
@@ -1055,46 +1100,32 @@
     <h1 data-i18n="hero-title">Click any issue on your website. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, pull request, or deployed directly to your server">code fix</abbr> with Claude Code or Codex.</h1>
     <p class="hero-sub" data-i18n="hero-sub">Built for anyone who can spot an issue, but doesn&rsquo;t want to debug it by hand.</p>
     <div class="cta-group">
-      <svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;border-radius:16px;align-self:center;" aria-hidden="true">
-        <rect width="128" height="128" rx="16" fill="#0d1117"/>
-        <!-- Step 1: browser frame with bug element -->
-        <rect x="10" y="10" width="108" height="30" rx="6" fill="#161b26" stroke="#30363d" stroke-width="1"/>
-        <circle cx="18" cy="16" r="2" fill="#ff5f57"/>
-        <circle cx="25" cy="16" r="2" fill="#febc2e"/>
-        <circle cx="32" cy="16" r="2" fill="#28c840"/>
-        <rect x="14" y="22" width="52" height="12" rx="2" fill="#21262d" stroke="#ff4444" stroke-width="1.5"/>
-        <rect x="16" y="24" width="30" height="3" rx="1" fill="#ff4444" opacity="0.45"/>
-        <rect x="16" y="29" width="22" height="3" rx="1" fill="#30363d"/>
-        <!-- cursor arrow -->
-        <path d="M72 28 L75 38 L77.5 34.5 L81 40 L82.5 39.5 L79 33.5 L83 33.5 Z" fill="#fff" opacity="0.9"/>
-        <!-- label -->
-        <text x="64" y="47" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" fill="#666" letter-spacing="0.5">click bug</text>
-        <!-- arrow down -->
-        <line x1="64" y1="51" x2="64" y2="56" stroke="#30363d" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M61 54 L64 57 L67 54" stroke="#30363d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <!-- Step 2: AI review popup -->
-        <rect x="10" y="58" width="108" height="24" rx="6" fill="#161b26" stroke="#7c3aed" stroke-width="1.5"/>
-        <rect x="15" y="64" width="12" height="12" rx="3" fill="#7c3aed" opacity="0.2"/>
-        <!-- mini Claude A -->
-        <path d="M21 74 L19.2 68.5 L21 68.5 M21 74 L22.8 68.5 L21 68.5" stroke="#d97757" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <rect x="31" y="63" width="52" height="3" rx="1.5" fill="#7c3aed" opacity="0.6"/>
-        <rect x="31" y="69" width="38" height="3" rx="1.5" fill="#444c56"/>
-        <rect x="31" y="75" width="28" height="3" rx="1.5" fill="#444c56"/>
-        <rect x="87" y="63" width="3" height="9" rx="1" fill="#7c3aed" opacity="0.8"/>
-        <!-- label -->
-        <text x="64" y="90" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" fill="#666" letter-spacing="0.5">AI reviews</text>
-        <!-- arrow down -->
-        <line x1="64" y1="93" x2="64" y2="98" stroke="#30363d" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M61 96 L64 99 L67 96" stroke="#30363d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <!-- Step 3: code diff / fix -->
-        <rect x="10" y="100" width="108" height="22" rx="6" fill="#161b26" stroke="#238636" stroke-width="1.5"/>
-        <rect x="14" y="104" width="3" height="5" rx="0.5" fill="#ff4444" opacity="0.8"/>
-        <rect x="19" y="105" width="38" height="3" rx="1" fill="#ff4444" opacity="0.25"/>
-        <rect x="14" y="112" width="3" height="5" rx="0.5" fill="#238636" opacity="0.9"/>
-        <rect x="19" y="113" width="55" height="3" rx="1" fill="#238636" opacity="0.35"/>
-        <!-- checkmark -->
-        <path d="M92 108 L98 114 L110 103" stroke="#238636" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      </svg>
+      <div class="flow-banner" aria-hidden="true">
+        <div class="fb-step">
+          <div class="fb-dots"><span></span><span></span><span></span></div>
+          <div class="fb-bug-el">
+            <div class="fb-line fb-line--red"></div>
+            <div class="fb-line"></div>
+          </div>
+          <div class="fb-cursor">👆</div>
+        </div>
+        <div class="fb-arrow">↓</div>
+        <div class="fb-step fb-step--ai">
+          <div class="fb-ai-icon">A</div>
+          <div class="fb-chat">
+            <div class="fb-chat-line fb-chat-line--purple"></div>
+            <div class="fb-chat-line fb-chat-line--gray"></div>
+          </div>
+        </div>
+        <div class="fb-arrow">↓</div>
+        <div class="fb-step fb-step--fix">
+          <div class="fb-diff">
+            <div class="fb-diff-line fb-diff-line--rm"></div>
+            <div class="fb-diff-line fb-diff-line--add"></div>
+          </div>
+          <div class="fb-check">✓</div>
+        </div>
+      </div>
       <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'download_extension'});" data-i18n="cta-download">Download Extension</a>
     </div>
     <p class="beta-note" data-i18n="beta-note">Free with your own Claude Code or Codex. Or use built-in AI &mdash; no setup required. Works on any code-accessible site, including legacy apps, WordPress, and modern frameworks.</p>
