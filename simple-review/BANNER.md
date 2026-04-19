@@ -1,17 +1,17 @@
-# Vibecheck Banner — Structure & Algorithm
+# SimpleReview Banner — Structure & Algorithm
 
-Файл: `vibecheck/index.html`. Баннер — это главный hero-мокап на `/vibers/vibecheck/`, имитирующий работу Chrome-расширения VibeCheck.
+Файл: `simple-review/index.html`. Баннер — это главный hero-мокап на `/vibers/simple-review/`, имитирующий работу Chrome-расширения SimpleReview.
 
 ## DOM-структура
 
 ```
 div.demo-banner-outer
 └── div.demo-banner
-    ├── div.browser-chrome           ← fake browser chrome (dots, URL bar, "👁 VibeCheck" badge)
+    ├── div.browser-chrome           ← fake browser chrome (dots, URL bar, "👁 SimpleReview" badge)
     ├── div.demo-viewport#tab-bug    ← 1 из 4 tab-viewport'ов показан (остальные display:none)
     │   ├── div.demo-site            ← левая часть: wireframe-макет сайта
     │   │                              (содержит ОДИН highlighted-элемент — оранжевая рамка)
-    │   └── div.demo-panel           ← правая sidebar-панель VibeCheck
+    │   └── div.demo-panel           ← правая sidebar-панель SimpleReview
     │       ├── .panel-header        (logo + badge "bug"/"feature"/"improve"/"WordPress")
     │       ├── .panel-element       ("Selected element" карточка: tag, text, path, file)
     │       ├── .panel-comment-wrap  ("Comment" + .tw typed-output + мигающий cursor)
@@ -84,7 +84,7 @@ div.demo-viewport
 │           ├── textarea.inline-comment (sim: печатается text)
 │           └── button.inline-fix   ("Fix it →")
 └── div.demo-panel.chat-mode        ← теперь это чат
-    ├── .chat-header                ("VibeCheck — chat" + status)
+    ├── .chat-header                ("SimpleReview — chat" + status)
     └── .chat-messages              ← стек bubble'ов (появляются последовательно)
         ├── [bubble] system:  "Selected <span.kpi-btn> on src/components/KPICard.tsx:42"
         ├── [bubble] user:    "{typed comment}"

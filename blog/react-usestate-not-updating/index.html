@@ -46,7 +46,7 @@
       "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
     },
     "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/blog/react-usestate-not-updating/" },
-    "keywords": ["react usestate not updating", "usestate not working", "react state not updating", "setstate not working", "react stale state", "usestate closure", "react useState bug", "vibecheck"]
+    "keywords": ["react usestate not updating", "usestate not working", "react state not updating", "setstate not working", "react stale state", "usestate closure", "react useState bug", "simple-review"]
   }
   </script>
 
@@ -210,7 +210,7 @@
     .bug-counter-code .line-bad{color:#fca5a5;text-decoration:line-through;display:block}
     .bug-counter-code .line-good{color:#86efac;display:block}
     .bug-clicks-meta{font-size:11px;color:#888;margin-top:8px;font-family:'JetBrains Mono',monospace}
-    /* Side panel (VibeCheck) */
+    /* Side panel (SimpleReview) */
     .bug-demo-panel{width:230px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;padding:16px 14px;display:flex;flex-direction:column;gap:10px}
     .bug-panel-header{display:flex;align-items:center;gap:6px}
     .bug-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;letter-spacing:.3px}
@@ -262,7 +262,7 @@
   <nav class="site-nav">
     <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
     <div class="nav-links">
-      <a href="/vibers/vibecheck/">VibeCheck Extension</a>
+      <a href="/vibers/simple-review/">SimpleReview Extension</a>
       <a href="/vibers/blog/">Blog</a>
       <a href="https://t.me/onoutnoxon">Telegram</a>
     </div>
@@ -294,7 +294,7 @@
       <div class="bug-demo-chrome">
         <div class="bug-demo-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
         <div class="bug-demo-url">localhost:3000/dashboard</div>
-        <div class="bug-demo-ext" title="VibeCheck">V</div>
+        <div class="bug-demo-ext" title="SimpleReview">V</div>
       </div>
       <div class="bug-demo-viewport">
         <div class="bug-demo-site">
@@ -316,7 +316,7 @@
         </div>
         <div class="bug-demo-panel">
           <div class="bug-panel-header">
-            <span class="bug-panel-logo">VIBECHECK</span>
+            <span class="bug-panel-logo">SIMPLEREVIEW</span>
             <span class="bug-panel-badge">REC</span>
           </div>
           <div class="bug-panel-element">
@@ -348,7 +348,7 @@
         <div class="bug-step-badge bug-step-3 tip-left" data-tip="3 — Send to Claude / Vibers reviewer">3</div>
       </div>
     </div>
-    <p class="bug-demo-caption">Click "Increment (broken)" — counter stays at 0. Then click "Fix It →" to watch VibeCheck capture and patch it. Toggle "Show fixed version" to see the working code.</p>
+    <p class="bug-demo-caption">Click "Increment (broken)" — counter stays at 0. Then click "Fix It →" to watch SimpleReview capture and patch it. Toggle "Show fixed version" to see the working code.</p>
   </div>
 
   <h2>Pattern 1 — Stale Closure (the AI Favorite)</h2>
@@ -478,9 +478,9 @@
 
   <p>Direct mutation has a similar root: most non-React JS code mutates freely. <code>arr.push</code>, <code>obj.foo = bar</code> — these are fine in 99% of JavaScript. React is the unusual environment where they're wrong. AI tools generate the JavaScript-idiomatic code, not the React-idiomatic code, unless the surrounding context strongly cues "this is state."</p>
 
-  <h2>The 30-Second Workflow with VibeCheck</h2>
+  <h2>The 30-Second Workflow with SimpleReview</h2>
 
-  <p>The bug demo at the top of this article shows the workflow we built into <a href="/vibers/vibecheck/">VibeCheck</a>: a free Chrome extension that captures broken React state on the page exactly as the user sees it.</p>
+  <p>The bug demo at the top of this article shows the workflow we built into <a href="/vibers/simple-review/">SimpleReview</a>: a free Chrome extension that captures broken React state on the page exactly as the user sees it.</p>
 
   <ol>
     <li><strong>Click the broken element.</strong> The extension grabs the DOM path, the React component name (from React DevTools fiber), the URL, the viewport, the browser, and any console errors fired in the last 10 seconds.</li>
@@ -492,8 +492,8 @@
 
   <div class="cta-block">
     <h3>Stop debugging stale state by hand</h3>
-    <p>VibeCheck captures the broken React state in one click. Free Chrome extension. No signup until you want a human reviewer.</p>
-    <a class="cta-btn" href="/vibers/vibecheck/">Try VibeCheck free →</a>
+    <p>SimpleReview captures the broken React state in one click. Free Chrome extension. No signup until you want a human reviewer.</p>
+    <a class="cta-btn" href="/vibers/simple-review/">Try SimpleReview free →</a>
   </div>
 
   <h2 id="faq" class="faq-section">Frequently Asked Questions</h2>
@@ -564,7 +564,7 @@
 
   <footer class="site-footer">
     <span>© 2026 Vibers · Human-in-the-loop code review</span>
-    <span><a href="/vibers/">Home</a> · <a href="/vibers/blog/">Blog</a> · <a href="/vibers/vibecheck/">VibeCheck</a></span>
+    <span><a href="/vibers/">Home</a> · <a href="/vibers/blog/">Blog</a> · <a href="/vibers/simple-review/">SimpleReview</a></span>
   </footer>
 
 </div>

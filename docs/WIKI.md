@@ -11,15 +11,15 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [../SKILL.md](../SKILL.md) | AI Agent skill — client-facing quickstart (English) |
 | [../REVIEW-RUNBOOK.md](../REVIEW-RUNBOOK.md) | Step-by-step review workflow for reviewers |
 | [../CLAUDE.md](../CLAUDE.md) | Claude Code project instructions |
-| [../vibecheck/index.html](../vibecheck/index.html) | **VibeCheck** — Chrome Extension "Website Feedback & Fix Tool". Click element → Fix It → real PR. Beta, free first fix. Landing at `/vibers/vibecheck/` |
+| [../simple-review/index.html](../simple-review/index.html) | **SimpleReview** — Chrome Extension "Website Feedback & Fix Tool". Click element → Fix It → real PR. Beta, free first fix. Landing at `/vibers/simple-review/` |
 
-### VibeCheck — Visual Feedback & Fix Chrome Extension
+### SimpleReview — Visual Feedback & Fix Chrome Extension
 
 **Positioning:** "Website Feedback & Fix Tool" — отличие от конкурентов: не просто репортит баг, а чинит (PR).
 
 **Direct competitors (visual feedback tools):**
 
-| Tool | Pricing | Target | Key diff vs VibeCheck |
+| Tool | Pricing | Target | Key diff vs SimpleReview |
 |------|---------|--------|----------------------|
 | **Marker.io** | $39/mo+ | Agencies, QA teams | Reports only. Session replay, console logs, 20+ integrations. No fixes, no PR. |
 | **BugHerd** | $50/mo+ (5 seats) | Web agencies, UAT | "Sticky notes on a webpage." Client-friendly Kanban, no login for clients. No code fixes. G2 4.8/5 |
@@ -28,11 +28,11 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | **Userback** | Freemium + paid | Product teams, SaaS | NPS, surveys, session replay, roadmap. No code fixes. 20K+ teams. |
 | **Huddlekit** | Free / $190-390 yr | Design studios, agencies | Multi-breakpoint preview, element inspector, share-by-link, task mgmt. Дёшево vs Marker/BugHerd. No code fixes, no PR. |
 
-**Key message:** All of them → ticket. VibeCheck → PR. All paid, VibeCheck free (BYOK).
+**Key message:** All of them → ticket. SimpleReview → PR. All paid, SimpleReview free (BYOK).
 
 **Alternative-статьи (опубликованы 2026-04-18):** `/blog/markerio-alternative/`, `/blog/bugherd-alternative/`, `/blog/usersnap-alternative/`. Все таргетят low-KD KWs (KD 1-4) + "free X" intent.
 
-→ Полный анализ + "alternative to" messaging: [COMPETITORS.md#visual-feedback-tools](COMPETITORS.md#visual-feedback-tools-vibecheck-специфичные-конкуренты)
+→ Полный анализ + "alternative to" messaging: [COMPETITORS.md#visual-feedback-tools](COMPETITORS.md#visual-feedback-tools-simple-review-специфичные-конкуренты)
 → Marker.io keyword intelligence (4431 KW): [marker-io-keyword-insights.md](marker-io-keyword-insights.md)
 
 ## Marketing & SEO
@@ -44,12 +44,12 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [keywords/](keywords/) | SEMrush keyword exports (6 CSV files, 2026-04-14) |
 | [reddit-alpha-beta-users.md](reddit-alpha-beta-users.md) | Reddit strategy for finding alpha/beta users |
 | [backlink-opportunities.md](backlink-opportunities.md) | 13 directories + 6 dev blogs + media pitch targets |
-| [COMPETITORS.md#markerio-markerio](COMPETITORS.md) | Marker.io ($39/mo) + **Feedbucket** (agency feedback tool) + Markup.io (design, adjacent) — прямые конкуренты VibeCheck. Marker.io: контент-паттерн (template hubs, utility tripwire) в COMPETITORS.md |
+| [COMPETITORS.md#markerio-markerio](COMPETITORS.md) | Marker.io ($39/mo) + **Feedbucket** (agency feedback tool) + Markup.io (design, adjacent) — прямые конкуренты SimpleReview. Marker.io: контент-паттерн (template hubs, utility tripwire) в COMPETITORS.md |
 | [advertising-channels.md](advertising-channels.md) | Полная карта рекламы: каталоги, ad networks, newsletters, стратегия по бюджету |
 | [backlinks/](backlinks/) | Raw SEMrush backlink exports (CodeRabbit 4.6K, Qodo 6K domains); `submission-targets-from-competitor-backlinks.csv` — каталоги из бэклинков конкурентов |
 | [topic-research-20260414.xlsx](topic-research-20260414.xlsx) | SEMrush Topic Research — 108 content ideas with volumes, questions, backlinks |
 | [google-2026-content-strategy.md](google-2026-content-strategy.md) | **NEW** Google March 2026 правила: что банят (scaled abuse), что поднимают (Information Gain). Наша стратегия. |
-| [bug-cluster-research.md](bug-cluster-research.md) | **NEW** 30 багов из SO + GitHub, классифицированы по VibeCheck fit и Noxon expertise. Roadmap на 5-10 статей. |
+| [bug-cluster-research.md](bug-cluster-research.md) | **NEW** 30 багов из SO + GitHub, классифицированы по SimpleReview fit и Noxon expertise. Roadmap на 5-10 статей. |
 | [marker-io-keyword-insights.md](marker-io-keyword-insights.md) | **NEW** Анализ marker.io 4431 KW: топ-кластеры, "free" intent, чего НЕ копировать. |
 | [WIKI.md#seo-intelligence](WIKI.md#seo-intelligence-april-2026) | Google March 2026 Core Update итоги + Claude SEO Prompts methodology |
 
@@ -57,7 +57,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 
 Полный список: `backlinks/submission-targets-from-competitor-backlinks.csv`
 
-**Каталоги для сабмишена Vibers/VibeCheck** (DS ≥ 15, не конкуренты):
+**Каталоги для сабмишена Vibers/SimpleReview** (DS ≥ 15, не конкуренты):
 
 | DS | Domain | Тип | Приоритет |
 |----|--------|-----|-----------|
@@ -105,7 +105,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 Каждая статья: 1 конкретный баг + интерактивный live-баннер с демкой бага + наш PR-fix flow + реальная отсылка к коду из Noxon-репо.
 
 **Опубликовано в bug-cluster (2026-04-18):**
-- [x] `/blog/react-usestate-not-updating/` — vol ~929k SO views, KD high. С live-баннером (broken counter → VibeCheck → fixed counter)
+- [x] `/blog/react-usestate-not-updating/` — vol ~929k SO views, KD high. С live-баннером (broken counter → SimpleReview → fixed counter)
 
 **Опубликовано в alternative-кластере (2026-04-18):**
 - [x] `/blog/markerio-alternative/` — KD 1-3, "free alternative" intent
@@ -229,15 +229,15 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [evaluation-round-1.md](evaluation-round-1.md) | First evaluation round results |
 | [evaluation-round-2.md](evaluation-round-2.md) | Second evaluation round results |
 | [improvement-log.md](improvement-log.md) | Log of improvements made |
-| [vibecheck-usage-analysis/INSIGHTS.md](vibecheck-usage-analysis/INSIGHTS.md) | **Opinion — not direction** (2026-04-18). Анализ 93 реальных Fix-It-ов (tamara/maria/julia, 8 дней) joined к .entire-сессиям Claude. Выводы: non-dev shipper = ICP, deployed fix (не PR) = deliverable, full-stack (JS+Python) = scope, issue-anchored Claude session = истинная природа продукта. **Гипотезы, не утверждённое направление.** |
-| [../../../office-hours-designs/2026-04-18-vibecheck-split-positioning-design.md](../../../office-hours-designs/2026-04-18-vibecheck-split-positioning-design.md) | **Opinion — not direction.** /office-hours дизайн-док по split-positioning (`/vibecheck/` team + `/vibecheck/solo/`) и issue-anchoring feature. Premise review, 4 personas (QA, editor, solo non-dev, manager-client), assignment = ship issue-auto-link Phase 1 на claritycult. Не утверждено, ждёт решения. |
+| [simple-review-usage-analysis/INSIGHTS.md](simple-review-usage-analysis/INSIGHTS.md) | **Opinion — not direction** (2026-04-18). Анализ 93 реальных Fix-It-ов (tamara/maria/julia, 8 дней) joined к .entire-сессиям Claude. Выводы: non-dev shipper = ICP, deployed fix (не PR) = deliverable, full-stack (JS+Python) = scope, issue-anchored Claude session = истинная природа продукта. **Гипотезы, не утверждённое направление.** |
+| [../../../office-hours-designs/2026-04-18-simple-review-split-positioning-design.md](../../../office-hours-designs/2026-04-18-simple-review-split-positioning-design.md) | **Opinion — not direction.** /office-hours дизайн-док по split-positioning (`/simple-review/` team + `/simple-review/solo/`) и issue-anchoring feature. Premise review, 4 personas (QA, editor, solo non-dev, manager-client), assignment = ship issue-auto-link Phase 1 на claritycult. Не утверждено, ждёт решения. |
 
-### VibeCheck usage analysis — raw data (2026-04-18)
+### SimpleReview usage analysis — raw data (2026-04-18)
 
 **Статус: гипотезы/мнение, не решение.** Перед действием — второй клиент + разговор с Tamara.
 
 - `/root/op.wpmix.net/prompt-logs/` — historical + live prompt persistence (JSONL per day)
-- `/root/vibers/docs/vibecheck-usage-analysis/` — INSIGHTS.md, joined-sessions.jsonl, outcomes.jsonl
+- `/root/vibers/docs/simple-review-usage-analysis/` — INSIGHTS.md, joined-sessions.jsonl, outcomes.jsonl
 - Surfaced persona mismatch (лендинг vs реальность), potentially killer feature (issue-auto-link), new ICP breadth (команды + solo + manager-client)
 
 ## Community

@@ -52,7 +52,7 @@
 
 ## Скорректированный roadmap
 
-См. [bug-cluster-research.md](bug-cluster-research.md) — 30 багов проранжированы по volume × Noxon credibility × VibeCheck visual fit. Стратегия — owning 3 узких кластера:
+См. [bug-cluster-research.md](bug-cluster-research.md) — 30 багов проранжированы по volume × Noxon credibility × SimpleReview visual fit. Стратегия — owning 3 узких кластера:
 
 1. WordPress/WooCommerce visual + checkout bugs (Noxon NFTsy moat)
 2. React state/effect bugs в AI-coded apps (MCW expertise)

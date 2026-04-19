@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VibeCheck — Website Feedback & Fix Tool (Chrome Extension)</title>
+  <title>SimpleReview — Website Feedback & Fix Tool (Chrome Extension)</title>
   <meta name="description" content="Chrome extension for website feedback. Click any element, leave a comment — the extension sends it to an AI agent that opens a real Pull Request, not just a screenshot.">
-  <link rel="canonical" href="https://onout.org/vibers/vibecheck/">
+  <link rel="canonical" href="https://onout.org/vibers/simple-review/">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="VibeCheck — Website Feedback & Fix Tool">
+  <meta property="og:title" content="SimpleReview — Website Feedback & Fix Tool">
   <meta property="og:description" content="Chrome extension for website feedback. Click any element, send it off — get a real Pull Request from an AI agent. Not just a screenshot tool.">
-  <meta property="og:url" content="https://onout.org/vibers/vibecheck/">
+  <meta property="og:url" content="https://onout.org/vibers/simple-review/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta property="og:image:width" content="800">
   <meta property="og:image:height" content="800">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="VibeCheck — Website Feedback & Fix Tool">
+  <meta name="twitter:title" content="SimpleReview — Website Feedback & Fix Tool">
   <meta name="twitter:description" content="Turn website feedback into real PRs. Click, comment, fix.">
   <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <!-- GA4 -->
@@ -30,9 +30,9 @@
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "VibeCheck",
+    "name": "SimpleReview",
     "description": "Chrome extension for website feedback. Click any element, leave a comment — an AI agent turns it into a real Pull Request.",
-    "url": "https://onout.org/vibers/vibecheck/",
+    "url": "https://onout.org/vibers/simple-review/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Chrome",
     "offers": [
@@ -46,10 +46,10 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {"@type": "Question", "name": "How is VibeCheck different from Marker.io or other feedback tools?", "acceptedAnswer": {"@type": "Answer", "text": "Most feedback tools stop at screenshots and bug reports. VibeCheck turns the issue into a real code fix — a Pull Request, not a ticket."}},
+      {"@type": "Question", "name": "How is SimpleReview different from Marker.io or other feedback tools?", "acceptedAnswer": {"@type": "Answer", "text": "Most feedback tools stop at screenshots and bug reports. SimpleReview turns the issue into a real code fix — a Pull Request, not a ticket."}},
       {"@type": "Question", "name": "Do I need my own AI agent?", "acceptedAnswer": {"@type": "Answer", "text": "Use your own Claude Code or Codex for free. A built-in AI mode is also available with no setup."}},
       {"@type": "Question", "name": "What does the Fix It button do?", "acceptedAnswer": {"@type": "Answer", "text": "It captures the selected element, DOM context, and your comment, then hands the package to your coding agent to generate a fix or patch."}},
-      {"@type": "Question", "name": "What kinds of sites does it work on?", "acceptedAnswer": {"@type": "Answer", "text": "VibeCheck works on any code-accessible site, including React, Vue, Next.js, WordPress, plain HTML/CSS, and legacy codebases. It does not work on closed no-code platforms without file access."}},
+      {"@type": "Question", "name": "What kinds of sites does it work on?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview works on any code-accessible site, including React, Vue, Next.js, WordPress, plain HTML/CSS, and legacy codebases. It does not work on closed no-code platforms without file access."}},
       {"@type": "Question", "name": "What do I get back?", "acceptedAnswer": {"@type": "Answer", "text": "A code fix, not just a screenshot — a patch or PR-ready output produced by your chosen coding agent."}},
       {"@type": "Question", "name": "How much does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "The Chrome extension is free. Use your own Claude Code or Codex for free, or try the optional built-in AI mode."}}
     ]
@@ -1051,11 +1051,11 @@
   <div class="hero-wrap">
   <div class="content-wrap">
   <header class="hero">
-    <div class="hero-badge" data-i18n="badge">VibeCheck &middot; Chrome Extension &mdash; Early Access</div>
+    <div class="hero-badge" data-i18n="badge">SimpleReview &middot; Chrome Extension &mdash; Early Access</div>
     <h1 data-i18n="hero-title">Click any issue on your website. Get a code fix with Claude Code or Codex.</h1>
     <p class="hero-sub" data-i18n="hero-sub">Built for anyone who can spot an issue, but doesn&rsquo;t want to debug it by hand.</p>
     <div class="cta-group">
-      <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'vibecheck',event_label:'download_extension'});" data-i18n="cta-download">Download Extension</a>
+      <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'download_extension'});" data-i18n="cta-download">Download Extension</a>
     </div>
     <p class="beta-note" data-i18n="beta-note">Free with your own Claude Code or Codex. Or use built-in AI &mdash; no setup required. Works on any code-accessible site, including legacy apps, WordPress, and modern frameworks.</p>
   </header>
@@ -1082,7 +1082,7 @@
       </div>
       <div class="browser-url" id="demo-url">onout.org/dashboard/</div>
       <div style="display:flex;align-items:center;gap:5px;background:#fff3ee;border:1px solid #FF6B35;border-radius:5px;padding:3px 10px;font-size:12px;color:#c94b1a;font-weight:600;white-space:nowrap;">
-        <span>👁</span> VibeCheck
+        <span>👁</span> SimpleReview
       </div>
     </div>
 
@@ -1160,7 +1160,7 @@
       </div>
       <div class="demo-panel">
         <div class="panel-header">
-          <span class="panel-logo">VibeCheck</span>
+          <span class="panel-logo">SimpleReview</span>
           <span class="panel-badge badge-bug">bug</span>
         </div>
         <div class="chat-messages" id="chat-bug"></div>
@@ -1233,7 +1233,7 @@
       </div>
       <div class="demo-panel">
         <div class="panel-header">
-          <span class="panel-logo">VibeCheck</span>
+          <span class="panel-logo">SimpleReview</span>
           <span class="panel-badge badge-feature">feature</span>
         </div>
         <div class="chat-messages" id="chat-feature"></div>
@@ -1304,7 +1304,7 @@
       </div>
       <div class="demo-panel">
         <div class="panel-header">
-          <span class="panel-logo">VibeCheck</span>
+          <span class="panel-logo">SimpleReview</span>
           <span class="panel-badge badge-improve">improve</span>
         </div>
         <div class="chat-messages" id="chat-improve"></div>
@@ -1387,7 +1387,7 @@
       </div>
       <div class="demo-panel">
         <div class="panel-header">
-          <span class="panel-logo">VibeCheck</span>
+          <span class="panel-logo">SimpleReview</span>
           <span class="panel-badge" style="background:#21759b;">WordPress</span>
         </div>
         <div class="chat-messages" id="chat-wp"></div>
@@ -1401,7 +1401,7 @@
 
   <div class="content-wrap">
   <section class="what-fixes">
-    <h2 data-i18n="h2-fixes">What VibeCheck can fix</h2>
+    <h2 data-i18n="h2-fixes">What SimpleReview can fix</h2>
     <div class="fixes-grid">
       <div class="fix-item">Copy &amp; content — typos, tone, CTA wording</div>
       <div class="fix-item">CSS, layout &amp; responsive issues</div>
@@ -1419,20 +1419,20 @@
   </section>
 
   <section class="how-it-works" id="how-it-works">
-    <h2 data-i18n="h2-how">How VibeCheck works</h2>
+    <h2 data-i18n="h2-how">How SimpleReview works</h2>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
           <h3>Install the Chrome Extension</h3>
-          <p>Add VibeCheck to Chrome in one click. Works on any code-accessible site &mdash; staging, production, localhost, and legacy apps. Not for closed no-code platforms (Webflow, Wix).</p>
+          <p>Add SimpleReview to Chrome in one click. Works on any code-accessible site &mdash; staging, production, localhost, and legacy apps. Not for closed no-code platforms (Webflow, Wix).</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-content">
           <h3>Select the issue on your site</h3>
-          <p>Hover any button, layout block, text, or image. VibeCheck captures the selected element, DOM context, and file path automatically.</p>
+          <p>Hover any button, layout block, text, or image. SimpleReview captures the selected element, DOM context, and file path automatically.</p>
         </div>
       </div>
       <div class="step">
@@ -1453,13 +1453,13 @@
   </section>
 
   <section class="vs-section">
-    <h2 data-i18n="h2-vs">VibeCheck vs feedback-only tools</h2>
+    <h2 data-i18n="h2-vs">SimpleReview vs feedback-only tools</h2>
     <table class="vs-table">
       <thead>
         <tr>
           <th>Feature</th>
           <th>Marker.io / Feedbucket / Userback</th>
-          <th class="col-vibers">VibeCheck</th>
+          <th class="col-vibers">SimpleReview</th>
         </tr>
       </thead>
       <tbody>
@@ -1508,7 +1508,7 @@
   </section>
 
   <section class="use-cases">
-    <h2 data-i18n="h2-who">Who uses VibeCheck</h2>
+    <h2 data-i18n="h2-who">Who uses SimpleReview</h2>
     <div class="case-grid">
       <div class="case-card">
         <h3>QA testers</h3>
@@ -1532,8 +1532,8 @@
   <section class="faq-section">
     <h2 data-i18n="h2-faq">FAQ</h2>
     <div class="faq-item">
-      <div class="faq-q">How is VibeCheck different from Marker.io or other feedback tools?</div>
-      <div class="faq-a">Most feedback tools stop at screenshots and bug reports. VibeCheck captures the issue and turns it into a real code fix &mdash; a Pull Request, not a ticket.</div>
+      <div class="faq-q">How is SimpleReview different from Marker.io or other feedback tools?</div>
+      <div class="faq-a">Most feedback tools stop at screenshots and bug reports. SimpleReview captures the issue and turns it into a real code fix &mdash; a Pull Request, not a ticket.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Do I need my own AI agent?</div>
@@ -1545,7 +1545,7 @@
     </div>
     <div class="faq-item">
       <div class="faq-q">What kinds of sites does it work on?</div>
-      <div class="faq-a">VibeCheck works on any code-accessible site, including React, Vue, Next.js, WordPress, plain HTML/CSS, and legacy codebases. It does not work on closed no-code platforms without file access.</div>
+      <div class="faq-a">SimpleReview works on any code-accessible site, including React, Vue, Next.js, WordPress, plain HTML/CSS, and legacy codebases. It does not work on closed no-code platforms without file access.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">What do I get back?</div>
@@ -1558,9 +1558,9 @@
   </section>
 
   <div class="cta-box">
-    <h2 data-i18n="h2-cta">Get early access to VibeCheck</h2>
+    <h2 data-i18n="h2-cta">Get early access to SimpleReview</h2>
     <p data-i18n="cta-sub">Early access is open. Works with GitHub, WordPress (FTP/SSH), and any code-accessible site.</p>
-    <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-white" onclick="gtag('event','generate_lead',{event_category:'vibecheck',event_label:'join_waitlist_bottom'});" data-i18n="cta-primary-bottom">Join Early Access &rarr;</a>
+    <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-white" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'join_waitlist_bottom'});" data-i18n="cta-primary-bottom">Join Early Access &rarr;</a>
   </div>
 
   <p style="font-size:14px; color:#555; margin: 32px 0 16px;">
@@ -1570,7 +1570,7 @@
   </p>
 
   <footer>
-    <p>VibeCheck is a product by <a href="/vibers/">Vibers</a> &mdash; Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Blog</a> &nbsp;|&nbsp; <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a></p>
+    <p>SimpleReview is a product by <a href="/vibers/">Vibers</a> &mdash; Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Blog</a> &nbsp;|&nbsp; <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a></p>
   </footer>
   </div><!-- /content-wrap main -->
 
@@ -1942,7 +1942,7 @@ switchTab(TAB_DATA[initTab] ? initTab : 'bug');
 
 <script>
 var ru = {
-  'badge':               'VibeCheck · Chrome Расширение — Ранний доступ',
+  'badge':               'SimpleReview · Chrome Расширение — Ранний доступ',
   'hero-title':          'Кликни на любой баг на сайте. Получи код-фикс через Claude Code или Codex.',
   'hero-sub':            'Для всех, кто видит проблему, но не хочет разбираться с ней руками.',
   'cta-download':        'Скачать расширение',
@@ -1954,12 +1954,12 @@ var ru = {
   'tab-feature':         '✨ Фича',
   'tab-improve':         '💡 Копирайтинг / UX',
   'tab-wp':              '🔌 WordPress',
-  'h2-fixes':            'Что исправляет VibeCheck',
-  'h2-how':              'Как работает VibeCheck',
-  'h2-vs':               'VibeCheck vs инструменты только для фидбека',
-  'h2-who':              'Кто использует VibeCheck',
+  'h2-fixes':            'Что исправляет SimpleReview',
+  'h2-how':              'Как работает SimpleReview',
+  'h2-vs':               'SimpleReview vs инструменты только для фидбека',
+  'h2-who':              'Кто использует SimpleReview',
   'h2-faq':              'Частые вопросы',
-  'h2-cta':              'Получить ранний доступ к VibeCheck',
+  'h2-cta':              'Получить ранний доступ к SimpleReview',
   'cta-sub':             'Ранний доступ открыт. GitHub, WordPress (FTP/SSH) и любой сайт с доступом к коду.',
   'cta-primary-bottom':  'Получить ранний доступ →'
 };

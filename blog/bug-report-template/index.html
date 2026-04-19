@@ -45,7 +45,7 @@
       "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
     },
     "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/blog/bug-report-template/" },
-    "keywords": ["bug report template", "bug report sample", "software bug report template", "bug template", "how to write a bug report", "bug report format", "markdown bug report", "vibecheck"]
+    "keywords": ["bug report template", "bug report sample", "software bug report template", "bug template", "how to write a bug report", "bug report format", "markdown bug report", "simple-review"]
   }
   </script>
 
@@ -75,7 +75,7 @@
         "name": "How do I write a bug report for a non-technical team?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Use the simplified 5-field plain-text version: what page or screen, what you did, what happened, what you expected, screenshot. Drop technical fields like console errors, stack traces, and browser version — the QA lead or developer can fill those in later if needed. The goal for non-technical reporters is capturing the user-visible problem clearly enough that someone technical can reproduce it. Even better, give them a tool like VibeCheck that auto-captures the technical fields from a single click."
+          "text": "Use the simplified 5-field plain-text version: what page or screen, what you did, what happened, what you expected, screenshot. Drop technical fields like console errors, stack traces, and browser version — the QA lead or developer can fill those in later if needed. The goal for non-technical reporters is capturing the user-visible problem clearly enough that someone technical can reproduce it. Even better, give them a tool like SimpleReview that auto-captures the technical fields from a single click."
         }
       },
       {
@@ -91,7 +91,7 @@
         "name": "Can I auto-generate bug reports?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Tools like VibeCheck (free Chrome extension), Marker.io ($39/mo), BugHerd, and Usersnap let a reporter click an element on the page and auto-capture the URL, screenshot, browser, OS, viewport, console errors, and DOM path. The reporter only types the description. This eliminates 6-7 of the 8 template fields and removes the most common failure mode of bug reporting: missing or incorrect environment data."
+          "text": "Yes. Tools like SimpleReview (free Chrome extension), Marker.io ($39/mo), BugHerd, and Usersnap let a reporter click an element on the page and auto-capture the URL, screenshot, browser, OS, viewport, console errors, and DOM path. The reporter only types the description. This eliminates 6-7 of the 8 template fields and removes the most common failure mode of bug reporting: missing or incorrect environment data."
         }
       },
       {
@@ -211,7 +211,7 @@
   <nav class="site-nav">
     <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
     <div class="nav-links">
-      <a href="/vibers/vibecheck/">VibeCheck Extension</a>
+      <a href="/vibers/simple-review/">SimpleReview Extension</a>
       <a href="/vibers/blog/">Blog</a>
       <a href="https://t.me/onoutnoxon">Telegram</a>
     </div>
@@ -233,7 +233,7 @@
       <li>A good bug report has <strong>8 fields</strong>: title, environment, repro steps, expected, actual, screenshot, severity, console errors. Missing any one of them costs the developer 10–30 minutes of guesswork.</li>
       <li>The Markdown version below pastes directly into <strong>GitHub Issues, Linear, and Jira</strong>. The plain-text version is for non-technical reporters.</li>
       <li>Severity rubric: <strong>S1</strong> (production down) → <strong>S4</strong> (cosmetic). Without a rubric, every bug becomes "high priority."</li>
-      <li>Or skip the template entirely — <a href="/vibers/vibecheck/">VibeCheck</a> auto-captures URL, screenshot, browser, console errors, and DOM element from a single click. Reporter just types the description.</li>
+      <li>Or skip the template entirely — <a href="/vibers/simple-review/">SimpleReview</a> auto-captures URL, screenshot, browser, console errors, and DOM element from a single click. Reporter just types the description.</li>
     </ul>
   </div>
 
@@ -384,17 +384,17 @@ Page POSTs to <span class="c-s">/api/checkout/create</span>, server returns <spa
     <div class="ap-fix"><strong>Fix:</strong> Always capture browser + version + OS. A bug that reproduces in Safari but not Chrome is a different bug than one that reproduces in both. Without environment data, the developer wastes an hour failing to reproduce on the wrong browser.</div>
   </div>
 
-  <h2>Skip the Template: Use VibeCheck Instead</h2>
+  <h2>Skip the Template: Use SimpleReview Instead</h2>
 
   <p>Here is the honest part. If your team uses GitHub, Linear, or any modern tracker, the bug report template above is solving a 2010s problem. The 2026 version is: a tool that captures all 8 fields automatically when the reporter clicks the broken element.</p>
 
   <div class="definition">
-    <strong><a href="/vibers/vibecheck/">VibeCheck</a></strong> is a free Chrome extension. The reporter opens the broken page, clicks the broken element, types one sentence describing the issue. VibeCheck auto-captures the URL, screenshot, browser, OS, viewport, console errors, DOM path of the clicked element, and any active network errors. The output is a structured bug report with all 8 template fields filled in — without the reporter ever seeing a form.</div>
+    <strong><a href="/vibers/simple-review/">SimpleReview</a></strong> is a free Chrome extension. The reporter opens the broken page, clicks the broken element, types one sentence describing the issue. SimpleReview auto-captures the URL, screenshot, browser, OS, viewport, console errors, DOM path of the clicked element, and any active network errors. The output is a structured bug report with all 8 template fields filled in — without the reporter ever seeing a form.</div>
 
   <div class="scenario-banner">
     <div class="scenario-label">Scenario — Real-world bug capture</div>
     <div class="scenario-title">Client opens site → clicks broken button → 30 seconds later, perfect bug report exists</div>
-    <p class="scenario-body">A client testing a staging build notices the "Add to cart" button overflows on her iPhone. With the template approach, she'd need to: take a screenshot, open Notion, copy the template, paste it, fill in 8 fields including browser version (which she has to look up), describe the steps, write expected vs actual, classify severity, then send it to the dev team. Realistic time: <strong>10–15 minutes</strong>, and she'll likely skip the technical fields. With VibeCheck: she clicks the button, types <em>"this overflows on mobile"</em>, hits submit. URL, viewport (375×812), browser (Safari 18.2 iOS), screenshot of the button, DOM path (<code>div.product-card &gt; button.add-to-cart</code>), and any console warnings are auto-attached.</p>
+    <p class="scenario-body">A client testing a staging build notices the "Add to cart" button overflows on her iPhone. With the template approach, she'd need to: take a screenshot, open Notion, copy the template, paste it, fill in 8 fields including browser version (which she has to look up), describe the steps, write expected vs actual, classify severity, then send it to the dev team. Realistic time: <strong>10–15 minutes</strong>, and she'll likely skip the technical fields. With SimpleReview: she clicks the button, types <em>"this overflows on mobile"</em>, hits submit. URL, viewport (375×812), browser (Safari 18.2 iOS), screenshot of the button, DOM path (<code>div.product-card &gt; button.add-to-cart</code>), and any console warnings are auto-attached.</p>
     <div class="scenario-result">Result: bug report with all 8 fields populated, sent to GitHub Issues. Total time: 30 seconds.</div>
   </div>
 
@@ -416,7 +416,7 @@ Page POSTs to <span class="c-s">/api/checkout/create</span>, server returns <spa
       </ul>
     </div>
     <div class="vs-card good">
-      <h4>VibeCheck (auto)</h4>
+      <h4>SimpleReview (auto)</h4>
       <ul>
         <li>Reporter clicks the broken element</li>
         <li>Types one-line description</li>
@@ -431,7 +431,7 @@ Page POSTs to <span class="c-s">/api/checkout/create</span>, server returns <spa
     </div>
   </div>
 
-  <p>The template still has its place. If your reporter doesn't have Chrome, or you need a paper trail in a Word doc for compliance, or your client refuses to install extensions, the Markdown and plain-text templates above are the right tool. For everyone else: skip the template, install <a href="/vibers/vibecheck/">VibeCheck</a>.</p>
+  <p>The template still has its place. If your reporter doesn't have Chrome, or you need a paper trail in a Word doc for compliance, or your client refuses to install extensions, the Markdown and plain-text templates above are the right tool. For everyone else: skip the template, install <a href="/vibers/simple-review/">SimpleReview</a>.</p>
 
   <h2>Tools That Use This Template</h2>
 
@@ -450,7 +450,7 @@ Page POSTs to <span class="c-s">/api/checkout/create</span>, server returns <spa
         <tr><td><strong>Linear</strong></td><td>Manual via templates</td><td>$8/user/mo</td><td>Product teams that already live in Linear</td></tr>
         <tr><td><strong>Jira</strong></td><td>Manual + plugins (Marker.io, Bugasura, etc.)</td><td>$8.15/user/mo + plugin cost</td><td>Enterprise QA workflows</td></tr>
         <tr><td><strong><a href="/vibers/blog/markerio-alternative/">Marker.io</a></strong></td><td>Semi-auto: click element, fills env + screenshot, manual description</td><td>$39/mo (Essential)</td><td>Agencies doing client UAT</td></tr>
-        <tr><td><strong><a href="/vibers/vibecheck/">VibeCheck</a></strong></td><td>Fully auto: click element, all 8 fields filled, manual one-line description</td><td>Free</td><td>Devs and PMs who want fixes, not tickets</td></tr>
+        <tr><td><strong><a href="/vibers/simple-review/">SimpleReview</a></strong></td><td>Fully auto: click element, all 8 fields filled, manual one-line description</td><td>Free</td><td>Devs and PMs who want fixes, not tickets</td></tr>
       </tbody>
     </table>
   </div>
@@ -476,7 +476,7 @@ Page POSTs to <span class="c-s">/api/checkout/create</span>, server returns <spa
 
     <div class="faq-item">
       <p class="faq-q">How do I write a bug report for a non-technical team?</p>
-      <p class="faq-a">Use the simplified 5-field plain-text version above: what page or screen, what you did, what happened, what you expected, screenshot. Drop technical fields like console errors, stack traces, and browser version — the QA lead or developer can fill those in later if needed. The goal for non-technical reporters is capturing the user-visible problem clearly enough that someone technical can reproduce it. Even better, give them a tool like VibeCheck that auto-captures the technical fields from a single click.</p>
+      <p class="faq-a">Use the simplified 5-field plain-text version above: what page or screen, what you did, what happened, what you expected, screenshot. Drop technical fields like console errors, stack traces, and browser version — the QA lead or developer can fill those in later if needed. The goal for non-technical reporters is capturing the user-visible problem clearly enough that someone technical can reproduce it. Even better, give them a tool like SimpleReview that auto-captures the technical fields from a single click.</p>
     </div>
 
     <div class="faq-item">
@@ -486,7 +486,7 @@ Page POSTs to <span class="c-s">/api/checkout/create</span>, server returns <spa
 
     <div class="faq-item">
       <p class="faq-q">Can I auto-generate bug reports?</p>
-      <p class="faq-a">Yes. Tools like VibeCheck (free Chrome extension), Marker.io ($39/mo), BugHerd, and Usersnap let a reporter click an element on the page and auto-capture the URL, screenshot, browser, OS, viewport, console errors, and DOM path. The reporter only types the description. This eliminates 6–7 of the 8 template fields and removes the most common failure mode of bug reporting: missing or incorrect environment data.</p>
+      <p class="faq-a">Yes. Tools like SimpleReview (free Chrome extension), Marker.io ($39/mo), BugHerd, and Usersnap let a reporter click an element on the page and auto-capture the URL, screenshot, browser, OS, viewport, console errors, and DOM path. The reporter only types the description. This eliminates 6–7 of the 8 template fields and removes the most common failure mode of bug reporting: missing or incorrect environment data.</p>
     </div>
 
     <div class="faq-item">
@@ -497,8 +497,8 @@ Page POSTs to <span class="c-s">/api/checkout/create</span>, server returns <spa
 
   <div class="cta-block">
     <h3>Stop writing bug reports by hand.</h3>
-    <p>VibeCheck captures URL, browser, OS, screenshot, console errors, and DOM element from a single click. Reporter types one sentence. Free Chrome extension, no subscription, works on any URL.</p>
-    <a href="/vibers/vibecheck/" class="cta-btn">Try VibeCheck Free</a>
+    <p>SimpleReview captures URL, browser, OS, screenshot, console errors, and DOM element from a single click. Reporter types one sentence. Free Chrome extension, no subscription, works on any URL.</p>
+    <a href="/vibers/simple-review/" class="cta-btn">Try SimpleReview Free</a>
     <a href="/vibers/" class="cta-secondary">Or get human review →</a>
   </div>
 
@@ -533,7 +533,7 @@ Page POSTs to <span class="c-s">/api/checkout/create</span>, server returns <spa
 
   <footer class="site-footer">
     <span>© 2026 Vibers — Human Code Review</span>
-    <span><a href="/vibers/">Home</a> · <a href="/vibers/blog/">Blog</a> · <a href="/vibers/vibecheck/">VibeCheck Extension</a></span>
+    <span><a href="/vibers/">Home</a> · <a href="/vibers/blog/">Blog</a> · <a href="/vibers/simple-review/">SimpleReview Extension</a></span>
   </footer>
 
 </div>

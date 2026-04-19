@@ -1,4 +1,4 @@
-# VibeCheck Usage Analysis — first 8 days of real data
+# SimpleReview Usage Analysis — first 8 days of real data
 
 Source:
 - Nginx access logs (historical backfill, 93 Fix-Its from `tamara`, `maria`, `julia`).
@@ -20,7 +20,7 @@ Window: 2026-04-11 — 2026-04-18 (8 days).
 **93 Fix-Its → ~135 commits, ~95 pushes, ~120 files edited.**
 95% of sessions produced real file changes. Not theater.
 
-## Finding 1: VibeCheck isn't a lightweight feedback tool — it's a non-dev dev-session launcher
+## Finding 1: SimpleReview isn't a lightweight feedback tool — it's a non-dev dev-session launcher
 
 Median session is 4–9 min, but chat-round counts are 21–57. That's **deep back-
 and-forth between a non-developer and Claude**, not fire-and-forget. The
