@@ -1776,6 +1776,8 @@ function resetTab(tab) {
   }
 }
 
+var animStarted = false; // first animation waits for banner to scroll into view
+
 function switchTab(tab, skipHistory) {
   if (!TAB_DATA[tab]) tab = 'bug';
   animGen++; // invalidates all pending callbacks from previous tab
@@ -1796,14 +1798,22 @@ function switchTab(tab, skipHistory) {
 
   // Chat stays empty until "Fix it" is clicked (see applyFix).
 
-  // Type comment into inline popup near selected element
-  typeText('tw-' + tab, data.text, 1200, gen, function() {
-    setTimeout(function() { applyFix(tab, gen); }, 500);
-  });
   currentTab = tab;
   if (!skipHistory) {
     history.replaceState(null, '', '#' + tab);
   }
+
+  // Gate the first animation on viewport visibility; subsequent tab clicks animate immediately.
+  if (animStarted) {
+    startTabAnimation(tab, gen);
+  }
+}
+
+function startTabAnimation(tab, gen) {
+  var data = TAB_DATA[tab];
+  typeText('tw-' + tab, data.text, 1200, gen, function() {
+    setTimeout(function() { applyFix(tab, gen); }, 500);
+  });
 }
 
 window.addEventListener('hashchange', function() {
@@ -1813,9 +1823,29 @@ window.addEventListener('hashchange', function() {
   }
 });
 
-// init
+// init — set up tab state, but hold the animation until the banner scrolls into view
 var initTab = location.hash.replace('#', '');
 switchTab(TAB_DATA[initTab] ? initTab : 'bug');
+
+(function gateAnimOnScroll() {
+  var banner = document.querySelector('.demo-banner');
+  if (!banner) return;
+  function trigger() {
+    if (animStarted) return;
+    animStarted = true;
+    startTabAnimation(currentTab, animGen);
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { trigger(); io.disconnect(); }
+      });
+    }, { threshold: 0.25 });
+    io.observe(banner);
+  } else {
+    trigger(); // fallback for ancient browsers
+  }
+})();
 </script>
 <div id="lang-switch">
   <button id="btn-en" onclick="setLang('en')">EN</button>
