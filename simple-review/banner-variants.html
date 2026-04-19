@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero banner variants — 60×60</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f4f4f6; margin: 0; padding: 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 30px;
+  }
+  h1 { font-size: 22px; margin: 0 0 10px; color: #1a1a1a; }
+  .grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 40px; max-width: 760px;
+  }
+  .card {
+    background: #fff; border: 1px solid #e4e4e4; border-radius: 12px;
+    padding: 30px; display: flex; flex-direction: column; align-items: center;
+    gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .name { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+  .desc { font-size: 12px; color: #888; text-align: center; max-width: 240px; }
+
+  /* Show banner at 1× and at 3× side-by-side for inspection */
+  .preview-row { display: flex; gap: 30px; align-items: center; }
+  .label-1x { font-size: 10px; color: #aaa; text-align: center; margin-top: 6px; }
+  .scale-3x { transform: scale(3); transform-origin: top left; }
+  .scale-3x-wrap { width: 180px; height: 180px; overflow: hidden; }
+
+  /* ============ COMMON: 60x60 frame ============ */
+  .banner {
+    width: 60px; height: 60px; flex-shrink: 0;
+    background: #fff; border: 1px solid #e4e4e4; border-radius: 8px;
+    box-sizing: border-box; padding: 4px; position: relative;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow: hidden;
+  }
+
+  /* ============ V1: highlighted button + tiny popup below ============ */
+  .v1-line { height: 2px; background: #d8d8d8; border-radius: 1px; margin-bottom: 2px; }
+  .v1-line.b { background: #1a1a1a; width: 60%; }
+  .v1-line.w70 { width: 70%; }
+  .v1-target {
+    display: inline-block;
+    border: 1.5px dashed #FF6B35; border-radius: 3px;
+    padding: 1.5px 5px; background: rgba(255,107,53,0.08);
+    box-shadow: 0 0 0 1.5px rgba(255,107,53,0.2);
+    color: #FF6B35; font-size: 6px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.2px; line-height: 1;
+    margin-top: 3px;
+  }
+  .v1-cursor { font-size: 8px; line-height: 1; vertical-align: middle; margin-left: 1px; }
+  .v1-popup {
+    position: absolute; left: 4px; right: 4px; bottom: 4px;
+    background: #fff; border: 1px solid #ccc; border-radius: 3px;
+    padding: 2px 3px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    display: flex; align-items: center; gap: 3px;
+  }
+  .v1-popup .t {
+    font-size: 6px; color: #1a1a1a; flex: 1;
+    font-family: ui-monospace, SFMono-Regular, monospace; line-height: 1.1;
+  }
+  .v1-popup .fix {
+    background: #FF6B35; color: #fff; font-size: 6px; font-weight: 700;
+    padding: 1.5px 4px; border-radius: 2px; line-height: 1; flex-shrink: 0;
+  }
+
+  /* ============ V2: just one BIG highlighted button + Fix it tag ============ */
+  .v2 { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 4px; padding-top: 2px; position: relative; }
+  .v2-target {
+    border: 2px dashed #FF6B35; border-radius: 4px;
+    padding: 5px 10px; background: rgba(255,107,53,0.08);
+    box-shadow: 0 0 0 2px rgba(255,107,53,0.2);
+    color: #1a1a1a; font-size: 8px; font-weight: 700; line-height: 1;
+    position: relative;
+  }
+  .v2-target::after {
+    content: '👆'; position: absolute; right: -10px; bottom: -8px; font-size: 11px; line-height: 1;
+  }
+  .v2-fix {
+    background: #FF6B35; color: #fff; font-size: 7px; font-weight: 700;
+    padding: 2.5px 7px; border-radius: 3px; line-height: 1;
+  }
+
+  /* ============ V3: split — element left, popup right ============ */
+  .v3 { display: flex; gap: 4px; height: 100%; }
+  .v3-left {
+    width: 24px; background: #fafafa; border: 1px solid #ececec; border-radius: 3px;
+    padding: 3px; display: flex; flex-direction: column; gap: 2px; position: relative;
+  }
+  .v3-l { height: 1.5px; background: #d8d8d8; border-radius: 1px; width: 80%; }
+  .v3-l.b { background: #1a1a1a; }
+  .v3-target {
+    margin-top: auto; border: 1.5px dashed #FF6B35; border-radius: 2px;
+    background: rgba(255,107,53,0.15); height: 8px;
+    box-shadow: 0 0 0 1.5px rgba(255,107,53,0.2);
+  }
+  .v3-cursor { position: absolute; bottom: -2px; right: -3px; font-size: 8px; line-height: 1; }
+  .v3-right { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+  .v3-right .t {
+    font-size: 6.5px; color: #1a1a1a; line-height: 1.1;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+  }
+  .v3-right .fix {
+    background: #FF6B35; color: #fff; font-size: 7px; font-weight: 700;
+    padding: 2px 5px; border-radius: 2px; line-height: 1;
+    align-self: flex-start;
+  }
+
+  /* ============ V4: speech bubble pointing at element ============ */
+  .v4 { height: 100%; display: flex; flex-direction: column; }
+  .v4-line { height: 1.5px; background: #d8d8d8; border-radius: 1px; margin-bottom: 2px; }
+  .v4-line.b { background: #1a1a1a; width: 50%; }
+  .v4-line.w70 { width: 70%; }
+  .v4-target-row { display: flex; align-items: center; gap: 3px; margin-top: 3px; }
+  .v4-target {
+    border: 1.5px dashed #FF6B35; border-radius: 8px;
+    padding: 2px 6px; background: rgba(255,107,53,0.1);
+    box-shadow: 0 0 0 1.5px rgba(255,107,53,0.2);
+    color: #FF6B35; font-size: 6.5px; font-weight: 700;
+    text-transform: uppercase; line-height: 1;
+  }
+  .v4-cursor { font-size: 9px; line-height: 1; }
+  .v4-bubble {
+    position: absolute; left: 4px; right: 4px; bottom: 4px;
+    background: #FF6B35; color: #fff; border-radius: 4px;
+    padding: 3px 5px; display: flex; align-items: center; gap: 4px;
+    box-shadow: 0 2px 5px rgba(255,107,53,0.4);
+  }
+  .v4-bubble::before {
+    content: ''; position: absolute; top: -4px; left: 12px;
+    width: 0; height: 0;
+    border-left: 4px solid transparent; border-right: 4px solid transparent;
+    border-bottom: 4px solid #FF6B35;
+  }
+  .v4-bubble .t {
+    font-size: 6.5px; flex: 1; line-height: 1.1; font-weight: 600;
+  }
+  .v4-bubble .fix {
+    background: #fff; color: #FF6B35; font-size: 6.5px; font-weight: 700;
+    padding: 1.5px 4px; border-radius: 2px; line-height: 1; flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Hero banner — 60×60px — выбери один из 4</h1>
+
+<div class="grid">
+
+  <!-- VARIANT 1 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v1-line b"></div>
+          <div class="v1-line w70"></div>
+          <div>
+            <span class="v1-target">Buy</span>
+            <span class="v1-cursor">👆</span>
+          </div>
+          <div class="v1-popup">
+            <span class="t">unclickable</span>
+            <span class="fix">Fix →</span>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v1-line b"></div>
+              <div class="v1-line w70"></div>
+              <div>
+                <span class="v1-target">Buy</span>
+                <span class="v1-cursor">👆</span>
+              </div>
+              <div class="v1-popup">
+                <span class="t">unclickable</span>
+                <span class="fix">Fix →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 1 — Wireframe + popup</div>
+    <div class="desc">Текст + кнопка "Buy" в рамке + 👆 + горизонтальный поп-ап с "Fix →"</div>
+  </div>
+
+  <!-- VARIANT 2 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v2">
+            <div class="v2-target">Submit</div>
+            <div class="v2-fix">Fix it →</div>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v2">
+                <div class="v2-target">Submit</div>
+                <div class="v2-fix">Fix it →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 2 — Минимум</div>
+    <div class="desc">Только большая выделенная кнопка Submit + 👆 + ярлык Fix it. Без вайрфрейма.</div>
+  </div>
+
+  <!-- VARIANT 3 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v3">
+            <div class="v3-left">
+              <div class="v3-l b"></div>
+              <div class="v3-l"></div>
+              <div class="v3-l" style="width:60%"></div>
+              <div class="v3-target"></div>
+              <span class="v3-cursor">👆</span>
+            </div>
+            <div class="v3-right">
+              <div class="t">btn<br>broken</div>
+              <span class="fix">Fix →</span>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v3">
+                <div class="v3-left">
+                  <div class="v3-l b"></div>
+                  <div class="v3-l"></div>
+                  <div class="v3-l" style="width:60%"></div>
+                  <div class="v3-target"></div>
+                  <span class="v3-cursor">👆</span>
+                </div>
+                <div class="v3-right">
+                  <div class="t">btn<br>broken</div>
+                  <span class="fix">Fix →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 3 — Split</div>
+    <div class="desc">Слева мини-страница с выделенным элементом, справа коммент + Fix</div>
+  </div>
+
+  <!-- VARIANT 4 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v4">
+            <div class="v4-line b"></div>
+            <div class="v4-line"></div>
+            <div class="v4-line w70"></div>
+            <div class="v4-target-row">
+              <div class="v4-target">Subscribe</div>
+              <span class="v4-cursor">👆</span>
+            </div>
+          </div>
+          <div class="v4-bubble">
+            <span class="t">broken</span>
+            <span class="fix">Fix →</span>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v4">
+                <div class="v4-line b"></div>
+                <div class="v4-line"></div>
+                <div class="v4-line w70"></div>
+                <div class="v4-target-row">
+                  <div class="v4-target">Subscribe</div>
+                  <span class="v4-cursor">👆</span>
+                </div>
+              </div>
+              <div class="v4-bubble">
+                <span class="t">broken</span>
+                <span class="fix">Fix →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 4 — Speech bubble</div>
+    <div class="desc">Pill-кнопка Subscribe + оранжевая speech-bubble с хвостиком и Fix →</div>
+  </div>
+
+</div>
+
+<p style="color:#888;font-size:13px;max-width:600px;text-align:center;">
+  Слева — реальный размер 60×60px. Справа — увеличение ×3 для оценки деталей.
+  Скажи номер варианта (1–4) — поставлю на лендинг.
+</p>
+
+</body>
+</html>
