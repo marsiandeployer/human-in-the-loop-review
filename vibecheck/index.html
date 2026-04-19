@@ -580,14 +580,144 @@
       50% { transform: translateY(-3px); }
     }
     .demo-panel {
-      width: 200px;
+      width: 260px;
       flex-shrink: 0;
       background: #f7f7f7;
       border-left: 1px solid #e0e0e0;
-      padding: 14px;
+      padding: 14px 12px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      min-height: 280px;
+    }
+    /* Chat panel (new) */
+    .chat-messages {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .bubble {
+      font-size: 12px;
+      line-height: 1.45;
+      border-radius: 9px;
+      padding: 7px 10px;
+      max-width: 95%;
+      word-break: break-word;
+      animation: bubbleIn .35s ease;
+    }
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .bubble-system {
+      background: #eef1f5;
+      color: #555;
+      font-size: 11px;
+      border: 1px solid #e0e4ea;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
+    }
+    .bubble-user {
+      background: #e8f0fe;
+      color: #1a3a6b;
+      border: 1px solid #c7dbf5;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+    .bubble-agent {
+      background: #fff3ee;
+      color: #8a3a0e;
+      border: 1px solid #ffd3bd;
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+      white-space: pre-line;
+    }
+    .bubble-agent.pr    { background: #f0faf4; color: #166534; border-color: #86efac; }
+    .bubble-agent.deploy{ background: #eff6ff; color: #1e40af; border-color: #93c5fd; }
+    /* Empty chat placeholder */
+    .chat-messages:empty::before {
+      content: '💬 Chat opens after Fix it';
+      display: block;
+      margin: auto;
+      color: #b8b8b8;
+      font-size: 11px;
+      text-align: center;
+      padding: 20px 10px;
+    }
+    .chat-messages:empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Inline popup (near selected element) */
+    .inline-popup {
+      position: absolute;
+      width: 230px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.12);
+      padding: 10px;
+      z-index: 5;
+      font-size: 12px;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .inline-popup::before {
+      content: '';
+      position: absolute;
+      top: -7px;
+      left: 22px;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border-left: 1px solid #ddd;
+      border-top: 1px solid #ddd;
+      transform: rotate(45deg);
+    }
+    .inline-popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #222;
+      font-size: 12px;
+    }
+    .inline-popup-header .close-x {
+      color: #bbb;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .inline-popup-ta {
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      padding: 7px 9px;
+      font-size: 12px;
+      color: #333;
+      line-height: 1.45;
+      min-height: 48px;
+      margin-bottom: 8px;
+    }
+    .inline-popup-fix {
+      background: #FF6B35;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      animation: pulse-btn 2s ease-in-out infinite;
+    }
+    .inline-popup.sending {
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
     }
     .panel-header {
       display: flex;
@@ -926,6 +1056,11 @@
             <div class="demo-kpi-value">$48,210</div>
             <div style="font-size:11px;color:#16a34a;margin-top:3px;font-weight:600;">↑ 12.4%</div>
             <span class="demo-kpi-btn" id="mock-btn-bug">View transaction details</span>
+            <div class="inline-popup" id="ipop-bug" style="top:calc(100% + 12px);left:-4px;">
+              <div class="inline-popup-header"><span>Code review</span><span class="close-x">×</span></div>
+              <div class="inline-popup-ta"><span class="tw" id="tw-bug"></span><span class="type-cursor">|</span></div>
+              <button class="inline-popup-fix">Fix it →</button>
+            </div>
           </div>
           <!-- wireframe KPI cards -->
           <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
@@ -966,25 +1101,7 @@
           <span class="panel-logo">VibeCheck</span>
           <span class="panel-badge badge-bug">bug</span>
         </div>
-        <div class="panel-element">
-          <div class="panel-element-label">Selected element</div>
-          <div class="panel-element-tag">&lt;span class="kpi-btn"&gt;</div>
-          <div class="panel-element-text">"View transaction details"</div>
-          <div class="panel-element-path">.kpi-card &gt; span.btn</div>
-          <div class="panel-element-file">src/components/dashboard/KPICard.tsx</div>
-        </div>
-        <div class="panel-comment-wrap">
-          <span class="step-badge step-badge-panel tip-left" data-tip="Step 2: Describe what you want">2</span>
-          <div class="panel-comment-label">Comment</div>
-          <div class="panel-comment-box"><span class="tw" id="tw-bug"></span><span class="type-cursor">|</span></div>
-        </div>
-        <div class="panel-btn-wrap">
-          <span class="step-badge step-badge-panel tip-left" data-tip="Step 3: Send it off and get a Pull Request">3</span>
-          <button class="panel-btn-fix" id="fix-btn-bug">Send it off →</button>
-          
-        </div>
-        <div class="panel-success" id="ps-bug"></div>
-        <div class="panel-deploy" id="pd-bug"></div>
+        <div class="chat-messages" id="chat-bug"></div>
       </div>
     </div>
 
@@ -1024,6 +1141,11 @@
           <div style="display:flex;justify-content:space-between;font-size:12px;color:#444;padding:5px 0;border-bottom:1px solid #f0f0f0;"><span>Alex Johnson</span><span style="color:#16a34a;font-weight:600;">$299</span></div>
           <div style="display:flex;justify-content:space-between;font-size:12px;color:#444;padding:5px 0;border-bottom:1px solid #f0f0f0;"><span>Maria García</span><span style="color:#16a34a;font-weight:600;">$49</span></div>
           <div style="display:flex;justify-content:space-between;font-size:12px;color:#444;padding:5px 0;"><span>Sam Park</span><span style="color:#16a34a;font-weight:600;">$129</span></div>
+          <div class="inline-popup" id="ipop-feature" style="top:calc(100% + 12px);left:-4px;">
+            <div class="inline-popup-header"><span>Code review</span><span class="close-x">×</span></div>
+            <div class="inline-popup-ta"><span class="tw" id="tw-feature"></span><span class="type-cursor">|</span></div>
+            <button class="inline-popup-fix">Fix it →</button>
+          </div>
         </div>
         <!-- wireframe summary row -->
         <div style="margin-top:10px;display:flex;gap:8px;">
@@ -1042,25 +1164,7 @@
           <span class="panel-logo">VibeCheck</span>
           <span class="panel-badge badge-feature">feature</span>
         </div>
-        <div class="panel-element">
-          <div class="panel-element-label">Selected element</div>
-          <div class="panel-element-tag">&lt;section class="transactions"&gt;</div>
-          <div class="panel-element-text">Recent Transactions</div>
-          <div class="panel-element-path">main &gt; section.transactions</div>
-          <div class="panel-element-file">src/components/TransactionsTable.tsx</div>
-        </div>
-        <div class="panel-comment-wrap">
-          <span class="step-badge step-badge-panel tip-left" data-tip="Step 2: Describe what you want">2</span>
-          <div class="panel-comment-label">Comment</div>
-          <div class="panel-comment-box"><span class="tw" id="tw-feature"></span><span class="type-cursor">|</span></div>
-        </div>
-        <div class="panel-btn-wrap">
-          <span class="step-badge step-badge-panel tip-left" data-tip="Step 3: Send it off and get a Pull Request">3</span>
-          <button class="panel-btn-fix" id="fix-btn-feature" style="background:#7c3aed;">Send it off →</button>
-          
-        </div>
-        <div class="panel-success" id="ps-feature"></div>
-        <div class="panel-deploy" id="pd-feature"></div>
+        <div class="chat-messages" id="chat-feature"></div>
       </div>
     </div>
 
@@ -1087,6 +1191,11 @@
           <div style="font-size:13px;color:#555;margin-bottom:12px;line-height:1.5;">Connect your accounts and get instant insights on your revenue.</div>
           <span style="display:inline-block;background:#1a1a1a;color:#fff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:4px;">Get started</span>
           <span style="position:absolute;bottom:-20px;right:8px;font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
+          <div class="inline-popup" id="ipop-improve" style="top:calc(100% + 12px);left:-4px;">
+            <div class="inline-popup-header"><span>Code review</span><span class="close-x">×</span></div>
+            <div class="inline-popup-ta"><span class="tw" id="tw-improve"></span><span class="type-cursor">|</span></div>
+            <button class="inline-popup-fix">Fix it →</button>
+          </div>
         </div>
         <!-- wireframe features block -->
         <div style="margin-top:20px;background:#ebebeb;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;margin-bottom:10px;">
@@ -1116,25 +1225,7 @@
           <span class="panel-logo">VibeCheck</span>
           <span class="panel-badge badge-improve">improve</span>
         </div>
-        <div class="panel-element">
-          <div class="panel-element-label">Selected element</div>
-          <div class="panel-element-tag">&lt;section class="hero"&gt;</div>
-          <div class="panel-element-text">"Automate your financial reporting"</div>
-          <div class="panel-element-path">main &gt; section.hero &gt; h1</div>
-          <div class="panel-element-file">src/pages/landing/Hero.tsx</div>
-        </div>
-        <div class="panel-comment-wrap">
-          <span class="step-badge step-badge-panel tip-left" data-tip="Step 2: Describe what you want">2</span>
-          <div class="panel-comment-label">Comment</div>
-          <div class="panel-comment-box"><span class="tw" id="tw-improve"></span><span class="type-cursor">|</span></div>
-        </div>
-        <div class="panel-btn-wrap">
-          <span class="step-badge step-badge-panel tip-left" data-tip="Step 3: Send it off and get a Pull Request">3</span>
-          <button class="panel-btn-fix" id="fix-btn-improve" style="background:#16a34a;">Send it off →</button>
-          
-        </div>
-        <div class="panel-success" id="ps-improve"></div>
-        <div class="panel-deploy" id="pd-improve"></div>
+        <div class="chat-messages" id="chat-improve"></div>
       </div>
     </div>
 
@@ -1180,6 +1271,11 @@
             </div>
             <div id="mock-wp-btn" style="background:#ccc;color:#999;font-size:10px;font-weight:700;padding:4px 8px;border-radius:3px;text-align:center;cursor:not-allowed;">Unavailable</div>
             <span style="position:absolute;bottom:-16px;right:6px;font-size:13px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
+            <div class="inline-popup" id="ipop-wp" style="top:calc(100% + 22px);left:-4px;">
+              <div class="inline-popup-header"><span>Code review</span><span class="close-x">×</span></div>
+              <div class="inline-popup-ta"><span class="tw" id="tw-wp"></span><span class="type-cursor">|</span></div>
+              <button class="inline-popup-fix">Fix it →</button>
+            </div>
           </div>
           <!-- wireframe product card 3 -->
           <div class="wf-kpi" style="padding:8px;border-radius:6px;aspect-ratio:1;box-sizing:border-box;display:flex;flex-direction:column;">
@@ -1202,25 +1298,7 @@
           <span class="panel-logo">VibeCheck</span>
           <span class="panel-badge" style="background:#21759b;">WordPress</span>
         </div>
-        <div class="panel-element">
-          <div class="panel-element-label">Selected element</div>
-          <div class="panel-element-tag">&lt;a class="button add_to_cart"&gt;</div>
-          <div class="panel-element-text">"Unavailable"</div>
-          <div class="panel-element-path">li.product &gt; a.button</div>
-          <div class="panel-element-file">wp-content/plugins/woocommerce/templates/loop/add-to-cart.php</div>
-        </div>
-        <div class="panel-comment-wrap">
-          <span class="step-badge step-badge-panel tip-left" data-tip="Step 2: Describe what you want">2</span>
-          <div class="panel-comment-label">Comment</div>
-          <div class="panel-comment-box"><span class="tw" id="tw-wp"></span><span class="type-cursor">|</span></div>
-        </div>
-        <div class="panel-btn-wrap">
-          <span class="step-badge step-badge-panel tip-left" data-tip="Step 3: Send it off — PR or FTP/SSH deploy">3</span>
-          <button class="panel-btn-fix" id="fix-btn-wp" style="background:#21759b;">Send it off →</button>
-          
-        </div>
-        <div class="panel-success" id="ps-wp"></div>
-        <div class="panel-deploy" id="pd-wp"></div>
+        <div class="chat-messages" id="chat-wp"></div>
       </div>
     </div>
 
@@ -1405,27 +1483,39 @@
 var TAB_DATA = {
   bug: {
     url: 'onout.org/dashboard/',
-    desc: '(1) Select the broken element. (2) Describe the issue in plain words. (3) Send it off and get a Pull Request.',
+    desc: 'Example: you ship a SaaS dashboard with revenue stats. A user emails screenshots — a button label is overflowing the KPI card. You don\'t want to open the IDE just for this. Click the broken element, describe it in plain English, send it off.',
     text: "the 'View transaction details' label overflows the card width — shorten to 'View details'",
-    caption: '✓ PR #247 merged — button copy fixed in 2 hours'
+    caption: '✓ PR #247 merged — button copy fixed in 2 hours',
+    element: 'Selected <span class="kpi-btn">\nsrc/components/dashboard/KPICard.tsx:42',
+    pr:       '📦 PR #247 opened\nfix: prevent kpi button overflow on narrow viewports\nbranch: fix/kpi-button-overflow\n1 file changed',
+    deploy:   '🚀 Deployed to production\nGitHub Pages · just now\n✓ Live on onout.org'
   },
   feature: {
     url: 'onout.org/dashboard/',
-    desc: '(1) Select where the feature should go. (2) Describe what you want. (3) Send it off and get a Pull Request.',
+    desc: 'Example: you\'re running an analytics dashboard. Support keeps getting the same ask — "how do I filter transactions by date?" — but nobody opens a proper ticket. Pick the table where the filter belongs, describe it in one line, and a PR shows up with the working feature.',
     text: "can we add a search bar here? users keep asking how to filter transactions by date",
-    caption: '✓ PR #248 merged — search filter added to nav'
+    caption: '✓ PR #248 merged — search filter added to nav',
+    element: 'Selected <section class="transactions">\nsrc/components/TransactionsTable.tsx',
+    pr:       '📦 PR #248 opened\nfeat: add transaction search + date filter\nbranch: feat/transaction-search\n1 file changed',
+    deploy:   '🚀 Deployed to production\nVercel — build passed · just now\n✓ Live on dashboard.app'
   },
   improve: {
     url: 'onout.org/landing/',
-    desc: '(1) Select the text block. (2) Explain what\'s off — tone, clarity, conversion. (3) Send it off and get a Pull Request.',
+    desc: 'Example: you have a marketing landing and conversion is flat. The hero feels too generic — you\'ve been meaning to rewrite it for weeks. Click the headline, dictate the tone you want, and a PR lands with the new copy ready to A/B test.',
     text: "headline feels too generic — 'See exactly where your money goes' might convert better",
-    caption: '✓ PR #249 merged — hero copy rewritten, CTR +18%'
+    caption: '✓ PR #249 merged — hero copy rewritten, CTR +18%',
+    element: 'Selected <section class="hero"> > h1\nsrc/pages/landing/Hero.tsx',
+    pr:       '📦 PR #249 opened\ncopy: rewrite hero headline for clarity + CTR\nbranch: copy/hero-headline\n1 file changed',
+    deploy:   '🚀 Deployed to production\nNetlify — build passed · just now\n✓ Live — CTR tracking started'
   },
   wp: {
     url: 'mystore.com/shop/',
-    desc: '(1) Select the broken element. (2) Describe the issue. (3) Send it off and we patch wp-content, deploy via FTP/SSH. No GitHub needed.',
+    desc: 'Example: you run a WooCommerce shop. A product is in stock but the button stubbornly says "Unavailable" — classic WooCommerce status bug. You have no dev on call, no GitHub repo. Click the button, describe what\'s wrong, and we patch wp-content and deploy via FTP/SSH in minutes.',
     text: "the Camera Lens product shows 'Unavailable' but it's in stock — looks like a WooCommerce status bug",
-    caption: '✓ Fix deployed to WordPress via FTP — product back on sale in 1 hour'
+    caption: '✓ Fix deployed to WordPress via FTP — product back on sale in 1 hour',
+    element: 'Selected <a class="button add_to_cart">\nwp-content/plugins/woocommerce/templates/loop/add-to-cart.php',
+    pr:       '🛠 Patch ready via FTP\nfix: enable add-to-cart for in-stock variants\nwp-content/plugins/woocommerce/loop/add-to-cart.php\n1 file changed',
+    deploy:   '🚀 Deployed via FTP\n✓ Product live on mystore.com'
   }
 };
 
@@ -1452,109 +1542,120 @@ function typeText(elId, text, delay, gen, onDone) {
   setTimeout(go, delay);
 }
 
+function addBubble(tab, type, text, extraCls) {
+  var chat = document.getElementById('chat-' + tab);
+  if (!chat) return null;
+  var b = document.createElement('div');
+  b.className = 'bubble bubble-' + type + (extraCls ? ' ' + extraCls : '');
+  b.textContent = text;
+  chat.appendChild(b);
+  chat.scrollTop = chat.scrollHeight;
+  return b;
+}
+
+function applyMockFix(tab, gen) {
+  if (animGen !== gen) return;
+  if (tab === 'bug') {
+    var mockBtn = document.getElementById('mock-btn-bug');
+    var kpiCard = mockBtn && mockBtn.closest('.demo-kpi');
+    if (mockBtn) {
+      mockBtn.classList.add('text-fade');
+      setTimeout(function() { if (animGen === gen) mockBtn.textContent = 'View details'; }, 200);
+    }
+    if (kpiCard) kpiCard.classList.add('fix-applied');
+  } else if (tab === 'feature') {
+    var nav = document.getElementById('mock-txn-feature');
+    if (nav) {
+      nav.classList.add('fix-applied');
+      var search = document.getElementById('filter-bar-feature');
+      if (search) search.style.display = 'block';
+    }
+  } else if (tab === 'improve') {
+    var title = document.getElementById('mock-hero-title');
+    if (title) {
+      title.classList.add('text-fade');
+      setTimeout(function() { if (animGen === gen) title.textContent = 'See exactly where your money goes'; }, 200);
+      var hw = title.closest('div[style*="border:2px"]');
+      if (hw) hw.classList.add('fix-applied');
+    }
+  } else if (tab === 'wp') {
+    var wpCard = document.getElementById('mock-wp-card');
+    var wpBtn  = document.getElementById('mock-wp-btn');
+    if (wpBtn) {
+      wpBtn.classList.add('text-fade');
+      setTimeout(function() {
+        if (animGen !== gen) return;
+        wpBtn.textContent = 'Add to cart';
+        wpBtn.style.background = '#96588a';
+        wpBtn.style.color = '#fff';
+        wpBtn.style.cursor = 'pointer';
+      }, 200);
+    }
+    if (wpCard) wpCard.classList.add('fix-applied');
+  }
+}
+
 function applyFix(tab, gen) {
   if (animGen !== gen) return;
-  var btn = document.getElementById('fix-btn-' + tab);
-  var ps  = document.getElementById('ps-' + tab);
+  var data = TAB_DATA[tab];
+  var pop  = document.getElementById('ipop-' + tab);
+  var cap  = document.getElementById('demo-caption');
 
-  if (btn) { btn.classList.add('sending'); btn.textContent = '⏳ Sending…'; }
-  var capEl = document.getElementById('demo-caption');
-  if (capEl) capEl.textContent = '⚙ Generating code change…';
+  // Animate inline-popup "send" — fade out + slide up
+  if (pop) pop.classList.add('sending');
+  if (cap) cap.textContent = '⚙ Generating code change…';
 
+  // Chat opens now — system context bubble first
   setTimeout(function() {
     if (animGen !== gen) return;
-    if (tab === 'bug') {
-      var mockBtn = document.getElementById('mock-btn-bug');
-      var kpiCard = mockBtn && mockBtn.closest('.demo-kpi');
-      if (mockBtn) {
-        mockBtn.classList.add('text-fade');
-        setTimeout(function() { if (animGen === gen) mockBtn.textContent = 'View details'; }, 200);
-      }
-      if (kpiCard) kpiCard.classList.add('fix-applied');
-    }
-    if (tab === 'feature') {
-      var nav = document.getElementById('mock-txn-feature');
-      if (nav) {
-        nav.classList.add('fix-applied');
-        var search = document.getElementById('filter-bar-feature');
-        if (search) search.style.display = 'block';
-      }
-    }
-    if (tab === 'improve') {
-      var title = document.getElementById('mock-hero-title');
-      if (title) {
-        title.classList.add('text-fade');
-        setTimeout(function() { if (animGen === gen) title.textContent = 'See exactly where your money goes'; }, 200);
-        title.closest('div[style*="border:2px"]') && title.closest('div[style*="border:2px"]').classList.add('fix-applied');
-      }
-    }
-    if (tab === 'wp') {
-      var wpCard = document.getElementById('mock-wp-card');
-      var wpBtn  = document.getElementById('mock-wp-btn');
-      if (wpBtn) {
-        wpBtn.classList.add('text-fade');
-        setTimeout(function() {
-          if (animGen !== gen) return;
-          wpBtn.textContent = 'Add to cart';
-          wpBtn.style.background = '#96588a';
-          wpBtn.style.color = '#fff';
-          wpBtn.style.cursor = 'pointer';
-        }, 200);
-      }
-      if (wpCard) wpCard.classList.add('fix-applied');
-    }
+    addBubble(tab, 'system', data.element);
+  }, 100);
 
-    setTimeout(function() {
-      if (animGen !== gen) return;
-      if (btn) { btn.style.display = 'none'; }
-      var paidBtn2 = document.getElementById('paid-btn-' + tab);
-      if (paidBtn2) paidBtn2.style.display = 'none';
-      if (ps) {
-        var msgs = {
-          bug:     '✓ PR #247 opened\nfix: prevent kpi button overflow on narrow viewports\nbranch: fix/kpi-button-overflow\nsrc/components/dashboard/KPICard.tsx  ·  1 file changed',
-          feature: '✓ PR #248 opened\nfeat: add transaction search + date filter\nbranch: feat/transaction-search\nsrc/components/TransactionsTable.tsx  ·  1 file changed',
-          improve: '✓ PR #249 opened\ncopy: rewrite hero headline for clarity + CTR\nbranch: copy/hero-headline\nsrc/pages/landing/Hero.tsx  ·  1 file changed',
-          wp:      '✓ Fix ready via FTP\nfix: enable add-to-cart button for in-stock variants\ntarget: wp-content/plugins/woocommerce\nloop/add-to-cart.php  ·  1 file changed'
-        };
-        ps.style.display = 'block';
-        ps.style.whiteSpace = 'pre-line';
-        ps.textContent = msgs[tab];
-      }
-      var cap = document.getElementById('demo-caption');
-      if (cap) cap.textContent = '📦 Opening pull request…';
-      setTimeout(function() {
-        if (animGen !== gen) return;
-        if (cap) cap.textContent = TAB_DATA[tab].caption;
-      }, 700);
-      // deploy step — shown 1.8s after PR success
-      setTimeout(function() {
-        if (animGen !== gen) return;
-        var pd = document.getElementById('pd-' + tab);
-        if (pd) {
-          var deploys = {
-            bug:     '🚀 Deployed to production\nGitHub Pages • 0s ago\n✓ Live on onout.org',
-            feature: '🚀 Deployed to production\nVercel — build passed • 0s ago\n✓ Live on dashboard.app',
-            improve: '🚀 Deployed to production\nNetlify — build passed • 0s ago\n✓ Live — CTR tracking started',
-            wp:      '🚀 Deployed via FTP\nwp-content/plugins/woocommerce\n✓ Product live on mystore.com'
-          };
-          pd.style.display = 'block';
-          pd.style.whiteSpace = 'pre-line';
-          pd.textContent = deploys[tab];
-        }
-      }, 1800);
-    }, 700);
-  }, 900);
+  // User bubble (the typed comment)
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'user', data.text);
+  }, 400);
+
+  // Agent "thinking"
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'agent', '⚙ Analyzing codebase…');
+  }, 700);
+
+  // DOM mutation on mockup
+  setTimeout(function() { applyMockFix(tab, gen); }, 1400);
+
+  // PR bubble
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'agent', data.pr, 'pr');
+    if (cap) cap.textContent = '📦 Opening pull request…';
+  }, 2100);
+
+  // Final caption
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    if (cap) cap.textContent = data.caption;
+  }, 2800);
+
+  // Deploy bubble
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'agent', data.deploy, 'deploy');
+  }, 3600);
 }
 
 function resetTab(tab) {
-  var btn = document.getElementById('fix-btn-' + tab);
-  var ps  = document.getElementById('ps-' + tab);
-  if (btn) { btn.classList.remove('sending'); btn.style.display = ''; btn.textContent = 'Send it off →'; }
-  var paidBtn = document.getElementById('paid-btn-' + tab);
-  if (paidBtn) paidBtn.style.display = '';
-  if (ps)  { ps.style.display = 'none'; ps.textContent = ''; }
-  var pd = document.getElementById('pd-' + tab);
-  if (pd)  { pd.style.display = 'none'; pd.textContent = ''; }
+  // Clear chat
+  var chat = document.getElementById('chat-' + tab);
+  if (chat) chat.innerHTML = '';
+  // Reset inline popup
+  var pop = document.getElementById('ipop-' + tab);
+  if (pop) pop.classList.remove('sending');
+  var tw = document.getElementById('tw-' + tab);
+  if (tw) tw.textContent = '';
+  // Reset mockups
   var mockBtn = document.getElementById('mock-btn-bug');
   if (mockBtn) { mockBtn.textContent = 'View transaction details'; mockBtn.classList.remove('text-fade'); }
   var bugCard = mockBtn && mockBtn.closest('.demo-kpi');
@@ -1564,11 +1665,22 @@ function resetTab(tab) {
   var filterBar = document.getElementById('filter-bar-feature');
   if (filterBar) filterBar.style.display = 'none';
   var title = document.getElementById('mock-hero-title');
-  if (title) { title.textContent = 'Automate your financial reporting'; title.classList.remove('text-fade'); var heroWrap = title.closest('div[style*="border:2px"]'); if (heroWrap) heroWrap.classList.remove('fix-applied'); }
+  if (title) {
+    title.textContent = 'Automate your financial reporting';
+    title.classList.remove('text-fade');
+    var heroWrap = title.closest('div[style*="border:2px"]');
+    if (heroWrap) heroWrap.classList.remove('fix-applied');
+  }
   var wpCard = document.getElementById('mock-wp-card');
   if (wpCard) wpCard.classList.remove('fix-applied');
   var wpBtn = document.getElementById('mock-wp-btn');
-  if (wpBtn) { wpBtn.textContent = 'Unavailable'; wpBtn.style.background = '#ccc'; wpBtn.style.color = '#999'; wpBtn.style.cursor = 'not-allowed'; wpBtn.classList.remove('text-fade'); }
+  if (wpBtn) {
+    wpBtn.textContent = 'Unavailable';
+    wpBtn.style.background = '#ccc';
+    wpBtn.style.color = '#999';
+    wpBtn.style.cursor = 'not-allowed';
+    wpBtn.classList.remove('text-fade');
+  }
 }
 
 function switchTab(tab, skipHistory) {
@@ -1584,10 +1696,14 @@ function switchTab(tab, skipHistory) {
   });
   var data = TAB_DATA[tab];
   document.getElementById('demo-url').textContent = data.url;
-  document.getElementById('demo-caption').textContent = '⏳ Preparing patch…';
+  document.getElementById('demo-caption').textContent = '👁 Click the element to leave a comment';
   var descEl = document.getElementById('tab-desc');
   if (descEl) descEl.textContent = (currentLang === 'ru' && TAB_DESC_RU && TAB_DESC_RU[tab])
     ? TAB_DESC_RU[tab] : data.desc;
+
+  // Chat stays empty until "Fix it" is clicked (see applyFix).
+
+  // Type comment into inline popup near selected element
   typeText('tw-' + tab, data.text, 1200, gen, function() {
     setTimeout(function() { applyFix(tab, gen); }, 500);
   });
@@ -1637,10 +1753,10 @@ var ru = {
 };
 
 TAB_DESC_RU = {
-  bug:     '(1) Выдели сломанный элемент. (2) Опиши проблему обычными словами. (3) Отправь — и получи Pull Request.',
-  feature: '(1) Выдели место, где нужна фича. (2) Опиши, что хочешь. (3) Отправь — и получи Pull Request.',
-  improve: '(1) Выдели текстовый блок. (2) Объясни, что не так — тон, смысл, конверсия. (3) Отправь — и получи Pull Request.',
-  wp:      '(1) Выдели сломанный элемент. (2) Опиши проблему. (3) Отправь — мы правим wp-content и деплоим по FTP/SSH. GitHub не нужен.'
+  bug:     'Пример: у тебя SaaS-дашборд со статистикой. Юзер присылает скрин — подпись кнопки вылезает за карточку. Открывать IDE ради этого не хочется. Кликаешь по сломанному элементу, объясняешь словами что не так — и отправляешь.',
+  feature: 'Пример: ты ведёшь аналитический дашборд. Поддержке регулярно пишут — "а можно фильтр транзакций по дате?" — но тикетов никто не заводит. Выбираешь таблицу, где фильтр должен быть, описываешь одной строкой — приходит PR с готовой фичей.',
+  improve: 'Пример: у тебя маркетинговый лендинг, конверсия не растёт. Заголовок в hero слишком общий — давно хочется переписать, но руки не доходят. Кликаешь по заголовку, говоришь какой тон хочешь — получаешь PR с новым текстом, готовым к A/B-тесту.',
+  wp:      'Пример: у тебя WooCommerce-магазин. Товар в наличии, но кнопка упорно пишет "Unavailable" — классический баг статуса. Разработчика под рукой нет, GitHub-репо тоже. Кликаешь по кнопке, описываешь проблему — мы правим wp-content и деплоим по FTP/SSH за минуты.'
 };
 
 // TAB_DESC_RU and currentLang declared in main script above
