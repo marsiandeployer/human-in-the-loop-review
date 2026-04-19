@@ -26,6 +26,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | **Usersnap** | $39-249/mo | Product/SaaS teams, PM | Enterprise: AI sentiment, surveys, SDK, 50+ integrations. No code access. |
 | **Feedbucket** | 14-day trial, paid | Agencies + clients | Reports only, no dev fixes. Widget (no extension). |
 | **Userback** | Freemium + paid | Product teams, SaaS | NPS, surveys, session replay, roadmap. No code fixes. 20K+ teams. |
+| **Huddlekit** | Free / $190-390 yr | Design studios, agencies | Multi-breakpoint preview, element inspector, share-by-link, task mgmt. Дёшево vs Marker/BugHerd. No code fixes, no PR. |
 
 **Key message:** All of them → ticket. VibeCheck → PR. All paid, VibeCheck free (BYOK).
 

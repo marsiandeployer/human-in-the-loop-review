@@ -196,6 +196,20 @@
 - **Не делает:** нет console/network logs (в отличие от Marker.io), нет session replay, нет code fixes, нет PR
 - **vs VibeCheck:** BugHerd заточен под клиент-агентский workflow (клиент тычет пальцем, разработчик чинит сам). VibeCheck — для ситуации, когда разработчик хочет, чтобы кто-то другой сделал PR. BugHerd дороже ($50+/mo), требует установки widget на сайт. VibeCheck бесплатен, работает без изменений на сайте
 
+### Huddlekit (huddlekit.com)
+
+- **Что:** Платформа визуального фидбека для дизайн-студий и агентств. Комментарии прямо на странице с авто-скриншотами; share-by-link без установки расширений на стороне клиента
+- **Цены (annual):** Starter $0 (3 members, 1 проект) → Pro $190/yr (3 members, unlimited projects) → Team $390/yr (20 members) — заметно дешевле Marker.io/BugHerd
+- **ЦА:** Дизайн-студии, веб-агентства, фрилансеры-дизайнеры, PM-ы, клиенты-стейкхолдеры. Позиционирование: «внутренние и клиентские отзывы в одном месте, без email-цепочек»
+- **Фишки:**
+  - Side-by-side preview нескольких разрешений (multi-breakpoint inspect — отличает от Pastel)
+  - Element inspector: линейки, отступы, alignment
+  - Авто-скриншот при комментарии
+  - Task management поверх собранного фидбека
+  - Share-by-link (клиенту не нужны логины и расширения)
+- **Не делает:** нет console/network logs, нет session replay, нет связи с кодом, нет PR/code fixes
+- **vs VibeCheck:** Huddlekit — review дизайна и вёрстки (студия ↔ клиент). VibeCheck — баг → PR. Huddlekit лучше для дизайн-аппрувала на разных breakpoints, VibeCheck — когда нужен код-фикс. Обе бесплатны на старте, но Huddlekit ограничивает 1 проектом, VibeCheck — без лимита (BYOK). Прямой пересечение в нише «website feedback tool», но разные deliverable: Huddlekit → ticket с пометкой на макете, VibeCheck → pull request
+
 ---
 
 ## VibeCheck как альтернатива конкурентам
