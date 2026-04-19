@@ -1557,7 +1557,7 @@
 var TAB_DATA = {
   bug: {
     url: 'onout.org/dashboard/',
-    desc: 'Example: you ship a SaaS dashboard with revenue stats. A user emails screenshots — a button label is overflowing the KPI card. You don\'t want to open the IDE just for this. Click the broken element, describe it in plain English, send it off.',
+    desc: 'Example: you ship a SaaS dashboard with revenue stats. A user emails screenshots — a button label is overflowing the KPI card. You don\'t want to open the IDE just for this. (1) Click the broken element, (2) describe it in plain English, (3) send it off.',
     text: "the 'View transaction details' label overflows the card width — shorten to 'View details'",
     caption: '✓ PR #247 merged — button copy fixed in 2 hours',
     element: 'Selected <span class="kpi-btn">\nsrc/components/dashboard/KPICard.tsx:42',
@@ -1566,7 +1566,7 @@ var TAB_DATA = {
   },
   feature: {
     url: 'onout.org/dashboard/',
-    desc: 'Example: you\'re running an analytics dashboard. Support keeps getting the same ask — "how do I filter transactions by date?" — but nobody opens a proper ticket. Pick the table where the filter belongs, describe it in one line, and a PR shows up with the working feature.',
+    desc: 'Example: you\'re running an analytics dashboard. Support keeps getting the same ask — "how do I filter transactions by date?" — but nobody opens a proper ticket. (1) Pick the table where the filter belongs, (2) describe it in one line, (3) a PR shows up with the working feature.',
     text: "can we add a search bar here? users keep asking how to filter transactions by date",
     caption: '✓ PR #248 merged — search filter added to nav',
     element: 'Selected <section class="transactions">\nsrc/components/TransactionsTable.tsx',
@@ -1575,7 +1575,7 @@ var TAB_DATA = {
   },
   improve: {
     url: 'onout.org/landing/',
-    desc: 'Example: you have a marketing landing and conversion is flat. The hero feels too generic — you\'ve been meaning to rewrite it for weeks. Click the headline, dictate the tone you want, and a PR lands with the new copy ready to A/B test.',
+    desc: 'Example: you have a marketing landing and conversion is flat. The hero feels too generic — you\'ve been meaning to rewrite it for weeks. (1) Click the headline, (2) dictate the tone you want, (3) a PR lands with the new copy ready to A/B test.',
     text: "headline feels too generic — 'See exactly where your money goes' might convert better",
     caption: '✓ PR #249 merged — hero copy rewritten, CTR +18%',
     element: 'Selected <section class="hero"> > h1\nsrc/pages/landing/Hero.tsx',
@@ -1584,7 +1584,7 @@ var TAB_DATA = {
   },
   wp: {
     url: 'mystore.com/shop/',
-    desc: 'Example: you run a WooCommerce shop. A product is in stock but the button stubbornly says "Unavailable" — classic WooCommerce status bug. You have no dev on call, no GitHub repo. Click the button, describe what\'s wrong, and we patch wp-content and deploy via FTP/SSH in minutes.',
+    desc: 'Example: you run a WooCommerce shop. A product is in stock but the button stubbornly says "Unavailable" — classic WooCommerce status bug. You have no dev on call, no GitHub repo. (1) Click the button, (2) describe what\'s wrong, (3) we patch wp-content and deploy via FTP/SSH in minutes.',
     text: "the Camera Lens product shows 'Unavailable' but it's in stock — looks like a WooCommerce status bug",
     caption: '✓ Fix deployed to WordPress via FTP — product back on sale in 1 hour',
     element: 'Selected <a class="button add_to_cart">\nwp-content/plugins/woocommerce/templates/loop/add-to-cart.php',
@@ -1877,10 +1877,10 @@ var ru = {
 };
 
 TAB_DESC_RU = {
-  bug:     'Пример: у тебя SaaS-дашборд со статистикой. Юзер присылает скрин — подпись кнопки вылезает за карточку. Открывать IDE ради этого не хочется. Кликаешь по сломанному элементу, объясняешь словами что не так — и отправляешь.',
-  feature: 'Пример: ты ведёшь аналитический дашборд. Поддержке регулярно пишут — "а можно фильтр транзакций по дате?" — но тикетов никто не заводит. Выбираешь таблицу, где фильтр должен быть, описываешь одной строкой — приходит PR с готовой фичей.',
-  improve: 'Пример: у тебя маркетинговый лендинг, конверсия не растёт. Заголовок в hero слишком общий — давно хочется переписать, но руки не доходят. Кликаешь по заголовку, говоришь какой тон хочешь — получаешь PR с новым текстом, готовым к A/B-тесту.',
-  wp:      'Пример: у тебя WooCommerce-магазин. Товар в наличии, но кнопка упорно пишет "Unavailable" — классический баг статуса. Разработчика под рукой нет, GitHub-репо тоже. Кликаешь по кнопке, описываешь проблему — мы правим wp-content и деплоим по FTP/SSH за минуты.'
+  bug:     'Пример: у тебя SaaS-дашборд со статистикой. Юзер присылает скрин — подпись кнопки вылезает за карточку. Открывать IDE ради этого не хочется. (1) Кликаешь по сломанному элементу, (2) объясняешь словами что не так, (3) отправляешь.',
+  feature: 'Пример: ты ведёшь аналитический дашборд. Поддержке регулярно пишут — "а можно фильтр транзакций по дате?" — но тикетов никто не заводит. (1) Выбираешь таблицу, где фильтр должен быть, (2) описываешь одной строкой, (3) приходит PR с готовой фичей.',
+  improve: 'Пример: у тебя маркетинговый лендинг, конверсия не растёт. Заголовок в hero слишком общий — давно хочется переписать, но руки не доходят. (1) Кликаешь по заголовку, (2) говоришь какой тон хочешь, (3) получаешь PR с новым текстом, готовым к A/B-тесту.',
+  wp:      'Пример: у тебя WooCommerce-магазин. Товар в наличии, но кнопка упорно пишет "Unavailable" — классический баг статуса. Разработчика под рукой нет, GitHub-репо тоже. (1) Кликаешь по кнопке, (2) описываешь проблему, (3) мы правим wp-content и деплоим по FTP/SSH за минуты.'
 };
 
 // TAB_DESC_RU and currentLang declared in main script above
