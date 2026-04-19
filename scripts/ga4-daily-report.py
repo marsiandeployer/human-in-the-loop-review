@@ -85,6 +85,13 @@ try:
 except Exception:
     labels = []
 
+# Lead → channel attribution
+try:
+    lead_channels = rows(query(['sessionDefaultChannelGroup','sessionSource'],
+        ['eventCount'], leads_filter, 'eventCount', 10))
+except Exception:
+    lead_channels = []
+
 # channels
 channels = rows(query(['sessionDefaultChannelGroup','sessionSource'], ['sessions'],
     vibers_filter, 'sessions', 10))
@@ -92,6 +99,17 @@ channels = rows(query(['sessionDefaultChannelGroup','sessionSource'], ['sessions
 # top landings
 landings = rows(query(['landingPage'], ['sessions','engagedSessions'],
     vibers_filter, 'sessions', 8))
+
+# landing × channel breakdown — used to show the source of engaged sessions
+engaged_by_landing = {}
+try:
+    lc_rows = rows(query(['landingPage','sessionDefaultChannelGroup','sessionSource'],
+        ['engagedSessions'], vibers_filter, 'engagedSessions', 50))
+    for lp, ch, src, eng in lc_rows:
+        if int(eng or 0) > 0:
+            engaged_by_landing.setdefault(lp, []).append((ch, src, eng))
+except Exception:
+    pass
 
 # clicks (link destinations)
 click_filter = FilterExpression(and_group=FilterExpressionList(expressions=[
@@ -116,6 +134,12 @@ if labels:
         lines.append(f'  · {name} — {cnt}')
     lines.append('')
 
+if lead_channels:
+    lines.append('Откуда лиды (канал / источник):')
+    for ch, src, cnt in lead_channels:
+        lines.append(f'  · {ch} / {src} — {cnt}')
+    lines.append('')
+
 if channels:
     lines.append('Каналы:')
     for ch, src, s in channels:
@@ -125,8 +149,11 @@ if channels:
 if landings:
     lines.append('Top landings:')
     for lp, s, eng in landings:
-        lp = lp[:50]
-        lines.append(f'  · {lp} — {s} ({eng} engaged)')
+        lp_short = lp[:50]
+        lines.append(f'  · {lp_short} — {s} ({eng} engaged)')
+        if int(eng or 0) > 0:
+            for ch, src, e in engaged_by_landing.get(lp, []):
+                lines.append(f'      ↳ {ch} / {src} — {e} engaged')
     lines.append('')
 
 if clicks:
