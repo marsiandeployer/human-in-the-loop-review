@@ -227,6 +227,33 @@
     }
     .mb-60  { width: 60px;  height: 60px;  font-size: 10px; }
     .mb-128 { width: 128px; height: 128px; font-size: 21px; }
+    .mb-180 { width: 180px; height: 180px; font-size: 30px; }
+    .mb-512 { width: 512px; height: 512px; font-size: 85px; }
+    /* mb-32 reuses simplified mb-16 layout, scaled */
+    .mb-32 {
+      width: 32px; height: 32px;
+      background: #fff; border: 1px solid #e4e4e4; border-radius: 3px;
+      padding: 3px 3px 0; box-shadow: none;
+      display: flex; flex-direction: column; gap: 2px;
+      box-sizing: border-box; position: relative; overflow: hidden;
+    }
+    .mb-32 .mb-line { height: 2px; background: #d0d0d0; border-radius: 1px; }
+    .mb-32 .mb-line.b   { background: #1a1a1a; width: 60%; height: 2.5px; }
+    .mb-32 .mb-line.w85 { width: 85%; }
+    .mb-32 .mb-line.w70 { width: 70%; }
+    .mb-32 .mb-line.w55 { width: 55%; }
+    .mb-32 .mb-target { height: 4px; background: #f0f0f0; border-radius: 1.5px; width: 60%; position: relative; }
+    .mb-32 .mb-loupe {
+      position: absolute; top: -7px; left: 12%;
+      width: 13px; height: 13px;
+      border: 2px solid #dc2626; border-radius: 50%;
+      background: rgba(255,255,255,0.6); box-shadow: none; box-sizing: border-box;
+    }
+    .mb-32 .mb-loupe::after {
+      content: ''; position: absolute; bottom: -1.5px; right: -2.5px;
+      width: 5px; height: 2px; background: #dc2626; border-radius: 1px;
+      transform: rotate(45deg); transform-origin: left center;
+    }
     .mb-topbar { display: flex; gap: 0.2em; margin-bottom: 0.1em; }
     .mb-topbar span { width: 0.3em; height: 0.3em; border-radius: 50%; flex-shrink: 0; }
     .mb-topbar span:nth-child(1) { background: #ff5f57; }
@@ -1139,6 +1166,34 @@
         <div class="mb-line w70"></div>
         <div class="mb-target"><div class="mb-loupe"></div></div>
         <div class="mb-line w55"></div>
+      </div>
+      <!-- temp render targets for icon export (visually hidden) -->
+      <div style="position:absolute;left:-9999px;top:0;" aria-hidden="true">
+        <div class="mb mb-32">
+          <div class="mb-line b"></div>
+          <div class="mb-line w85"></div>
+          <div class="mb-line w70"></div>
+          <div class="mb-target"><div class="mb-loupe"></div></div>
+          <div class="mb-line w55"></div>
+        </div>
+        <div class="mb mb-180">
+          <div class="mb-topbar"><span></span><span></span><span></span></div>
+          <div class="mb-line b"></div>
+          <div class="mb-line w85"></div>
+          <div class="mb-line w70"></div>
+          <div class="mb-line w55"></div>
+          <div class="mb-target"><div class="mb-loupe"></div></div>
+          <div class="mb-fix-row"><div class="mb-fix">Fix it →</div></div>
+        </div>
+        <div class="mb mb-512">
+          <div class="mb-topbar"><span></span><span></span><span></span></div>
+          <div class="mb-line b"></div>
+          <div class="mb-line w85"></div>
+          <div class="mb-line w70"></div>
+          <div class="mb-line w55"></div>
+          <div class="mb-target"><div class="mb-loupe"></div></div>
+          <div class="mb-fix-row"><div class="mb-fix">Fix it →</div></div>
+        </div>
       </div>
       <div class="mb mb-128" aria-hidden="true">
         <div class="mb-topbar"><span></span><span></span><span></span></div>
