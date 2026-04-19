@@ -182,74 +182,45 @@
     }
     .btn-secondary:hover { border-color: #1a1a1a; background: #fafafa; text-decoration: none; }
     .btn-secondary:focus-visible { outline: 2px solid #5b44e8; outline-offset: 3px; }
-    .flow-banner {
-      width: 128px; height: 128px; flex-shrink: 0; align-self: center;
-      background: #fff; border: 1px solid #e4e4e4; border-radius: 12px;
-      box-sizing: border-box; padding: 7px; position: relative;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    /* M3 banner — scalable via font-size (em units) */
+    .mb {
+      flex-shrink: 0; align-self: center;
+      background: #fff; border: 1px solid #e4e4e4; border-radius: 0.7em;
+      box-sizing: border-box; padding: 0.35em 0.35em 0; position: relative;
+      box-shadow: 0 0.15em 0.5em rgba(0,0,0,0.06);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex; flex-direction: column; gap: 0.25em;
+      overflow: hidden;
     }
-    .fb-topbar {
-      display: flex; align-items: center; gap: 3px;
-      padding-bottom: 4px; border-bottom: 1px solid #f0f0f0; margin-bottom: 5px;
+    .mb-60  { width: 60px;  height: 60px;  font-size: 10px; }
+    .mb-128 { width: 128px; height: 128px; font-size: 21px; }
+    .mb-topbar { display: flex; gap: 0.2em; margin-bottom: 0.1em; }
+    .mb-topbar span { width: 0.3em; height: 0.3em; border-radius: 50%; flex-shrink: 0; }
+    .mb-topbar span:nth-child(1) { background: #ff5f57; }
+    .mb-topbar span:nth-child(2) { background: #febc2e; }
+    .mb-topbar span:nth-child(3) { background: #28c840; }
+    .mb-line { height: 0.2em; background: #d8d8d8; border-radius: 0.1em; }
+    .mb-line.b   { background: #1a1a1a; width: 45%; height: 0.25em; }
+    .mb-line.w85 { width: 85%; }
+    .mb-line.w70 { width: 70%; }
+    .mb-line.w55 { width: 55%; }
+    .mb-target {
+      height: 0.7em; background: #f0f0f0; border-radius: 0.2em;
+      width: 45%; position: relative;
     }
-    .fb-topbar span.fb-dot { width: 4px; height: 4px; border-radius: 50%; }
-    .fb-topbar span.fb-dot:nth-child(1) { background: #ff5f57; }
-    .fb-topbar span.fb-dot:nth-child(2) { background: #febc2e; }
-    .fb-topbar span.fb-dot:nth-child(3) { background: #28c840; }
-    .fb-topbar .fb-url {
-      flex: 1; height: 5px; border-radius: 2px; background: #f0f0f0;
-      margin-left: 4px;
+    .mb-loupe {
+      position: absolute; top: -1.1em; left: 18%;
+      width: 2em; height: 2em;
+      border: 0.25em solid #FF6B35; border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      box-shadow: 0 0 0 0.2em rgba(255,107,53,0.18);
+      box-sizing: border-box;
     }
-    .fb-wf-row { display: flex; gap: 3px; align-items: center; margin-bottom: 4px; }
-    .fb-wf-block { background: #e8e8e8; border-radius: 1.5px; }
-    .fb-wf-block--logo { width: 12px; height: 5px; background: #1a1a1a; }
-    .fb-wf-block--nav { width: 8px; height: 3px; }
-    .fb-wf-block--nav2 { width: 11px; height: 3px; }
-    .fb-wf-h { height: 4px; background: #1a1a1a; border-radius: 1.5px; width: 55%; margin-bottom: 4px; }
-    .fb-wf-text { height: 2.5px; background: #d8d8d8; border-radius: 1.5px; margin-bottom: 2px; }
-    .fb-wf-text.w90 { width: 90%; }
-    .fb-wf-text.w70 { width: 70%; }
-    .fb-target {
-      border: 2px dashed #FF6B35; border-radius: 4px;
-      padding: 3px 6px; background: rgba(255,107,53,0.06);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 0 2px rgba(255,107,53,0.12);
-      width: 50%; height: 14px; margin-top: 4px;
-    }
-    .fb-target span {
-      font-size: 7px; font-weight: 700; color: #FF6B35;
-      letter-spacing: 0.3px; line-height: 1; text-transform: uppercase;
-    }
-    .fb-popup {
-      position: absolute; left: 12px; right: 12px; bottom: 8px;
-      background: #fff; border: 1px solid #d0d0d0; border-radius: 5px;
-      padding: 5px 6px 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-      display: flex; flex-direction: column; gap: 3px;
-    }
-    .fb-popup-header {
-      display: flex; align-items: center; justify-content: space-between;
-      font-size: 8px; color: #666; font-weight: 600; letter-spacing: 0.2px;
-    }
-    .fb-popup-header .fb-x { color: #999; font-weight: 400; font-size: 9px; }
-    .fb-popup-text {
-      font-size: 8px; color: #1a1a1a; line-height: 1.3;
-      font-family: ui-monospace, SFMono-Regular, monospace;
-    }
-    .fb-popup-text::after {
-      content: '|'; color: #5b44e8; margin-left: 1px;
-      animation: fb-blink 1s steps(1) infinite;
-    }
-    @keyframes fb-blink { 50% { opacity: 0; } }
-    .fb-popup-fix {
-      align-self: flex-end; background: #FF6B35; color: #fff;
-      font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 3px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-    .fb-cursor {
-      position: absolute; font-size: 10px; line-height: 1;
-      top: 47px; left: 56px;
+    .mb-fix-row { display: flex; justify-content: flex-end; margin-top: auto; padding-bottom: 0.2em; }
+    .mb-fix {
+      background: #FF6B35; color: #fff;
+      font-size: 0.85em; font-weight: 700;
+      padding: 0.3em 0.7em; border-radius: 0.3em; line-height: 1;
     }
     .beta-note {
       font-size: 13px;
@@ -1124,28 +1095,23 @@
     <h1 data-i18n="hero-title">Click any issue on your website. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, pull request, or deployed directly to your server">code fix</abbr> with Claude Code or Codex.</h1>
     <p class="hero-sub" data-i18n="hero-sub">Built for anyone who can spot an issue, but doesn&rsquo;t want to debug it by hand.</p>
     <div class="cta-group">
-      <div class="flow-banner" aria-hidden="true">
-        <div class="fb-topbar">
-          <span class="fb-dot"></span><span class="fb-dot"></span><span class="fb-dot"></span>
-          <span class="fb-url"></span>
-        </div>
-        <div class="fb-wf-row">
-          <div class="fb-wf-block fb-wf-block--logo"></div>
-          <div style="flex:1"></div>
-          <div class="fb-wf-block fb-wf-block--nav"></div>
-          <div class="fb-wf-block fb-wf-block--nav"></div>
-          <div class="fb-wf-block fb-wf-block--nav2"></div>
-        </div>
-        <div class="fb-wf-h"></div>
-        <div class="fb-wf-text w90"></div>
-        <div class="fb-wf-text w70"></div>
-        <div class="fb-target"><span>Buy now</span></div>
-        <div class="fb-cursor">👆</div>
-        <div class="fb-popup">
-          <div class="fb-popup-header"><span>Code review</span><span class="fb-x">×</span></div>
-          <div class="fb-popup-text">button is unclickable</div>
-          <div class="fb-popup-fix">Fix it →</div>
-        </div>
+      <div class="mb mb-128" aria-hidden="true">
+        <div class="mb-topbar"><span></span><span></span><span></span></div>
+        <div class="mb-line b"></div>
+        <div class="mb-line w85"></div>
+        <div class="mb-line w70"></div>
+        <div class="mb-line w55"></div>
+        <div class="mb-target"><div class="mb-loupe"></div></div>
+        <div class="mb-fix-row"><div class="mb-fix">Fix it →</div></div>
+      </div>
+      <div class="mb mb-60" aria-hidden="true">
+        <div class="mb-topbar"><span></span><span></span><span></span></div>
+        <div class="mb-line b"></div>
+        <div class="mb-line w85"></div>
+        <div class="mb-line w70"></div>
+        <div class="mb-line w55"></div>
+        <div class="mb-target"><div class="mb-loupe"></div></div>
+        <div class="mb-fix-row"><div class="mb-fix">Fix it →</div></div>
       </div>
       <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'download_extension'});" data-i18n="cta-download">Download Extension</a>
     </div>
