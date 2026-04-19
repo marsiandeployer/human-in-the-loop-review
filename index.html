@@ -77,9 +77,9 @@
             font-size: 15px;
         }
 
-        /* Page wrapper — CV width */
+        /* Page wrapper */
         .page {
-            max-width: 800px;
+            max-width: 880px;
             margin: 0 auto;
             padding: 48px 40px;
             background: #fff;
@@ -89,7 +89,98 @@
         a { color: #5b44e8; text-decoration: none; }
         a:hover { text-decoration: underline; }
 
-        /* ─── CV Header ─── */
+        /* ─── Hero (vibecheck design system) ─── */
+        .hero {
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 32px;
+            margin-bottom: 32px;
+        }
+        .hero-badge {
+            display: inline-block;
+            color: #5b44e8;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .hero-badge::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #5b44e8;
+            margin-right: 8px;
+            vertical-align: middle;
+            transform: translateY(-1px);
+        }
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 800;
+            letter-spacing: -1.2px;
+            line-height: 1.02;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+        .hero-sub {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 24px;
+            line-height: 1.45;
+            max-width: 640px;
+        }
+        .hero-sub strong { font-weight: 600; color: #1a1a1a; }
+        .cta-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 12px 26px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background .15s, transform .1s;
+        }
+        .btn-primary:hover { background: #333; text-decoration: none; }
+        .btn-primary:active { transform: translateY(1px); }
+        .btn-primary:focus-visible { outline: 2px solid #5b44e8; outline-offset: 3px; }
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            color: #1a1a1a;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 12px 22px;
+            border-radius: 8px;
+            border: 1px solid #d8d8d8;
+            background: #fff;
+            text-decoration: none;
+            transition: border-color .15s, background .15s;
+        }
+        .btn-secondary:hover { border-color: #1a1a1a; background: #fafafa; text-decoration: none; }
+        .beta-note {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            max-width: 640px;
+        }
+        .beta-note a { color: #5b44e8; border-bottom: 1px solid rgba(91,68,232,0.3); }
+        .beta-note a:hover { border-bottom-color: #5b44e8; text-decoration: none; }
+
+        /* ─── Legacy CV Header (kept for fallback) ─── */
         .cv-header {
             border-bottom: 2px solid #1a1a1a;
             padding-bottom: 24px;
@@ -627,6 +718,11 @@
         /* ─── Mobile (must be LAST to override base rules) ─── */
         @media (max-width: 600px) {
             .page { padding: 24px 16px; }
+            .hero { padding-bottom: 24px; margin-bottom: 24px; }
+            .hero h1 { font-size: 34px; letter-spacing: -0.6px; }
+            .hero-sub { font-size: 17px; }
+            .cta-group { flex-direction: column; align-items: stretch; }
+            .btn-primary, .btn-secondary { width: 100%; }
             .cv-name { font-size: 24px; }
             .cv-tagline { font-size: 14px; }
             .cv-badge { display: block; margin: 8px 0 0 0; }
@@ -675,31 +771,28 @@
 
 <div class="page">
 
-    <!-- CV Header -->
-    <header class="cv-header">
-        <div class="cv-name" data-i18n="cv_name">Human-in-the-loop Review</div>
-        <div class="cv-tagline" data-i18n="cv_tagline">
-            Human-in-the-loop code review for vibecoded projects
-            <a href="https://github.com/marsiandeployer/human-in-the-loop-review" target="_blank" rel="noopener noreferrer" class="cv-badge promo" style="text-decoration:none; color:#fff;">⭐ free for a GitHub star + feedback</a>
+    <!-- Hero (vibecheck design system) -->
+    <header class="hero">
+        <div class="hero-badge" data-i18n="cv_tagline">Vibers · Human-in-the-loop Code Review</div>
+        <h1 data-i18n="cv_name">Human-in-the-loop code review for vibecoded projects.</h1>
+        <p class="hero-sub" data-i18n="sum_body">We review and fix code written by AI vibecoders. Install our GitHub App, share your spec — we check every commit, catch hallucinations, fix security holes, and send a pull request with working code. <strong>You merge, keep shipping.</strong></p>
+        <div class="cta-group">
+            <a href="https://github.com/apps/vibers-review/installations/new" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="trackLead('click_install_app');rdt('track','Lead');" data-i18n="install_btn">Install GitHub App — Free</a>
+            <a href="https://github.com/marsiandeployer/human-in-the-loop-review" target="_blank" rel="noopener noreferrer" class="btn-secondary">⭐ Star on GitHub — first review free</a>
         </div>
+        <p class="beta-note">30s setup · 0 clarifying questions · Pay-as-you-go $15/hr · <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Talk to us on Telegram</a></p>
         <!-- TrustBox widget - Micro Review Count -->
-        <div class="trustpilot-widget" data-locale="en-US" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="639a2de1b79e39e3f877b277" data-style-height="24px" data-style-width="100%" data-theme="light" data-min-review-count="10" data-without-reviews-preferred-string-id="1" data-style-alignment="center" style="margin-top: 16px;">
+        <div class="trustpilot-widget" data-locale="en-US" data-template-id="5419b6a8b0d04a076446a9ad" data-businessunit-id="639a2de1b79e39e3f877b277" data-style-height="24px" data-style-width="100%" data-theme="light" data-min-review-count="10" data-without-reviews-preferred-string-id="1" data-style-alignment="left" style="margin-top: 16px;">
             <a href="https://www.trustpilot.com/review/onout.org" rel="nofollow noopener" target="_blank">Trustpilot</a>
         </div>
         <!-- End TrustBox widget -->
     </header>
-
-    <!-- Above-the-fold summary (always visible) -->
-    <p style="font-size: 15px; color: #333; margin-bottom: 14px; line-height: 1.6;" data-i18n="sum_body">We review and fix code written by AI vibecoders. Install our GitHub App, share your spec — we check every commit, catch hallucinations, fix security holes, and send a pull request with working code. You merge, keep shipping.</p>
 
     <div class="metrics-row" style="margin-bottom: 24px;">
         <div class="metric"><div class="metric-value">30s</div><div class="metric-label" data-i18n="m_setup">Setup time</div></div>
         <div class="metric"><div class="metric-value">Free</div><div class="metric-label" data-i18n="m_price">first review (⭐ + feedback)</div></div>
         <div class="metric"><div class="metric-value">0</div><div class="metric-label" data-i18n="m_questions">Clarifying questions</div></div>
     </div>
-
-    <!-- Primary CTA: Install GitHub App -->
-    <a href="https://github.com/apps/vibers-review/installations/new" target="_blank" rel="noopener noreferrer" class="install-btn" onclick="trackLead('click_install_app');rdt('track','Lead');" data-i18n="install_btn">Install GitHub App — Free</a>
 
     <!-- Secondary CTA: Skill command for AI agent users -->
     <div class="setup-box">
