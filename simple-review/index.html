@@ -191,21 +191,36 @@
     }
     .fb-topbar {
       display: flex; align-items: center; gap: 3px;
-      padding-bottom: 5px; border-bottom: 1px solid #f0f0f0; margin-bottom: 6px;
+      padding-bottom: 4px; border-bottom: 1px solid #f0f0f0; margin-bottom: 5px;
     }
-    .fb-topbar span { width: 4px; height: 4px; border-radius: 50%; }
-    .fb-topbar span:nth-child(1) { background: #ff5f57; }
-    .fb-topbar span:nth-child(2) { background: #febc2e; }
-    .fb-topbar span:nth-child(3) { background: #28c840; }
+    .fb-topbar span.fb-dot { width: 4px; height: 4px; border-radius: 50%; }
+    .fb-topbar span.fb-dot:nth-child(1) { background: #ff5f57; }
+    .fb-topbar span.fb-dot:nth-child(2) { background: #febc2e; }
+    .fb-topbar span.fb-dot:nth-child(3) { background: #28c840; }
+    .fb-topbar .fb-url {
+      flex: 1; height: 5px; border-radius: 2px; background: #f0f0f0;
+      margin-left: 4px;
+    }
+    .fb-wf-row { display: flex; gap: 3px; align-items: center; margin-bottom: 4px; }
+    .fb-wf-block { background: #e8e8e8; border-radius: 1.5px; }
+    .fb-wf-block--logo { width: 12px; height: 5px; background: #1a1a1a; }
+    .fb-wf-block--nav { width: 8px; height: 3px; }
+    .fb-wf-block--nav2 { width: 11px; height: 3px; }
+    .fb-wf-h { height: 4px; background: #1a1a1a; border-radius: 1.5px; width: 55%; margin-bottom: 4px; }
+    .fb-wf-text { height: 2.5px; background: #d8d8d8; border-radius: 1.5px; margin-bottom: 2px; }
+    .fb-wf-text.w90 { width: 90%; }
+    .fb-wf-text.w70 { width: 70%; }
     .fb-target {
       border: 2px dashed #FF6B35; border-radius: 4px;
-      padding: 4px 5px; background: rgba(255,107,53,0.05);
-      display: flex; flex-direction: column; gap: 2px;
+      padding: 3px 6px; background: rgba(255,107,53,0.06);
+      display: flex; align-items: center; justify-content: center;
       box-shadow: 0 0 0 2px rgba(255,107,53,0.12);
-      width: 60%;
+      width: 50%; height: 14px; margin-top: 4px;
     }
-    .fb-target-line { height: 3px; border-radius: 2px; background: #c9c9c9; }
-    .fb-target-line:first-child { width: 80%; background: #1a1a1a; }
+    .fb-target span {
+      font-size: 7px; font-weight: 700; color: #FF6B35;
+      letter-spacing: 0.3px; line-height: 1; text-transform: uppercase;
+    }
     .fb-popup {
       position: absolute; left: 12px; right: 12px; bottom: 8px;
       background: #fff; border: 1px solid #d0d0d0; border-radius: 5px;
@@ -215,11 +230,11 @@
     }
     .fb-popup-header {
       display: flex; align-items: center; justify-content: space-between;
-      font-size: 6.5px; color: #666; font-weight: 600; letter-spacing: 0.2px;
+      font-size: 8px; color: #666; font-weight: 600; letter-spacing: 0.2px;
     }
-    .fb-popup-header .fb-x { color: #999; font-weight: 400; }
+    .fb-popup-header .fb-x { color: #999; font-weight: 400; font-size: 9px; }
     .fb-popup-text {
-      font-size: 6.5px; color: #1a1a1a; line-height: 1.25;
+      font-size: 8px; color: #1a1a1a; line-height: 1.3;
       font-family: ui-monospace, SFMono-Regular, monospace;
     }
     .fb-popup-text::after {
@@ -229,12 +244,12 @@
     @keyframes fb-blink { 50% { opacity: 0; } }
     .fb-popup-fix {
       align-self: flex-end; background: #FF6B35; color: #fff;
-      font-size: 7px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+      font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 3px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     .fb-cursor {
-      position: absolute; font-size: 11px; line-height: 1;
-      top: 38px; left: 64px;
+      position: absolute; font-size: 10px; line-height: 1;
+      top: 47px; left: 56px;
     }
     .beta-note {
       font-size: 13px;
@@ -1110,11 +1125,21 @@
     <p class="hero-sub" data-i18n="hero-sub">Built for anyone who can spot an issue, but doesn&rsquo;t want to debug it by hand.</p>
     <div class="cta-group">
       <div class="flow-banner" aria-hidden="true">
-        <div class="fb-topbar"><span></span><span></span><span></span></div>
-        <div class="fb-target">
-          <div class="fb-target-line"></div>
-          <div class="fb-target-line"></div>
+        <div class="fb-topbar">
+          <span class="fb-dot"></span><span class="fb-dot"></span><span class="fb-dot"></span>
+          <span class="fb-url"></span>
         </div>
+        <div class="fb-wf-row">
+          <div class="fb-wf-block fb-wf-block--logo"></div>
+          <div style="flex:1"></div>
+          <div class="fb-wf-block fb-wf-block--nav"></div>
+          <div class="fb-wf-block fb-wf-block--nav"></div>
+          <div class="fb-wf-block fb-wf-block--nav2"></div>
+        </div>
+        <div class="fb-wf-h"></div>
+        <div class="fb-wf-text w90"></div>
+        <div class="fb-wf-text w70"></div>
+        <div class="fb-target"><span>Buy now</span></div>
         <div class="fb-cursor">👆</div>
         <div class="fb-popup">
           <div class="fb-popup-header"><span>Code review</span><span class="fb-x">×</span></div>
