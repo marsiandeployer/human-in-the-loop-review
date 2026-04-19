@@ -216,6 +216,11 @@
       box-shadow: 0 0 0 0.2em rgba(255,107,53,0.18);
       box-sizing: border-box;
     }
+    .mb-loupe::after {
+      content: ''; position: absolute; bottom: -0.1em; right: -0.7em;
+      width: 0.9em; height: 0.35em; background: #FF6B35; border-radius: 0.1em;
+      transform: rotate(45deg); transform-origin: left center;
+    }
     .mb-fix-row { display: flex; justify-content: flex-end; margin-top: auto; padding-bottom: 0.2em; }
     .mb-fix {
       background: #FF6B35; color: #fff;
