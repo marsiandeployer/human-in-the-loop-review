@@ -873,6 +873,29 @@
       50% { opacity: 0; }
     }
 
+    /* ── Animated fake cursor that travels to the Fix it button ── */
+    .fake-cursor {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+      transform: translate(var(--tx,0), var(--ty,0)) scale(1);
+      transition: transform .7s cubic-bezier(.4,.0,.2,1), opacity .2s ease;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+    }
+    .fake-cursor.visible { opacity: 1; }
+    .fake-cursor.clicking {
+      transform: translate(var(--tx,0), var(--ty,0)) scale(.82);
+      transition: transform .12s ease;
+    }
+    .inline-popup-fix.being-clicked {
+      transform: scale(.96);
+      box-shadow: 0 0 0 3px rgba(255,107,53,.35);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
     /* ── Fix animation states ── */
     .panel-btn-fix.sending {
       background: #444 !important;
@@ -1745,7 +1768,13 @@ function resetTab(tab) {
   if (chat) chat.innerHTML = '';
   // Reset inline popup
   var pop = document.getElementById('ipop-' + tab);
-  if (pop) pop.classList.remove('sending');
+  if (pop) {
+    pop.classList.remove('sending');
+    var cur = pop.querySelector('.fake-cursor');
+    if (cur) cur.classList.remove('visible', 'clicking');
+    var fb = pop.querySelector('.inline-popup-fix');
+    if (fb) fb.classList.remove('being-clicked');
+  }
   var tw = document.getElementById('tw-' + tab);
   if (tw) tw.textContent = '';
   // Reset mockups
@@ -1809,10 +1838,69 @@ function switchTab(tab, skipHistory) {
   }
 }
 
+function animateCursorToFix(tab, gen, onDone) {
+  var pop = document.getElementById('ipop-' + tab);
+  if (!pop) { onDone(); return; }
+  var btn = pop.querySelector('.inline-popup-fix');
+  if (!btn) { onDone(); return; }
+
+  var cursor = pop.querySelector('.fake-cursor');
+  if (!cursor) {
+    cursor = document.createElement('div');
+    cursor.className = 'fake-cursor';
+    cursor.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18"><path fill="#222" stroke="#fff" stroke-width="1.2" stroke-linejoin="round" d="M4 2 L4 18 L8.5 14 L11 20 L13.5 19 L11 13 L17 13 Z"/></svg>';
+    pop.appendChild(cursor);
+  }
+
+  // Starting anchor — top-right corner of popup (near close ×)
+  var startX = pop.clientWidth - 28;
+  var startY = 4;
+  cursor.style.left = startX + 'px';
+  cursor.style.top  = startY + 'px';
+  cursor.style.setProperty('--tx', '0px');
+  cursor.style.setProperty('--ty', '0px');
+  cursor.classList.remove('clicking');
+
+  // Reveal
+  void cursor.offsetWidth;
+  cursor.classList.add('visible');
+
+  // Travel to Fix it button
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    var dx = btn.offsetLeft + btn.offsetWidth * 0.62 - startX - 4;
+    var dy = btn.offsetTop  + btn.offsetHeight / 2 - startY - 9;
+    cursor.style.setProperty('--tx', dx + 'px');
+    cursor.style.setProperty('--ty', dy + 'px');
+  }, 60);
+
+  // Click press
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    cursor.classList.add('clicking');
+    btn.classList.add('being-clicked');
+  }, 830);
+
+  // Release + fire fix
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    cursor.classList.remove('clicking');
+    btn.classList.remove('being-clicked');
+    cursor.classList.remove('visible');
+    onDone();
+  }, 1000);
+}
+
 function startTabAnimation(tab, gen) {
   var data = TAB_DATA[tab];
   typeText('tw-' + tab, data.text, 1200, gen, function() {
-    setTimeout(function() { applyFix(tab, gen); }, 500);
+    setTimeout(function() {
+      if (animGen !== gen) return;
+      animateCursorToFix(tab, gen, function() {
+        if (animGen !== gen) return;
+        applyFix(tab, gen);
+      });
+    }, 400);
   });
 }
 
