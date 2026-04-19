@@ -88,22 +88,33 @@
   }
 
   /* ============ M3: Loupe scans wireframe rows, highlights one ============ */
-  .m3 { height: 100%; display: flex; flex-direction: column; gap: 3px; padding: 4px 4px 0; }
+  .m3 { height: 100%; display: flex; flex-direction: column; gap: 2.5px; padding: 3px 3px 0; }
+  .m3-topbar { display: flex; gap: 2px; margin-bottom: 1px; }
+  .m3-topbar span { width: 3px; height: 3px; border-radius: 50%; }
+  .m3-topbar span:nth-child(1) { background: #ff5f57; }
+  .m3-topbar span:nth-child(2) { background: #febc2e; }
+  .m3-topbar span:nth-child(3) { background: #28c840; }
   .m3-line { height: 2px; background: #d8d8d8; border-radius: 1px; }
-  .m3-line.b { background: #1a1a1a; width: 40%; }
+  .m3-line.b { background: #1a1a1a; width: 45%; height: 2.5px; }
   .m3-line.w70 { width: 70%; }
+  .m3-line.w85 { width: 85%; }
+  .m3-line.w55 { width: 55%; }
   .m3-target {
-    height: 6px; background: #f0f0f0; border-radius: 2px;
-    width: 50%; position: relative;
+    height: 7px; background: #f0f0f0; border-radius: 2px;
+    width: 45%; position: relative;
   }
   .m3-loupe {
-    position: absolute; top: -6px; left: 25%;
-    width: 18px; height: 18px;
+    /* override common loupe — no handle, ring only */
+    position: absolute; top: -7px; left: 18%;
+    width: 20px; height: 20px;
+    border: 2.5px solid #FF6B35; border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    box-shadow: 0 0 0 2px rgba(255,107,53,0.18);
   }
-  .m3-fix-row { display: flex; justify-content: flex-end; padding-right: 2px; margin-top: auto; padding-bottom: 2px; }
+  .m3-fix-row { display: flex; justify-content: flex-end; padding-right: 1px; margin-top: auto; padding-bottom: 2px; }
   .m3-fix {
-    background: #FF6B35; color: #fff; font-size: 7px; font-weight: 700;
-    padding: 2px 5px; border-radius: 2px; line-height: 1;
+    background: #FF6B35; color: #fff; font-size: 8.5px; font-weight: 700;
+    padding: 3px 7px; border-radius: 3px; line-height: 1;
   }
 
   /* ============ M4: HUGE loupe with "Fix it" inside lens, no other elements ============ */
@@ -236,10 +247,13 @@
       <div>
         <div class="banner">
           <div class="m3">
+            <div class="m3-topbar"><span></span><span></span><span></span></div>
             <div class="m3-line b"></div>
+            <div class="m3-line w85"></div>
             <div class="m3-line w70"></div>
-            <div class="m3-target"><div class="loupe m3-loupe"></div></div>
-            <div class="m3-fix-row"><div class="m3-fix">Fix →</div></div>
+            <div class="m3-line w55"></div>
+            <div class="m3-target"><div class="m3-loupe"></div></div>
+            <div class="m3-fix-row"><div class="m3-fix">Fix it →</div></div>
           </div>
         </div>
         <div class="label-1x">1×</div>
