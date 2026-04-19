@@ -192,23 +192,41 @@
       display: flex; flex-direction: column; gap: 0.25em;
       overflow: hidden;
     }
-    .mb-16  { width: 16px;  height: 16px;  font-size: 7px; padding: 0; border: none; box-shadow: none; background: transparent; border-radius: 0; }
-    .mb-60  { width: 60px;  height: 60px;  font-size: 10px; }
-    .mb-128 { width: 128px; height: 128px; font-size: 21px; }
-    /* mb-16: hide all wireframe content, show only centered loupe */
-    .mb-16 > *:not(.mb-loupe-wrap) { display: none; }
-    .mb-16 .mb-loupe-wrap { width: 100%; height: 100%; position: relative; }
+    .mb-16  {
+      width: 16px; height: 16px;
+      background: #fff; border: 1px solid #e4e4e4; border-radius: 2px;
+      padding: 1.5px 1.5px 0; box-shadow: none;
+      display: flex; flex-direction: column; gap: 1px;
+      box-sizing: border-box; position: relative; overflow: hidden;
+    }
+    .mb-16 > .mb-topbar, .mb-16 > .mb-fix-row, .mb-16 > .mb-loupe-wrap-only { display: none; }
+    .mb-16 .mb-line { height: 1px; background: #d0d0d0; border-radius: 0.5px; }
+    .mb-16 .mb-line.b   { background: #1a1a1a; width: 60%; height: 1.5px; }
+    .mb-16 .mb-line.w85 { width: 85%; }
+    .mb-16 .mb-line.w70 { width: 70%; }
+    .mb-16 .mb-line.w55 { width: 55%; }
+    .mb-16 .mb-target {
+      height: 2.5px; background: #f0f0f0; border-radius: 1px;
+      width: 60%; position: relative;
+    }
     .mb-16 .mb-loupe {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-58%, -58%);
-      width: 11px; height: 11px;
-      border-width: 2px;
-      box-shadow: none;
+      position: absolute; top: -4px; left: 15%;
+      width: 7px; height: 7px;
+      border: 1.5px solid #dc2626; border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      box-shadow: none; box-sizing: border-box;
     }
     .mb-16 .mb-loupe::after {
-      bottom: -2px; right: -2px;
-      width: 5px; height: 2px;
+      content: ''; position: absolute; bottom: -1px; right: -1.5px;
+      width: 3px; height: 1.2px; background: #dc2626; border-radius: 0.5px;
+      transform: rotate(45deg); transform-origin: left center;
     }
+    .mb-16 .mb-fix-bar {
+      margin-top: auto; height: 4px; background: #dc2626; border-radius: 1px;
+      margin-bottom: 1.5px;
+    }
+    .mb-60  { width: 60px;  height: 60px;  font-size: 10px; }
+    .mb-128 { width: 128px; height: 128px; font-size: 21px; }
     .mb-topbar { display: flex; gap: 0.2em; margin-bottom: 0.1em; }
     .mb-topbar span { width: 0.3em; height: 0.3em; border-radius: 50%; flex-shrink: 0; }
     .mb-topbar span:nth-child(1) { background: #ff5f57; }
@@ -1116,7 +1134,10 @@
     <p class="hero-sub" data-i18n="hero-sub">Built for anyone who can spot an issue, but doesn&rsquo;t want to debug it by hand.</p>
     <div class="cta-group">
       <div class="mb mb-16" aria-hidden="true">
-        <div class="mb-loupe-wrap"><div class="mb-loupe"></div></div>
+        <div class="mb-line b"></div>
+        <div class="mb-line w85"></div>
+        <div class="mb-target"><div class="mb-loupe"></div></div>
+        <div class="mb-fix-bar"></div>
       </div>
       <div class="mb mb-128" aria-hidden="true">
         <div class="mb-topbar"><span></span><span></span><span></span></div>
