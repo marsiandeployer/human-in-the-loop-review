@@ -144,6 +144,154 @@
     background: #fff; color: #FF6B35; font-size: 6.5px; font-weight: 700;
     padding: 1.5px 4px; border-radius: 2px; line-height: 1; flex-shrink: 0;
   }
+
+  /* ============ V5: Magnifier loupe over element ============ */
+  .v5 { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; position: relative; }
+  .v5-element {
+    background: #f0f0f0; border-radius: 3px; padding: 5px 9px;
+    color: #999; font-size: 7px; font-weight: 700;
+    text-decoration: line-through; line-height: 1;
+  }
+  .v5-loupe {
+    position: absolute; top: 6px; right: 6px;
+    width: 22px; height: 22px; border: 2.5px solid #FF6B35;
+    border-radius: 50%; background: rgba(255,255,255,0.4);
+  }
+  .v5-loupe::after {
+    content: ''; position: absolute; bottom: -7px; right: -3px;
+    width: 8px; height: 3px; background: #FF6B35; border-radius: 1px;
+    transform: rotate(45deg);
+  }
+  .v5-fix {
+    background: #FF6B35; color: #fff; font-size: 7px; font-weight: 700;
+    padding: 2.5px 7px; border-radius: 3px; line-height: 1;
+  }
+
+  /* ============ V6: Annotation pin with callout label ============ */
+  .v6 { height: 100%; padding: 2px; }
+  .v6-line { height: 1.5px; background: #d8d8d8; border-radius: 1px; margin-bottom: 2px; }
+  .v6-line.b { background: #1a1a1a; width: 50%; }
+  .v6-line.w70 { width: 70%; }
+  .v6-target-row { position: relative; margin-top: 6px; display: inline-block; }
+  .v6-element {
+    background: #f5f5f5; border: 1px solid #ddd; border-radius: 2px;
+    padding: 3px 8px; font-size: 6.5px; color: #555; line-height: 1;
+    font-weight: 600;
+  }
+  .v6-pin {
+    position: absolute; top: -7px; right: -7px;
+    width: 14px; height: 14px; background: #FF6B35;
+    color: #fff; font-size: 8px; font-weight: 700;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 3px rgba(255,107,53,0.5);
+    line-height: 1;
+  }
+  .v6-callout {
+    position: absolute; left: 4px; right: 4px; bottom: 4px;
+    background: #1a1a1a; color: #fff; border-radius: 3px;
+    padding: 3px 5px; display: flex; align-items: center; gap: 4px;
+  }
+  .v6-callout .t {
+    flex: 1; font-size: 6.5px; line-height: 1;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+  }
+  .v6-callout .fix {
+    background: #FF6B35; color: #fff; font-size: 6.5px; font-weight: 700;
+    padding: 1.5px 4px; border-radius: 2px; line-height: 1; flex-shrink: 0;
+  }
+
+  /* ============ V7: BUG stamp on a card + Fix it ============ */
+  .v7 { height: 100%; padding: 2px; display: flex; flex-direction: column; gap: 4px; }
+  .v7-card {
+    background: #fafafa; border: 1.5px solid #FF6B35; border-radius: 4px;
+    padding: 5px 6px; position: relative;
+    box-shadow: 0 0 0 1.5px rgba(255,107,53,0.15);
+  }
+  .v7-card-h { height: 3px; background: #1a1a1a; border-radius: 1.5px; width: 70%; margin-bottom: 3px; }
+  .v7-card-t { height: 2px; background: #d8d8d8; border-radius: 1px; width: 90%; margin-bottom: 2px; }
+  .v7-stamp {
+    position: absolute; top: 3px; right: 3px;
+    background: #FF6B35; color: #fff; font-size: 5.5px; font-weight: 800;
+    padding: 1.5px 4px; border-radius: 2px; line-height: 1;
+    transform: rotate(8deg); letter-spacing: 0.4px;
+  }
+  .v7-fix-row { display: flex; justify-content: center; }
+  .v7-fix {
+    background: #FF6B35; color: #fff; font-size: 8px; font-weight: 700;
+    padding: 3px 10px; border-radius: 3px; line-height: 1;
+    box-shadow: 0 1px 3px rgba(255,107,53,0.4);
+  }
+
+  /* ============ V8: Yellow sticky note ============ */
+  .v8 { height: 100%; padding: 2px; position: relative; }
+  .v8-line { height: 1.5px; background: #d8d8d8; border-radius: 1px; margin-bottom: 2px; }
+  .v8-line.b { background: #1a1a1a; width: 50%; }
+  .v8-target {
+    margin-top: 4px; border: 1.5px dashed #FF6B35; border-radius: 3px;
+    background: rgba(255,107,53,0.08); padding: 2px 6px;
+    color: #FF6B35; font-size: 6.5px; font-weight: 700;
+    text-transform: uppercase; line-height: 1; display: inline-block;
+  }
+  .v8-sticky {
+    position: absolute; right: 3px; bottom: 3px;
+    width: 38px; background: #FFF3A0;
+    border-radius: 2px; padding: 4px 5px;
+    box-shadow: 1px 2px 4px rgba(0,0,0,0.15);
+    transform: rotate(-3deg);
+  }
+  .v8-sticky .t {
+    font-size: 6.5px; color: #1a1a1a; line-height: 1.1;
+    font-family: ui-monospace, SFMono-Regular, monospace; margin-bottom: 3px;
+  }
+  .v8-sticky .fix {
+    background: #FF6B35; color: #fff; font-size: 6px; font-weight: 700;
+    padding: 1.5px 4px; border-radius: 2px; line-height: 1; display: inline-block;
+  }
+
+  /* ============ V9: Two-row before/after with Fix it ============ */
+  .v9 { height: 100%; padding: 2px; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+  .v9-row { display: flex; align-items: center; gap: 5px; }
+  .v9-icon {
+    width: 14px; height: 14px; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; line-height: 1; flex-shrink: 0;
+  }
+  .v9-icon.bad { background: rgba(255,68,68,0.15); color: #ff4444; }
+  .v9-icon.good { background: rgba(35,134,54,0.15); color: #238636; }
+  .v9-bar { flex: 1; height: 4px; border-radius: 2px; }
+  .v9-bar.bad { background: rgba(255,68,68,0.4); }
+  .v9-bar.good { background: rgba(35,134,54,0.4); }
+  .v9-fix-row { display: flex; justify-content: center; margin-top: 2px; }
+  .v9-fix {
+    background: #FF6B35; color: #fff; font-size: 8px; font-weight: 700;
+    padding: 3px 10px; border-radius: 3px; line-height: 1;
+  }
+
+  /* ============ V10: Card with floating Fix it badge ============ */
+  .v10 { height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
+  .v10-card {
+    width: 42px; background: #fff; border: 2px solid #FF6B35; border-radius: 4px;
+    padding: 4px; box-shadow: 0 0 0 2px rgba(255,107,53,0.15);
+  }
+  .v10-img {
+    height: 14px; background: linear-gradient(135deg,#1a2a4a 0%,#2d4a7a 100%);
+    border-radius: 2px; margin-bottom: 3px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6); font-size: 8px; line-height: 1;
+  }
+  .v10-name { height: 2px; background: #1a1a1a; border-radius: 1px; width: 80%; margin-bottom: 2px; }
+  .v10-price { height: 2px; background: #ff4444; border-radius: 1px; width: 50%; margin-bottom: 3px; }
+  .v10-btn {
+    background: #ccc; height: 5px; border-radius: 1.5px;
+  }
+  .v10-cursor { position: absolute; bottom: 8px; right: 10px; font-size: 9px; }
+  .v10-badge {
+    position: absolute; top: -4px; right: -4px;
+    background: #FF6B35; color: #fff; font-size: 6.5px; font-weight: 800;
+    padding: 2px 5px; border-radius: 8px; line-height: 1;
+    box-shadow: 0 1px 3px rgba(255,107,53,0.5);
+    transform: rotate(8deg);
+  }
 </style>
 </head>
 <body>
@@ -322,9 +470,259 @@
 
 </div>
 
+</div>
+
+<h1 style="margin-top:40px;">Минималистичные варианты (≤3 элемента)</h1>
+
+<div class="grid">
+
+  <!-- VARIANT 5: Magnifier -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v5">
+            <div class="v5-element">Buy now</div>
+            <div class="v5-loupe"></div>
+            <div class="v5-fix">Fix it →</div>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v5">
+                <div class="v5-element">Buy now</div>
+                <div class="v5-loupe"></div>
+                <div class="v5-fix">Fix it →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 5 — Magnifier</div>
+    <div class="desc">Зачёркнутый "Buy now" + лупа в углу + Fix it. Метафора code review.</div>
+  </div>
+
+  <!-- VARIANT 6: Annotation pin -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v6" style="display:flex;align-items:center;justify-content:center;height:100%;">
+            <div class="v6-target-row">
+              <div class="v6-element">Subscribe</div>
+              <div class="v6-pin">!</div>
+            </div>
+          </div>
+          <div class="v6-callout">
+            <span class="t">broken</span>
+            <span class="fix">Fix →</span>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v6" style="display:flex;align-items:center;justify-content:center;height:100%;">
+                <div class="v6-target-row">
+                  <div class="v6-element">Subscribe</div>
+                  <div class="v6-pin">!</div>
+                </div>
+              </div>
+              <div class="v6-callout">
+                <span class="t">broken</span>
+                <span class="fix">Fix →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 6 — Pin annotation</div>
+    <div class="desc">Кнопка Subscribe + красный pin "!" + чёрный callout с Fix.</div>
+  </div>
+
+  <!-- VARIANT 7: BUG stamp -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v7">
+            <div class="v7-card">
+              <div class="v7-card-h"></div>
+              <div class="v7-card-t"></div>
+              <div class="v7-card-t" style="width:60%"></div>
+              <div class="v7-stamp">BUG</div>
+            </div>
+            <div class="v7-fix-row">
+              <div class="v7-fix">Fix it →</div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v7">
+                <div class="v7-card">
+                  <div class="v7-card-h"></div>
+                  <div class="v7-card-t"></div>
+                  <div class="v7-card-t" style="width:60%"></div>
+                  <div class="v7-stamp">BUG</div>
+                </div>
+                <div class="v7-fix-row">
+                  <div class="v7-fix">Fix it →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 7 — BUG stamp</div>
+    <div class="desc">Карточка-блок с диагональным "BUG" стампом + Fix it ниже.</div>
+  </div>
+
+  <!-- VARIANT 8: Sticky note -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v8" style="display:flex;align-items:center;justify-content:center;height:100%;">
+            <div class="v8-target">Buy now</div>
+          </div>
+          <div class="v8-sticky">
+            <div class="t">broken</div>
+            <span class="fix">Fix →</span>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v8" style="display:flex;align-items:center;justify-content:center;height:100%;">
+                <div class="v8-target">Buy now</div>
+              </div>
+              <div class="v8-sticky">
+                <div class="t">broken</div>
+                <span class="fix">Fix →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 8 — Sticky note</div>
+    <div class="desc">Выделенная кнопка + жёлтый стикер с заметкой и Fix.</div>
+  </div>
+
+  <!-- VARIANT 9: Before/after -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v9">
+            <div class="v9-row">
+              <div class="v9-icon bad">✕</div>
+              <div class="v9-bar bad"></div>
+            </div>
+            <div class="v9-row">
+              <div class="v9-icon good">✓</div>
+              <div class="v9-bar good"></div>
+            </div>
+            <div class="v9-fix-row">
+              <div class="v9-fix">Fix it →</div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v9">
+                <div class="v9-row">
+                  <div class="v9-icon bad">✕</div>
+                  <div class="v9-bar bad"></div>
+                </div>
+                <div class="v9-row">
+                  <div class="v9-icon good">✓</div>
+                  <div class="v9-bar good"></div>
+                </div>
+                <div class="v9-fix-row">
+                  <div class="v9-fix">Fix it →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 9 — Before / after</div>
+    <div class="desc">Красный X (баг) → зелёный галочка (фикс) + Fix it. Чисто символьный.</div>
+  </div>
+
+  <!-- VARIANT 10: Product card with badge -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="v10">
+            <div class="v10-card">
+              <div class="v10-img">📷</div>
+              <div class="v10-name"></div>
+              <div class="v10-price"></div>
+              <div class="v10-btn"></div>
+            </div>
+            <div class="v10-badge">Fix it</div>
+          </div>
+        </div>
+        <div class="label-1x">1× (60px)</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap">
+          <div class="scale-3x">
+            <div class="banner">
+              <div class="v10">
+                <div class="v10-card">
+                  <div class="v10-img">📷</div>
+                  <div class="v10-name"></div>
+                  <div class="v10-price"></div>
+                  <div class="v10-btn"></div>
+                </div>
+                <div class="v10-badge">Fix it</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label-1x">3× zoom</div>
+      </div>
+    </div>
+    <div class="name">Variant 10 — Product card</div>
+    <div class="desc">Мини-карточка товара в оранжевой рамке + бейдж "Fix it" в углу.</div>
+  </div>
+
+</div>
+
 <p style="color:#888;font-size:13px;max-width:600px;text-align:center;">
   Слева — реальный размер 60×60px. Справа — увеличение ×3 для оценки деталей.
-  Скажи номер варианта (1–4) — поставлю на лендинг.
+  Скажи номер варианта (1–10) — поставлю на лендинг.
 </p>
 
 </body>
