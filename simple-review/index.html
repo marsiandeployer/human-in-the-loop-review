@@ -184,48 +184,57 @@
     .btn-secondary:focus-visible { outline: 2px solid #5b44e8; outline-offset: 3px; }
     .flow-banner {
       width: 128px; height: 128px; flex-shrink: 0; align-self: center;
-      background: #0d1117; border-radius: 16px; padding: 9px;
-      box-sizing: border-box; display: flex; flex-direction: column;
-      gap: 5px;
+      background: #fff; border: 1px solid #e4e4e4; border-radius: 12px;
+      box-sizing: border-box; padding: 7px; position: relative;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    .fb-step {
-      border-radius: 5px; background: #161b26; border: 1px solid #30363d;
-      padding: 4px 6px; display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+    .fb-topbar {
+      display: flex; align-items: center; gap: 3px;
+      padding-bottom: 5px; border-bottom: 1px solid #f0f0f0; margin-bottom: 6px;
     }
-    .fb-step--ai  { border-color: #7c3aed; }
-    .fb-step--fix { border-color: #238636; }
-    .fb-dots { display: flex; gap: 3px; flex-shrink: 0; }
-    .fb-dots span { width: 4px; height: 4px; border-radius: 50%; }
-    .fb-dots span:nth-child(1) { background: #ff5f57; }
-    .fb-dots span:nth-child(2) { background: #febc2e; }
-    .fb-dots span:nth-child(3) { background: #28c840; }
-    .fb-bug-el {
-      flex: 1; border: 1px solid #ff4444; border-radius: 3px;
-      padding: 2px 4px; display: flex; flex-direction: column; gap: 2px;
+    .fb-topbar span { width: 4px; height: 4px; border-radius: 50%; }
+    .fb-topbar span:nth-child(1) { background: #ff5f57; }
+    .fb-topbar span:nth-child(2) { background: #febc2e; }
+    .fb-topbar span:nth-child(3) { background: #28c840; }
+    .fb-target {
+      border: 2px dashed #FF6B35; border-radius: 4px;
+      padding: 4px 5px; background: rgba(255,107,53,0.05);
+      display: flex; flex-direction: column; gap: 2px;
+      box-shadow: 0 0 0 2px rgba(255,107,53,0.12);
+      width: 60%;
     }
-    .fb-line { height: 3px; border-radius: 2px; background: #30363d; }
-    .fb-line--red { background: rgba(255,68,68,0.5); width: 70%; }
-    .fb-cursor { font-size: 10px; flex-shrink: 0; line-height: 1; }
-    .fb-arrow { text-align: center; font-size: 8px; color: #444c56; line-height: 1; flex-shrink: 0; }
-    .fb-ai-icon {
-      width: 14px; height: 14px; border-radius: 3px; background: rgba(124,58,237,0.2);
-      color: #d97757; font-size: 9px; font-weight: 700; display: flex;
-      align-items: center; justify-content: center; flex-shrink: 0; font-family: sans-serif;
+    .fb-target-line { height: 3px; border-radius: 2px; background: #c9c9c9; }
+    .fb-target-line:first-child { width: 80%; background: #1a1a1a; }
+    .fb-popup {
+      position: absolute; left: 12px; right: 12px; bottom: 8px;
+      background: #fff; border: 1px solid #d0d0d0; border-radius: 5px;
+      padding: 5px 6px 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+      display: flex; flex-direction: column; gap: 3px;
     }
-    .fb-chat { flex: 1; display: flex; flex-direction: column; gap: 3px; }
-    .fb-chat-line { height: 3px; border-radius: 2px; }
-    .fb-chat-line--purple { background: rgba(124,58,237,0.7); width: 90%; }
-    .fb-chat-line--gray   { background: #30363d; width: 60%; }
-    .fb-diff { flex: 1; display: flex; flex-direction: column; gap: 3px; }
-    .fb-diff-line { height: 3px; border-radius: 2px; display: flex; align-items: center; gap: 3px; }
-    .fb-diff-line::before { content: ''; width: 3px; height: 3px; border-radius: 1px; flex-shrink: 0; }
-    .fb-diff-line--rm::before { background: #ff4444; }
-    .fb-diff-line--rm { background: rgba(255,68,68,0.2); width: 65%; }
-    .fb-diff-line--add::before { background: #238636; }
-    .fb-diff-line--add { background: rgba(35,134,54,0.25); width: 85%; }
-    .fb-check {
-      font-size: 13px; flex-shrink: 0; line-height: 1;
-      color: #238636; font-weight: 700; font-family: sans-serif;
+    .fb-popup-header {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 6.5px; color: #666; font-weight: 600; letter-spacing: 0.2px;
+    }
+    .fb-popup-header .fb-x { color: #999; font-weight: 400; }
+    .fb-popup-text {
+      font-size: 6.5px; color: #1a1a1a; line-height: 1.25;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+    }
+    .fb-popup-text::after {
+      content: '|'; color: #5b44e8; margin-left: 1px;
+      animation: fb-blink 1s steps(1) infinite;
+    }
+    @keyframes fb-blink { 50% { opacity: 0; } }
+    .fb-popup-fix {
+      align-self: flex-end; background: #FF6B35; color: #fff;
+      font-size: 7px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .fb-cursor {
+      position: absolute; font-size: 11px; line-height: 1;
+      top: 38px; left: 64px;
     }
     .beta-note {
       font-size: 13px;
@@ -1101,29 +1110,16 @@
     <p class="hero-sub" data-i18n="hero-sub">Built for anyone who can spot an issue, but doesn&rsquo;t want to debug it by hand.</p>
     <div class="cta-group">
       <div class="flow-banner" aria-hidden="true">
-        <div class="fb-step">
-          <div class="fb-dots"><span></span><span></span><span></span></div>
-          <div class="fb-bug-el">
-            <div class="fb-line fb-line--red"></div>
-            <div class="fb-line"></div>
-          </div>
-          <div class="fb-cursor">👆</div>
+        <div class="fb-topbar"><span></span><span></span><span></span></div>
+        <div class="fb-target">
+          <div class="fb-target-line"></div>
+          <div class="fb-target-line"></div>
         </div>
-        <div class="fb-arrow">↓</div>
-        <div class="fb-step fb-step--ai">
-          <div class="fb-ai-icon">A</div>
-          <div class="fb-chat">
-            <div class="fb-chat-line fb-chat-line--purple"></div>
-            <div class="fb-chat-line fb-chat-line--gray"></div>
-          </div>
-        </div>
-        <div class="fb-arrow">↓</div>
-        <div class="fb-step fb-step--fix">
-          <div class="fb-diff">
-            <div class="fb-diff-line fb-diff-line--rm"></div>
-            <div class="fb-diff-line fb-diff-line--add"></div>
-          </div>
-          <div class="fb-check">✓</div>
+        <div class="fb-cursor">👆</div>
+        <div class="fb-popup">
+          <div class="fb-popup-header"><span>Code review</span><span class="fb-x">×</span></div>
+          <div class="fb-popup-text">button is unclickable</div>
+          <div class="fb-popup-fix">Fix it →</div>
         </div>
       </div>
       <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'download_extension'});" data-i18n="cta-download">Download Extension</a>
