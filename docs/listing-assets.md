@@ -1,7 +1,10 @@
 # Vibers — Listing Assets Pack
 
-Готовый набор ассетов для заливки на каталоги (Capterra, G2, ProductHunt, AlternativeTo, Futurepedia и т.д.).
+Готовый набор ассетов для заливки Vibers на каталоги (Capterra, G2, ProductHunt, AlternativeTo и т.д.).
 Копируй нужные блоки в форму. Все длины подогнаны под лимиты популярных площадок.
+
+> Это файл для **Vibers** — human-in-the-loop code review (GitHub App, люди читают PR и шлют фиксы).
+> Для Chrome-расширения SimpleReview — см. `docs/simple-review-listing-assets.md`.
 
 ---
 
@@ -13,11 +16,11 @@
 | Tagline (60 chars) | Human code review for AI-generated code |
 | Tagline alt (80 chars) | Real humans review your AI code and send PRs with fixes |
 | Category (primary) | Code Review / Developer Tools |
-| Category (alt) | QA & Testing, AI Tools |
+| Category (alt) | QA & Testing |
 | Pricing model | Freemium (free tier + paid review packs) |
 | Founded | 2025 |
 | Languages | English, Russian |
-| Platforms | GitHub App, Chrome Extension, AI Agent Skill |
+| Platforms | GitHub App, AI Agent Skill |
 
 ---
 
@@ -32,7 +35,6 @@
 | Telegram | https://t.me/VibersReview |
 | Reddit | https://www.reddit.com/r/VibeCodeReview |
 | Pricing | https://onout.org/vibers/#pricing |
-| Demo | https://onout.org/vibers/vibecheck |
 | Contact email | hello@onout.org |
 
 ---
@@ -70,8 +72,7 @@ Use cases: vibe-coded SaaS prototypes, Chrome extensions, WordPress / WooCommerc
 - Reviewer sends a pull request with the fix, not a ticket
 - One-click install via GitHub App
 - Works as an AI agent skill (Claude Code, Cursor, Windsurf, Codex)
-- Chrome Extension (SimpleReview) for in-browser feedback on live sites
-- Catches bugs AI misses: edge cases, dead UI states, regression in main flows
+- Catches bugs AI misses: edge cases, dead UI states, regressions in main flows
 - No OWASP / compliance theater — honest about what we do
 - Language-agnostic and framework-agnostic
 - Free tier for solo devs; paid review packs for teams
@@ -86,7 +87,6 @@ Use cases: vibe-coded SaaS prototypes, Chrome extensions, WordPress / WooCommerc
 - Small teams using Cursor, Claude Code, Copilot, Windsurf
 - Vibe-coders who care about quality but cannot afford traditional code review
 - Agencies delivering AI-built MVPs to clients
-- WordPress / WooCommerce shops with AI-generated customizations
 
 ---
 
@@ -94,8 +94,9 @@ Use cases: vibe-coded SaaS prototypes, Chrome extensions, WordPress / WooCommerc
 
 | Competitor | They do | We do |
 |-----------|---------|-------|
-| CodeRabbit / Greptile | LLM bot posts review comments | Human reads code and sends PR with fix |
-| Marker.io / Userback / BugHerd | Tooling so YOUR team can report bugs | We review and fix; not just tooling |
+| CodeRabbit | LLM bot posts review comments on PR | Human reads code and sends PR with fix |
+| Greptile | AI-generated PR reviews | Human reviewer, fix-as-PR |
+| Bugbot / PR-Agent | Static + LLM suggestions | Real developer runs the flow, writes the patch |
 | Snyk / SonarQube | Static analysis, security scans | Human eyes on logic, UX, and main flows |
 | Traditional code review consulting | Slow, expensive, retainer-based | On-demand, per-PR, transparent pricing |
 
@@ -106,11 +107,10 @@ Use this for "Vibers vs X" fields and comparison pages.
 ## 7. Tags / Keywords (для каталогов с тегами)
 
 ```
-code-review, ai-code-review, human-code-review, github-app, chrome-extension,
-ai-tools, developer-tools, qa-testing, vibe-coding, claude-code, cursor,
+code-review, ai-code-review, human-code-review, github-app,
+developer-tools, qa-testing, vibe-coding, claude-code, cursor,
 copilot, windsurf, pull-request, pr-review, alternative-to-coderabbit,
-alternative-to-marker-io, alternative-to-usersnap, indie-hackers,
-saas-tools, bug-detection, freemium
+alternative-to-greptile, indie-hackers, saas-tools, bug-detection, freemium
 ```
 
 ---
@@ -132,20 +132,10 @@ saas-tools, bug-detection, freemium
 |-------|------|------------|-----|
 | Logo (square 512) | `assets/vibers-logo-source.jpg` | https://onout.org/vibers/assets/vibers-logo-source.jpg | profile avatar |
 | Favicon (512 PNG) | `favicon-512.png` | https://onout.org/vibers/favicon-512.png | small icon |
-| Demo: comment → PR (1) | uploads | https://i.wpmix.net/image/photo/image_2026-04-19_18-15-44_1776611748531.png | screenshot |
-| Demo: PR opened (2) | uploads | https://i.wpmix.net/image/photo/image_2026-04-19_18-16-17_1776611778828.png | screenshot |
-| Demo: WordPress use case | uploads | https://i.wpmix.net/image/photo/image_2026-04-20_10-07-11_1776668832499.png | screenshot |
-| Demo: Feature request flow | uploads | https://i.wpmix.net/image/photo/image_2026-04-20_10-10-53_1776669053918.png | screenshot |
-| Demo: Search transactions | uploads | https://i.wpmix.net/image/photo/image_2026-04-20_10-11-02_1776669063234.png | screenshot |
 
-Рекомендуемый порядок скриншотов в галерее каталога:
-1. Comment on element (intent)
-2. Claude/Codex picker + Fix it
-3. PR opened on GitHub
-4. Deploy result + metric (CTR +18%)
-5. Use-case variant (WordPress / Feature request)
+Если нужны скриншоты продукта — делать свежие из GitHub App flow (установка → PR review → фикс-PR от ревьюера). Demo-скрины Chrome-расширения относятся к другому продукту (SimpleReview).
 
-Если каталог требует видео — записать 30-секундный screencast по тем же 5 шагам.
+Если каталог требует видео — записать 30-секундный screencast: установка GitHub App → пуш PR → ревьюер открывает fix-PR.
 
 ---
 
@@ -182,12 +172,12 @@ Those are LLM bots that post comments. We are humans who send pull requests with
 ## 12. Submission checklist (один раз перед заливкой)
 
 - [ ] Logo 512×512 PNG готов
-- [ ] 5 скриншотов в правильном порядке
+- [ ] Скриншоты GitHub App flow (установка → PR → fix-PR) готовы
 - [ ] Короткий и длинный pitch скопированы из этого файла
 - [ ] Tags / keywords скопированы
 - [ ] Pricing блок актуален (свериться с лендингом)
 - [ ] Founder bio под аккаунт того, кто заливает
-- [ ] UTM-источник в URL: добавь `?utm_source=<directory>&utm_medium=listing` к https://onout.org/vibers/
+- [ ] UTM-источник в URL: `?utm_source=<directory>&utm_medium=listing` к https://onout.org/vibers/
 
 UTM пример для Capterra: `https://onout.org/vibers/?utm_source=capterra&utm_medium=listing`
 
@@ -197,7 +187,8 @@ UTM пример для Capterra: `https://onout.org/vibers/?utm_source=capterra
 
 См. issue #50 и `docs/WIKI.md` секция «Software Directories & Placement Ideas» — приоритеты по волнам:
 1. Capterra / G2 / GetApp (общие SaaS)
-2. AlternativeTo (issue #26)
-3. Futurepedia / There's An AI For That (AI-каталоги)
-4. ProductHunt / BetaList / Peerlist (launch)
-5. GitHub Marketplace / Indie Hackers (dev-комьюнити)
+2. AlternativeTo (issue #26) — категория Code Review
+3. ProductHunt / BetaList / Peerlist (launch)
+4. GitHub Marketplace / Indie Hackers (dev-комьюнити)
+
+AI-каталоги (Futurepedia, There's An AI For That) — спорно для Vibers, т.к. мы human-review, не AI-tool. Подаваться как «human alternative to AI review bots».

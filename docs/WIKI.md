@@ -262,7 +262,11 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 
 Где ещё можно разместить Vibers для получения трафика, backlinks и лидов.
 
-> **Готовый набор ассетов для заливки:** [listing-assets.md](listing-assets.md) — pitch'и всех длин, скриншоты, FAQ, теги, UTM-инструкция.
+> **Готовые наборы ассетов для заливки** (разделены по продуктам):
+> - **Vibers** (human-in-the-loop, GitHub App): [listing-assets.md](listing-assets.md)
+> - **SimpleReview** (Chrome Extension, AI → PR): [simple-review-listing-assets.md](simple-review-listing-assets.md)
+>
+> Внутри каждого — pitch'и всех длин, скриншоты, FAQ, теги, UTM-инструкция.
 
 ### Общие каталоги SaaS/Software
 
