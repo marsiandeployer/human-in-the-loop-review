@@ -192,3 +192,12 @@ UTM пример для Capterra: `https://onout.org/vibers/?utm_source=capterra
 4. GitHub Marketplace / Indie Hackers (dev-комьюнити)
 
 AI-каталоги (Futurepedia, There's An AI For That) — спорно для Vibers, т.к. мы human-review, не AI-tool. Подаваться как «human alternative to AI review bots».
+
+---
+
+## 14. Известные проблемы при регистрации
+
+**Capterra — нет России и Армении в списке стран (2026-04-20)**
+При заполнении профиля вендора Capterra не предлагает ни Россию, ни Армению в дропдауне стран.
+Как следствие — нет возможности указать местный номер телефона.
+Решение: выбрать другую страну (например, Georgia/Грузия или Cyprus) или пропустить поле телефона если оно не обязательное.
