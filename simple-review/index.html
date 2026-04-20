@@ -1599,15 +1599,10 @@
   </div><!-- /demo-banner -->
   </div><!-- /demo-banner-outer -->
 
-  <!-- A/B/C banner variants for install testing -->
-  <div class="ab-banners-wrap" style="max-width:1400px;margin:0 auto 48px;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(440px,1fr));gap:32px;justify-items:center;">
+  <!-- Small banner 440x280 -->
+  <div class="ab-banners-wrap" style="max-width:440px;margin:0 auto 48px;padding:0 16px;">
 
-    <!-- VARIANT A — Flow / product mechanics (headline INSIDE banner, split hero layout) -->
     <div style="width:100%;max-width:440px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-        <span style="background:#1a1a1a;color:#fff;font-size:11px;font-weight:800;padding:3px 7px;border-radius:3px;letter-spacing:.5px;">A</span>
-        <span style="font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Flow / mechanics</span>
-      </div>
       <div class="demo-banner static-banner variant-a-split">
         <div class="va-left">
           <div style="font-size:18px;font-weight:600;color:#c8c8c8;letter-spacing:-0.3px;line-height:1.15;margin-bottom:6px;">Click any issue on your website</div>
@@ -1641,7 +1636,7 @@
                 <div style="text-align:center;font-size:14px;line-height:1;color:#FF6B35;font-weight:300;padding:6px 0;">&darr;</div>
                 <!-- Fix popup -->
                 <div class="inline-popup" style="position:relative;padding:6px;margin:0;">
-                  <div class="inline-popup-ta" style="margin-bottom:5px;font-weight:600;font-size:10px;padding:4px 6px;min-height:0;font-style:italic;color:#444;">&ldquo;Unavailable &rarr; Add to cart&rdquo;</div>
+                  <div class="inline-popup-ta" style="margin-bottom:5px;font-weight:600;font-size:10px;padding:4px 6px;min-height:0;font-style:italic;color:#444;">&ldquo;Button is disabled but item is in stock&rdquo;</div>
                   <button class="inline-popup-fix" style="padding:4px 8px;font-size:10px;">Fix it &rarr;</button>
                 </div>
                 <!-- Arrow -->
@@ -1665,73 +1660,72 @@
       </div>
     </div>
 
-    <!-- VARIANT B — Outcome / aggressive (headline in dark top-band) -->
-    <div style="width:100%;max-width:440px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-        <span style="background:#1a1a1a;color:#fff;font-size:11px;font-weight:800;padding:3px 7px;border-radius:3px;letter-spacing:.5px;">B</span>
-        <span style="font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Outcome / punch</span>
-      </div>
-      <div class="demo-banner static-banner variant-b-stack">
-        <div class="vb-headline">
-          <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.4px;line-height:1.15;">Stop writing bug reports.</div>
-          <div style="font-size:22px;font-weight:900;color:#FF6B35;letter-spacing:-0.6px;line-height:1.05;margin-top:2px;">Ship fixes.</div>
+    </div>
+  </div>
+
+  <!-- Large banner 1400x560 -->
+  <div style="max-width:1400px;margin:0 auto 48px;padding:0 16px;">
+    <div style="background:#1a1a1a;border-radius:16px;overflow:hidden;display:flex;height:560px;">
+      <!-- Left text panel -->
+      <div style="width:340px;flex-shrink:0;padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          <div style="font-size:32px;font-weight:600;color:#c8c8c8;letter-spacing:-0.5px;line-height:1.2;margin-bottom:16px;">Click any issue on your website</div>
+          <div style="font-size:48px;font-weight:300;color:#FF6B35;line-height:1;margin-bottom:16px;">&darr;</div>
+          <div style="font-size:42px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.05;">Ship the fix<span style="color:#FF6B35;">.</span></div>
         </div>
-        <div class="demo-viewport" style="flex:1;background:#fff;">
-          <div class="demo-site" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:14px 16px;height:100%;box-sizing:border-box;">
-            <div style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:5px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;width:92px;flex-shrink:0;box-sizing:border-box;">
-              <div style="height:48px;border-radius:3px;margin-bottom:5px;overflow:hidden;">
-                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=220&h=140&fit=crop&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:3px;">
-              </div>
-              <div style="background:#ccc;color:#999;font-size:9px;font-weight:700;padding:3px 4px;border-radius:3px;text-align:center;">Unavailable</div>
+        <div style="font-size:14px;color:#555;font-weight:500;letter-spacing:.3px;">SimpleReview &middot; Chrome</div>
+      </div>
+      <!-- Right viewport -->
+      <div style="flex:1;background:#f0f0f0;display:flex;flex-direction:column;">
+        <!-- Browser chrome bar -->
+        <div style="background:#e0e0e0;padding:10px 16px;display:flex;align-items:center;gap:8px;">
+          <div style="display:flex;gap:6px;">
+            <span style="width:12px;height:12px;border-radius:50%;background:#ff5f57;display:block;"></span>
+            <span style="width:12px;height:12px;border-radius:50%;background:#febc2e;display:block;"></span>
+            <span style="width:12px;height:12px;border-radius:50%;background:#28c840;display:block;"></span>
+          </div>
+          <div style="flex:1;background:#fff;border-radius:6px;padding:5px 12px;font-size:12px;color:#888;max-width:300px;margin:0 auto;">mystore.com</div>
+        </div>
+        <!-- Site content -->
+        <div style="flex:1;padding:32px 40px;display:flex;flex-direction:column;justify-content:space-between;">
+          <!-- Issue card -->
+          <div style="background:#fff;border:3px solid #FF6B35;border-radius:12px;padding:16px;box-shadow:0 0 0 6px rgba(255,107,53,.12);position:relative;display:flex;gap:16px;align-items:center;">
+            <span style="position:absolute;top:-13px;left:14px;background:#FF6B35;color:#fff;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:3px 10px;border-radius:5px;line-height:1;">Issue</span>
+            <div style="width:72px;height:72px;border-radius:8px;overflow:hidden;flex-shrink:0;">
+              <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=200&h=200&fit=crop&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
-            <button class="inline-popup-fix" style="animation:none;padding:10px 18px;font-size:14px;white-space:nowrap;flex-shrink:0;">Fix it &rarr;</button>
-            <div style="background:#f0fdf4;border:2px solid #16a34a;border-radius:8px;padding:12px 10px;box-sizing:border-box;text-align:center;flex-shrink:0;">
-              <div style="font-size:22px;font-weight:900;color:#15803d;letter-spacing:-.5px;line-height:1;margin-bottom:4px;">&#10003; Fixed</div>
-              <div style="font-size:9px;color:#166534;font-weight:600;line-height:1.35;">
-                <div>PR opened</div>
-                <div>Live</div>
-              </div>
+            <div style="flex:1;">
+              <div style="font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:4px;">Camera Lens 50mm f/1.8</div>
+              <div style="font-size:14px;color:#46b450;font-weight:600;">In stock — 12 units</div>
             </div>
+            <div style="background:#ddd;color:#999;font-size:14px;font-weight:800;padding:8px 16px;border-radius:8px;flex-shrink:0;">Unavailable</div>
+            <!-- Cursor -->
+            <svg style="position:absolute;right:-8px;bottom:-12px;width:28px;height:28px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));" viewBox="0 0 24 24"><path d="M3 2 L3 18 L7.5 14 L10 20 L13 19 L10.5 13 L17 13 Z" fill="#fff" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <!-- Arrow -->
+          <div style="text-align:center;font-size:28px;line-height:1;color:#FF6B35;">&darr;</div>
+          <!-- Comment popup -->
+          <div style="background:#fff;border:2px solid #FF6B35;border-radius:12px;padding:16px 20px;box-shadow:0 4px 20px rgba(0,0,0,.08);">
+            <div style="font-size:15px;font-weight:600;font-style:italic;color:#444;margin-bottom:12px;">&ldquo;Button is disabled but item is in stock&rdquo;</div>
+            <button style="background:#FF6B35;color:#fff;border:none;border-radius:8px;padding:8px 20px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.2px;">Fix it &rarr;</button>
+          </div>
+          <!-- Arrow -->
+          <div style="text-align:center;font-size:28px;line-height:1;color:#16a34a;">&darr;</div>
+          <!-- Fixed card -->
+          <div style="background:#fff;border:3px solid #16a34a;border-radius:12px;padding:16px;box-shadow:0 0 0 6px rgba(22,163,74,.12);position:relative;display:flex;gap:16px;align-items:center;">
+            <span style="position:absolute;top:-13px;left:14px;background:#16a34a;color:#fff;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:3px 10px;border-radius:5px;line-height:1;">&#10003; Fixed</span>
+            <div style="width:72px;height:72px;border-radius:8px;overflow:hidden;flex-shrink:0;">
+              <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=200&h=200&fit=crop&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:4px;">Camera Lens 50mm f/1.8</div>
+              <div style="font-size:14px;color:#46b450;font-weight:600;">In stock — 12 units</div>
+            </div>
+            <div style="background:#FF6B35;color:#fff;font-size:14px;font-weight:800;padding:8px 20px;border-radius:8px;flex-shrink:0;letter-spacing:.3px;">Add to cart</div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- VARIANT C — Balanced (favorite) — light top-strip headline -->
-    <div style="width:100%;max-width:440px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-        <span style="background:#FF6B35;color:#fff;font-size:11px;font-weight:800;padding:3px 7px;border-radius:3px;letter-spacing:.5px;">C</span>
-        <span style="font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Balanced &middot; favorite</span>
-      </div>
-      <div class="demo-banner static-banner variant-c-stack">
-        <div class="vc-headline">
-          <span style="font-size:17px;font-weight:700;color:#1a1a1a;letter-spacing:-0.3px;">Click any issue</span>
-          <span style="font-size:20px;font-weight:300;color:#FF6B35;line-height:1;">&rarr;</span>
-          <span style="font-size:17px;font-weight:800;color:#1a1a1a;letter-spacing:-0.3px;">Get the fix</span>
-        </div>
-        <div class="demo-viewport" style="flex:1;background:#fff;">
-          <div class="demo-site" style="padding:12px;">
-            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;">
-              <div style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:5px;box-shadow:0 0 0 3px rgba(255,107,53,.15);box-sizing:border-box;">
-                <div style="height:48px;border-radius:3px;margin-bottom:5px;overflow:hidden;">
-                  <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=220&h=140&fit=crop&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:3px;">
-                </div>
-                <div style="background:#ccc;color:#999;font-size:10px;font-weight:700;padding:3px 5px;border-radius:3px;text-align:center;">Unavailable</div>
-              </div>
-              <div class="inline-popup" style="position:relative;min-width:0;padding:8px;">
-                <div class="inline-popup-ta" style="margin-bottom:7px;font-weight:600;font-size:10px;text-align:center;font-style:italic;color:#444;padding:4px 6px;min-height:0;">&ldquo;Unavailable &rarr; Add to cart&rdquo;</div>
-                <button class="inline-popup-fix" style="padding:5px 8px;font-size:11px;">Fix it &rarr;</button>
-              </div>
-              <div style="background:#f0fdf4;border:2px solid #16a34a;border-radius:8px;padding:10px 8px;box-sizing:border-box;text-align:center;">
-                <div style="font-size:18px;font-weight:900;color:#15803d;letter-spacing:-.3px;line-height:1;margin-bottom:4px;">&#10003; Fixed</div>
-                <div style="font-size:9px;color:#166534;font-weight:600;">Live</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   </div><!-- /hero-wrap -->
