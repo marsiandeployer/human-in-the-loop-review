@@ -262,6 +262,8 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 
 Где ещё можно разместить Vibers для получения трафика, backlinks и лидов.
 
+> **Готовый набор ассетов для заливки:** [listing-assets.md](listing-assets.md) — pitch'и всех длин, скриншоты, FAQ, теги, UTM-инструкция.
+
 ### Общие каталоги SaaS/Software
 
 | Платформа | URL | Приоритет | Примечание |

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:440px;height:280px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+body{
+  background:radial-gradient(ellipse at 50% 130%, #fff0e8 0%, #fff 60%);
+  padding:14px 16px;color:#111;overflow:hidden;
+}
+.head{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.loupe-mark{width:20px;height:20px;border:2.5px solid #FF6B35;border-radius:50%;position:relative;}
+.loupe-mark::after{content:'';position:absolute;right:-5px;bottom:-2px;width:7px;height:2.5px;background:#FF6B35;border-radius:1px;transform:rotate(45deg);transform-origin:left center;}
+.brand{font-size:14px;font-weight:800;letter-spacing:-0.2px;}
+.tag{margin-left:auto;font-size:8px;font-weight:700;letter-spacing:1px;color:#FF6B35;background:#fff3ee;border:1px solid #ffd6c2;padding:3px 6px;border-radius:3px;text-transform:uppercase;}
+
+.flow{display:flex;align-items:center;gap:8px;}
+.panel{
+  flex:1;background:#fff;border:1px solid #e4e4e4;border-radius:7px;
+  padding:6px;position:relative;height:178px;box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+.panel-label{
+  position:absolute;top:-8px;left:8px;font-size:9px;font-weight:700;
+  letter-spacing:1px;padding:2px 7px;border-radius:3px;text-transform:uppercase;
+}
+.lbl-a{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;}
+.lbl-b{background:#dcfce7;color:#166534;border:1px solid #86efac;}
+.topbar{display:flex;gap:3px;margin-bottom:6px;}
+.topbar span{width:5px;height:5px;border-radius:50%;}
+.topbar span:nth-child(1){background:#ff5f57;}
+.topbar span:nth-child(2){background:#febc2e;}
+.topbar span:nth-child(3){background:#28c840;}
+.wire{display:flex;flex-direction:column;gap:5px;padding:2px 3px;}
+.wire .bar{height:4px;background:#e5e7eb;border-radius:2px;}
+.wire .bar.b{background:#111;width:50%;height:5px;}
+.wire .bar.w80{width:80%;}.wire .bar.w70{width:70%;}.wire .bar.w55{width:55%;}
+.btn-row{display:flex;gap:4px;margin-top:7px;}
+.btn-sm{font-size:8px;padding:4px 6px;border-radius:3px;background:#eef0f3;color:#888;}
+.btn-err{background:#fff;border:1.5px solid #dc2626;color:#111;font-weight:700;position:relative;}
+.btn-fix{background:#16a34a;border:1.5px solid #16a34a;color:#fff;font-weight:700;}
+.cursor{
+  position:absolute;width:16px;height:16px;
+  border-left:2px solid #111;border-top:2px solid #111;
+  transform:rotate(-30deg);
+}
+.cursor::after{content:'';position:absolute;left:-2px;top:8px;width:2px;height:8px;background:#111;transform:rotate(42deg);}
+.click-ring{
+  position:absolute;width:22px;height:22px;border:2px solid #dc2626;border-radius:50%;
+  animation:none;
+}
+.loupe-big{
+  position:absolute;width:40px;height:40px;border:3px solid #dc2626;border-radius:50%;
+  background:rgba(255,255,255,.2);
+}
+.loupe-big::after{content:'';position:absolute;right:-10px;bottom:-3px;width:14px;height:4px;background:#dc2626;border-radius:1.5px;transform:rotate(45deg);transform-origin:left center;}
+.arrow{
+  font-size:22px;font-weight:800;color:#FF6B35;flex-shrink:0;
+}
+.fix-pill{
+  position:absolute;background:#dc2626;color:#fff;font-size:8px;font-weight:800;
+  padding:3px 6px;border-radius:3px;
+}
+.pr-badge{
+  position:absolute;background:#16a34a;color:#fff;font-size:8px;font-weight:800;
+  padding:3px 6px;border-radius:3px;display:flex;align-items:center;gap:3px;
+}
+.foot{
+  text-align:center;font-size:10px;color:#555;margin-top:8px;
+}
+.foot b{color:#111;}
+</style></head><body>
+<div class="head">
+  <div class="loupe-mark"></div>
+  <div class="brand">SimpleReview</div>
+  <div class="tag">Chrome Extension</div>
+</div>
+
+<div class="flow">
+  <div class="panel">
+    <div class="panel-label lbl-a">1 &middot; Click issue</div>
+    <div class="topbar"><span></span><span></span><span></span></div>
+    <div class="wire">
+      <div class="bar b"></div>
+      <div class="bar w80"></div>
+      <div class="bar w70"></div>
+      <div class="bar w55"></div>
+    </div>
+    <div class="btn-row">
+      <div class="btn-sm">Export</div>
+      <div class="btn-sm btn-err">Filter</div>
+      <div class="btn-sm">Refresh</div>
+    </div>
+    <div class="loupe-big" style="left:62px;top:90px;"></div>
+    <div class="fix-pill" style="left:108px;top:120px;">Fix it &rarr;</div>
+  </div>
+
+  <div class="arrow">&rarr;</div>
+
+  <div class="panel">
+    <div class="panel-label lbl-b">2 &middot; Fix shipped</div>
+    <div class="topbar"><span></span><span></span><span></span></div>
+    <div class="wire">
+      <div class="bar b"></div>
+      <div class="bar w80"></div>
+      <div class="bar w70"></div>
+      <div class="bar w55"></div>
+    </div>
+    <div class="btn-row">
+      <div class="btn-sm">Export</div>
+      <div class="btn-sm btn-fix">Filter by date</div>
+      <div class="btn-sm">Refresh</div>
+    </div>
+    <div class="pr-badge" style="right:8px;bottom:8px;">&#10003; PR opened</div>
+  </div>
+</div>
+
+<div class="foot">Powered by <b>Claude Code</b> &middot; <b>Codex</b> &middot; built-in AI</div>
+</body></html>

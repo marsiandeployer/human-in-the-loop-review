@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:1400px;height:560px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+body{
+  background:radial-gradient(ellipse at 50% 130%, #fff0e8 0%, #fff 60%);
+  padding:36px 48px;color:#111;overflow:hidden;
+}
+.head{display:flex;align-items:center;gap:16px;margin-bottom:22px;}
+.loupe-mark{width:40px;height:40px;border:4.5px solid #FF6B35;border-radius:50%;position:relative;}
+.loupe-mark::after{content:'';position:absolute;right:-11px;bottom:-5px;width:16px;height:5.5px;background:#FF6B35;border-radius:2px;transform:rotate(45deg);transform-origin:left center;}
+.brand{font-size:28px;font-weight:800;letter-spacing:-0.5px;}
+.tag{font-size:12px;font-weight:700;letter-spacing:1.5px;color:#FF6B35;background:#fff3ee;border:1px solid #ffd6c2;padding:6px 12px;border-radius:5px;text-transform:uppercase;}
+.slogan{
+  margin-left:auto;font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#111;
+}
+.slogan .hl{color:#FF6B35;}
+
+.flow{display:flex;align-items:center;gap:28px;}
+.panel{
+  flex:1;background:#fff;border:1px solid #e4e4e4;border-radius:14px;
+  padding:18px;position:relative;height:410px;box-shadow:0 12px 30px rgba(0,0,0,.07);
+}
+.panel-label{
+  position:absolute;top:-14px;left:22px;font-size:13px;font-weight:700;
+  letter-spacing:1.5px;padding:5px 12px;border-radius:5px;text-transform:uppercase;
+}
+.lbl-a{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;}
+.lbl-b{background:#dcfce7;color:#166534;border:1px solid #86efac;}
+.topbar{display:flex;gap:7px;margin-bottom:14px;align-items:center;}
+.topbar .dot{width:11px;height:11px;border-radius:50%;}
+.topbar .d1{background:#ff5f57;}.topbar .d2{background:#febc2e;}.topbar .d3{background:#28c840;}
+.topbar .urlbar{flex:1;height:22px;background:#f5f5f5;border:1px solid #e5e7eb;border-radius:5px;font-size:11px;color:#6b7280;display:flex;align-items:center;padding:0 10px;margin-left:6px;}
+.wire{display:flex;flex-direction:column;gap:12px;padding:10px 6px;}
+.wire .bar{height:10px;background:#e5e7eb;border-radius:3px;}
+.wire .bar.b{background:#111;width:40%;height:14px;}
+.wire .bar.w80{width:80%;}.wire .bar.w70{width:70%;}.wire .bar.w55{width:55%;}.wire .bar.w45{width:45%;}
+.btn-row{display:flex;gap:10px;margin-top:20px;}
+.btn-sm{font-size:13px;padding:10px 16px;border-radius:5px;background:#eef0f3;color:#888;font-weight:600;}
+.btn-err{background:#fff;border:2px solid #dc2626;color:#111;font-weight:800;}
+.btn-fix{background:#16a34a;border:2px solid #16a34a;color:#fff;font-weight:800;}
+
+.loupe-big{
+  position:absolute;width:130px;height:130px;border:7px solid #dc2626;border-radius:50%;
+  background:rgba(255,255,255,.15);
+  box-shadow:0 0 0 6px rgba(220,38,38,.14), 0 12px 30px rgba(220,38,38,.25);
+}
+.loupe-big::after{content:'';position:absolute;right:-34px;bottom:-8px;width:48px;height:13px;background:#dc2626;border-radius:4px;transform:rotate(45deg);transform-origin:left center;}
+.fix-pill{
+  position:absolute;background:#dc2626;color:#fff;font-size:17px;font-weight:800;
+  padding:10px 18px;border-radius:8px;
+  box-shadow:0 10px 24px rgba(220,38,38,.35);
+}
+.fix-pill::before{content:'';position:absolute;left:-8px;top:16px;border:7px solid transparent;border-right-color:#dc2626;}
+
+.cursor{
+  position:absolute;left:140px;top:172px;width:0;height:0;
+  border-left:16px solid transparent;border-top:22px solid #111;
+  transform:rotate(-30deg);
+}
+.click-note{
+  position:absolute;left:170px;top:170px;font-size:13px;font-weight:700;
+  background:#111;color:#fff;padding:5px 10px;border-radius:5px;
+}
+
+.pr-badge{
+  position:absolute;right:22px;bottom:22px;background:#16a34a;color:#fff;font-size:14px;font-weight:800;
+  padding:8px 14px;border-radius:6px;display:flex;align-items:center;gap:6px;
+  box-shadow:0 8px 20px rgba(22,163,74,.35);
+}
+.diff{
+  margin-top:22px;background:#0b1020;border-radius:8px;padding:12px 14px;font-family:'SF Mono',Menlo,monospace;font-size:12px;line-height:1.5;
+  color:#cbd5e1;
+}
+.diff .rem{color:#fca5a5;background:rgba(220,38,38,.15);display:block;padding:0 6px;border-left:2px solid #ef4444;}
+.diff .add{color:#86efac;background:rgba(22,163,74,.15);display:block;padding:0 6px;border-left:2px solid #22c55e;}
+.arrow{
+  font-size:54px;font-weight:800;color:#FF6B35;flex-shrink:0;
+}
+.arrow-sub{font-size:12px;font-weight:700;color:#FF6B35;letter-spacing:1.5px;margin-top:-6px;text-align:center;text-transform:uppercase;}
+.arrow-wrap{display:flex;flex-direction:column;align-items:center;}
+
+.foot{
+  text-align:center;font-size:14px;color:#555;margin-top:18px;
+}
+.foot b{color:#111;}
+</style></head><body>
+<div class="head">
+  <div class="loupe-mark"></div>
+  <div class="brand">SimpleReview</div>
+  <div class="tag">Chrome Extension</div>
+  <div class="slogan">Click any issue. Get a <span class="hl">code fix</span>.</div>
+</div>
+
+<div class="flow">
+  <div class="panel">
+    <div class="panel-label lbl-a">1 &middot; Click issue</div>
+    <div class="topbar">
+      <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+      <div class="urlbar">onout.org/dashboard/</div>
+    </div>
+    <div class="wire">
+      <div class="bar b"></div>
+      <div class="bar w80"></div>
+      <div class="bar w70"></div>
+      <div class="bar w55"></div>
+      <div class="bar w45"></div>
+    </div>
+    <div class="btn-row">
+      <div class="btn-sm">Export</div>
+      <div class="btn-sm btn-err">Filter</div>
+      <div class="btn-sm">Refresh</div>
+    </div>
+    <div class="loupe-big" style="left:140px;top:198px;"></div>
+    <div class="fix-pill" style="left:280px;top:240px;">Fix it &rarr;</div>
+    <div class="click-note" style="left:86px;top:330px;">&#9758; label is truncated</div>
+  </div>
+
+  <div class="arrow-wrap">
+    <div class="arrow">&rarr;</div>
+    <div class="arrow-sub">AI agent</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label lbl-b">2 &middot; Fix shipped</div>
+    <div class="topbar">
+      <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+      <div class="urlbar">onout.org/dashboard/</div>
+    </div>
+    <div class="wire">
+      <div class="bar b"></div>
+      <div class="bar w80"></div>
+      <div class="bar w70"></div>
+      <div class="bar w55"></div>
+      <div class="bar w45"></div>
+    </div>
+    <div class="btn-row">
+      <div class="btn-sm">Export</div>
+      <div class="btn-sm btn-fix">Filter by date</div>
+      <div class="btn-sm">Refresh</div>
+    </div>
+    <div class="diff">
+<span class="rem">-  &lt;button&gt;Filter&lt;/button&gt;</span>
+<span class="add">+  &lt;button&gt;Filter by date&lt;/button&gt;</span>
+    </div>
+    <div class="pr-badge">&#10003; PR #124 opened</div>
+  </div>
+</div>
+
+<div class="foot">Powered by <b>Claude Code</b> &middot; <b>Codex</b> &middot; built-in AI &mdash; works on any website</div>
+</body></html>
