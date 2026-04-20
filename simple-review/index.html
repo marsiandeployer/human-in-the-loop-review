@@ -1687,7 +1687,7 @@
           <div style="flex:1;background:#fff;border-radius:5px;padding:4px 12px;font-size:12px;color:#888;max-width:280px;margin:0 auto;">mystore.com/shop</div>
         </div>
         <!-- Site + sidebar -->
-        <div style="flex:1;display:flex;overflow:hidden;">
+        <div style="flex:1;display:flex;overflow:visible;position:relative;">
           <!-- Website mock -->
           <div style="flex:1;background:#f8f8f8;padding:20px 24px;overflow:hidden;">
             <!-- Header -->
@@ -1730,7 +1730,7 @@
                 <!-- Code review popup — same markup as the real inline-popup, floats absolute -->
                 <div class="inline-popup static-popup" style="position:absolute;top:calc(100% + 8px);left:-16px;right:-16px;z-index:30;">
                   <div class="inline-popup-header"><span>Code review</span><span class="close-x">×</span></div>
-                  <div class="inline-popup-ta">the Camera Lens product shows &lsquo;Una<span class="type-cursor">|</span></div>
+                  <div class="inline-popup-ta">the Camera Lens product shows &lsquo;Unavailable&rsquo; but it&rsquo;s in stock<span class="type-cursor">|</span></div>
                   <div class="agent-select">
                     <div class="agent-opt active" data-agent="claude">
                       <svg viewBox="0 0 92.2 65" width="12" height="12"><path fill="#D97757" d="M66.5,0H52.4l25.7,65h14.1L66.5,0z M25.7,0L0,65h14.4l5.3-13.6h26.9L51.8,65h14.4L40.5,0H25.7z M24.3,39.3l8.8-22.8l8.8,22.8H24.3z"/></svg>
@@ -1742,6 +1742,15 @@
                     </div>
                   </div>
                   <button class="inline-popup-fix">Fix it →</button>
+                  <!-- Arrow pointing right toward sidebar -->
+                  <svg style="position:absolute;top:50%;right:-80px;transform:translateY(-50%);overflow:visible;pointer-events:none;z-index:40;" width="90" height="28" viewBox="0 0 90 28">
+                    <defs>
+                      <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L8,3 z" fill="#FF6B35"/>
+                      </marker>
+                    </defs>
+                    <line x1="0" y1="14" x2="76" y2="14" stroke="#FF6B35" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+                  </svg>
                 </div>
               </div>
               <!-- Wireframe card 3 -->
