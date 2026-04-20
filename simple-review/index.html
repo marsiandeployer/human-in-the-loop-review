@@ -1703,7 +1703,7 @@
               </div>
             </div>
             <!-- Product grid 3 cols -->
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;overflow:visible;position:relative;">
               <!-- Wireframe card 1 -->
               <div style="background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;">
                 <div style="background:#ebebeb;border-radius:5px;height:90px;"></div>
@@ -1712,7 +1712,7 @@
                 <div style="background:#ebebeb;border-radius:4px;height:22px;"></div>
               </div>
               <!-- Clicked issue card + popup -->
-              <div style="position:relative;">
+              <div style="position:relative;z-index:20;">
                 <!-- Issue card (Unavailable — before fix) -->
                 <div style="background:#fff;border:2px solid #FF6B35;border-radius:8px;padding:10px;box-shadow:0 0 0 4px rgba(255,107,53,.12);position:relative;display:flex;flex-direction:column;gap:6px;">
                   <div style="border-radius:5px;height:90px;overflow:hidden;">
@@ -1727,8 +1727,8 @@
                   <!-- Cursor -->
                   <svg style="position:absolute;right:-6px;bottom:28px;width:18px;height:18px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.35));z-index:2;" viewBox="0 0 24 24"><path d="M3 2 L3 18 L7.5 14 L10 20 L13 19 L10.5 13 L17 13 Z" fill="#fff" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round"/></svg>
                 </div>
-                <!-- Code review popup -->
-                <div style="background:#fff;border:1.5px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 18px rgba(0,0,0,.13);padding:8px 10px;margin-top:4px;z-index:10;">
+                <!-- Code review popup — position:absolute so it floats over neighbours -->
+                <div style="position:absolute;top:calc(100% + 6px);left:-20px;right:-20px;background:#fff;border:1.5px solid #e0e0e0;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.18);padding:8px 10px;z-index:30;">
                   <!-- Header -->
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
                     <span style="font-size:10px;font-weight:700;color:#1a1a1a;">Code review</span>
