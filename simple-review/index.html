@@ -1621,8 +1621,8 @@
             <div class="browser-url" style="font-size:9px;padding:1px 6px;margin:0 4px;">mystore.com</div>
           </div>
           <div class="demo-viewport" style="flex:1;">
-            <div class="demo-site" style="padding:10px;">
-              <div style="display:flex;flex-direction:column;gap:2px;">
+            <div class="demo-site" style="padding:10px;display:flex;flex-direction:column;height:100%;box-sizing:border-box;">
+              <div style="display:flex;flex-direction:column;flex:1;justify-content:space-between;">
                 <!-- Issue card (with cursor) -->
                 <div style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:5px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;box-sizing:border-box;display:flex;gap:6px;align-items:center;">
                   <span style="position:absolute;top:-8px;left:6px;background:#FF6B35;color:#fff;font-size:7px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:2px 5px;border-radius:3px;line-height:1;">Issue</span>
@@ -1638,14 +1638,14 @@
                   <svg style="position:absolute;right:-4px;bottom:-6px;width:16px;height:16px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 2 L3 18 L7.5 14 L10 20 L13 19 L10.5 13 L17 13 Z" fill="#fff" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round"/></svg>
                 </div>
                 <!-- Arrow -->
-                <div style="text-align:center;font-size:14px;line-height:1;color:#FF6B35;font-weight:300;margin:0;">&darr;</div>
+                <div style="text-align:center;font-size:14px;line-height:1;color:#FF6B35;font-weight:300;padding:6px 0;">&darr;</div>
                 <!-- Fix popup -->
                 <div class="inline-popup" style="position:relative;padding:6px;margin:0;">
                   <div class="inline-popup-ta" style="margin-bottom:5px;font-weight:600;font-size:10px;padding:4px 6px;min-height:0;font-style:italic;color:#444;">&ldquo;Unavailable &rarr; Add to cart&rdquo;</div>
                   <button class="inline-popup-fix" style="padding:4px 8px;font-size:10px;">Fix it &rarr;</button>
                 </div>
                 <!-- Arrow -->
-                <div style="text-align:center;font-size:14px;line-height:1;color:#16a34a;font-weight:300;margin:0;">&darr;</div>
+                <div style="text-align:center;font-size:14px;line-height:1;color:#16a34a;font-weight:300;padding:6px 0;">&darr;</div>
                 <!-- Fixed issue (same card, now with Add to cart) -->
                 <div style="background:#fff;border:2px solid #16a34a;border-radius:6px;padding:5px;box-shadow:0 0 0 3px rgba(22,163,74,.15);position:relative;box-sizing:border-box;display:flex;gap:6px;align-items:center;">
                   <span style="position:absolute;top:-8px;left:6px;background:#16a34a;color:#fff;font-size:7px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:2px 5px;border-radius:3px;line-height:1;">&#10003; Fixed</span>
