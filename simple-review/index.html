@@ -2291,9 +2291,11 @@ function setLang(lang) {
 (function() {
   var isRu = /^ru\b/i.test(navigator.language || '');
   var stored = localStorage.getItem('vibers_lang');
-  if (isRu || stored) {
+  var hashLang = /[#&\/]ru\b/i.test(location.hash) ? 'ru' : null;
+  var lang = hashLang || stored || (isRu ? 'ru' : null);
+  if (lang) {
     document.getElementById('lang-switch').style.display = 'flex';
-    setLang(stored || (isRu ? 'ru' : 'en'));
+    setLang(lang);
   }
 })();
 </script>
