@@ -376,7 +376,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             msg = f"🖱 **Click: {event}**\n🌐 Lang: `{lang}`\n📎 Source: `{source}`"
             if ref:
                 msg += f"\n🔗 Ref: {ref}"
-            send_telegram(msg)
+            send_telegram(msg, TELEGRAM_REVIEW_CHAT_ID)
             self.send_response(200)
             self._cors_headers()
             self.end_headers()
