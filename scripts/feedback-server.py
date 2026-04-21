@@ -17,6 +17,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import urllib.parse
 import urllib.request
 from http.server import HTTPServer, BaseHTTPRequestHandler
 # Single-threaded: pyrogram requires main thread event loop
@@ -365,6 +366,21 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             self._cors_headers()
             self.end_headers()
             self.wfile.write(json.dumps(health).encode())
+        elif self.path.startswith("/click"):
+            parsed = urllib.parse.urlparse(self.path)
+            params = urllib.parse.parse_qs(parsed.query)
+            event = params.get("event", ["?"])[0]
+            lang = params.get("lang", ["?"])[0]
+            source = params.get("source", ["?"])[0]
+            ref = params.get("ref", [""])[0]
+            msg = f"🖱 **Click: {event}**\n🌐 Lang: `{lang}`\n📎 Source: `{source}`"
+            if ref:
+                msg += f"\n🔗 Ref: {ref}"
+            send_telegram(msg)
+            self.send_response(200)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"ok":true}')
         else:
             self.send_response(404)
             self._cors_headers()

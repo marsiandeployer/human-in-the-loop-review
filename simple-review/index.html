@@ -20,6 +20,9 @@
   <meta name="twitter:title" content="SimpleReview — Website Feedback & Fix Tool">
   <meta name="twitter:description" content="Turn website feedback into real PRs. Click, comment, fix.">
   <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <!-- Reddit Pixel -->
+  <script>!function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js";t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','t2_133sby');rdt('track','PageVisit');</script>
+  <!-- End Reddit Pixel -->
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
@@ -1268,7 +1271,7 @@
     <h1 data-i18n="hero-title">Click any issue on your website. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, pull request, or deployed directly to your server">code fix</abbr> with Claude Code or Codex.</h1>
     <p class="hero-sub" data-i18n="hero-sub">Built for anyone who can spot an issue, but doesn&rsquo;t want to debug it by hand.</p>
     <div class="cta-group">
-      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_vibers_simplereview" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'download_extension'});" data-i18n="cta-download">Download Extension</a>
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_vibers_simplereview" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'download_extension'});rdt('track','Lead');trackClick('download_extension');" data-i18n="cta-download">Download Extension</a>
     </div>
     <p class="beta-note" data-i18n="beta-note">Free with your own Claude Code or Codex. Or use built-in AI &mdash; no setup required. Works on any code-accessible site, including legacy apps, WordPress, and modern frameworks.</p>
   </header>
@@ -1951,7 +1954,7 @@
   <div class="cta-box">
     <h2 data-i18n="h2-cta">Get early access to SimpleReview</h2>
     <p data-i18n="cta-sub">Early access is open. Works with GitHub, WordPress (FTP/SSH), and any code-accessible site.</p>
-    <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-white" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'join_waitlist_bottom'});" data-i18n="cta-primary-bottom">Join Early Access &rarr;</a>
+    <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer" class="btn-white" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'join_waitlist_bottom'});rdt('track','Lead');trackClick('join_waitlist_bottom');" data-i18n="cta-primary-bottom">Join Early Access &rarr;</a>
   </div>
 
   <p style="font-size:14px; color:#555; margin: 32px 0 16px;">
@@ -2338,6 +2341,20 @@ switchTab(TAB_DATA[initTab] ? initTab : 'bug');
     trigger(); // fallback for ancient browsers
   }
 })();
+
+function trackClick(event) {
+  try {
+    var lang = navigator.language || '';
+    var params = new URLSearchParams(window.location.search);
+    var source = params.get('utm_source') || params.get('source') || 'direct';
+    var ref = (document.referrer || '').slice(0, 150);
+    var url = 'https://vibers.onout.org/click?event=' + encodeURIComponent(event) +
+      '&lang=' + encodeURIComponent(lang) +
+      '&source=' + encodeURIComponent(source) +
+      '&ref=' + encodeURIComponent(ref);
+    fetch(url, {mode: 'no-cors', keepalive: true});
+  } catch(e) {}
+}
 </script>
 <div id="lang-switch">
   <button id="btn-en" onclick="setLang('en')">EN</button>
