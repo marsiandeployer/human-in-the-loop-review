@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SimpleReview — Ad Banners</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f4f4f6; margin: 0; padding: 48px 24px;
+    display: flex; flex-direction: column; align-items: center; gap: 48px;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; color: #1a1a1a; }
+  .subtitle { font-size: 13px; color: #888; margin: 0 0 24px; }
+  .section { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
+  .section-title { font-size: 13px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .5px; }
+  .banners-row { display: flex; gap: 24px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+  .banner-card { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .banner-label { font-size: 11px; color: #aaa; }
+
+  /* ====== Shared banner styles ====== */
+  .demo-banner {
+    background: #0f0f0f; border-radius: 10px; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+  }
+  .browser-chrome {
+    background: #e8e8e8; border-bottom: 1px solid #d0d0d0;
+    padding: 8px 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .browser-dots { display: flex; gap: 5px; }
+  .browser-dots span { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot-r { background: #ff5f57; } .dot-y { background: #ffbd2e; } .dot-g { background: #28c840; }
+  .browser-url {
+    flex: 1; background: #fff; border: 1px solid #c8c8c8; border-radius: 4px;
+    padding: 4px 12px; font-size: 13px; color: #444; margin: 0 8px;
+  }
+  .inline-popup {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.12); padding: 10px; z-index: 5;
+    font-size: 12px;
+  }
+  .inline-popup-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 6px; font-weight: 600; color: #222; font-size: 12px;
+  }
+  .inline-popup-header .close-x { color: #bbb; font-size: 16px; line-height: 1; }
+  .inline-popup-ta {
+    background: #fafafa; border: 1px solid #e0e0e0; border-radius: 5px;
+    padding: 7px 9px; font-size: 12px; color: #333; line-height: 1.45;
+    min-height: 48px; margin-bottom: 8px;
+  }
+  .agent-select { display: flex; gap: 6px; margin-bottom: 8px; }
+  .agent-opt {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    gap: 5px; padding: 5px 6px; border: 1px solid #e0e0e0; border-radius: 5px;
+    background: #fafafa; font-size: 11px; font-weight: 600; color: #555;
+  }
+  .agent-opt.active { background: #fff; border-color: #FF6B35; color: #222; box-shadow: 0 0 0 1px #FF6B35 inset; }
+  .inline-popup-fix {
+    background: #FF6B35; color: #fff; border: none; border-radius: 5px;
+    padding: 7px 10px; font-size: 12px; font-weight: 700; cursor: pointer; width: 100%;
+  }
+
+  /* ====== Variant A — split (shared) ====== */
+  .variant-a-split { display: flex; flex-direction: row; background: #0f0f0f; }
+  .variant-a-split .va-left {
+    flex-shrink: 0; padding: 18px 16px;
+    background: linear-gradient(155deg, #1a1a1a 0%, #0b0b0b 100%);
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .variant-a-split .va-left::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255,107,53,0.18), transparent 55%);
+    pointer-events: none;
+  }
+  .variant-a-split .va-left > * { position: relative; z-index: 1; }
+  .variant-a-split .va-right { flex: 1; display: flex; flex-direction: column; background: #fff; min-width: 0; }
+  .variant-a-split .browser-chrome { flex-shrink: 0; }
+
+  /* ====== 440×280 static overrides ====== */
+  .static-440 { width: 440px; height: 280px; overflow: hidden; display: flex; flex-direction: column; box-sizing: border-box; }
+  .static-440 .va-left { width: 170px; }
+  .static-440 .browser-chrome { padding: 5px 8px; gap: 6px; flex-shrink: 0; }
+  .static-440 .browser-dots span { width: 7px; height: 7px; }
+  .static-440 .browser-url { font-size: 10px; padding: 2px 8px; margin: 0 6px; }
+  .static-440 .demo-viewport { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+  .static-440 .inline-popup { padding: 6px; font-size: 10px; }
+  .static-440 .inline-popup-ta { font-size: 10px; padding: 4px 6px; min-height: 28px; margin-bottom: 5px; }
+  .static-440 .agent-opt { padding: 3px 4px; font-size: 10px; }
+  .static-440 .inline-popup-fix { padding: 4px 8px; font-size: 10px; }
+
+  /* ====== 275×175 static overrides ====== */
+  .static-275 { width: 275px; height: 175px; overflow: hidden; display: flex; flex-direction: column; box-sizing: border-box; }
+  .static-275 .va-left { width: 106px; padding: 11px 10px; }
+  .static-275 .browser-chrome { padding: 3px 5px; gap: 4px; flex-shrink: 0; }
+  .static-275 .browser-dots span { width: 5px; height: 5px; }
+  .static-275 .browser-url { font-size: 7px; padding: 1px 5px; margin: 0 4px; }
+  .static-275 .demo-viewport { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+</style>
+</head>
+<body>
+
+<h1>SimpleReview — Ad Banners</h1>
+<p class="subtitle">Media kit · All banner sizes</p>
+
+<!-- Row: 275×175 + 440×280 -->
+<div class="section">
+  <div class="section-title">Standard Banners</div>
+  <div class="banners-row">
+
+    <!-- 275×175 -->
+    <div class="banner-card">
+      <div class="demo-banner variant-a-split static-275">
+        <div class="va-left">
+          <div style="font-size:11px;font-weight:600;color:#c8c8c8;letter-spacing:-0.2px;line-height:1.15;margin-bottom:4px;">Click any issue on your website</div>
+          <div style="font-size:19px;font-weight:300;color:#FF6B35;line-height:1;margin-bottom:3px;">&darr;</div>
+          <div style="font-size:14px;font-weight:800;color:#fff;letter-spacing:-0.4px;line-height:1.05;">Ship the fix<span style="color:#FF6B35;">.</span></div>
+          <div style="margin-top:auto;font-size:7px;color:#888;font-weight:500;letter-spacing:.3px;">SimpleReview &middot; Chrome</div>
+        </div>
+        <div class="va-right">
+          <div class="browser-chrome">
+            <div class="browser-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+            <div class="browser-url">mystore.com</div>
+          </div>
+          <div class="demo-viewport">
+            <div style="padding:6px;display:flex;flex-direction:column;height:100%;box-sizing:border-box;flex:1;">
+              <div style="display:flex;flex-direction:column;flex:1;justify-content:space-between;">
+                <!-- Issue card -->
+                <div style="background:#fff;border:1.5px solid #FF6B35;border-radius:4px;padding:3px;box-shadow:0 0 0 2px rgba(255,107,53,.12);position:relative;box-sizing:border-box;display:flex;gap:4px;align-items:center;">
+                  <span style="position:absolute;top:-5px;left:4px;background:#FF6B35;color:#fff;font-size:5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:1px 3px;border-radius:2px;line-height:1;">Issue</span>
+                  <div style="width:21px;height:21px;border-radius:2px;overflow:hidden;flex-shrink:0;">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=140&h=140&fit=crop&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                  </div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:6px;font-weight:700;color:#1a1a1a;line-height:1.1;">Camera Lens 50mm</div>
+                    <div style="font-size:5px;color:#46b450;font-weight:600;">In stock</div>
+                  </div>
+                  <div style="background:#ccc;color:#999;font-size:5px;font-weight:700;padding:2px 3px;border-radius:2px;flex-shrink:0;">Unavailable</div>
+                  <svg style="position:absolute;right:-3px;bottom:-4px;width:10px;height:10px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));" viewBox="0 0 24 24"><path d="M3 2 L3 18 L7.5 14 L10 20 L13 19 L10.5 13 L17 13 Z" fill="#fff" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                </div>
+                <!-- Arrow -->
+                <div style="text-align:center;font-size:9px;line-height:1;color:#FF6B35;font-weight:300;padding:3px 0;">&darr;</div>
+                <!-- Fix popup -->
+                <div style="background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:0 3px 10px rgba(0,0,0,.1);padding:4px;">
+                  <div style="font-size:6px;font-weight:600;font-style:italic;color:#444;margin-bottom:3px;">&ldquo;Button is disabled but item is in stock&rdquo;</div>
+                  <button style="background:#FF6B35;color:#fff;border:none;border-radius:3px;padding:3px 5px;font-size:6px;font-weight:700;width:100%;cursor:pointer;">Fix it &rarr;</button>
+                </div>
+                <!-- Arrow -->
+                <div style="text-align:center;font-size:9px;line-height:1;color:#16a34a;font-weight:300;padding:3px 0;">&darr;</div>
+                <!-- Fixed card -->
+                <div style="background:#fff;border:1.5px solid #16a34a;border-radius:4px;padding:3px;box-shadow:0 0 0 2px rgba(22,163,74,.12);position:relative;box-sizing:border-box;display:flex;gap:4px;align-items:center;">
+                  <span style="position:absolute;top:-5px;left:4px;background:#16a34a;color:#fff;font-size:5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:1px 3px;border-radius:2px;line-height:1;">&#10003; Fixed</span>
+                  <div style="width:21px;height:21px;border-radius:2px;overflow:hidden;flex-shrink:0;">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=140&h=140&fit=crop&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                  </div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:6px;font-weight:700;color:#1a1a1a;line-height:1.1;">Camera Lens 50mm</div>
+                    <div style="font-size:5px;color:#46b450;font-weight:600;">In stock</div>
+                  </div>
+                  <div style="background:#FF6B35;color:#fff;font-size:5px;font-weight:800;padding:2px 4px;border-radius:2px;flex-shrink:0;letter-spacing:.2px;">Add to cart</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="banner-label">275 × 175</div>
+    </div>
+
+    <!-- 440×280 -->
+    <div class="banner-card">
+      <div class="demo-banner variant-a-split static-440">
+        <div class="va-left">
+          <div style="font-size:18px;font-weight:600;color:#c8c8c8;letter-spacing:-0.3px;line-height:1.15;margin-bottom:6px;">Click any issue on your website</div>
+          <div style="font-size:30px;font-weight:300;color:#FF6B35;line-height:1;margin-bottom:4px;">&darr;</div>
+          <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.6px;line-height:1.05;">Ship the fix<span style="color:#FF6B35;">.</span></div>
+          <div style="margin-top:auto;font-size:10px;color:#888;font-weight:500;letter-spacing:.3px;">SimpleReview &middot; Chrome</div>
+        </div>
+        <div class="va-right">
+          <div class="browser-chrome">
+            <div class="browser-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+            <div class="browser-url">mystore.com</div>
+          </div>
+          <div class="demo-viewport">
+            <div style="padding:10px;display:flex;flex-direction:column;height:100%;box-sizing:border-box;flex:1;">
+              <div style="display:flex;flex-direction:column;flex:1;justify-content:space-between;">
+                <!-- Issue card -->
+                <div style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:5px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;box-sizing:border-box;display:flex;gap:6px;align-items:center;">
+                  <span style="position:absolute;top:-8px;left:6px;background:#FF6B35;color:#fff;font-size:7px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:2px 5px;border-radius:3px;line-height:1;">Issue</span>
+                  <div style="width:34px;height:34px;border-radius:3px;overflow:hidden;flex-shrink:0;">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=140&h=140&fit=crop&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                  </div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:9px;font-weight:700;color:#1a1a1a;line-height:1.1;">Camera Lens 50mm</div>
+                    <div style="font-size:8px;color:#46b450;font-weight:600;">In stock</div>
+                  </div>
+                  <div style="background:#ccc;color:#999;font-size:8px;font-weight:700;padding:3px 5px;border-radius:3px;flex-shrink:0;">Unavailable</div>
+                  <svg style="position:absolute;right:-4px;bottom:-6px;width:16px;height:16px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));" viewBox="0 0 24 24"><path d="M3 2 L3 18 L7.5 14 L10 20 L13 19 L10.5 13 L17 13 Z" fill="#fff" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                </div>
+                <!-- Arrow -->
+                <div style="text-align:center;font-size:14px;line-height:1;color:#FF6B35;font-weight:300;padding:6px 0;">&darr;</div>
+                <!-- Fix popup -->
+                <div class="inline-popup" style="position:relative;padding:6px;margin:0;">
+                  <div class="inline-popup-ta" style="margin-bottom:5px;font-weight:600;font-size:10px;padding:4px 6px;min-height:0;font-style:italic;color:#444;">&ldquo;Button is disabled but item is in stock&rdquo;</div>
+                  <button class="inline-popup-fix" style="padding:4px 8px;font-size:10px;">Fix it &rarr;</button>
+                </div>
+                <!-- Arrow -->
+                <div style="text-align:center;font-size:14px;line-height:1;color:#16a34a;font-weight:300;padding:6px 0;">&darr;</div>
+                <!-- Fixed card -->
+                <div style="background:#fff;border:2px solid #16a34a;border-radius:6px;padding:5px;box-shadow:0 0 0 3px rgba(22,163,74,.15);position:relative;box-sizing:border-box;display:flex;gap:6px;align-items:center;">
+                  <span style="position:absolute;top:-8px;left:6px;background:#16a34a;color:#fff;font-size:7px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:2px 5px;border-radius:3px;line-height:1;">&#10003; Fixed</span>
+                  <div style="width:34px;height:34px;border-radius:3px;overflow:hidden;flex-shrink:0;">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=140&h=140&fit=crop&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                  </div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:9px;font-weight:700;color:#1a1a1a;line-height:1.1;">Camera Lens 50mm</div>
+                    <div style="font-size:8px;color:#46b450;font-weight:600;">In stock</div>
+                  </div>
+                  <div style="background:#FF6B35;color:#fff;font-size:8px;font-weight:800;padding:3px 6px;border-radius:3px;flex-shrink:0;letter-spacing:.2px;">Add to cart</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="banner-label">440 × 280</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Large banner 1400×560 -->
+<div class="section">
+  <div class="section-title">Large Banner — 1400 × 560</div>
+  <div style="max-width:1400px;width:100%;">
+    <div style="background:#1a1a1a;border-radius:16px;overflow:hidden;display:flex;height:560px;">
+      <!-- Left text panel -->
+      <div style="width:340px;flex-shrink:0;padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          <div style="font-size:32px;font-weight:600;color:#c8c8c8;letter-spacing:-0.5px;line-height:1.2;margin-bottom:16px;">Click any issue on your website</div>
+          <div style="font-size:48px;font-weight:300;color:#FF6B35;line-height:1;margin-bottom:16px;">&darr;</div>
+          <div style="font-size:42px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.05;">Ship the fix<span style="color:#FF6B35;">.</span></div>
+        </div>
+        <div style="font-size:14px;color:#555;font-weight:500;letter-spacing:.3px;">SimpleReview &middot; Chrome</div>
+      </div>
+      <!-- Right viewport: browser chrome + site + sidebar -->
+      <div style="flex:1;display:flex;flex-direction:column;background:#f0f0f0;">
+        <!-- Browser chrome bar -->
+        <div style="background:#e0e0e0;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
+          <div style="display:flex;gap:6px;">
+            <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;display:block;"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#febc2e;display:block;"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#28c840;display:block;"></span>
+          </div>
+          <div style="flex:1;background:#fff;border-radius:5px;padding:4px 12px;font-size:12px;color:#888;max-width:280px;margin:0 auto;">mystore.com/shop</div>
+        </div>
+        <!-- Site + sidebar -->
+        <div style="flex:1;display:flex;overflow:visible;position:relative;">
+          <!-- Website mock -->
+          <div style="flex:1;background:#f8f8f8;padding:20px 24px;overflow:visible;position:relative;z-index:10;">
+            <!-- Header -->
+            <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e4e4e4;padding-bottom:10px;margin-bottom:16px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="width:26px;height:18px;border-radius:3px;background:#ddd;"></div>
+                <div style="width:90px;height:10px;border-radius:3px;background:#ddd;"></div>
+              </div>
+              <div style="display:flex;gap:10px;">
+                <div style="width:38px;height:10px;border-radius:3px;background:#ddd;"></div>
+                <div style="width:38px;height:10px;border-radius:3px;background:#ddd;"></div>
+                <div style="width:52px;height:10px;border-radius:3px;background:#ddd;"></div>
+              </div>
+            </div>
+            <!-- Product grid -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;overflow:visible;position:relative;">
+              <!-- Wireframe card 1 -->
+              <div style="background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;">
+                <div style="background:#ebebeb;border-radius:5px;height:90px;"></div>
+                <div style="background:#ddd;border-radius:3px;height:9px;width:80%;"></div>
+                <div style="background:#ddd;border-radius:3px;height:9px;width:40%;"></div>
+                <div style="background:#ebebeb;border-radius:4px;height:22px;"></div>
+              </div>
+              <!-- Clicked issue card + popup -->
+              <div style="position:relative;z-index:20;">
+                <div style="background:#fff;border:2px solid #FF6B35;border-radius:8px;padding:10px;box-shadow:0 0 0 4px rgba(255,107,53,.12);position:relative;display:flex;flex-direction:column;gap:6px;">
+                  <div style="border-radius:5px;height:90px;overflow:hidden;">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300&h=200&fit=crop&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:5px;">
+                  </div>
+                  <div style="font-size:11px;font-weight:700;color:#1a1a1a;">Camera Lens 50mm</div>
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <span style="font-size:12px;color:#e44;font-weight:700;">$349</span>
+                    <span style="font-size:10px;color:#46b450;font-weight:600;">In stock</span>
+                  </div>
+                  <div style="background:#ccc;color:#999;font-size:10px;font-weight:800;padding:4px 8px;border-radius:4px;text-align:center;cursor:not-allowed;">Unavailable</div>
+                  <svg style="position:absolute;right:-6px;bottom:28px;width:18px;height:18px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.35));z-index:2;" viewBox="0 0 24 24"><path d="M3 2 L3 18 L7.5 14 L10 20 L13 19 L10.5 13 L17 13 Z" fill="#fff" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                </div>
+                <!-- Review popup -->
+                <div style="position:absolute;top:calc(100% + 8px);left:-16px;right:-16px;z-index:30;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.12);padding:10px;font-family:-apple-system,sans-serif;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-weight:600;color:#222;font-size:12px;"><span>Code review</span><span style="color:#bbb;font-size:16px;">×</span></div>
+                  <div style="background:#fafafa;border:1px solid #e0e0e0;border-radius:5px;padding:7px 9px;font-size:11px;color:#333;margin-bottom:8px;">the Camera Lens shows &lsquo;Unavailable&rsquo; but it&rsquo;s in stock</div>
+                  <div style="display:flex;gap:6px;margin-bottom:8px;">
+                    <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:5px 6px;border:1px solid #FF6B35;border-radius:5px;background:#fff;font-size:11px;font-weight:600;color:#222;box-shadow:0 0 0 1px #FF6B35 inset;">
+                      <svg viewBox="0 0 92.2 65" width="12" height="12"><path fill="#D97757" d="M66.5,0H52.4l25.7,65h14.1L66.5,0z M25.7,0L0,65h14.4l5.3-13.6h26.9L51.8,65h14.4L40.5,0H25.7z M24.3,39.3l8.8-22.8l8.8,22.8H24.3z"/></svg>
+                      <span>Claude</span>
+                    </div>
+                    <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:5px 6px;border:1px solid #e0e0e0;border-radius:5px;background:#fafafa;font-size:11px;font-weight:600;color:#555;">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="#000"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494z"/></svg>
+                      <span>Codex</span>
+                    </div>
+                  </div>
+                  <button style="background:#FF6B35;color:#fff;border:none;border-radius:5px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;width:100%;">Fix it →</button>
+                  <svg style="position:absolute;top:50%;right:-260px;transform:translateY(0%);overflow:visible;pointer-events:none;z-index:200;" width="270" height="60" viewBox="0 0 270 60">
+                    <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#FF6B35"/></marker></defs>
+                    <path d="M0,10 Q135,60 255,30" fill="none" stroke="#FF6B35" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arr2)"/>
+                  </svg>
+                </div>
+              </div>
+              <!-- Wireframe card 3 -->
+              <div style="background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;">
+                <div style="background:#ebebeb;border-radius:5px;height:90px;"></div>
+                <div style="background:#ddd;border-radius:3px;height:9px;width:65%;"></div>
+                <div style="background:#ddd;border-radius:3px;height:9px;width:40%;"></div>
+                <div style="background:#ebebeb;border-radius:4px;height:22px;"></div>
+              </div>
+            </div>
+          </div>
+          <!-- SimpleReview sidebar -->
+          <div style="width:260px;flex-shrink:0;background:#fff;border-left:3px solid #e0e0e0;display:flex;flex-direction:column;padding:14px 12px;gap:10px;position:relative;z-index:1;box-shadow:-4px 0 12px rgba(0,0,0,.08);">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid #e8e8e8;">
+              <span style="font-size:13px;font-weight:700;color:#1a1a1a;">SimpleReview</span>
+              <span style="background:#21759b;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.3px;">WordPress</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;flex:1;overflow:hidden;font-size:9.5px;line-height:1.45;">
+              <div style="background:#fff;border:1px solid #e8e8e8;border-radius:5px;padding:5px 8px;font-family:monospace;color:#FF6B35;">Selected &lt;a class=&quot;button add_to_cart&quot;&gt;<br><span style="color:#888;">wp-content/plugins/woocommerce/<br>templates/loop/add-to-cart.php</span></div>
+              <div style="background:#fff8f5;border:1px solid #ffd5c0;border-radius:5px;padding:5px 8px;font-style:italic;color:#444;">&ldquo;the Camera Lens shows &lsquo;Unavailable&rsquo; but it&rsquo;s in stock&rdquo;</div>
+              <div style="color:#888;padding:2px 4px;">&#9881; Analyzing codebase&hellip;</div>
+              <div style="color:#888;padding:2px 4px;">&#128187; Claude is coding&hellip;</div>
+              <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:5px;padding:6px 8px;display:flex;flex-direction:column;gap:3px;">
+                <div style="color:#15803d;font-weight:700;">&#128295; Patch ready via FTP</div>
+                <div style="font-family:monospace;color:#166534;">fix: enable add-to-cart for<br>in-stock variants<br><span style="color:#888;">1 file changed</span></div>
+              </div>
+              <div style="color:#888;padding:2px 4px;">&#128640; Deployed via FTP</div>
+              <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:5px;padding:5px 8px;font-weight:700;color:#15803d;">&#10003; Product live on mystore.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
