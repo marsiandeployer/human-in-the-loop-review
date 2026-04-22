@@ -33,6 +33,7 @@
 | GitHub | https://github.com/marsiandeployer/human-in-the-loop-review |
 | Blog | https://onout.org/vibers/blog/ |
 | Contact email | hello@onout.org |
+| Product video (YouTube) | https://youtu.be/Qp_wiXltaQw |
 
 ---
 

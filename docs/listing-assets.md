@@ -36,6 +36,7 @@
 | Reddit | https://www.reddit.com/r/VibeCodeReview |
 | Pricing | https://onout.org/vibers/#pricing |
 | Contact email | hello@onout.org |
+| Product video (YouTube) | https://youtu.be/Qp_wiXltaQw |
 
 ---
 
