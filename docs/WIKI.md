@@ -50,6 +50,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [topic-research-20260414.xlsx](topic-research-20260414.xlsx) | SEMrush Topic Research — 108 content ideas with volumes, questions, backlinks |
 | [google-2026-content-strategy.md](google-2026-content-strategy.md) | **NEW** Google March 2026 правила: что банят (scaled abuse), что поднимают (Information Gain). Наша стратегия. |
 | [bug-cluster-research.md](bug-cluster-research.md) | **NEW** 30 багов из SO + GitHub, классифицированы по SimpleReview fit и Noxon expertise. Roadmap на 5-10 статей. |
+| [animated-banner-guide.md](animated-banner-guide.md) | Инструкция по созданию анимированных баннеров (cursor→highlight→popup→spinner→PR sidebar) для статей блога и лендингов. |
 | [marker-io-keyword-insights.md](marker-io-keyword-insights.md) | **NEW** Анализ marker.io 4431 KW: топ-кластеры, "free" intent, чего НЕ копировать. |
 | [WIKI.md#seo-intelligence](WIKI.md#seo-intelligence-april-2026) | Google March 2026 Core Update итоги + Claude SEO Prompts methodology |
 
