@@ -13,11 +13,11 @@
   <meta property="og:title" content="How to Add a CAPTCHA to Your Website (2026 Guide)">
   <meta property="og:description" content="Step-by-step guide: reCAPTCHA, hCaptcha, Cloudflare Turnstile for HTML, WordPress, Shopify, Webflow, Google Forms. Plus a no-code point-and-click method.">
   <meta property="og:url" content="https://onout.org/vibers/blog/add-captcha-to-website/">
-  <meta property="og:image" content="https://onout.org/vibers/banner400.png">
-  <meta property="og:image:width" content="800">
-  <meta property="og:image:height" content="400">
+  <meta property="og:image" content="https://onout.org/vibers/blog/add-captcha-to-website/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://onout.org/vibers/banner400.png">
+  <meta name="twitter:image" content="https://onout.org/vibers/blog/add-captcha-to-website/og-image.png">
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
@@ -164,41 +164,65 @@
     .cap-dots span:nth-child(2){background:#ffbd2e}
     .cap-dots span:nth-child(3){background:#28c840}
     .cap-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
-    .cap-ext-icon{width:18px;height:18px;background:#FF6B35;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;animation:extPulse 6s infinite}
-    @keyframes extPulse{0%,40%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,107,53,0)}45%,55%{transform:scale(1.15);box-shadow:0 0 0 6px rgba(255,107,53,.25)}}
-    .cap-stage{position:relative;background:#fafafa;min-height:320px;padding:28px 32px;color:#1a1a1a}
-    .cap-form{background:#fff;border:1px solid #e4e4e4;border-radius:8px;padding:20px;max-width:340px;margin:0 auto;position:relative}
-    .cap-form h4{font-size:14px;font-weight:700;margin:0 0 12px;color:#1a1a1a}
-    .cap-form label{display:block;font-size:11px;color:#666;margin:8px 0 4px;font-weight:500}
-    .cap-form input{width:100%;padding:7px 10px;border:1px solid #d4d4d4;border-radius:4px;font-size:12px;font-family:inherit;background:#fafafa}
-    .cap-form .cap-submit{margin-top:14px;background:#5b44e8;color:#fff;border:none;border-radius:4px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;width:100%}
-    /* recaptcha skeleton — hidden until step 3 */
-    .cap-recaptcha{display:flex;align-items:center;gap:10px;border:1px solid #d3d3d3;border-radius:4px;padding:10px 12px;background:#f9f9f9;margin-top:10px;opacity:0;transform:translateY(6px);animation:capReveal 6s infinite}
-    @keyframes capReveal{0%,65%{opacity:0;transform:translateY(6px)}75%,100%{opacity:1;transform:translateY(0)}}
-    .cap-check{width:20px;height:20px;border:2px solid #c1c1c1;border-radius:3px;background:#fff;position:relative;flex-shrink:0}
-    .cap-check::after{content:'';position:absolute;top:2px;left:5px;width:5px;height:9px;border:solid #16a34a;border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);animation:capCheck 6s infinite}
-    @keyframes capCheck{0%,80%{transform:rotate(45deg) scale(0)}90%,100%{transform:rotate(45deg) scale(1)}}
-    .cap-recaptcha-label{font-size:11px;color:#444;font-weight:500}
-    .cap-recaptcha-logo{margin-left:auto;font-size:9px;color:#888;text-align:right;line-height:1.2}
-    .cap-recaptcha-logo strong{display:block;font-size:10px;color:#333}
-    /* pointer cursor that clicks the extension */
-    .cap-cursor{position:absolute;width:22px;height:22px;top:-60px;left:50%;pointer-events:none;animation:capCursor 6s infinite;z-index:10}
-    @keyframes capCursor{0%{left:20%;top:160px;opacity:0}10%{opacity:1}30%{left:calc(100% - 60px);top:-40px}40%,50%{left:calc(100% - 60px);top:-40px}60%{left:50%;top:140px;opacity:1}70%,100%{opacity:0}}
+    .cap-ext-icon{width:18px;height:18px;background:#FF6B35;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800}
+    /* viewport: sidebar (left) + site (right) */
+    .cap-viewport{display:flex;min-height:300px;position:relative}
+    /* left sidebar slides in */
+    .cap-sidebar{max-width:0;overflow:hidden;background:#f7f7f7;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;gap:8px;padding:12px 0;box-sizing:border-box;flex-shrink:0;animation:sideOpen 9s infinite}
+    @keyframes sideOpen{0%,68%{max-width:0;padding-left:0;padding-right:0}76%,94%{max-width:220px;padding-left:10px;padding-right:10px}100%{max-width:0;padding-left:0;padding-right:0}}
+    .cap-panel-logo{font-size:12px;font-weight:700;color:#FF6B35;white-space:nowrap;display:flex;align-items:center;gap:5px}
+    .cap-panel-badge{font-size:9px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .cap-el-info{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:7px 9px;flex-shrink:0}
+    .cap-el-label{font-size:9px;color:#888;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+    .cap-el-tag{font-size:10px;color:#0070f3;font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cap-el-text{font-size:10px;color:#333;margin-top:2px;white-space:nowrap}
+    .cap-chat{display:flex;flex-direction:column;gap:6px}
+    .cap-bubble-user{background:#e8f0fe;color:#1a3a6b;border:1px solid #c7dbf5;border-radius:8px;border-bottom-right-radius:2px;padding:6px 8px;font-size:10px;line-height:1.4;opacity:0;animation:bUp 9s infinite;align-self:flex-end;white-space:nowrap}
+    @keyframes bUp{0%,72%{opacity:0;transform:translateY(3px)}78%,94%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    .cap-bubble-pr{background:#f0faf4;color:#166534;border:1px solid #86efac;border-radius:8px;border-bottom-left-radius:2px;padding:6px 8px;font-size:10px;line-height:1.4;opacity:0;animation:bPr 9s infinite;white-space:nowrap}
+    @keyframes bPr{0%,80%{opacity:0;transform:translateY(3px)}86%,94%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    /* site area */
+    .cap-site{flex:1;background:#fafafa;padding:20px 24px;position:relative;min-width:0}
+    .cap-form{background:#fff;border:1px solid #e4e4e4;border-radius:8px;padding:16px;max-width:300px;position:relative}
+    .cap-form h4{font-size:13px;font-weight:700;margin:0 0 10px;color:#1a1a1a}
+    .cap-form label{display:block;font-size:10px;color:#666;margin:6px 0 3px;font-weight:500}
+    .cap-form input[type=text],.cap-form input[type=email]{width:100%;padding:5px 8px;border:1px solid #d4d4d4;border-radius:4px;font-size:11px;font-family:inherit;background:#fafafa;box-sizing:border-box}
+    .cap-form textarea{width:100%;padding:5px 8px;border:1px solid #d4d4d4;border-radius:4px;font-size:11px;font-family:inherit;background:#fafafa;height:38px;resize:none;box-sizing:border-box}
+    /* captcha target slot */
+    .cap-target{border:1px dashed #d0d0d0;border-radius:4px;height:36px;margin:8px 0;display:flex;align-items:center;justify-content:center;font-size:8px;color:#bbb;letter-spacing:.4px;text-transform:uppercase;font-weight:600;position:relative;animation:tHL 9s infinite}
+    @keyframes tHL{0%,18%{border-color:#d0d0d0;box-shadow:none}24%,66%{border-color:#FF6B35;box-shadow:0 0 0 2px rgba(255,107,53,.12)}72%,100%{border-color:#d0d0d0;box-shadow:none}}
+    .cap-target::after{content:'Captured';position:absolute;top:-8px;left:8px;background:#FF6B35;color:#fff;font-size:7px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:1px 5px;border-radius:2px;line-height:1;opacity:0;animation:tLbl 9s infinite}
+    @keyframes tLbl{0%,22%{opacity:0}26%,66%{opacity:1}70%,100%{opacity:0}}
+    .cap-submit{margin-top:10px;background:#5b44e8;color:#fff;border:none;border-radius:4px;padding:7px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;width:100%}
+    /* inline popup (appears near captcha slot) */
+    .cap-inline-popup{position:absolute;left:24px;top:216px;width:196px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.12);padding:8px;z-index:5;opacity:0;animation:iPopup 9s infinite}
+    @keyframes iPopup{0%,26%{opacity:0;transform:translateY(-4px)}32%,62%{opacity:1;transform:translateY(0)}68%,100%{opacity:0;transform:translateY(-4px)}}
+    .cap-inline-popup::before{content:'';position:absolute;top:-6px;left:18px;width:10px;height:10px;background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
+    .cap-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .cap-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .cap-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:28px;margin-bottom:6px}
+    .cap-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:capBlink 0.8s step-end infinite;margin-left:1px}
+    @keyframes capBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .cap-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;cursor:pointer}
+    /* animated cursor */
+    .cap-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:cMove 9s infinite}
     .cap-cursor svg{width:100%;height:100%;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
-    /* extension popup */
-    .cap-popup{position:absolute;top:12px;right:24px;width:220px;background:#fff;border:1px solid #d4d4d4;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.22);padding:14px;z-index:8;opacity:0;transform:translateY(-6px);animation:capPopup 6s infinite;font-family:inherit}
-    @keyframes capPopup{0%,35%{opacity:0;transform:translateY(-6px)}45%,62%{opacity:1;transform:translateY(0)}72%,100%{opacity:0;transform:translateY(-6px)}}
-    .cap-popup-header{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;font-weight:700}
-    .cap-popup-input{background:#fafafa;border:1px solid #e4e4e4;border-radius:4px;padding:8px 10px;font-size:12px;color:#1a1a1a;line-height:1.4;margin-bottom:10px;min-height:34px}
-    .cap-popup-input::after{content:'|';color:#5b44e8;animation:capBlink 1s infinite}
-    @keyframes capBlink{0%,50%{opacity:1}51%,100%{opacity:0}}
-    .cap-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:7px 12px;font-size:11px;font-weight:700;width:100%;text-align:center;font-family:inherit}
-    .cap-caption{background:#0f0f0f;color:#b8b8b8;padding:10px 16px;font-size:12px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    @keyframes cMove{
+      0%    {left:110px;top:16px;opacity:0}
+      8%    {left:110px;top:16px;opacity:1}
+      18%   {left:110px;top:162px;opacity:1}
+      62%   {left:110px;top:162px;opacity:1}
+      68%   {left:94px;top:228px;opacity:1}
+      74%   {left:94px;top:228px;opacity:.5}
+      78%   {opacity:0}
+      100%  {opacity:0}
+    }
+    .cap-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
     .cap-caption strong{color:#FF6B35}
     @media(max-width:600px){
-      .cap-stage{padding:20px 16px;min-height:280px}
-      .cap-popup{right:10px;width:180px;padding:10px}
-      .cap-form{padding:14px}
+      .cap-site{padding:14px 12px}
+      .cap-form{max-width:100%}
+      .cap-inline-popup{left:12px;width:calc(100% - 24px)}
     }
   </style>
 </head>
@@ -223,37 +247,51 @@
     <p class="article-lead">Every form without a CAPTCHA is a spam magnet. This guide covers reCAPTCHA, hCaptcha, and Cloudflare Turnstile across HTML, WordPress, Shopify, Webflow, Google Forms, and Contact Form 7 — plus a point-and-click method that ships a pull request without you touching code.</p>
   </header>
 
-  <!-- Animated Banner: showing "click extension → describe → captcha appears" -->
-  <div class="cap-banner" aria-label="Animated demo: adding captcha via SimpleReview extension">
+  <!-- Animated Banner: hover element → highlight → comment → Fix it → sidebar with PR -->
+  <div class="cap-banner" aria-label="Animated demo: hover captcha area, write comment, click Fix it, sidebar opens with PR">
     <div class="cap-chrome">
       <div class="cap-dots"><span></span><span></span><span></span></div>
       <div class="cap-url">your-site.com/contact</div>
       <div class="cap-ext-icon">V</div>
     </div>
-    <div class="cap-stage">
-      <div class="cap-form">
-        <h4>Contact us</h4>
-        <label>Email</label>
-        <input type="email" placeholder="you@example.com" readonly>
-        <label>Message</label>
-        <input type="text" placeholder="Hi, I'd like to..." readonly>
-        <div class="cap-recaptcha">
-          <div class="cap-check"></div>
-          <div class="cap-recaptcha-label">I'm not a robot</div>
-          <div class="cap-recaptcha-logo"><strong>Turnstile</strong>Privacy · Terms</div>
+    <div class="cap-viewport">
+      <!-- Left panel: slides in after Fix it -->
+      <div class="cap-sidebar">
+        <div class="cap-panel-logo">SimpleReview <span class="cap-panel-badge">AI</span></div>
+        <div class="cap-el-info">
+          <div class="cap-el-label">Selected element</div>
+          <div class="cap-el-tag">form#contact .captcha-slot</div>
+          <div class="cap-el-text">CAPTCHA placeholder</div>
         </div>
-        <button class="cap-submit" type="button">Send</button>
+        <div class="cap-chat">
+          <div class="cap-bubble-user">Add Turnstile CAPTCHA here</div>
+          <div class="cap-bubble-pr">✓ PR #38 — Turnstile added</div>
+        </div>
       </div>
-      <div class="cap-popup">
-        <div class="cap-popup-header">SimpleReview</div>
-        <div class="cap-popup-input">Add Cloudflare Turnstile CAPTCHA to this form</div>
-        <button class="cap-popup-fix" type="button">Fix with AI →</button>
-      </div>
-      <div class="cap-cursor">
-        <svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/></svg>
+      <!-- Site with form -->
+      <div class="cap-site">
+        <div class="cap-form">
+          <h4>Contact us</h4>
+          <label>Email</label>
+          <input type="email" value="hello@example.com" readonly>
+          <label>Message</label>
+          <textarea readonly>How can you help me?</textarea>
+          <div class="cap-target">captcha goes here</div>
+          <button class="cap-submit" type="button">Send message</button>
+        </div>
+        <!-- Inline popup appears near captcha slot -->
+        <div class="cap-inline-popup">
+          <div class="cap-popup-hdr"><span>Add fix</span><span class="cap-popup-x">×</span></div>
+          <div class="cap-popup-ta">Add Cloudflare Turnstile here<span class="cap-blink">|</span></div>
+          <button class="cap-popup-fix" type="button">Fix it →</button>
+        </div>
+        <!-- Animated cursor -->
+        <div class="cap-cursor">
+          <svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/></svg>
+        </div>
       </div>
     </div>
-    <div class="cap-caption">Click the extension → type <strong>"add captcha here"</strong> → merge the PR.</div>
+    <div class="cap-caption">Hover the element · write <strong>"add captcha here"</strong> · click Fix it · get a real PR</div>
   </div>
 
   <div class="key-takeaways">
