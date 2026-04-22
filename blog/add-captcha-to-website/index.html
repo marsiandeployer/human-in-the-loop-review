@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Add a CAPTCHA to Your Website (2026): Every Platform + Zero-Code Method — Vibers Blog</title>
+  <meta name="description" content="Add CAPTCHA to HTML, WordPress, Shopify, Webflow, Google Forms, Contact Form 7. reCAPTCHA v2/v3, hCaptcha, Cloudflare Turnstile compared. Plus a point-and-click method via Chrome extension — no code.">
+  <link rel="canonical" href="https://onout.org/vibers/blog/add-captcha-to-website/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Add a CAPTCHA to Your Website (2026 Guide)">
+  <meta property="og:description" content="Step-by-step guide: reCAPTCHA, hCaptcha, Cloudflare Turnstile for HTML, WordPress, Shopify, Webflow, Google Forms. Plus a no-code point-and-click method.">
+  <meta property="og:url" content="https://onout.org/vibers/blog/add-captcha-to-website/">
+  <meta property="og:image" content="https://onout.org/vibers/banner400.png">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="400">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/banner400.png">
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Add a CAPTCHA to Your Website (2026 Guide)",
+    "description": "Step-by-step guide to adding CAPTCHA (reCAPTCHA, hCaptcha, Cloudflare Turnstile) to HTML, WordPress, Shopify, Webflow, Google Forms, Contact Form 7 — and a no-code point-and-click method via Chrome extension.",
+    "url": "https://onout.org/vibers/blog/add-captcha-to-website/",
+    "datePublished": "2026-04-22",
+    "dateModified": "2026-04-22",
+    "author": { "@type": "Person", "name": "Alex Noxon", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/blog/add-captcha-to-website/" },
+    "keywords": ["add captcha to website", "how to add captcha to website", "add captcha to wordpress", "add captcha to contact form", "add cloudflare captcha to website", "recaptcha html form", "hcaptcha", "cloudflare turnstile"],
+    "articleSection": "Web Development"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the fastest way to add a CAPTCHA to a website?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The fastest way is Cloudflare Turnstile: sign up at cloudflare.com, create a site key, paste one script tag and one div into your form. It is free, privacy-friendly, and works on any HTML form without a Google account. Total time: under 5 minutes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I add a CAPTCHA to my site without writing code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. On WordPress use a plugin like CF7 Simple Recaptcha or WPForms. For any other site, you can use a Chrome extension like SimpleReview to click the form, describe the change in plain English (‘add Cloudflare Turnstile here’), and receive a ready-to-merge GitHub pull request with the CAPTCHA wired in."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is reCAPTCHA v3 better than v2?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "reCAPTCHA v3 is invisible and returns a 0.0–1.0 risk score instead of a checkbox, so user experience is better. However v3 does not block bots by itself — you must decide a score threshold and handle the failure. reCAPTCHA v2 is easier because Google decides pass/fail for you."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I add a CAPTCHA to a Google Form?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Google Forms does not support third-party CAPTCHAs. The closest built-in option is a short-answer question with Response Validation set to a regex the bot scrapers usually fail. For real bot protection, embed your form via Google Apps Script on a page where you control the HTML, then add Turnstile."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which CAPTCHA is best for GDPR compliance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Cloudflare Turnstile and hCaptcha are more GDPR-friendly than Google reCAPTCHA because they do not require Google cookies or cross-site tracking. Turnstile specifically claims no user-tracking cookies, which makes consent banners simpler."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need a CAPTCHA on every form?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Put CAPTCHA on any form that writes to your database or triggers an email: signup, login, password reset, contact, comment, checkout. Pure read-only forms (search boxes, filters) usually do not need one."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a;border:none}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555;border-bottom:1px solid transparent}
+    .site-nav .nav-links a:hover{color:#5b44e8;border-color:#5b44e8;text-decoration:none}
+    .article-header{margin-bottom:32px}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    blockquote{border-left:3px solid #5b44e8;padding:12px 16px;margin:20px 0;color:#444;font-style:italic}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    .definition strong{font-weight:700}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-section h2{border-top:none;padding-top:0}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+
+    /* ───────── Animated Captcha Banner ───────── */
+    .cap-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .cap-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .cap-dots{display:flex;gap:5px}
+    .cap-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .cap-dots span:nth-child(1){background:#ff5f57}
+    .cap-dots span:nth-child(2){background:#ffbd2e}
+    .cap-dots span:nth-child(3){background:#28c840}
+    .cap-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .cap-ext-icon{width:18px;height:18px;background:#FF6B35;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;animation:extPulse 6s infinite}
+    @keyframes extPulse{0%,40%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,107,53,0)}45%,55%{transform:scale(1.15);box-shadow:0 0 0 6px rgba(255,107,53,.25)}}
+    .cap-stage{position:relative;background:#fafafa;min-height:320px;padding:28px 32px;color:#1a1a1a}
+    .cap-form{background:#fff;border:1px solid #e4e4e4;border-radius:8px;padding:20px;max-width:340px;margin:0 auto;position:relative}
+    .cap-form h4{font-size:14px;font-weight:700;margin:0 0 12px;color:#1a1a1a}
+    .cap-form label{display:block;font-size:11px;color:#666;margin:8px 0 4px;font-weight:500}
+    .cap-form input{width:100%;padding:7px 10px;border:1px solid #d4d4d4;border-radius:4px;font-size:12px;font-family:inherit;background:#fafafa}
+    .cap-form .cap-submit{margin-top:14px;background:#5b44e8;color:#fff;border:none;border-radius:4px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;width:100%}
+    /* recaptcha skeleton — hidden until step 3 */
+    .cap-recaptcha{display:flex;align-items:center;gap:10px;border:1px solid #d3d3d3;border-radius:4px;padding:10px 12px;background:#f9f9f9;margin-top:10px;opacity:0;transform:translateY(6px);animation:capReveal 6s infinite}
+    @keyframes capReveal{0%,65%{opacity:0;transform:translateY(6px)}75%,100%{opacity:1;transform:translateY(0)}}
+    .cap-check{width:20px;height:20px;border:2px solid #c1c1c1;border-radius:3px;background:#fff;position:relative;flex-shrink:0}
+    .cap-check::after{content:'';position:absolute;top:2px;left:5px;width:5px;height:9px;border:solid #16a34a;border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);animation:capCheck 6s infinite}
+    @keyframes capCheck{0%,80%{transform:rotate(45deg) scale(0)}90%,100%{transform:rotate(45deg) scale(1)}}
+    .cap-recaptcha-label{font-size:11px;color:#444;font-weight:500}
+    .cap-recaptcha-logo{margin-left:auto;font-size:9px;color:#888;text-align:right;line-height:1.2}
+    .cap-recaptcha-logo strong{display:block;font-size:10px;color:#333}
+    /* pointer cursor that clicks the extension */
+    .cap-cursor{position:absolute;width:22px;height:22px;top:-60px;left:50%;pointer-events:none;animation:capCursor 6s infinite;z-index:10}
+    @keyframes capCursor{0%{left:20%;top:160px;opacity:0}10%{opacity:1}30%{left:calc(100% - 60px);top:-40px}40%,50%{left:calc(100% - 60px);top:-40px}60%{left:50%;top:140px;opacity:1}70%,100%{opacity:0}}
+    .cap-cursor svg{width:100%;height:100%;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+    /* extension popup */
+    .cap-popup{position:absolute;top:12px;right:24px;width:220px;background:#fff;border:1px solid #d4d4d4;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.22);padding:14px;z-index:8;opacity:0;transform:translateY(-6px);animation:capPopup 6s infinite;font-family:inherit}
+    @keyframes capPopup{0%,35%{opacity:0;transform:translateY(-6px)}45%,62%{opacity:1;transform:translateY(0)}72%,100%{opacity:0;transform:translateY(-6px)}}
+    .cap-popup-header{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;font-weight:700}
+    .cap-popup-input{background:#fafafa;border:1px solid #e4e4e4;border-radius:4px;padding:8px 10px;font-size:12px;color:#1a1a1a;line-height:1.4;margin-bottom:10px;min-height:34px}
+    .cap-popup-input::after{content:'|';color:#5b44e8;animation:capBlink 1s infinite}
+    @keyframes capBlink{0%,50%{opacity:1}51%,100%{opacity:0}}
+    .cap-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:7px 12px;font-size:11px;font-weight:700;width:100%;text-align:center;font-family:inherit}
+    .cap-caption{background:#0f0f0f;color:#b8b8b8;padding:10px 16px;font-size:12px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .cap-caption strong{color:#FF6B35}
+    @media(max-width:600px){
+      .cap-stage{padding:20px 16px;min-height:280px}
+      .cap-popup{right:10px;width:180px;padding:10px}
+      .cap-form{padding:14px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <header class="article-header">
+    <div class="article-meta">
+      <span>Web Development</span>
+      <span>April 22, 2026</span>
+      <span>12 min read</span>
+    </div>
+    <h1>How to Add a CAPTCHA to Your Website (2026): Every Platform + a Zero-Code Method</h1>
+    <p class="article-lead">Every form without a CAPTCHA is a spam magnet. This guide covers reCAPTCHA, hCaptcha, and Cloudflare Turnstile across HTML, WordPress, Shopify, Webflow, Google Forms, and Contact Form 7 — plus a point-and-click method that ships a pull request without you touching code.</p>
+  </header>
+
+  <!-- Animated Banner: showing "click extension → describe → captcha appears" -->
+  <div class="cap-banner" aria-label="Animated demo: adding captcha via SimpleReview extension">
+    <div class="cap-chrome">
+      <div class="cap-dots"><span></span><span></span><span></span></div>
+      <div class="cap-url">your-site.com/contact</div>
+      <div class="cap-ext-icon">V</div>
+    </div>
+    <div class="cap-stage">
+      <div class="cap-form">
+        <h4>Contact us</h4>
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com" readonly>
+        <label>Message</label>
+        <input type="text" placeholder="Hi, I'd like to..." readonly>
+        <div class="cap-recaptcha">
+          <div class="cap-check"></div>
+          <div class="cap-recaptcha-label">I'm not a robot</div>
+          <div class="cap-recaptcha-logo"><strong>Turnstile</strong>Privacy · Terms</div>
+        </div>
+        <button class="cap-submit" type="button">Send</button>
+      </div>
+      <div class="cap-popup">
+        <div class="cap-popup-header">SimpleReview</div>
+        <div class="cap-popup-input">Add Cloudflare Turnstile CAPTCHA to this form</div>
+        <button class="cap-popup-fix" type="button">Fix with AI →</button>
+      </div>
+      <div class="cap-cursor">
+        <svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/></svg>
+      </div>
+    </div>
+    <div class="cap-caption">Click the extension → type <strong>"add captcha here"</strong> → merge the PR.</div>
+  </div>
+
+  <div class="key-takeaways">
+    <h3>Key Takeaways</h3>
+    <ul>
+      <li><strong>Fastest provider in 2026:</strong> Cloudflare Turnstile — free, no Google cookies, one script tag + one div.</li>
+      <li><strong>WordPress:</strong> don't write code — install WPForms, CF7 Simple Recaptcha, or the official Cloudflare Turnstile plugin.</li>
+      <li><strong>Plain HTML:</strong> 6 lines of JS to add reCAPTCHA v2; the secret-key check happens server-side.</li>
+      <li><strong>No-code option:</strong> a Chrome extension like SimpleReview lets you click the form, say "add captcha", and receive a ready-to-merge pull request.</li>
+      <li><strong>Never skip server-side verification</strong> — client-side alone is trivial to bypass.</li>
+    </ul>
+  </div>
+
+  <h2>What a CAPTCHA actually does</h2>
+  <div class="definition"><strong>CAPTCHA</strong> (Completely Automated Public Turing test) is a challenge that distinguishes a human from a script. Modern CAPTCHAs (reCAPTCHA v3, Turnstile) don't show a puzzle at all — they score the visitor's behaviour and let the server decide whether to accept the submission.</div>
+
+  <p>If a form writes to your database or sends an email, you need a CAPTCHA. Signup, login, password reset, comments, checkout, contact — all of them get hammered by bots within hours of going live. In 2024 Cloudflare reported <strong>nearly 50% of internet traffic was automated</strong>, and a sizeable share was malicious. Unprotected forms become spam engines, credential-stuffing targets, or SMTP-abuse launchpads.</p>
+
+  <h2>Which CAPTCHA should you pick?</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Provider</th><th>UX</th><th>Privacy</th><th>Free tier</th><th>Best for</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Cloudflare Turnstile</strong></td>
+          <td>Invisible or checkbox</td>
+          <td>No tracking cookies</td>
+          <td>Unlimited</td>
+          <td>New projects, GDPR-sensitive sites</td>
+        </tr>
+        <tr>
+          <td><strong>Google reCAPTCHA v3</strong></td>
+          <td>Invisible score</td>
+          <td>Google cookies</td>
+          <td>1M req/mo</td>
+          <td>Sites already on Google stack</td>
+        </tr>
+        <tr>
+          <td><strong>Google reCAPTCHA v2</strong></td>
+          <td>"I'm not a robot" checkbox</td>
+          <td>Google cookies</td>
+          <td>1M req/mo</td>
+          <td>Legacy forms; you want Google to decide</td>
+        </tr>
+        <tr>
+          <td><strong>hCaptcha</strong></td>
+          <td>Checkbox + image challenge</td>
+          <td>Privacy-focused</td>
+          <td>Unlimited</td>
+          <td>Drop-in reCAPTCHA replacement, can earn revenue</td>
+        </tr>
+        <tr>
+          <td><strong>Honeypot field</strong></td>
+          <td>Invisible</td>
+          <td>None needed</td>
+          <td>Free, self-hosted</td>
+          <td>Low-traffic contact forms, small WordPress blogs</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stat-box"><strong>Pro tip:</strong> combine a honeypot + Turnstile. Honeypot kills 80% of dumb scrapers for free, Turnstile handles the rest. Two layers, zero UX cost.</div>
+
+  <h2>Method 1 — Point-and-click via Chrome extension (no code)</h2>
+
+  <p>If you don't want to edit HTML, deal with site keys, or read a plugin changelog, you can add a CAPTCHA the same way you report a bug: click the form, describe the change, merge a pull request.</p>
+
+  <p>That is exactly what the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">SimpleReview Chrome extension</a> does. The animated banner above is the real flow:</p>
+
+  <ol>
+    <li>Open any page of your site.</li>
+    <li>Click the SimpleReview icon. A popup appears next to the element you clicked.</li>
+    <li>Type <em>"Add Cloudflare Turnstile CAPTCHA to this form"</em> and hit <strong>Fix with AI</strong>.</li>
+    <li>The extension sends the DOM snippet + your instruction to a background AI agent. A pull request lands in your repo within a few minutes.</li>
+    <li>A human reviewer on our side checks the diff (keys loaded from env vars, server-side verification wired in) before it reaches you.</li>
+  </ol>
+
+  <p>This is the zero-code method. It works on HTML, React, Vue, Svelte, PHP — anything you can open in a browser and point at a GitHub repo.</p>
+
+  <h2>Method 2 — Add CAPTCHA to a plain HTML form</h2>
+
+  <p>If you prefer copy-paste, here's the shortest working path. We'll use Cloudflare Turnstile because it's the fastest in 2026.</p>
+
+  <h3>Step 1: get a site key</h3>
+  <p>Sign up at <a href="https://dash.cloudflare.com/">dash.cloudflare.com</a> → Turnstile → Add site → copy the <strong>site key</strong> (public) and <strong>secret key</strong> (keep private).</p>
+
+  <h3>Step 2: put the widget on the form</h3>
+  <pre><code>&lt;script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer&gt;&lt;/script&gt;
+
+&lt;form action="/contact" method="POST"&gt;
+  &lt;input name="email" type="email" required&gt;
+  &lt;textarea name="message" required&gt;&lt;/textarea&gt;
+  &lt;div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY"&gt;&lt;/div&gt;
+  &lt;button type="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+  <h3>Step 3: verify on the server (non-negotiable)</h3>
+  <p>Client-side alone is useless — anyone with DevTools skips it. Your backend must POST the token to Cloudflare:</p>
+
+  <pre><code>// Node / Express
+app.post('/contact', async (req, res) =&gt; {
+  const token = req.body['cf-turnstile-response'];
+  const r = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: `secret=${process.env.TURNSTILE_SECRET}&response=${token}&remoteip=${req.ip}`
+  });
+  const data = await r.json();
+  if (!data.success) return res.status(403).send('Bot detected');
+  // ...save message, send email...
+});</code></pre>
+
+  <p>The same pattern works for reCAPTCHA v2 (endpoint: <code>https://www.google.com/recaptcha/api/siteverify</code>) and hCaptcha (<code>https://hcaptcha.com/siteverify</code>).</p>
+
+  <h2>Method 3 — WordPress (Contact Form 7, WPForms, Elementor)</h2>
+
+  <p>Never hand-patch WordPress theme files. Every CAPTCHA has an official plugin:</p>
+
+  <ul>
+    <li><strong>Contact Form 7:</strong> install <em>CF7 Simple Recaptcha</em> or <em>Advanced Google reCAPTCHA</em>. Add your keys in Settings → Integration. Put <code>[cfturnstile]</code> or <code>[recaptcha]</code> inside your form tag.</li>
+    <li><strong>WPForms:</strong> go to WPForms → Settings → CAPTCHA, pick provider, paste keys, then drag the CAPTCHA field onto any form.</li>
+    <li><strong>Elementor Forms:</strong> Elementor Pro ships reCAPTCHA and hCaptcha fields natively. Add the field, paste keys in Elementor → Settings → Integrations.</li>
+    <li><strong>Gravity Forms:</strong> use the built-in CAPTCHA field; switch provider under Forms → Settings → reCAPTCHA / hCaptcha.</li>
+    <li><strong>WooCommerce:</strong> for checkout and registration use <em>Advanced noCaptcha &amp; invisible Captcha</em> or <em>Login No Captcha reCAPTCHA</em>. Don't try to inject it manually — WooCommerce's checkout hook order is a minefield.</li>
+    <li><strong>Comments:</strong> Akismet first, CAPTCHA second. Most comment spam dies to Akismet alone.</li>
+  </ul>
+
+  <div class="stat-box"><strong>Watch out:</strong> caching plugins (WP Rocket, LiteSpeed) sometimes cache the page that contains the CAPTCHA token. Exclude form pages from full-page cache or the same token gets reused and Google auto-rejects it.</div>
+
+  <h2>Method 4 — Shopify, Webflow, Wix, Squarespace</h2>
+
+  <p>Hosted platforms differ: some ship CAPTCHA built-in, some require a workaround.</p>
+
+  <ul>
+    <li><strong>Shopify:</strong> the native contact form (<code>contact_form</code> Liquid tag) has bot protection on by default since 2022. For custom checkout fields, use an app like <em>Captcha by POWR</em>. Shopify Plus: you can add reCAPTCHA via checkout extensibility.</li>
+    <li><strong>Webflow:</strong> go to Project Settings → Forms → reCAPTCHA, paste site + secret key, done. Turnstile is not native yet — use a custom embed.</li>
+    <li><strong>Wix:</strong> only Wix Forms Pro supports CAPTCHA. Turn it on in form settings → Advanced → CAPTCHA.</li>
+    <li><strong>Squarespace:</strong> Business+ plans include built-in Google reCAPTCHA on contact and newsletter forms. Enable in Settings → Forms.</li>
+  </ul>
+
+  <h2>Method 5 — Google Forms</h2>
+
+  <p>Google Forms does not expose a CAPTCHA field. Your options:</p>
+
+  <ol>
+    <li><strong>Built-in response validation</strong> — add a short-answer question with a regex (e.g. <code>^[A-Za-z ]{3,40}$</code>). Weak, but filters the dumbest bots.</li>
+    <li><strong>Require sign-in</strong> — Settings → Responses → Limit to 1 response / restrict to organization. Blocks 100% of anonymous bots, kills 30% of real submissions.</li>
+    <li><strong>Embed your own form</strong> — build the page yourself, add Turnstile, POST to Google Apps Script. Most control, most work.</li>
+  </ol>
+
+  <h2>Method 6 — Cloudflare Turnstile (recommended default)</h2>
+
+  <p>For any greenfield project in 2026, Turnstile is the lowest-friction pick. Reasons:</p>
+
+  <ul>
+    <li><strong>No Google account</strong> — just Cloudflare, which you probably already use for DNS.</li>
+    <li><strong>No tracking cookies</strong> — easier GDPR story, no extra consent banner row.</li>
+    <li><strong>Managed mode auto-switches</strong> between invisible, non-interactive, and interactive challenges based on risk.</li>
+    <li><strong>Free and unlimited</strong> for all plans.</li>
+  </ul>
+
+  <p>If you're on Cloudflare Pages or Workers, the sitekey can be injected as a binding — no env files needed.</p>
+
+  <h2>Common problems and how to fix them</h2>
+
+  <ul>
+    <li><strong>"Invalid site key"</strong> — you pasted the secret key into the HTML. Secret key never leaves your server.</li>
+    <li><strong>CAPTCHA appears but form still lets bots through</strong> — you forgot server-side verification. The client token means nothing without <code>siteverify</code>.</li>
+    <li><strong>Token expired</strong> — Turnstile tokens live 300s, reCAPTCHA v2 tokens 120s. If your form takes longer (file upload, multi-step) request a fresh token right before submit.</li>
+    <li><strong>CORS error on verify call</strong> — call <code>siteverify</code> from your server, not from JS. It's a server-to-server endpoint.</li>
+    <li><strong>Double-render widget</strong> in React / Vue — call <code>turnstile.render()</code> in a <code>useEffect</code> cleanup, or use the official <code>@marsidev/react-turnstile</code> wrapper.</li>
+    <li><strong>Accessibility complaints</strong> — reCAPTCHA v2 audio challenge is notoriously poor. Turnstile has better a11y; invisible modes sidestep the issue entirely.</li>
+  </ul>
+
+  <div class="stat-box"><strong>If a CAPTCHA breaks your conversion rate</strong>, you picked the wrong one. Invisible Turnstile typically adds 0 friction; reCAPTCHA v2 checkbox costs 2-4% of conversions. Measure before/after.</div>
+
+  <h2>Testing your CAPTCHA</h2>
+
+  <ol>
+    <li>Use the provider's <strong>test keys</strong> in development — they always pass or always fail, predictable.
+      <ul>
+        <li>Turnstile always-pass site key: <code>1x00000000000000000000AA</code></li>
+        <li>reCAPTCHA always-pass site key: <code>6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI</code></li>
+      </ul>
+    </li>
+    <li>Write an integration test that POSTs a submission <em>without</em> a token — it must 403.</li>
+    <li>Test on mobile Safari — several CAPTCHAs have historic issues with ITP / storage partitioning.</li>
+  </ol>
+
+  <div class="cta-block">
+    <h3>Don't want to touch the code?</h3>
+    <p>Install the SimpleReview Chrome extension. Click the form, type "add captcha", get a pull request. A human reviews it before you see it.</p>
+    <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_vibers_blog&amp;utm_medium=article&amp;utm_campaign=add-captcha" onclick="gtag('event','generate_lead',{event_category:'blog',event_label:'add-captcha-cta'});">Install for free →</a>
+  </div>
+
+  <h2 id="faq">FAQ</h2>
+  <section class="faq-section">
+    <div class="faq-item">
+      <div class="faq-q">What is the fastest way to add a CAPTCHA to a website?</div>
+      <div class="faq-a">Cloudflare Turnstile. Sign up at cloudflare.com, create a site key, paste one script tag and one div into your form. Free, privacy-friendly, works on any HTML form without a Google account. Under 5 minutes end-to-end.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I add a CAPTCHA without writing code?</div>
+      <div class="faq-a">Yes. On WordPress use a plugin (WPForms, CF7 Simple Recaptcha). For everything else, install the SimpleReview Chrome extension, click the form, describe the change in plain English, and merge the generated pull request. No editor, no keys to paste manually.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is reCAPTCHA v3 better than v2?</div>
+      <div class="faq-a">v3 is invisible and returns a 0.0–1.0 risk score instead of a checkbox, so UX is better. But v3 doesn't block bots on its own — you pick the score threshold and handle the failure. v2 is simpler because Google decides pass/fail for you.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I add a CAPTCHA to a Google Form?</div>
+      <div class="faq-a">Google Forms doesn't support third-party CAPTCHAs. Use response validation with a regex, require Google sign-in, or rebuild the form yourself on a page where you control HTML and add Turnstile.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Which CAPTCHA is best for GDPR?</div>
+      <div class="faq-a">Cloudflare Turnstile and hCaptcha. They don't require Google cookies or cross-site tracking, which keeps consent banners simple.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need a CAPTCHA on every form?</div>
+      <div class="faq-a">Every form that writes to a database or sends an email: signup, login, password reset, contact, comment, checkout. Read-only forms (search, filter) usually don't need one.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do CAPTCHAs hurt SEO?</div>
+      <div class="faq-a">No — search crawlers don't submit forms. But heavy third-party scripts hurt Core Web Vitals. Use <code>async defer</code>, and prefer invisible modes.</div>
+    </div>
+  </section>
+
+  <h2>Related reading</h2>
+  <ul>
+    <li><a href="/vibers/blog/vibe-coding-security-risks/">7 Security Risks in Vibe-Coded Apps (and what a CAPTCHA doesn't fix)</a></li>
+    <li><a href="/vibers/blog/review-vibe-coded-app-before-launch/">Pre-launch Checklist for AI-Generated Apps</a></li>
+    <li><a href="/vibers/blog/best-chrome-extensions-ai-code-review/">Best Chrome Extensions for AI Code Review in 2026</a></li>
+  </ul>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers · <a href="/vibers/">onout.org/vibers</a></span>
+    <span><a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a> · <a href="/vibers/blog/">Blog</a></span>
+  </footer>
+</div>
+</body>
+</html>
