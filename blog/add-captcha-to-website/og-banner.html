@@ -13,13 +13,45 @@
   .dots span{width:12px;height:12px;border-radius:50%;display:inline-block}
   .dot-r{background:#ff5f57}.dot-y{background:#ffbd2e}.dot-g{background:#28c840}
   .url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:5px;padding:5px 14px;font-size:13px;color:#444;margin:0 10px}
-  .ext{width:22px;height:22px;background:#FF6B35;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800}
+  .ext{width:22px;height:22px;border-radius:4px;display:block;object-fit:cover}
 
-  /* viewport */
+  /* viewport: site left, sidebar right */
   .viewport{display:flex;flex:1;overflow:hidden}
 
-  /* left sidebar */
-  .sidebar{width:240px;flex-shrink:0;background:#f7f7f7;border-right:1px solid #e0e0e0;padding:16px 14px;display:flex;flex-direction:column;gap:10px}
+  /* site area */
+  .site{flex:1;background:#f5f5f3;padding:36px 40px;position:relative;display:flex;align-items:flex-start;gap:32px}
+
+  /* wireframe side */
+  .wf{width:180px;display:flex;flex-direction:column;gap:10px;padding-top:6px;flex-shrink:0}
+  .wf-line{height:8px;background:#ddd;border-radius:4px}
+  .wf-img{height:90px;background:#e2e2e2;border-radius:7px;margin-top:4px}
+  .wf-sm{height:6px;background:#e8e8e8;border-radius:3px}
+
+  .form{background:#fff;border:1px solid #e4e4e4;border-radius:10px;padding:22px 24px;width:300px;flex-shrink:0;position:relative}
+  .form h4{font-size:15px;font-weight:700;margin:0 0 12px;color:#1a1a1a}
+  .form label{display:block;font-size:11px;color:#666;margin:8px 0 4px;font-weight:500}
+  .form input[type=email],.form textarea{width:100%;padding:7px 10px;border:1px solid #d4d4d4;border-radius:5px;font-size:12px;font-family:inherit;background:#fafafa;box-sizing:border-box}
+  .form textarea{height:44px;resize:none}
+
+  /* highlighted captcha slot */
+  .cap-target{border:1px dashed #FF6B35;border-radius:5px;height:42px;margin:10px 0;display:flex;align-items:center;justify-content:center;font-size:9px;color:#bbb;text-transform:uppercase;font-weight:600;letter-spacing:.4px;position:relative;box-shadow:0 0 0 2px rgba(255,107,53,.12)}
+  .cap-target-label{position:absolute;top:-9px;left:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1}
+  .submit{margin-top:12px;background:#5b44e8;color:#fff;border:none;border-radius:5px;padding:9px 14px;font-size:12px;font-weight:600;width:100%;font-family:inherit}
+
+  /* inline popup */
+  .popup{position:absolute;left:40px;top:240px;width:210px;background:#fff;border:1px solid #ddd;border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,.14);padding:10px 11px}
+  .popup::before{content:'';position:absolute;top:-7px;left:18px;width:12px;height:12px;background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
+  .popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:11px;font-weight:700;color:#222}
+  .popup-x{color:#bbb;font-size:14px;line-height:1}
+  .popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:5px;padding:7px 9px;font-size:11px;color:#333;line-height:1.4;margin-bottom:8px}
+  .popup-blink{color:#5b44e8;font-weight:100}
+  .popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:5px;padding:7px 11px;font-size:11px;font-weight:700;width:100%;text-align:center;font-family:inherit;cursor:pointer}
+
+  /* cursor arrow */
+  .cursor{position:absolute;left:304px;top:212px;width:22px;height:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+
+  /* right sidebar */
+  .sidebar{width:260px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;padding:18px 14px;display:flex;flex-direction:column;gap:12px}
   .panel-logo{font-size:14px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:6px}
   .panel-badge{font-size:10px;background:#FF6B35;color:#fff;padding:2px 6px;border-radius:3px;font-weight:700}
   .el-info{background:#fff;border:1px solid #e5e5e5;border-radius:5px;padding:9px 11px}
@@ -29,31 +61,6 @@
   .chat{display:flex;flex-direction:column;gap:8px;margin-top:4px}
   .bubble-user{background:#e8f0fe;color:#1a3a6b;border:1px solid #c7dbf5;border-radius:9px;border-bottom-right-radius:2px;padding:8px 10px;font-size:11px;line-height:1.4;align-self:flex-end}
   .bubble-pr{background:#f0faf4;color:#166534;border:1px solid #86efac;border-radius:9px;border-bottom-left-radius:2px;padding:8px 10px;font-size:11px;line-height:1.4}
-
-  /* site area */
-  .site{flex:1;background:#f5f5f3;padding:36px 40px;position:relative;display:flex;align-items:flex-start;justify-content:flex-start}
-  .form{background:#fff;border:1px solid #e4e4e4;border-radius:10px;padding:22px 24px;width:320px;position:relative}
-  .form h4{font-size:15px;font-weight:700;margin:0 0 14px;color:#1a1a1a}
-  .form label{display:block;font-size:11px;color:#666;margin:8px 0 4px;font-weight:500}
-  .form input[type=email],.form textarea{width:100%;padding:7px 10px;border:1px solid #d4d4d4;border-radius:5px;font-size:12px;font-family:inherit;background:#fafafa;box-sizing:border-box}
-  .form textarea{height:46px;resize:none}
-
-  /* highlighted captcha slot */
-  .cap-target{border:1px dashed #FF6B35;border-radius:5px;height:42px;margin:10px 0;display:flex;align-items:center;justify-content:center;font-size:9px;color:#bbb;text-transform:uppercase;font-weight:600;letter-spacing:.4px;position:relative;box-shadow:0 0 0 2px rgba(255,107,53,.12)}
-  .cap-target-label{position:absolute;top:-9px;left:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1}
-  .submit{margin-top:12px;background:#5b44e8;color:#fff;border:none;border-radius:5px;padding:9px 14px;font-size:12px;font-weight:600;width:100%;font-family:inherit}
-
-  /* inline popup */
-  .popup{position:absolute;left:370px;top:152px;width:210px;background:#fff;border:1px solid #ddd;border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,.14);padding:10px 11px}
-  .popup::before{content:'';position:absolute;top:18px;left:-7px;width:12px;height:12px;background:#fff;border-left:1px solid #ddd;border-bottom:1px solid #ddd;transform:rotate(45deg)}
-  .popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:11px;font-weight:700;color:#222}
-  .popup-x{color:#bbb;font-size:14px;line-height:1}
-  .popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:5px;padding:7px 9px;font-size:11px;color:#333;line-height:1.4;margin-bottom:8px}
-  .popup-blink{color:#5b44e8;font-weight:100}
-  .popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:5px;padding:7px 11px;font-size:11px;font-weight:700;width:100%;text-align:center;font-family:inherit;cursor:pointer}
-
-  /* cursor arrow */
-  .cursor{position:absolute;left:334px;top:182px;width:22px;height:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
 
   /* headline overlay bottom */
   .headline{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(15,15,15,.95));padding:28px 32px 22px;color:#fff}
@@ -67,10 +74,47 @@
   <div class="chrome">
     <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
     <div class="url">your-site.com/contact</div>
-    <div class="ext">V</div>
+    <img src="../../favicon.png" class="ext" alt="ext">
   </div>
   <div class="viewport">
-    <!-- Left sidebar -->
+    <!-- Site with form -->
+    <div class="site">
+      <!-- Wireframe side content -->
+      <div class="wf">
+        <div class="wf-line" style="width:70%"></div>
+        <div class="wf-line" style="width:100%"></div>
+        <div class="wf-line" style="width:55%"></div>
+        <div class="wf-img"></div>
+        <div class="wf-sm" style="width:90%"></div>
+        <div class="wf-sm" style="width:65%"></div>
+      </div>
+      <div class="form">
+        <h4>Contact us</h4>
+        <label>Email</label>
+        <input type="email" value="hello@example.com" readonly>
+        <label>Message</label>
+        <textarea readonly>How can you help me?</textarea>
+        <div class="cap-target">
+          <span class="cap-target-label">Selected</span>
+          captcha goes here
+        </div>
+        <button class="submit" type="button">Send message</button>
+      </div>
+      <!-- Inline popup with Done state -->
+      <div class="popup">
+        <div class="popup-hdr"><span>Add fix</span><span class="popup-x">×</span></div>
+        <div class="popup-ta">Add Cloudflare Turnstile here<span class="popup-blink">|</span></div>
+        <button class="popup-fix" type="button">Done ✓</button>
+      </div>
+      <!-- Cursor pointing at captcha slot -->
+      <svg class="cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/></svg>
+      <!-- Bottom headline overlay -->
+      <div class="headline">
+        <h2>How to Add a <span class="hl-orange">CAPTCHA</span> to Your Website</h2>
+        <p>reCAPTCHA · hCaptcha · Cloudflare Turnstile · WordPress · Shopify · HTML · <span class="hl-orange">zero-code via SimpleReview</span></p>
+      </div>
+    </div>
+    <!-- Right sidebar (opened) -->
     <div class="sidebar">
       <div class="panel-logo">SimpleReview <span class="panel-badge">AI</span></div>
       <div class="el-info">
@@ -81,34 +125,6 @@
       <div class="chat">
         <div class="bubble-user">Add Turnstile CAPTCHA here</div>
         <div class="bubble-pr">✓ PR #38 — Cloudflare Turnstile added to contact form</div>
-      </div>
-    </div>
-    <!-- Site with form -->
-    <div class="site">
-      <div class="form">
-        <h4>Contact us</h4>
-        <label>Email</label>
-        <input type="email" value="hello@example.com" readonly>
-        <label>Message</label>
-        <textarea readonly>How can you help me?</textarea>
-        <div class="cap-target">
-          <span class="cap-target-label">Captured</span>
-          captcha goes here
-        </div>
-        <button class="submit" type="button">Send message</button>
-      </div>
-      <!-- Inline popup -->
-      <div class="popup">
-        <div class="popup-hdr"><span>Add fix</span><span class="popup-x">×</span></div>
-        <div class="popup-ta">Add Cloudflare Turnstile here<span class="popup-blink">|</span></div>
-        <button class="popup-fix" type="button">Fix it →</button>
-      </div>
-      <!-- Cursor -->
-      <svg class="cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/></svg>
-      <!-- Bottom headline overlay -->
-      <div class="headline">
-        <h2>How to Add a <span class="hl-orange">CAPTCHA</span> to Your Website</h2>
-        <p>reCAPTCHA · hCaptcha · Cloudflare Turnstile · WordPress · Shopify · HTML · <span class="hl-orange">zero-code via SimpleReview</span></p>
       </div>
     </div>
   </div>
