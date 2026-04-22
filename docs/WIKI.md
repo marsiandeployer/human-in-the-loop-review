@@ -50,7 +50,20 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [topic-research-20260414.xlsx](topic-research-20260414.xlsx) | SEMrush Topic Research — 108 content ideas with volumes, questions, backlinks |
 | [google-2026-content-strategy.md](google-2026-content-strategy.md) | **NEW** Google March 2026 правила: что банят (scaled abuse), что поднимают (Information Gain). Наша стратегия. |
 | [bug-cluster-research.md](bug-cluster-research.md) | **NEW** 30 багов из SO + GitHub, классифицированы по SimpleReview fit и Noxon expertise. Roadmap на 5-10 статей. |
-| [animated-banner-guide.md](animated-banner-guide.md) | Инструкция по созданию анимированных баннеров (cursor→highlight→popup→spinner→PR sidebar) для статей блога и лендингов. |
+| [animated-banner-guide.md](animated-banner-guide.md) | Инструкция по созданию анимированных баннеров (cursor→highlight→popup→spinner→PR sidebar) для статей блога и лендингов. Включает формат voiceover JSON (зашитые субтитры для диктора). |
+
+### Workflow: написание SEO-статьи для блога
+
+1. **Исследование ключевых слов** → `/demand-research <тема>` — вытаскивает Wordstat, Google Suggest, People Also Ask
+2. Если есть Semrush CSV/gist — парсить все группы (high-vol, mid-vol, platform-specific) и покрыть каждую группу в статье
+3. **Маппинг ключей в секции:**
+   - High-volume → title, H1, первые 100 слов, meta description, meta keywords
+   - Platform/tool-specific → отдельный H2/H3 для каждой платформы (WordPress, Shopify, Webflow…)
+   - PAA-вопросы → FAQ-раздел (+ FAQ-schema в JSON-LD)
+   - Long-tail → естественно по тексту
+4. **Баннер** — каждая статья должна иметь анимированный `.cap-banner` с `cap-voiceover` JSON внутри (инструкция в `animated-banner-guide.md`)
+5. **CTA** — минимум 2: один сразу после баннера (ext-callout), один в конце статьи (`.cta-block`)
+6. **Meta tags** — `<meta name="keywords">` + `<meta name="description">` + OG-теги
 | [marker-io-keyword-insights.md](marker-io-keyword-insights.md) | **NEW** Анализ marker.io 4431 KW: топ-кластеры, "free" intent, чего НЕ копировать. |
 | [WIKI.md#seo-intelligence](WIKI.md#seo-intelligence-april-2026) | Google March 2026 Core Update итоги + Claude SEO Prompts methodology |
 

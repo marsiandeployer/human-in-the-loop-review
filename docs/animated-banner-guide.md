@@ -200,6 +200,90 @@ main();
 
 ---
 
+---
+
+## Voiceover / Subtitle Timing (зашитые субтитры)
+
+Каждый баннер должен содержать **скрытый JSON-блок с тайминговыми данными** для озвучки. Пользователь эти данные не видит — они зашиты в `<script type="application/json">` внутри `.cap-banner`.
+
+### Формат
+
+```html
+<!-- Voiceover timing data for video/screen recording narration. Not shown to users.
+     Extract: JSON.parse(document.getElementById('cap-voiceover').textContent) -->
+<script type="application/json" id="cap-voiceover">
+{
+  "duration_s": 9,
+  "loop": true,
+  "notes": "Narration script aligned to CSS animation keyframes. t = seconds into loop.",
+  "tracks": [
+    {"t": 0.0, "voice": "Фраза в начале — описание контекста."},
+    {"t": 0.7, "voice": "Что делает пользователь — курсор появляется."},
+    {"t": 1.5, "voice": "Курсор движется к целевому элементу."},
+    {"t": 2.0, "voice": "Элемент выделен."},
+    {"t": 3.0, "voice": "Попап открылся — описываем поле ввода."},
+    {"t": 4.5, "voice": "Текст комментария — то что пишет пользователь."},
+    {"t": 5.0, "voice": "Нажатие Fix it."},
+    {"t": 5.5, "voice": "Идёт создание PR..."},
+    {"t": 7.0, "voice": "Готово — PR создан, сайдбар открылся."}
+  ]
+}
+</script>
+```
+
+### Таблица тайминга (9-секундный цикл)
+
+| Время (сек) | CSS keyframe % | Что происходит | Что говорит диктор |
+|-------------|---------------|----------------|--------------------|
+| 0.0 | 0% | Начало | Вводная фраза про инструмент |
+| 0.7 | 8% | Курсор появился | Упоминание расширения в браузере |
+| 1.5 | 17% | Курсор движется | Движение к форме |
+| 2.0 | 22% | Элемент подсвечен | Выделение элемента |
+| 3.0 | 33% | Попап виден | Описание попапа |
+| 4.5 | 50% | Текст напечатан | Озвучка текста комментария |
+| 5.0 | 56% | Нажат Fix it | "Нажимаем Fix it" |
+| 5.5 | 61% | Спиннер | "Создаётся PR..." |
+| 7.0 | 78% | Done ✓ + сайдбар | Итог |
+
+### Как извлечь субтитры
+
+```js
+// Прямо в DevTools или в скрипте генерации видео:
+const data = JSON.parse(document.getElementById('cap-voiceover').textContent);
+data.tracks.forEach(t => console.log(`[${t.t}s] ${t.voice}`));
+```
+
+Или из bash (для скрипта генерации):
+```bash
+node -e "
+const html = require('fs').readFileSync('index.html','utf8');
+const m = html.match(/<script type=\"application\/json\" id=\"cap-voiceover\">([\s\S]*?)<\/script>/);
+const data = JSON.parse(m[1]);
+data.tracks.forEach(t => console.log(t.t + 's: ' + t.voice));
+"
+```
+
+### Правило для новых баннеров
+
+- **Обязательно** добавлять `<script type="application/json" id="cap-voiceover">` внутрь `.cap-banner`
+- `id` должен быть уникальным если несколько баннеров на странице: `cap-voiceover-2` и т.д.
+- `t` = секунды от начала 9-секундного цикла (совпадает с % * 0.09 * duration_s)
+- Озвучка пишется по-русски (для RU-видео) или по-английски (для EN-статей)
+
+---
+
+## Примеры адаптации под другие use-cases
+
+| Статья | Элемент | Комментарий | Озвучка ключевой фразы (t≈4.5s) |
+|--------|---------|-------------|----------------------------------|
+| Add CAPTCHA | captcha slot | "Add Cloudflare Turnstile here" | "Add Cloudflare Turnstile CAPTCHA here." |
+| Fix broken button | `.btn-submit` | "Button broken on mobile" | "Fix broken button on mobile." |
+| Add alt text | `img.hero` | "Add alt text for accessibility" | "Add descriptive alt text to this image." |
+| Fix layout | `.hero` | "Fix mobile layout" | "The hero section breaks on mobile. Fix it." |
+| Add field | form area | "Add phone number field" | "Add a required phone number field to this form." |
+
+---
+
 ## Файловая структура нового баннера
 
 ```

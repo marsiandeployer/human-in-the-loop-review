@@ -18,6 +18,7 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://onout.org/vibers/blog/add-captcha-to-website/og-image.png">
+  <meta name="keywords" content="add captcha to website, how to add captcha to website, add captcha to wordpress, add captcha to html form, add captcha to google form, add captcha in php, cloudflare turnstile, recaptcha, hcaptcha, contact form 7 captcha, wpforms captcha, spam protection website, prevent form spam, add captcha without code, captcha tutorial, website security, woocommerce captcha, elementor captcha, gravity forms captcha">
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
@@ -242,6 +243,8 @@
       .cap-form{width:100%}
       .cap-inline-popup{left:12px;width:calc(100% - 24px)}
     }
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
   </style>
 </head>
 <body>
@@ -323,6 +326,30 @@
       </div>
     </div>
     <div class="cap-caption">Hover the element · write <strong>"add captcha here"</strong> · click Fix it · get a real PR</div>
+    <!-- Voiceover timing data for video/screen recording narration. Not shown to users.
+         Extract: JSON.parse(document.getElementById('cap-voiceover').textContent) -->
+    <script type="application/json" id="cap-voiceover">
+    {
+      "duration_s": 9,
+      "loop": true,
+      "notes": "Narration script aligned to CSS animation keyframes. t=seconds into loop.",
+      "tracks": [
+        {"t": 0.0, "voice": "You're looking at SimpleReview — a Chrome extension that adds a CAPTCHA to any website form without touching code."},
+        {"t": 0.7, "voice": "The extension icon is already in the Chrome toolbar. Click it, then click any element on the page."},
+        {"t": 1.5, "voice": "The cursor moves toward the contact form — toward the empty CAPTCHA slot."},
+        {"t": 2.0, "voice": "SimpleReview highlights the element with an orange border. It's selected."},
+        {"t": 3.0, "voice": "A popup appears. Type your instruction in plain English."},
+        {"t": 4.5, "voice": "Add Cloudflare Turnstile CAPTCHA here."},
+        {"t": 5.0, "voice": "Click Fix it — the AI agent starts working immediately."},
+        {"t": 5.5, "voice": "Creating pull request..."},
+        {"t": 7.0, "voice": "Done. A reviewable GitHub pull request lands in the sidebar — CAPTCHA wired in, server-side verification included."}
+      ]
+    }
+    </script>
+  </div>
+
+  <div class="ext-callout">
+    <strong>Skip the code entirely.</strong> The demo above shows the real flow — <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm" onclick="gtag('event','generate_lead',{event_category:'blog',event_label:'ext-callout-captcha'});">install SimpleReview for Chrome</a>, click any form element on your site, write "add captcha here", and get a ready-to-merge pull request. No keys to paste, no code to edit.
   </div>
 
   <div class="key-takeaways">
@@ -339,7 +366,7 @@
   <h2>What a CAPTCHA actually does</h2>
   <div class="definition"><strong>CAPTCHA</strong> (Completely Automated Public Turing test) is a challenge that distinguishes a human from a script. Modern CAPTCHAs (reCAPTCHA v3, Turnstile) don't show a puzzle at all — they score the visitor's behaviour and let the server decide whether to accept the submission.</div>
 
-  <p>If a form writes to your database or sends an email, you need a CAPTCHA. Signup, login, password reset, comments, checkout, contact — all of them get hammered by bots within hours of going live. In 2024 Cloudflare reported <strong>nearly 50% of internet traffic was automated</strong>, and a sizeable share was malicious. Unprotected forms become spam engines, credential-stuffing targets, or SMTP-abuse launchpads.</p>
+  <p>If a form writes to your database or sends an email, you need spam protection. Signup, login, password reset, comments, checkout, contact — all of them get hammered by bots within hours of going live. Adding a CAPTCHA is the most reliable way to prevent form spam without blocking real users. In 2024 Cloudflare reported <strong>nearly 50% of internet traffic was automated</strong>, and a sizeable share was malicious. Unprotected forms become spam engines, credential-stuffing targets, or SMTP-abuse launchpads.</p>
 
   <h2>Which CAPTCHA should you pick?</h2>
 
@@ -441,6 +468,29 @@ app.post('/contact', async (req, res) =&gt; {
 
   <p>The same pattern works for reCAPTCHA v2 (endpoint: <code>https://www.google.com/recaptcha/api/siteverify</code>) and hCaptcha (<code>https://hcaptcha.com/siteverify</code>).</p>
 
+  <h3>Server-side in PHP</h3>
+  <pre><code>&lt;?php
+$token = $_POST['cf-turnstile-response'] ?? '';
+$resp  = file_get_contents(
+    'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+    false,
+    stream_context_create(['http' => [
+        'method'  => 'POST',
+        'header'  => 'Content-Type: application/x-www-form-urlencoded',
+        'content' => http_build_query([
+            'secret'   => getenv('TURNSTILE_SECRET'),
+            'response' => $token,
+            'remoteip' => $_SERVER['REMOTE_ADDR'],
+        ]),
+    ]])
+);
+$data = json_decode($resp, true);
+if (!$data['success']) {
+    http_response_code(403);
+    exit('Bot detected');
+}
+// ...save message, send email...</code></pre>
+
   <h2>Method 3 — WordPress (Contact Form 7, WPForms, Elementor)</h2>
 
   <p>Never hand-patch WordPress theme files. Every CAPTCHA has an official plugin:</p>
@@ -465,6 +515,15 @@ app.post('/contact', async (req, res) =&gt; {
     <li><strong>Webflow:</strong> go to Project Settings → Forms → reCAPTCHA, paste site + secret key, done. Turnstile is not native yet — use a custom embed.</li>
     <li><strong>Wix:</strong> only Wix Forms Pro supports CAPTCHA. Turn it on in form settings → Advanced → CAPTCHA.</li>
     <li><strong>Squarespace:</strong> Business+ plans include built-in Google reCAPTCHA on contact and newsletter forms. Enable in Settings → Forms.</li>
+  </ul>
+
+  <h3>Other platforms: Drupal, Joomla, Magento, HubSpot, Mailchimp</h3>
+  <ul>
+    <li><strong>Drupal:</strong> install the <em>CAPTCHA</em> or <em>reCAPTCHA</em> module from drupal.org/project/captcha. Configure which forms are protected under <em>Configuration → People → CAPTCHA</em>.</li>
+    <li><strong>Joomla:</strong> enable <em>CAPTCHA – ReCaptcha</em> in Extensions → Plugin Manager, then select it in Global Configuration → Site → Default Captcha.</li>
+    <li><strong>Magento / Adobe Commerce:</strong> go to Stores → Configuration → Customers → Customer Configuration → CAPTCHA. Choose forms (login, registration, checkout) and provider.</li>
+    <li><strong>HubSpot forms:</strong> no native third-party CAPTCHA API, but HubSpot applies its own bot detection. For custom embeds on your own page, add Turnstile and validate before calling the HubSpot Forms API.</li>
+    <li><strong>Mailchimp signup forms:</strong> Mailchimp-hosted forms include reCAPTCHA automatically. For embedded forms, add Turnstile server-side before calling the Mailchimp API.</li>
   </ul>
 
   <h2>Method 5 — Google Forms</h2>
