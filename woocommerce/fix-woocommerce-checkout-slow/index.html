@@ -187,12 +187,12 @@
     /* Timing: 0-7% sidebar opens, 7-24% RED scan of whole checkout, 24-92% orange Selected */
     @keyframes formScan{
       0%,9%    {outline:none;box-shadow:none}
-      13%,24%  {outline:3px solid #ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.15)}
-      28%,92%  {outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}
+      13%,30%  {outline:3px solid #ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.15)}
+      31%,92%  {outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}
       95%,100% {outline:none;box-shadow:none}
     }
     .sc-form::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 14s infinite}
-    @keyframes selBadge{0%,26%{opacity:0}30%,92%{opacity:1}95%,100%{opacity:0}}
+    @keyframes selBadge{0%,30%{opacity:0}31%,92%{opacity:1}95%,100%{opacity:0}}
     .sc-form h4{font-size:13px;font-weight:700;margin:0 0 10px;color:#1a1a1a}
     .sc-row{display:flex;gap:6px;margin-bottom:6px}
     .sc-in{flex:1;height:24px;background:#fafafa;border:1px solid #d4d4d4;border-radius:4px}
@@ -216,7 +216,7 @@
     .sc-ov-ok-title{font-weight:700;margin-bottom:4px;font-size:10px;color:#166534;display:flex;align-items:center;gap:4px}
     /* Inline popup (comment → Fix it) — appears below the form when it's Selected */
     .sc-popup{position:absolute;left:28px;top:220px;width:230px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 14s infinite}
-    @keyframes popupShow{0%,27%{opacity:0;transform:translateY(-6px)}30%,92%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes popupShow{0%,30%{opacity:0;transform:translateY(-6px)}31%,92%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
     .sc-popup::before{content:'';position:absolute;top:-6px;left:18px;width:10px;height:10px;background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
     .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
     .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
