@@ -305,13 +305,13 @@
 
     <!-- Narrated video walkthrough -->
     <video controls preload="metadata" playsinline muted autoplay loop poster="banner-poster.jpg" style="width:100%;max-width:100%;border-radius:12px;margin:0 0 8px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block">
-      <source src="banner.mp4?v=3" type="video/mp4">
+      <source src="banner.mp4?v=4" type="video/mp4">
       Your browser does not support video. <a href="banner.mp4">Download the 14-second walkthrough</a>.
     </video>
     <p style="font-size:13px;color:#888;text-align:center;margin:0 0 28px">14-second narrated walkthrough: slow checkout → SimpleReview → PR with a fix</p>
 
     <!-- Animated Banner (14s cycle): crosshair scans entire checkout → red → click Place Order → arrow + Selected → popup → Fix it → spinner → Done → sidebar PR → green fixed state -->
-    <div class="sc-banner" aria-label="Animated demo: SimpleReview selects the entire slow WooCommerce checkout and opens a pull request with the fix">
+    <div class="sc-banner" aria-label="Animated demo: SimpleReview selects the entire slow WooCommerce checkout and auto-deploys the fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">yourstore.com/checkout</div>
@@ -391,14 +391,14 @@
             <div style="font-size:9px;color:#166534;line-height:1.4">Cache tax-sync in transient (5 min). Move hook → only on checkout submit.</div>
           </div>
           <div class="sc-pr">
-            <div class="sc-pr-title">PR #12 opened</div>
+            <div class="sc-pr-title">✓ Auto-deployed</div>
             <div class="sc-pr-meta">fix: cache tax-sync + move hook<br>−34 hooks → 76% faster TTFB</div>
           </div>
         </div>
         </div><!-- sc-content-row -->
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click the SimpleReview icon → select the slow checkout → <strong>Fix it</strong> → pull request</div>
+      <div class="sc-caption">Click the SimpleReview icon → select the slow checkout → <strong>Fix it</strong> → auto-deploy</div>
       <!-- Global cursor (positioned relative to .sc-banner — can reach chrome bar extension icon) -->
       <div class="sc-cursor">
         <span class="sc-cross"><svg viewBox="0 0 24 24">
@@ -540,7 +540,7 @@ add_action( 'woocommerce_checkout_update_order_review', function( $post_data ) {
 
     <div class="cta-block">
       <h3>Shipped AI-generated WooCommerce code and checkout got slow?</h3>
-      <p>SimpleReview reads your repo, runs the checkout under profiling, finds the exact hook or query causing the slowdown, and opens a pull request with the fix. First fix is free.</p>
+      <p>SimpleReview reads your repo, runs the checkout under profiling, finds the exact hook or query causing the slowdown, and auto-deploys the fix. First fix is free.</p>
       <a class="cta-btn" href="https://onout.org/vibers/simple-review/">Get a code review →</a>
     </div>
 
