@@ -61,6 +61,46 @@
 - **`.cap-wf`** — 2-column wireframe grid справа (`grid-template-columns: 1fr 1fr`)
 - **`.cap-turnstile`** — виджет внутри `.cap-target`, появляется в Done-фазе
 
+### WordPress-экосистема: добавлять WP Admin Bar
+
+Если баннер показывает WordPress-сайт (WooCommerce, плагины, темы) — **обязательно** добавлять чёрную панель WordPress-администратора (`#wpadminbar`) в верх viewport-а баннера. Это делает сцену реалистичной (пользователь залогинен в WP) и соответствует тому, как разработчик видит свой сайт.
+
+**HTML** (внутри `.sc-viewport`, перед `.sc-content-row`):
+```html
+<div class="sc-adminbar">
+  <div class="sc-ab-left">
+    <span class="sc-ab-wp">W</span>
+    <span class="sc-ab-site">My WP Site</span>
+    <span class="sc-ab-item">Edit site</span>
+    <span class="sc-ab-cnt">3</span>
+    <span class="sc-ab-item">🔍 AI Review</span>
+  </div>
+  <div class="sc-ab-right">
+    <span class="sc-ab-item">Howdy, admin</span>
+  </div>
+</div>
+```
+
+**CSS**:
+```css
+.sc-viewport { display:flex; flex-direction:column; }
+.sc-adminbar { background:#1d2327; height:26px; display:flex; align-items:center;
+  justify-content:space-between; padding:0 8px; font-size:9px; color:#c3c4c7;
+  flex-shrink:0; box-sizing:border-box; border-bottom:1px solid #2c3338; }
+.sc-ab-left,.sc-ab-right { display:flex; align-items:center; gap:5px; }
+.sc-ab-wp { color:#fff; font-size:12px; font-weight:900; opacity:.9; }
+.sc-ab-site { color:#fff; font-weight:600; }
+.sc-ab-cnt { background:#d63638; color:#fff; font-size:7px; padding:1px 3px;
+  border-radius:8px; font-weight:700; min-width:12px; text-align:center; }
+.sc-content-row { display:flex; flex:1; background:#fafafa; position:relative; }
+```
+
+**Пересчёт курсора**: adminbar добавляет +26px к top-координатам всех элементов внутри `.sc-content-row` (относительно `.sc-banner`). Всегда перемерять через CDP после добавления:
+```js
+document.querySelector('.sc-form').getBoundingClientRect()  // relative to viewport
+// vs banner.getBoundingClientRect() → получить offset
+```
+
 ### Turnstile / виджет в финале
 
 Добавить внутрь `.cap-target` (показывается при `opacity:1` в Done-фазе):

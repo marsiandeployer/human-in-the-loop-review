@@ -156,7 +156,14 @@
     .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
     .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 14s infinite}
     @keyframes extPulse{0%,4%{box-shadow:0 0 0 0 rgba(255,107,53,.8)}2%{box-shadow:0 0 0 6px rgba(255,107,53,0)}6%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0)}}
-    .sc-viewport{display:flex;min-height:360px;position:relative;background:#fafafa;overflow:hidden}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#1d2327;overflow:hidden}
+    .sc-adminbar{background:#1d2327;height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:9px;color:#c3c4c7;flex-shrink:0;box-sizing:border-box;border-bottom:1px solid #2c3338}
+    .sc-ab-left,.sc-ab-right{display:flex;align-items:center;gap:5px}
+    .sc-ab-wp{color:#fff;font-size:12px;font-weight:900;letter-spacing:-1px;opacity:.9;padding:0 2px}
+    .sc-ab-site{color:#fff;font-weight:600}
+    .sc-ab-item{color:#c3c4c7;white-space:nowrap}
+    .sc-ab-cnt{background:#d63638;color:#fff;font-size:7px;padding:1px 3px;border-radius:8px;font-weight:700;min-width:12px;text-align:center;display:inline-block}
+    .sc-content-row{display:flex;flex:1;background:#fafafa;position:relative;overflow:hidden}
     .sc-site{flex:1;padding:18px;min-width:0;position:relative;order:1}
     /* Sidebar always occupies space; contents reveal over time. Initial state: empty look until icon clicked (~7%) */
     .sc-sidebar{width:200px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;order:2;position:relative}
@@ -248,16 +255,16 @@
       0%   {left:695px;top:12px;opacity:0}
       2%   {left:695px;top:12px;opacity:1}   /* hover extension icon */
       6%   {left:695px;top:12px;opacity:1}   /* click — pulse visible */
-      10%  {left:80px;top:75px;opacity:1}    /* jump to top-left of checkout */
-      15%  {left:150px;top:135px;opacity:1}  /* scan */
-      20%  {left:220px;top:210px;opacity:1}  /* scan */
-      25%  {left:240px;top:285px;opacity:1}  /* over Place Order area */
-      31%  {left:200px;top:250px;opacity:1}  /* click form center (arrow switches here) */
-      40%  {left:143px;top:310px;opacity:1}  /* move to popup */
-      48%  {left:143px;top:342px;opacity:1}  /* Fix it button center (measured) */
-      55%  {left:143px;top:342px;opacity:1}  /* click Fix it */
-      72%  {left:580px;top:160px;opacity:1}  /* point at sidebar PR */
-      92%  {left:580px;top:160px;opacity:1}  /* hold */
+      10%  {left:40px;top:100px;opacity:1}   /* jump to top-left of checkout */
+      15%  {left:150px;top:155px;opacity:1}  /* scan */
+      20%  {left:220px;top:220px;opacity:1}  /* scan */
+      25%  {left:210px;top:330px;opacity:1}  /* over Place Order area */
+      31%  {left:198px;top:256px;opacity:1}  /* click form center (arrow) */
+      40%  {left:143px;top:345px;opacity:1}  /* move to popup */
+      48%  {left:143px;top:374px;opacity:1}  /* Fix it button center (measured) */
+      55%  {left:143px;top:374px;opacity:1}  /* click Fix it */
+      72%  {left:620px;top:369px;opacity:1}  /* point at sidebar PR */
+      92%  {left:620px;top:369px;opacity:1}  /* hold */
       96%  {opacity:0}
       100% {opacity:0}
     }
@@ -298,7 +305,7 @@
 
     <!-- Narrated video walkthrough -->
     <video controls preload="metadata" playsinline muted autoplay loop poster="banner-poster.jpg" style="width:100%;max-width:100%;border-radius:12px;margin:0 0 8px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block">
-      <source src="banner.mp4?v=2" type="video/mp4">
+      <source src="banner.mp4?v=3" type="video/mp4">
       Your browser does not support video. <a href="banner.mp4">Download the 14-second walkthrough</a>.
     </video>
     <p style="font-size:13px;color:#888;text-align:center;margin:0 0 28px">14-second narrated walkthrough: slow checkout → SimpleReview → PR with a fix</p>
@@ -311,6 +318,19 @@
         <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
       </div>
       <div class="sc-viewport">
+        <div class="sc-adminbar">
+          <div class="sc-ab-left">
+            <span class="sc-ab-wp">W</span>
+            <span class="sc-ab-site">SimpleReview Test</span>
+            <span class="sc-ab-item">Edit site</span>
+            <span class="sc-ab-cnt">3</span>
+            <span class="sc-ab-item">🔍 AI Review</span>
+          </div>
+          <div class="sc-ab-right">
+            <span class="sc-ab-item">Howdy, admin</span>
+          </div>
+        </div>
+        <div class="sc-content-row">
         <div class="sc-site">
           <div class="sc-form">
             <h4>Billing Details</h4>
@@ -375,6 +395,7 @@
             <div class="sc-pr-meta">fix: cache tax-sync + move hook<br>−34 hooks → 76% faster TTFB</div>
           </div>
         </div>
+        </div><!-- sc-content-row -->
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
       <div class="sc-caption">Click the SimpleReview icon → select the slow checkout → <strong>Fix it</strong> → pull request</div>
