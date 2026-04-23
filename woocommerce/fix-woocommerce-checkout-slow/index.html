@@ -220,13 +220,15 @@
     .sc-overlay-ok{position:absolute;top:18px;left:18px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;padding:8px 10px;font-size:10px;color:#166534;box-shadow:0 4px 12px rgba(0,0,0,.1);width:160px;opacity:0;animation:okShow 14s infinite;z-index:3}
     @keyframes okShow{0%,80%{opacity:0}83%,95%{opacity:1}98%,100%{opacity:0}}
     .sc-ov-ok-title{font-weight:700;margin-bottom:4px;font-size:10px;color:#166534;display:flex;align-items:center;gap:4px}
-    /* Inline popup (comment → Fix it) — appears below the form when it's Selected */
-    .sc-popup{position:absolute;left:28px;top:220px;width:230px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 14s infinite}
-    @keyframes popupShow{0%,19%{opacity:0;transform:translateY(-6px)}20%,92%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
-    .sc-popup::before{content:'';position:absolute;top:-6px;left:18px;width:10px;height:10px;background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
+    /* Popup to the RIGHT of the selected form element */
+    .sc-popup{position:absolute;left:385px;top:20px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 14s infinite}
+    @keyframes popupShow{0%,19%{opacity:0;transform:translateX(-6px)}20%,92%{opacity:1;transform:translateX(0)}96%,100%{opacity:0}}
+    .sc-popup::before{content:'';position:absolute;top:14px;left:-6px;width:10px;height:10px;background:#fff;border-top:1px solid #ddd;border-left:1px solid #ddd;transform:rotate(-45deg)}
     .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
     .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
-    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 14s infinite}
+    @keyframes typeText{0%,20%{max-width:0}47%,92%{max-width:190px}96%,100%{max-width:0}}
     .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
     @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
     .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
@@ -255,10 +257,10 @@
       5%   {left:695px;top:12px;opacity:1}   /* click ext icon */
       15%  {left:100px;top:105px;opacity:1}  /* move to Billing Details */
       20%  {left:100px;top:105px;opacity:1}  /* click → orange highlight + popup */
-      48%  {left:143px;top:374px;opacity:1}  /* move to Fix it */
-      55%  {left:143px;top:374px;opacity:1}  /* click Fix it */
-      72%  {left:620px;top:369px;opacity:1}  /* point at sidebar result */
-      92%  {left:620px;top:369px;opacity:1}  /* hold */
+      48%  {left:490px;top:175px;opacity:1}  /* move to Fix it in right popup */
+      55%  {left:490px;top:175px;opacity:1}  /* click Fix it */
+      72%  {left:620px;top:150px;opacity:1}  /* point at sidebar result */
+      92%  {left:620px;top:150px;opacity:1}  /* hold */
       96%  {opacity:0}
       100% {opacity:0}
     }
@@ -299,7 +301,7 @@
 
     <!-- Narrated video walkthrough -->
     <video controls preload="metadata" playsinline muted autoplay loop poster="banner-poster.jpg" style="width:100%;max-width:100%;border-radius:12px;margin:0 0 8px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block">
-      <source src="banner.mp4?v=5" type="video/mp4">
+      <source src="banner.mp4?v=6" type="video/mp4">
       Your browser does not support video. <a href="banner.mp4">Download the 14-second walkthrough</a>.
     </video>
     <p style="font-size:13px;color:#888;text-align:center;margin:0 0 28px">14-second narrated walkthrough: slow checkout → SimpleReview → PR with a fix</p>
@@ -357,10 +359,10 @@
             <div class="sc-ov-row"><span>Checkout hooks</span><span class="t" style="color:#166534">9</span></div>
             <div class="sc-ov-row"><span>PHP queries</span><span class="t" style="color:#166534">78</span></div>
           </div>
-          <!-- Inline popup appears after "Selected" (32%+) with typed comment + Fix it -->
+          <!-- Inline popup appears at 20% to the RIGHT of the form with typed comment + Fix it -->
           <div class="sc-popup">
             <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
-            <div class="sc-popup-ta">Checkout is 4.8s slow — profile and fix<span class="sc-blink">|</span></div>
+            <div class="sc-popup-ta"><span class="sc-ta-inner">Checkout is 4.8s slow — fix hook</span><span class="sc-blink">|</span></div>
             <div class="sc-popup-fix">
               <span class="sc-fxt">Fix it</span>
               <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
