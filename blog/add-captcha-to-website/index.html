@@ -168,77 +168,107 @@
     .cap-ext-icon{width:18px;height:18px;border-radius:3px;display:block;object-fit:cover;flex-shrink:0}
     /* viewport: site (left) + sidebar (right) */
     .cap-viewport{display:flex;min-height:330px;position:relative}
-    /* right sidebar snaps open on Fix it click */
-    .cap-sidebar{max-width:0;overflow:hidden;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:8px;padding:12px 0;box-sizing:border-box;flex-shrink:0;order:2;animation:sideOpen 9s infinite}
-    @keyframes sideOpen{0%,55%{max-width:0;padding-left:0;padding-right:0}56%,93%{max-width:220px;padding-left:10px;padding-right:10px}100%{max-width:0;padding-left:0;padding-right:0}}
+    /* right sidebar — always open */
+    .cap-sidebar{width:200px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:8px;padding:12px 10px;box-sizing:border-box;order:2}
     .cap-panel-logo{font-size:12px;font-weight:700;color:#FF6B35;white-space:nowrap;display:flex;align-items:center;gap:5px}
     .cap-panel-badge{font-size:9px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
-    .cap-el-info{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:7px 9px;flex-shrink:0}
+    .cap-sidebar-hint{font-size:9px;color:#bbb;text-align:center;padding:6px 4px;animation:hintFade 16s infinite}
+    @keyframes hintFade{0%,28%{opacity:1}32%,100%{opacity:0}}
+    .cap-el-info{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:7px 9px;flex-shrink:0;animation:elFade 16s infinite}
+    @keyframes elFade{0%,30%{opacity:0;transform:translateY(3px)}33%,88%{opacity:1;transform:translateY(0)}94%,100%{opacity:0}}
     .cap-el-label{font-size:9px;color:#888;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
     .cap-el-tag{font-size:10px;color:#0070f3;font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .cap-el-text{font-size:10px;color:#333;margin-top:2px;white-space:nowrap}
     .cap-chat{display:flex;flex-direction:column;gap:6px}
-    .cap-bubble-user{background:#e8f0fe;color:#1a3a6b;border:1px solid #c7dbf5;border-radius:8px;border-bottom-right-radius:2px;padding:6px 8px;font-size:10px;line-height:1.4;opacity:0;animation:bUp 9s infinite;align-self:flex-end;white-space:nowrap}
-    @keyframes bUp{0%,72%{opacity:0;transform:translateY(3px)}78%,93%{opacity:1;transform:translateY(0)}100%{opacity:0}}
-    .cap-bubble-pr{background:#f0faf4;color:#166534;border:1px solid #86efac;border-radius:8px;border-bottom-left-radius:2px;padding:6px 8px;font-size:10px;line-height:1.4;opacity:0;animation:bPr 9s infinite;white-space:nowrap}
-    @keyframes bPr{0%,80%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    .cap-bubble-user{background:#e8f0fe;color:#1a3a6b;border:1px solid #c7dbf5;border-radius:8px;border-bottom-right-radius:2px;padding:6px 8px;font-size:10px;line-height:1.4;opacity:0;animation:bUp 16s infinite;align-self:flex-end;white-space:nowrap}
+    @keyframes bUp{0%,57%{opacity:0;transform:translateY(3px)}60%,88%{opacity:1;transform:translateY(0)}94%,100%{opacity:0}}
+    .cap-bubble-pr{background:#f0faf4;color:#166534;border:1px solid #86efac;border-radius:8px;border-bottom-left-radius:2px;padding:6px 8px;font-size:10px;line-height:1.4;opacity:0;animation:bPr 16s infinite;white-space:nowrap}
+    @keyframes bPr{0%,62%{opacity:0;transform:translateY(3px)}65%,88%{opacity:1;transform:translateY(0)}94%,100%{opacity:0}}
     /* site area */
-    .cap-site{flex:1;background:#fafafa;padding:16px;position:relative;min-width:0;order:1}
-    /* wireframe side content */
-    .cap-wf{position:absolute;right:14px;top:16px;width:130px;display:flex;flex-direction:column;gap:7px}
+    .cap-site{flex:1;background:#fafafa;padding:42px 16px 16px 16px;position:relative;min-width:0;order:1}
+    /* page nav bar inside the site */
+    .cap-nav{position:absolute;top:0;left:0;right:0;height:34px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;padding:0 14px;gap:8px;box-sizing:border-box;z-index:2}
+    .cap-nav-logo{width:56px;height:9px;background:#ccc;border-radius:2px;flex-shrink:0}
+    .cap-nav-links{flex:1;display:flex;gap:8px;align-items:center;margin-left:12px}
+    .cap-nav-link{height:6px;background:#e4e4e4;border-radius:2px}
+    .cap-nav-cta{width:44px;height:18px;background:rgba(255,107,53,.35);border-radius:3px;flex-shrink:0}
+    /* wireframe side content — 2-column grid */
+    .cap-wf{position:absolute;right:12px;top:42px;bottom:12px;width:210px;display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start}
+    .cap-wf-card{background:#fff;border:1px solid #e8e8e8;border-radius:5px;padding:7px;display:flex;flex-direction:column;gap:5px}
+    .cap-wf-span2{grid-column:1/-1}
     .cap-wf-line{height:6px;background:#e2e2e2;border-radius:3px}
-    .cap-wf-img{height:60px;background:#e8e8e8;border-radius:5px;margin-top:2px}
+    .cap-wf-img{background:#e8e8e8;border-radius:4px}
     .cap-wf-sm{height:5px;background:#ececec;border-radius:3px}
+    .cap-wf-divider{height:1px;background:#eee;margin:2px 0;grid-column:1/-1}
+    .cap-wf-btn{height:18px;background:#ebebeb;border-radius:3px}
+    /* turnstile widget appears inside captcha slot at Done phase */
+    .cap-turnstile{position:absolute;inset:0;background:#fff;border-radius:3px;display:flex;align-items:center;justify-content:center;gap:5px;opacity:0;animation:tsVis 16s infinite}
+    @keyframes tsVis{0%,59%{opacity:0}63%,88%{opacity:1}94%,100%{opacity:0}}
     .cap-form{background:#fff;border:1px solid #e4e4e4;border-radius:8px;padding:14px;width:220px;position:relative}
     .cap-form h4{font-size:13px;font-weight:700;margin:0 0 8px;color:#1a1a1a}
     .cap-form label{display:block;font-size:10px;color:#666;margin:5px 0 3px;font-weight:500}
-    .cap-form input[type=text],.cap-form input[type=email]{width:100%;padding:5px 8px;border:1px solid #d4d4d4;border-radius:4px;font-size:11px;font-family:inherit;background:#fafafa;box-sizing:border-box}
-    .cap-form textarea{width:100%;padding:5px 8px;border:1px solid #d4d4d4;border-radius:4px;font-size:11px;font-family:inherit;background:#fafafa;height:36px;resize:none;box-sizing:border-box}
-    /* captcha target slot */
-    .cap-target{border:1px dashed #d0d0d0;border-radius:4px;height:36px;margin:8px 0;display:flex;align-items:center;justify-content:center;font-size:8px;color:#bbb;letter-spacing:.4px;text-transform:uppercase;font-weight:600;position:relative;animation:tHL 9s infinite}
-    @keyframes tHL{0%,16%{border-color:#d0d0d0;box-shadow:none}22%,70%{border-color:#FF6B35;box-shadow:0 0 0 2px rgba(255,107,53,.12)}76%,100%{border-color:#d0d0d0;box-shadow:none}}
-    .cap-target::after{content:'Selected';position:absolute;top:-8px;left:8px;background:#FF6B35;color:#fff;font-size:7px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:1px 5px;border-radius:2px;line-height:1;opacity:0;animation:tLbl 9s infinite}
-    @keyframes tLbl{0%,20%{opacity:0}26%,70%{opacity:1}76%,100%{opacity:0}}
-    .cap-submit{margin-top:8px;background:#5b44e8;color:#fff;border:none;border-radius:4px;padding:7px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;width:100%}
-    /* inline popup stays visible after Fix it — shows spinner then done */
-    .cap-inline-popup{position:absolute;left:16px;top:210px;width:190px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.12);padding:8px;z-index:5;opacity:0;animation:iPopup 9s infinite}
-    @keyframes iPopup{0%,27%{opacity:0;transform:translateY(-4px)}33%,93%{opacity:1;transform:translateY(0)}99%,100%{opacity:0;transform:translateY(-4px)}}
+    /* red outline on scan hover — crosshair passes over each field before clicking target */
+    .cap-form input[type=text],.cap-form input[type=email]{width:100%;padding:5px 8px;border:1px solid #d4d4d4;border-radius:4px;font-size:11px;font-family:inherit;background:#fafafa;box-sizing:border-box;animation:emailRed 16s infinite;outline-offset:2px}
+    @keyframes emailRed{0%,10%{outline:none;box-shadow:none}13%,18%{outline:2px solid #ef4444;box-shadow:0 0 0 2px rgba(239,68,68,.12)}21%,100%{outline:none;box-shadow:none}}
+    .cap-form textarea{width:100%;padding:5px 8px;border:1px solid #d4d4d4;border-radius:4px;font-size:11px;font-family:inherit;background:#fafafa;height:36px;resize:none;box-sizing:border-box;animation:taRed 16s infinite;outline-offset:2px}
+    @keyframes taRed{0%,18%{outline:none;box-shadow:none}21%,26%{outline:2px solid #ef4444;box-shadow:0 0 0 2px rgba(239,68,68,.12)}29%,100%{outline:none;box-shadow:none}}
+    /* captcha slot — hidden initially, slides in at Done phase above the button */
+    .cap-target{border:1px dashed transparent;border-radius:4px;height:0;margin:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:8px;color:#bbb;letter-spacing:.4px;text-transform:uppercase;font-weight:600;position:relative;animation:capSlotAppear 16s infinite}
+    @keyframes capSlotAppear{0%,59%{height:0;margin:0;border-color:transparent;box-shadow:none}63%,88%{height:36px;margin:8px 0;border-color:#FF6B35;box-shadow:0 0 0 2px rgba(255,107,53,.12)}94%,100%{height:0;margin:0;border-color:transparent;box-shadow:none}}
+    /* submit button — red scan then orange selected badge */
+    .cap-submit{margin-top:8px;background:#5b44e8;color:#fff;border:none;border-radius:4px;padding:7px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;width:100%;position:relative;animation:btnHL 16s infinite;outline-offset:2px}
+    @keyframes btnHL{0%,26%{outline:none;box-shadow:none}28%,32%{outline:2px solid #ef4444;box-shadow:0 0 0 2px rgba(239,68,68,.12)}35%,59%{outline:2px solid #FF6B35;box-shadow:0 0 0 2px rgba(255,107,53,.12)}62%,100%{outline:none;box-shadow:none}}
+    .cap-submit::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:7px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:1px 5px;border-radius:2px;line-height:1;opacity:0;animation:btnLbl 16s infinite}
+    @keyframes btnLbl{0%,30%{opacity:0}33%,59%{opacity:1}62%,100%{opacity:0}}
+    /* inline popup — holds through final state */
+    .cap-inline-popup{position:absolute;left:16px;top:226px;width:190px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.12);padding:8px;z-index:5;opacity:0;animation:iPopup 16s infinite}
+    @keyframes iPopup{0%,36%{opacity:0;transform:translateY(-4px)}38%,88%{opacity:1;transform:translateY(0)}94%,100%{opacity:0;transform:translateY(-4px)}}
     .cap-inline-popup::before{content:'';position:absolute;top:-6px;left:18px;width:10px;height:10px;background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
     .cap-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
     .cap-popup-x{color:#bbb;font-size:13px;line-height:1}
     .cap-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:28px;margin-bottom:6px}
     .cap-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:capBlink 0.8s step-end infinite;margin-left:1px}
     @keyframes capBlink{0%,100%{opacity:1}50%{opacity:0}}
-    /* Fix it button: text → spinner → done */
+    /* Fix it button: text → spinner → done (holds ~4s) */
     .cap-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;cursor:pointer;position:relative;height:24px}
     .fxt,.fsp,.fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
-    .fxt{animation:fTxt 9s infinite}
-    .fsp{animation:fSpin 9s infinite}
-    .fdn{animation:fDone 9s infinite}
+    .fxt{animation:fTxt 16s infinite}
+    .fsp{animation:fSpin 16s infinite}
+    .fdn{animation:fDone 16s infinite}
     .fsp-icon{display:inline-block;animation:fSpinRot .5s linear infinite}
-    @keyframes fTxt{0%,54%{opacity:1}57%,100%{opacity:0}}
-    @keyframes fSpin{0%,55%{opacity:0}58%,76%{opacity:1}78%,100%{opacity:0}}
-    @keyframes fDone{0%,77%{opacity:0}79%,93%{opacity:1}95%,100%{opacity:0}}
+    @keyframes fTxt{0%,47%{opacity:1}49%,100%{opacity:0}}
+    @keyframes fSpin{0%,48%{opacity:0}50%,59%{opacity:1}61%,100%{opacity:0}}
+    @keyframes fDone{0%,59%{opacity:0}62%,88%{opacity:1}94%,100%{opacity:0}}
     @keyframes fSpinRot{to{transform:rotate(360deg)}}
-    /* animated cursor */
-    .cap-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:cMove 9s infinite}
-    .cap-cursor svg{width:100%;height:100%;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
-    /* cap-target center ≈ top:188px left:118px (within .cap-site) */
-    /* Fix it button center ≈ top:284px left:104px */
+    /* animated cursor — crosshair during scan phase, arrow after clicking target */
+    .cap-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:cMove 16s infinite}
+    .cap-cross,.cap-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .cap-cross svg,.cap-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .cap-cross{animation:crossVis 16s infinite}
+    .cap-arrow{animation:arrowVis 16s infinite}
+    @keyframes crossVis{0%,27%{opacity:1}31%,100%{opacity:0}}
+    @keyframes arrowVis{0%,27%{opacity:0}31%,100%{opacity:1}}
+    /* cursor path: appear → scan email → scan textarea → click Submit button → click Fix it */
     @keyframes cMove{
-      0%    {left:118px;top:14px;opacity:0}
-      8%    {left:118px;top:14px;opacity:1}
-      20%   {left:118px;top:182px;opacity:1}
-      52%   {left:118px;top:182px;opacity:1}
-      58%   {left:104px;top:278px;opacity:1}
-      64%   {left:104px;top:278px;opacity:.5}
-      70%   {opacity:0}
-      100%  {opacity:0}
+      0%   {left:118px;top:14px;opacity:0}
+      3%   {left:118px;top:14px;opacity:1}
+      13%  {left:118px;top:106px;opacity:1}
+      20%  {left:118px;top:161px;opacity:1}
+      28%  {left:118px;top:204px;opacity:1}
+      43%  {left:118px;top:204px;opacity:1}
+      48%  {left:104px;top:294px;opacity:1}
+      52%  {left:104px;top:294px;opacity:.5}
+      56%  {opacity:0}
+      100% {opacity:0}
     }
+    /* progress bar — fills over full 16s cycle */
+    .cap-progress{height:3px;background:rgba(255,255,255,0.08)}
+    .cap-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 16s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
     .cap-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
     .cap-caption strong{color:#FF6B35}
     @media(max-width:600px){
-      .cap-site{padding:12px}
+      .cap-site{padding:38px 12px 12px 12px}
       .cap-wf{display:none}
       .cap-form{width:100%}
       .cap-inline-popup{left:12px;width:calc(100% - 24px)}
@@ -276,16 +306,57 @@
       <img src="../../favicon.png" class="cap-ext-icon" alt="SimpleReview extension">
     </div>
     <div class="cap-viewport">
-      <!-- Site with form + wireframe -->
+      <!-- Site with nav + form + wireframe -->
       <div class="cap-site">
-        <!-- Wireframe side content (right side decoration) -->
+        <!-- Page nav bar -->
+        <div class="cap-nav">
+          <div class="cap-nav-logo"></div>
+          <div class="cap-nav-links">
+            <div class="cap-nav-link" style="width:28px"></div>
+            <div class="cap-nav-link" style="width:36px"></div>
+            <div class="cap-nav-link" style="width:24px"></div>
+            <div class="cap-nav-link" style="width:40px"></div>
+          </div>
+          <div class="cap-nav-cta"></div>
+        </div>
+        <!-- Wireframe side content — 2-column grid -->
         <div class="cap-wf">
-          <div class="cap-wf-line" style="width:75%"></div>
-          <div class="cap-wf-line" style="width:100%"></div>
-          <div class="cap-wf-line" style="width:55%"></div>
-          <div class="cap-wf-img"></div>
-          <div class="cap-wf-sm" style="width:90%"></div>
-          <div class="cap-wf-sm" style="width:70%"></div>
+          <!-- Row 1: two info cards -->
+          <div class="cap-wf-card">
+            <div class="cap-wf-img" style="height:36px"></div>
+            <div class="cap-wf-line" style="width:80%"></div>
+            <div class="cap-wf-sm" style="width:100%"></div>
+            <div class="cap-wf-sm" style="width:70%"></div>
+          </div>
+          <div class="cap-wf-card">
+            <div class="cap-wf-img" style="height:36px"></div>
+            <div class="cap-wf-line" style="width:65%"></div>
+            <div class="cap-wf-sm" style="width:90%"></div>
+            <div class="cap-wf-sm" style="width:75%"></div>
+          </div>
+          <!-- Map spanning both columns -->
+          <div class="cap-wf-img cap-wf-span2" style="height:48px"></div>
+          <!-- Row 3: address + hours -->
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div class="cap-wf-line" style="width:60%;background:#ccc"></div>
+            <div class="cap-wf-sm" style="width:100%"></div>
+            <div class="cap-wf-sm" style="width:85%"></div>
+            <div class="cap-wf-sm" style="width:70%"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div class="cap-wf-line" style="width:70%;background:#ccc"></div>
+            <div class="cap-wf-sm" style="width:90%"></div>
+            <div class="cap-wf-sm" style="width:80%"></div>
+            <div class="cap-wf-sm" style="width:55%"></div>
+          </div>
+          <div class="cap-wf-divider"></div>
+          <!-- Social + CTA spanning both -->
+          <div class="cap-wf-span2" style="display:flex;gap:5px;align-items:center">
+            <div style="width:14px;height:14px;border-radius:3px;background:#e0e0e0"></div>
+            <div style="width:14px;height:14px;border-radius:3px;background:#e0e0e0"></div>
+            <div style="width:14px;height:14px;border-radius:3px;background:#e0e0e0"></div>
+          </div>
+          <div class="cap-wf-btn cap-wf-span2"></div>
         </div>
         <div class="cap-form">
           <h4>Contact us</h4>
@@ -293,31 +364,38 @@
           <input type="email" value="hello@example.com" readonly>
           <label>Message</label>
           <textarea readonly>How can you help me?</textarea>
-          <div class="cap-target">captcha goes here</div>
+          <div class="cap-target">
+            <div class="cap-turnstile">
+              <div style="width:16px;height:16px;border-radius:50%;background:#F4801A;display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="width:6px;height:6px;border-radius:50%;background:#fff"></div></div>
+              <div style="font-size:7px;color:#333;font-weight:600;line-height:1.2">✓ Verified<br><span style="color:#888;font-weight:400">Cloudflare</span></div>
+            </div>
+          </div>
           <button class="cap-submit" type="button">Send message</button>
         </div>
         <!-- Inline popup stays visible: shows text → Fix it → spinner → done -->
         <div class="cap-inline-popup">
           <div class="cap-popup-hdr"><span>Add fix</span><span class="cap-popup-x">×</span></div>
-          <div class="cap-popup-ta">Add Cloudflare Turnstile here<span class="cap-blink">|</span></div>
+          <div class="cap-popup-ta">Add Cloudflare Turnstile above this button<span class="cap-blink">|</span></div>
           <button class="cap-popup-fix" type="button">
             <span class="fxt">Fix it →</span>
             <span class="fsp"><span class="fsp-icon">↻</span></span>
             <span class="fdn">Done ✓</span>
           </button>
         </div>
-        <!-- Animated cursor -->
+        <!-- Animated cursor: crosshair during scan → arrow on click -->
         <div class="cap-cursor">
-          <svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/></svg>
+          <span class="cap-cross"><svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/></svg></span>
+          <span class="cap-arrow"><svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/></svg></span>
         </div>
       </div>
-      <!-- Right panel: snaps open on Fix it click -->
+      <!-- Right panel: always open -->
       <div class="cap-sidebar">
         <div class="cap-panel-logo">SimpleReview <span class="cap-panel-badge">AI</span></div>
+        <div class="cap-sidebar-hint">← hover any element</div>
         <div class="cap-el-info">
           <div class="cap-el-label">Selected element</div>
-          <div class="cap-el-tag">form#contact .captcha-slot</div>
-          <div class="cap-el-text">CAPTCHA placeholder</div>
+          <div class="cap-el-tag">form#contact button[type=submit]</div>
+          <div class="cap-el-text">Send message — no CAPTCHA</div>
         </div>
         <div class="cap-chat">
           <div class="cap-bubble-user">Add Turnstile CAPTCHA here</div>
@@ -325,24 +403,27 @@
         </div>
       </div>
     </div>
+    <div class="cap-progress"><div class="cap-progress-fill"></div></div>
     <div class="cap-caption">Hover the element · write <strong>"add captcha here"</strong> · click Fix it · get a real PR</div>
     <!-- Voiceover timing data for video/screen recording narration. Not shown to users.
          Extract: JSON.parse(document.getElementById('cap-voiceover').textContent) -->
     <script type="application/json" id="cap-voiceover">
     {
-      "duration_s": 9,
+      "duration_s": 16,
       "loop": true,
-      "notes": "Narration script aligned to CSS animation keyframes. t=seconds into loop.",
+      "notes": "Narration aligned to 16s CSS animation keyframes. t=seconds into loop. Scan phase 0-4.5s, fix phase 4.5-10s, final hold 10-14s, reset 14-16s.",
       "tracks": [
-        {"t": 0.0, "voice": "You're looking at SimpleReview — a Chrome extension that adds a CAPTCHA to any website form without touching code."},
-        {"t": 0.7, "voice": "The extension icon is already in the Chrome toolbar. Click it, then click any element on the page."},
-        {"t": 1.5, "voice": "The cursor moves toward the contact form — toward the empty CAPTCHA slot."},
-        {"t": 2.0, "voice": "SimpleReview highlights the element with an orange border. It's selected."},
-        {"t": 3.0, "voice": "A popup appears. Type your instruction in plain English."},
-        {"t": 4.5, "voice": "Add Cloudflare Turnstile CAPTCHA here."},
-        {"t": 5.0, "voice": "Click Fix it — the AI agent starts working immediately."},
-        {"t": 5.5, "voice": "Creating pull request..."},
-        {"t": 7.0, "voice": "Done. A reviewable GitHub pull request lands in the sidebar — CAPTCHA wired in, server-side verification included."}
+        {"t": 0.0, "voice": "SimpleReview — a Chrome extension that lets you point at any element and ship a fix instantly."},
+        {"t": 0.5, "voice": "A crosshair cursor appears — scanning mode. Not selected yet."},
+        {"t": 2.1, "voice": "Cursor hovers over the email field — red outline. Not the target."},
+        {"t": 3.4, "voice": "Moving to the message textarea — red highlight. Still looking."},
+        {"t": 4.5, "voice": "Found it — the empty CAPTCHA slot. Cursor switches to pointer and clicks."},
+        {"t": 6.1, "voice": "Orange border — element selected. A popup appears."},
+        {"t": 7.5, "voice": "Type your instruction: 'Add Cloudflare Turnstile here.'"},
+        {"t": 7.9, "voice": "Click Fix it — the AI agent starts working immediately."},
+        {"t": 8.5, "voice": "Creating pull request..."},
+        {"t": 9.9, "voice": "Done. PR #38 is ready — CAPTCHA wired in, server-side verification included."},
+        {"t": 10.5, "voice": "Review the PR, merge it — CAPTCHA is live without touching a single line of code yourself."}
       ]
     }
     </script>
