@@ -254,7 +254,9 @@ HTML структура курсора:
 
 ### 2a. Структура попапа (comment + Fix it) — ОБЯЗАТЕЛЬНЫЙ блок
 
-Попап появляется после того, как курсор переключился на arrow и target получил "Selected" badge. Внутри попапа: поле комментария с курсором-мигалкой + кнопка Fix it, которая проходит 3 состояния (текст → спиннер → Done).
+Попап появляется после того, как курсор кликнул на target и тот получил "Selected" badge. Внутри попапа: поле комментария с typewriter-анимацией + кнопка Fix it (текст → спиннер → Done).
+
+**⚠️ Правило позиционирования: popup ВСЕГДА справа от выделенного элемента** — как в реальных code review инструментах (GitHub, Linear). НЕ ниже элемента.
 
 **HTML:**
 
@@ -264,7 +266,9 @@ HTML структура курсора:
     <span>Comment</span>
     <span class="cap-popup-x">×</span>
   </div>
-  <div class="cap-popup-ta">{описание задачи}<span class="cap-blink">|</span></div>
+  <div class="cap-popup-ta">
+    <span class="cap-ta-inner">{описание задачи}</span><span class="cap-blink">|</span>
+  </div>
   <div class="cap-popup-fix">
     <span class="fxt">Fix it</span>
     <span class="fsp"><span class="fsp-icon">⟳</span></span>
@@ -276,35 +280,43 @@ HTML структура курсора:
 **CSS (ключевое):**
 
 ```css
-/* Попап появляется после Selected (~32-36%) и держится до ~92% */
-.cap-popup{position:absolute;left:22px;top:260px;width:220px;background:#fff;
-  border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.15);
-  padding:9px;z-index:6;opacity:0;animation:popupShow 14s infinite}
+/* Попап СПРАВА от selected-элемента. left = правый край формы + 10px зазор.
+   Например, форма 360px + padding 18px → left:385px */
+.cap-popup{position:absolute;left:385px;top:20px;width:210px;background:#fff;
+  border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);
+  padding:10px;z-index:6;opacity:0;animation:popupShow 14s infinite}
 @keyframes popupShow{
-  0%,32%   {opacity:0;transform:translateY(-6px)}
-  36%,92%  {opacity:1;transform:translateY(0)}
+  0%,19%   {opacity:0;transform:translateX(-6px)}  /* slide-in слева */
+  20%,92%  {opacity:1;transform:translateX(0)}
   96%,100% {opacity:0}
 }
 
-/* Стрелочка сверху попапа — указывает на Selected target */
-.cap-popup::before{content:'';position:absolute;top:-6px;left:18px;width:10px;height:10px;
-  background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
+/* Стрелочка СЛЕВА попапа — указывает влево на selected target */
+.cap-popup::before{content:'';position:absolute;top:14px;left:-6px;width:10px;height:10px;
+  background:#fff;border-top:1px solid #ddd;border-left:1px solid #ddd;transform:rotate(-45deg)}
+
+/* Typewriter-эффект: текст набирается постепенно */
+.cap-popup-ta{white-space:nowrap;overflow:hidden}
+.cap-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;
+  vertical-align:bottom;animation:typeText 14s infinite}
+@keyframes typeText{0%,20%{max-width:0} 47%,92%{max-width:190px} 96%,100%{max-width:0}}
 
 /* Fix it: 3 состояния в одной кнопке, каждое absolute inset:0 */
 .fxt{animation:fxTxt 14s infinite}  /* "Fix it" текст */
 .fsp{animation:fxSpin 14s infinite} /* спиннер */
 .fdn{animation:fxDone 14s infinite} /* "✓ Done" */
-@keyframes fxTxt {0%,45%{opacity:1} 48%,100%{opacity:0}}
-@keyframes fxSpin{0%,46%{opacity:0} 49%,56%{opacity:1} 58%,100%{opacity:0}}
-@keyframes fxDone{0%,56%{opacity:0} 59%,92%{opacity:1} 96%,100%{opacity:0}}
+@keyframes fxTxt {0%,52%{opacity:1} 55%,100%{opacity:0}}
+@keyframes fxSpin{0%,54%{opacity:0} 57%,63%{opacity:1} 65%,100%{opacity:0}}
+@keyframes fxDone{0%,63%{opacity:0} 66%,92%{opacity:1} 96%,100%{opacity:0}}
 ```
 
 **Частые ошибки:**
 
-- Попап позиционируется относительно `.cap-site`. Если делаешь попап внутри form, `position:absolute` у попапа будет искать ближайшего relative-предка — форма (если у неё position:relative) или site. Удобнее держать попап прямым child `.cap-site`.
-- `top` попапа = расстояние от верха `.cap-site` (padding:16px от верха viewport). Target-кнопка внизу формы → попап с `top:260px` встаёт под формой.
-- Стрелочка `::before` должна указывать на target. Если target справа в форме, стрелочку сдвинуть `left:180px`.
-- Проверь что `.cap-popup-fix` имеет `position:relative` и `height` фиксирован (24px) — иначе absolute-children (fxt/fsp/fdn) схлопнутся.
+- Попап снизу — неправильно. Попап всегда СПРАВА (см. правило выше).
+- `left` считать от левого края `.cap-site` (или того positioned-предка, где лежит попап).
+- Стрелочка `::before` с `rotate(-45deg)` + `border-top + border-left` = указывает влево. Для popups снизу (если нужно) — `rotate(45deg)` + `border-left + border-top` = указывает вверх.
+- `cap-ta-inner` обязателен для typewriter — без него текст появляется мгновенно.
+- Проверь что `.cap-popup-fix` имеет `position:relative` и `height:24px` фиксирован — иначе absolute-children (fxt/fsp/fdn) схлопнутся.
 
 ### 2b. Стартовый клик по extension иконке
 
