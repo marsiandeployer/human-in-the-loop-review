@@ -145,7 +145,7 @@
     .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     .site-footer a{color:#555}
 
-    /* ─────── Slow Checkout Animated Banner (14s cycle) ─────── */
+    /* ─────── Slow Checkout Animated Banner (28s cycle) ─────── */
     .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
     .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
     .sc-dots{display:flex;gap:5px}
@@ -154,7 +154,7 @@
     .sc-dots span:nth-child(2){background:#ffbd2e}
     .sc-dots span:nth-child(3){background:#28c840}
     .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
-    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 14s infinite}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
     @keyframes extPulse{0%,4%{box-shadow:0 0 0 0 rgba(255,107,53,.8)}2%{box-shadow:0 0 0 6px rgba(255,107,53,0)}6%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0)}}
     .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#1d2327;overflow:hidden}
     .sc-adminbar{background:#1d2327;height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:9px;color:#c3c4c7;flex-shrink:0;box-sizing:border-box;border-bottom:1px solid #2c3338}
@@ -167,16 +167,16 @@
     .sc-site{flex:1;padding:18px;min-width:0;position:relative;order:1}
     /* Sidebar always occupies space; contents reveal over time. Initial state: empty look until icon clicked (~7%) */
     .sc-sidebar{width:200px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;order:2;position:relative}
-    .sc-sidebar::before{content:'';position:absolute;inset:0;background:#fafafa;animation:sbReveal 14s infinite}
+    .sc-sidebar::before{content:'';position:absolute;inset:0;background:#fafafa;animation:sbReveal 28s infinite}
     @keyframes sbReveal{0%,4%{opacity:1}6%,95%{opacity:0}98%,100%{opacity:1}}
     .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
     .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
-    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 14s infinite}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
     @keyframes sbHintFade{0%,18%{opacity:1}22%,100%{opacity:0}}
     .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
-    .sc-sb-c1{animation:sbC1 14s infinite}
-    .sc-sb-c2{animation:sbC2 14s infinite}
-    .sc-sb-c3{animation:sbC3 14s infinite}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
     @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
     @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
     @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
@@ -184,20 +184,20 @@
     .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
     .sc-sb-k{color:#666}
     .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700}
-    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 14s infinite}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
     @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
     .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
     .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
     /* Mock checkout page */
     .sc-site-inner{position:relative;order:1;flex:1;padding:18px;min-width:0}
-    .sc-form{background:#fff;border:2px solid transparent;border-radius:8px;padding:14px;max-width:360px;position:relative;outline-offset:3px;animation:formScan 14s infinite}
+    .sc-form{background:#fff;border:2px solid transparent;border-radius:8px;padding:14px;max-width:360px;position:relative;outline-offset:3px;animation:formScan 28s infinite}
     /* 3-click flow: ext icon → click form → click Fix it. No red scan phase. */
     @keyframes formScan{
       0%,19%   {outline:none;box-shadow:none}
       20%,92%  {outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}
       95%,100% {outline:none;box-shadow:none}
     }
-    .sc-form::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 14s infinite}
+    .sc-form::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
     @keyframes selBadge{0%,19%{opacity:0}20%,92%{opacity:1}95%,100%{opacity:0}}
     .sc-form h4{font-size:13px;font-weight:700;margin:0 0 10px;color:#1a1a1a}
     .sc-row{display:flex;gap:6px;margin-bottom:6px}
@@ -209,44 +209,44 @@
     .sc-total-v{font-weight:700;color:#333}
     .sc-place{margin-top:8px;background:#5b44e8;color:#fff;border-radius:4px;padding:8px;font-size:11px;font-weight:600;text-align:center}
     /* Red slow-state overlay: shown while form is being scanned red (2-22%) */
-    .sc-overlay{position:absolute;top:18px;left:18px;background:#fff;border:1px solid #fecdd3;border-radius:6px;padding:8px 10px;font-size:10px;color:#9f1239;box-shadow:0 4px 12px rgba(0,0,0,.1);width:160px;opacity:0;animation:ovShow 14s infinite;z-index:3}
+    .sc-overlay{position:absolute;top:18px;left:18px;background:#fff;border:1px solid #fecdd3;border-radius:6px;padding:8px 10px;font-size:10px;color:#9f1239;box-shadow:0 4px 12px rgba(0,0,0,.1);width:160px;opacity:0;animation:ovShow 28s infinite;z-index:3}
     @keyframes ovShow{0%,100%{opacity:0}}
     .sc-ov-title{font-weight:700;margin-bottom:4px;font-size:10px;color:#9f1239;display:flex;align-items:center;gap:4px}
-    .sc-ov-spinner{width:9px;height:9px;border:2px solid #fecdd3;border-top-color:#e11d48;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+    .sc-ov-spinner{width:9px;height:9px;border:2px solid #fecdd3;border-top-color:#e11d48;border-radius:50%;animation:spin .14s linear infinite;flex-shrink:0}
     @keyframes spin{to{transform:rotate(360deg)}}
     .sc-ov-row{display:flex;justify-content:space-between;font-size:9px;color:#555;line-height:1.6}
     .sc-ov-row .t{color:#b91c1c;font-family:monospace;font-weight:700}
     /* Green fixed-state overlay: shown in final ~3 sec (83-95%) */
-    .sc-overlay-ok{position:absolute;top:18px;left:18px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;padding:8px 10px;font-size:10px;color:#166534;box-shadow:0 4px 12px rgba(0,0,0,.1);width:160px;opacity:0;animation:okShow 14s infinite;z-index:3}
+    .sc-overlay-ok{position:absolute;top:18px;left:18px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;padding:8px 10px;font-size:10px;color:#166534;box-shadow:0 4px 12px rgba(0,0,0,.1);width:160px;opacity:0;animation:okShow 28s infinite;z-index:3}
     @keyframes okShow{0%,80%{opacity:0}83%,95%{opacity:1}98%,100%{opacity:0}}
     .sc-ov-ok-title{font-weight:700;margin-bottom:4px;font-size:10px;color:#166534;display:flex;align-items:center;gap:4px}
     /* Popup to the RIGHT of the selected form element */
-    .sc-popup{position:absolute;left:385px;top:20px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 14s infinite}
+    .sc-popup{position:absolute;left:385px;top:20px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
     @keyframes popupShow{0%,19%{opacity:0;transform:translateX(-6px)}20%,92%{opacity:1;transform:translateX(0)}96%,100%{opacity:0}}
     .sc-popup::before{content:'';position:absolute;top:14px;left:-6px;width:10px;height:10px;background:#fff;border-top:1px solid #ddd;border-left:1px solid #ddd;transform:rotate(-45deg)}
     .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
     .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
     .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
-    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 14s infinite}
-    @keyframes typeText{0%,20%{max-width:0}47%,92%{max-width:190px}96%,100%{max-width:0}}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,20%{max-width:0}30%,92%{max-width:190px}96%,100%{max-width:0}}
     .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
     @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
     .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
     .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
-    .sc-fxt{animation:fxTxt 14s infinite}
-    .sc-fsp{animation:fxSpin 14s infinite}
-    .sc-fdn{animation:fxDone 14s infinite}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
     @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
     @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
     @keyframes fxDone{0%,63%{opacity:0}66%,92%{opacity:1}96%,100%{opacity:0}}
-    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .5s linear infinite}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .10s linear infinite}
     @keyframes fxSpinRot{to{transform:rotate(360deg)}}
     /* Cursor: crosshair (scan) → arrow (click) */
-    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 14s infinite}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
     .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
     .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
-    .sc-cross{animation:crossVis 14s infinite}
-    .sc-arrow{animation:arrowVis 14s infinite}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
     /* Arrow only — no crosshair scanning */
     @keyframes crossVis{0%,100%{opacity:0}}
     @keyframes arrowVis{0%,95%{opacity:1}97%,100%{opacity:0}}
@@ -270,7 +270,7 @@
     .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
     .sc-caption strong{color:#FF6B35}
     .sc-progress{height:3px;background:rgba(255,255,255,.08)}
-    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 14s linear infinite}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
     @keyframes progFill{0%{width:0}100%{width:100%}}
     @media(max-width:640px){
       .sc-sidebar{width:170px}
@@ -303,12 +303,12 @@
 
     <!-- Narrated video walkthrough -->
     <video controls preload="metadata" playsinline muted autoplay loop poster="banner-poster.jpg" style="width:100%;max-width:100%;border-radius:12px;margin:0 0 8px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block">
-      <source src="banner.mp4?v=7" type="video/mp4">
+      <source src="banner.mp4?v=8" type="video/mp4">
       Your browser does not support video. <a href="banner.mp4">Download the 14-second walkthrough</a>.
     </video>
     <p style="font-size:13px;color:#888;text-align:center;margin:0 0 28px">14-second narrated walkthrough: slow checkout → SimpleReview → PR with a fix</p>
 
-    <!-- Animated Banner (14s cycle): crosshair scans entire checkout → red → click Place Order → arrow + Selected → popup → Fix it → spinner → Done → sidebar PR → green fixed state -->
+    <!-- Animated Banner (28s cycle): crosshair scans entire checkout → red → click Place Order → arrow + Selected → popup → Fix it → spinner → Done → sidebar PR → green fixed state -->
     <div class="sc-banner" aria-label="Animated demo: SimpleReview selects the entire slow WooCommerce checkout and auto-deploys the fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
