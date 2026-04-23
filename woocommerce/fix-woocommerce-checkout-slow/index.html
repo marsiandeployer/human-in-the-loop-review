@@ -168,38 +168,37 @@
     /* Sidebar always occupies space; contents reveal over time. Initial state: empty look until icon clicked (~7%) */
     .sc-sidebar{width:200px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;order:2;position:relative}
     .sc-sidebar::before{content:'';position:absolute;inset:0;background:#fafafa;animation:sbReveal 14s infinite}
-    @keyframes sbReveal{0%,4%{opacity:1}7%,95%{opacity:0}98%,100%{opacity:1}}
+    @keyframes sbReveal{0%,4%{opacity:1}6%,95%{opacity:0}98%,100%{opacity:1}}
     .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
     .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
     .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 14s infinite}
-    @keyframes sbHintFade{0%,48%{opacity:1}52%,100%{opacity:0}}
+    @keyframes sbHintFade{0%,18%{opacity:1}22%,100%{opacity:0}}
     .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
     .sc-sb-c1{animation:sbC1 14s infinite}
     .sc-sb-c2{animation:sbC2 14s infinite}
     .sc-sb-c3{animation:sbC3 14s infinite}
-    @keyframes sbC1{0%,50%{opacity:0;transform:translateY(3px)}54%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
-    @keyframes sbC2{0%,62%{opacity:0;transform:translateY(3px)}66%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
-    @keyframes sbC3{0%,72%{opacity:0;transform:translateY(3px)}76%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
     .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
     .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
     .sc-sb-k{color:#666}
     .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700}
     .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 14s infinite}
-    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}85%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
     .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
     .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
     /* Mock checkout page */
     .sc-site-inner{position:relative;order:1;flex:1;padding:18px;min-width:0}
     .sc-form{background:#fff;border:2px solid transparent;border-radius:8px;padding:14px;max-width:360px;position:relative;outline-offset:3px;animation:formScan 14s infinite}
-    /* Timing: 0-7% sidebar opens, 7-24% RED scan of whole checkout, 24-92% orange Selected */
+    /* 3-click flow: ext icon → click form → click Fix it. No red scan phase. */
     @keyframes formScan{
-      0%,9%    {outline:none;box-shadow:none}
-      13%,30%  {outline:3px solid #ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.15)}
-      31%,92%  {outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}
+      0%,19%   {outline:none;box-shadow:none}
+      20%,92%  {outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}
       95%,100% {outline:none;box-shadow:none}
     }
     .sc-form::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 14s infinite}
-    @keyframes selBadge{0%,30%{opacity:0}31%,92%{opacity:1}95%,100%{opacity:0}}
+    @keyframes selBadge{0%,19%{opacity:0}20%,92%{opacity:1}95%,100%{opacity:0}}
     .sc-form h4{font-size:13px;font-weight:700;margin:0 0 10px;color:#1a1a1a}
     .sc-row{display:flex;gap:6px;margin-bottom:6px}
     .sc-in{flex:1;height:24px;background:#fafafa;border:1px solid #d4d4d4;border-radius:4px}
@@ -211,7 +210,7 @@
     .sc-place{margin-top:8px;background:#5b44e8;color:#fff;border-radius:4px;padding:8px;font-size:11px;font-weight:600;text-align:center}
     /* Red slow-state overlay: shown while form is being scanned red (2-22%) */
     .sc-overlay{position:absolute;top:18px;left:18px;background:#fff;border:1px solid #fecdd3;border-radius:6px;padding:8px 10px;font-size:10px;color:#9f1239;box-shadow:0 4px 12px rgba(0,0,0,.1);width:160px;opacity:0;animation:ovShow 14s infinite;z-index:3}
-    @keyframes ovShow{0%,9%{opacity:0}12%,26%{opacity:1}30%,100%{opacity:0}}
+    @keyframes ovShow{0%,100%{opacity:0}}
     .sc-ov-title{font-weight:700;margin-bottom:4px;font-size:10px;color:#9f1239;display:flex;align-items:center;gap:4px}
     .sc-ov-spinner{width:9px;height:9px;border:2px solid #fecdd3;border-top-color:#e11d48;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -223,7 +222,7 @@
     .sc-ov-ok-title{font-weight:700;margin-bottom:4px;font-size:10px;color:#166534;display:flex;align-items:center;gap:4px}
     /* Inline popup (comment → Fix it) — appears below the form when it's Selected */
     .sc-popup{position:absolute;left:28px;top:220px;width:230px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 14s infinite}
-    @keyframes popupShow{0%,30%{opacity:0;transform:translateY(-6px)}31%,92%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes popupShow{0%,19%{opacity:0;transform:translateY(-6px)}20%,92%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
     .sc-popup::before{content:'';position:absolute;top:-6px;left:18px;width:10px;height:10px;background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
     .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
     .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
@@ -235,9 +234,9 @@
     .sc-fxt{animation:fxTxt 14s infinite}
     .sc-fsp{animation:fxSpin 14s infinite}
     .sc-fdn{animation:fxDone 14s infinite}
-    @keyframes fxTxt{0%,45%{opacity:1}48%,100%{opacity:0}}
-    @keyframes fxSpin{0%,46%{opacity:0}49%,56%{opacity:1}58%,100%{opacity:0}}
-    @keyframes fxDone{0%,56%{opacity:0}59%,92%{opacity:1}96%,100%{opacity:0}}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,92%{opacity:1}96%,100%{opacity:0}}
     .sc-fsp-icon{display:inline-block;animation:fxSpinRot .5s linear infinite}
     @keyframes fxSpinRot{to{transform:rotate(360deg)}}
     /* Cursor: crosshair (scan) → arrow (click) */
@@ -246,24 +245,19 @@
     .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
     .sc-cross{animation:crossVis 14s infinite}
     .sc-arrow{animation:arrowVis 14s infinite}
-    /* Arrow: 0-7% (extension click) + 26%+ (form click). Crosshair: 8-26% (scanning). */
-    @keyframes crossVis{0%,7%{opacity:0}9%,26%{opacity:1}29%,100%{opacity:0}}
-    @keyframes arrowVis{0%,7%{opacity:1}9%,26%{opacity:0}29%,100%{opacity:1}}
-    /* Cursor path: start at SimpleReview extension icon (top-right of chrome bar) → click it → sidebar opens → move to scan form (crosshair) → click Place Order area → stay on popup → Fix it click */
-    /* Coordinates relative to .sc-banner (chrome bar ~38px tall on top, sidebar 200px on right) */
+    /* Arrow only — no crosshair scanning */
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,95%{opacity:1}97%,100%{opacity:0}}
+    /* 3 clicks: 1) extension icon, 2) Billing Details form → popup, 3) Fix it button */
     @keyframes scCur{
       0%   {left:695px;top:12px;opacity:0}
       2%   {left:695px;top:12px;opacity:1}   /* hover extension icon */
-      6%   {left:695px;top:12px;opacity:1}   /* click — pulse visible */
-      10%  {left:40px;top:100px;opacity:1}   /* jump to top-left of checkout */
-      15%  {left:150px;top:155px;opacity:1}  /* scan */
-      20%  {left:220px;top:220px;opacity:1}  /* scan */
-      25%  {left:210px;top:330px;opacity:1}  /* over Place Order area */
-      31%  {left:198px;top:256px;opacity:1}  /* click form center (arrow) */
-      40%  {left:143px;top:345px;opacity:1}  /* move to popup */
-      48%  {left:143px;top:374px;opacity:1}  /* Fix it button center (measured) */
+      5%   {left:695px;top:12px;opacity:1}   /* click ext icon */
+      15%  {left:100px;top:105px;opacity:1}  /* move to Billing Details */
+      20%  {left:100px;top:105px;opacity:1}  /* click → orange highlight + popup */
+      48%  {left:143px;top:374px;opacity:1}  /* move to Fix it */
       55%  {left:143px;top:374px;opacity:1}  /* click Fix it */
-      72%  {left:620px;top:369px;opacity:1}  /* point at sidebar PR */
+      72%  {left:620px;top:369px;opacity:1}  /* point at sidebar result */
       92%  {left:620px;top:369px;opacity:1}  /* hold */
       96%  {opacity:0}
       100% {opacity:0}
@@ -305,7 +299,7 @@
 
     <!-- Narrated video walkthrough -->
     <video controls preload="metadata" playsinline muted autoplay loop poster="banner-poster.jpg" style="width:100%;max-width:100%;border-radius:12px;margin:0 0 8px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block">
-      <source src="banner.mp4?v=4" type="video/mp4">
+      <source src="banner.mp4?v=5" type="video/mp4">
       Your browser does not support video. <a href="banner.mp4">Download the 14-second walkthrough</a>.
     </video>
     <p style="font-size:13px;color:#888;text-align:center;margin:0 0 28px">14-second narrated walkthrough: slow checkout → SimpleReview → PR with a fix</p>
