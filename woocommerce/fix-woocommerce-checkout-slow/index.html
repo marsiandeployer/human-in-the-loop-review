@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WooCommerce Checkout Slow? 12 Real Fixes That Cut Page Load by 60%+ (2026) — Vibers</title>
+  <meta name="description" content="Why WooCommerce checkout is slow: AJAX cart fragments, heavy plugins, autoloaded options, heartbeat API, slow payment gateways. 12 diagnostic steps + concrete fixes for 2026. Plus a human code review option for AI-generated WooCommerce customizations.">
+  <link rel="canonical" href="https://onout.org/vibers/woocommerce/fix-woocommerce-checkout-slow/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="WooCommerce Checkout Slow? 12 Real Fixes That Cut Page Load by 60%+ (2026)">
+  <meta property="og:description" content="Diagnostic checklist and concrete fixes for a slow WooCommerce checkout: AJAX fragments, autoload bloat, heartbeat, payment JS, caching rules.">
+  <meta property="og:url" content="https://onout.org/vibers/woocommerce/fix-woocommerce-checkout-slow/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="woocommerce checkout slow, woocommerce checkout very slow, fix slow woocommerce, woocommerce slow, how to make woocommerce faster, woocommerce checkout page slow, woocommerce checkout loading slow, woocommerce add to cart slow, wp-ajax update_order_review slow, woocommerce cart fragments slow, woocommerce performance, woocommerce speed optimization">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "WooCommerce Checkout Slow? 12 Real Fixes That Cut Page Load by 60%+",
+    "description": "Diagnostic guide for a slow WooCommerce checkout covering AJAX cart fragments, autoloaded options, heartbeat API, payment gateway JS, and caching rules.",
+    "url": "https://onout.org/vibers/woocommerce/fix-woocommerce-checkout-slow/",
+    "datePublished": "2026-04-23",
+    "dateModified": "2026-04-23",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/woocommerce/fix-woocommerce-checkout-slow/" },
+    "keywords": ["woocommerce checkout slow", "woocommerce checkout very slow", "fix slow woocommerce", "how to make woocommerce faster", "woocommerce cart fragments", "woocommerce performance", "woocommerce speed optimization"],
+    "articleSection": "WooCommerce"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why is my WooCommerce checkout so slow?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Three causes dominate: AJAX cart fragments (wc-ajax=get_refreshed_fragments) firing on every page, autoloaded wp_options bloat above 1 MB, and plugin hooks triggering on woocommerce_checkout_process or update_order_review. Disable cart fragments sitewide except on cart/checkout, audit autoloaded options, and profile plugins with Query Monitor to find the specific slow hook."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is wc-ajax=update_order_review and why is it slow?",
+        "acceptedAnswer": {"@type": "Answer", "text": "It is the AJAX request that refreshes the checkout order totals every time a field changes (address, shipping, payment method). It re-runs all checkout hooks, tax calculations, and shipping queries. If it takes over one second, a third-party plugin is hooked into woocommerce_checkout_update_order_review or calculate_totals and making a slow remote call or database query."}
+      },
+      {
+        "@type": "Question",
+        "name": "Should I disable WooCommerce cart fragments?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes, on every page except the cart and checkout. Cart fragments (wc-cart-fragments.js) fire an AJAX request on every page load to refresh the mini-cart count. On cached pages without a cart widget this is pure overhead. Dequeue the script conditionally or use a plugin that does it for you."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does excluding checkout from page cache fix slow checkout?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Not directly — WooCommerce already excludes /cart/, /checkout/, and /my-account/ from page caching, and caching them breaks session data. The real fix is object caching (Redis or Memcached), PHP 8.1+, and removing plugins that hook into checkout. Page cache only helps the rest of the site; checkout speed is about backend execution time."}
+      },
+      {
+        "@type": "Question",
+        "name": "How slow is 'too slow' for a WooCommerce checkout?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Above 3 seconds time-to-interactive on a warm request is slow. Above 5 seconds is conversion-killing. Google Core Web Vitals benchmarks suggest LCP under 2.5 seconds and INP under 200 ms for checkout fields to respond. WooCommerce ships fast by default — if you are above 3 seconds, third-party code is the cause in the vast majority of cases."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can AI-generated WooCommerce snippets cause checkout slowdowns?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes, frequently. AI assistants will happily add an action on woocommerce_checkout_process that calls a remote API, loops over all order items, or triggers a full cart recalculation. Most look correct in review but execute on every AJAX tick of the checkout. If the slowdown appeared after adding custom code from ChatGPT, Claude, Cursor, or Copilot, a human review is the fastest path to the specific hook that is wrong."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    .definition strong{font-weight:700}
+    .checklist{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .checklist h3{margin-top:0}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+
+    /* ─────── Slow Checkout Animated Banner (14s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 14s infinite}
+    @keyframes extPulse{0%,4%{box-shadow:0 0 0 0 rgba(255,107,53,.8)}2%{box-shadow:0 0 0 6px rgba(255,107,53,0)}6%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0)}}
+    .sc-viewport{display:flex;min-height:360px;position:relative;background:#fafafa;overflow:hidden}
+    .sc-site{flex:1;padding:18px;min-width:0;position:relative;order:1}
+    /* Sidebar always occupies space; contents reveal over time. Initial state: empty look until icon clicked (~7%) */
+    .sc-sidebar{width:200px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;order:2;position:relative}
+    .sc-sidebar::before{content:'';position:absolute;inset:0;background:#fafafa;animation:sbReveal 14s infinite}
+    @keyframes sbReveal{0%,4%{opacity:1}7%,95%{opacity:0}98%,100%{opacity:1}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 14s infinite}
+    @keyframes sbHintFade{0%,48%{opacity:1}52%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 14s infinite}
+    .sc-sb-c2{animation:sbC2 14s infinite}
+    .sc-sb-c3{animation:sbC3 14s infinite}
+    @keyframes sbC1{0%,50%{opacity:0;transform:translateY(3px)}54%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes sbC2{0%,62%{opacity:0;transform:translateY(3px)}66%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes sbC3{0%,72%{opacity:0;transform:translateY(3px)}76%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 14s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}85%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Mock checkout page */
+    .sc-site-inner{position:relative;order:1;flex:1;padding:18px;min-width:0}
+    .sc-form{background:#fff;border:2px solid transparent;border-radius:8px;padding:14px;max-width:360px;position:relative;outline-offset:3px;animation:formScan 14s infinite}
+    /* Timing: 0-7% sidebar opens, 7-24% RED scan of whole checkout, 24-92% orange Selected */
+    @keyframes formScan{
+      0%,9%    {outline:none;box-shadow:none}
+      13%,24%  {outline:3px solid #ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.15)}
+      28%,92%  {outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}
+      95%,100% {outline:none;box-shadow:none}
+    }
+    .sc-form::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 14s infinite}
+    @keyframes selBadge{0%,26%{opacity:0}30%,92%{opacity:1}95%,100%{opacity:0}}
+    .sc-form h4{font-size:13px;font-weight:700;margin:0 0 10px;color:#1a1a1a}
+    .sc-row{display:flex;gap:6px;margin-bottom:6px}
+    .sc-in{flex:1;height:24px;background:#fafafa;border:1px solid #d4d4d4;border-radius:4px}
+    .sc-pay{display:flex;gap:6px;margin:10px 0 8px}
+    .sc-pay-btn{flex:1;height:26px;background:#fafafa;border:1px solid #d4d4d4;border-radius:4px;font-size:9px;display:flex;align-items:center;justify-content:center;color:#888;font-weight:600}
+    .sc-total{display:flex;justify-content:space-between;font-size:11px;padding:6px 0;border-top:1px dashed #ddd;border-bottom:1px dashed #ddd;margin:8px 0}
+    .sc-total-k{color:#666}
+    .sc-total-v{font-weight:700;color:#333}
+    .sc-place{margin-top:8px;background:#5b44e8;color:#fff;border-radius:4px;padding:8px;font-size:11px;font-weight:600;text-align:center}
+    /* Red slow-state overlay: shown while form is being scanned red (2-22%) */
+    .sc-overlay{position:absolute;top:18px;left:18px;background:#fff;border:1px solid #fecdd3;border-radius:6px;padding:8px 10px;font-size:10px;color:#9f1239;box-shadow:0 4px 12px rgba(0,0,0,.1);width:160px;opacity:0;animation:ovShow 14s infinite;z-index:3}
+    @keyframes ovShow{0%,9%{opacity:0}12%,26%{opacity:1}30%,100%{opacity:0}}
+    .sc-ov-title{font-weight:700;margin-bottom:4px;font-size:10px;color:#9f1239;display:flex;align-items:center;gap:4px}
+    .sc-ov-spinner{width:9px;height:9px;border:2px solid #fecdd3;border-top-color:#e11d48;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .sc-ov-row{display:flex;justify-content:space-between;font-size:9px;color:#555;line-height:1.6}
+    .sc-ov-row .t{color:#b91c1c;font-family:monospace;font-weight:700}
+    /* Green fixed-state overlay: shown in final ~3 sec (83-95%) */
+    .sc-overlay-ok{position:absolute;top:18px;left:18px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;padding:8px 10px;font-size:10px;color:#166534;box-shadow:0 4px 12px rgba(0,0,0,.1);width:160px;opacity:0;animation:okShow 14s infinite;z-index:3}
+    @keyframes okShow{0%,80%{opacity:0}83%,95%{opacity:1}98%,100%{opacity:0}}
+    .sc-ov-ok-title{font-weight:700;margin-bottom:4px;font-size:10px;color:#166534;display:flex;align-items:center;gap:4px}
+    /* Inline popup (comment → Fix it) — appears below the form when it's Selected */
+    .sc-popup{position:absolute;left:28px;top:220px;width:230px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 14s infinite}
+    @keyframes popupShow{0%,32%{opacity:0;transform:translateY(-6px)}36%,92%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-popup::before{content:'';position:absolute;top:-6px;left:18px;width:10px;height:10px;background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 14s infinite}
+    .sc-fsp{animation:fxSpin 14s infinite}
+    .sc-fdn{animation:fxDone 14s infinite}
+    @keyframes fxTxt{0%,45%{opacity:1}48%,100%{opacity:0}}
+    @keyframes fxSpin{0%,46%{opacity:0}49%,56%{opacity:1}58%,100%{opacity:0}}
+    @keyframes fxDone{0%,56%{opacity:0}59%,92%{opacity:1}96%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .5s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    /* Cursor: crosshair (scan) → arrow (click) */
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 14s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 14s infinite}
+    .sc-arrow{animation:arrowVis 14s infinite}
+    /* Arrow: 0-7% (extension click) + 26%+ (form click). Crosshair: 8-26% (scanning). */
+    @keyframes crossVis{0%,7%{opacity:0}9%,26%{opacity:1}29%,100%{opacity:0}}
+    @keyframes arrowVis{0%,7%{opacity:1}9%,26%{opacity:0}29%,100%{opacity:1}}
+    /* Cursor path: start at SimpleReview extension icon (top-right of chrome bar) → click it → sidebar opens → move to scan form (crosshair) → click Place Order area → stay on popup → Fix it click */
+    /* Coordinates relative to .sc-banner (chrome bar ~38px tall on top, sidebar 200px on right) */
+    @keyframes scCur{
+      0%   {left:695px;top:12px;opacity:0}
+      2%   {left:695px;top:12px;opacity:1}   /* hover extension icon */
+      6%   {left:695px;top:12px;opacity:1}   /* click — pulse visible */
+      10%  {left:80px;top:75px;opacity:1}    /* jump to top-left of checkout */
+      15%  {left:150px;top:135px;opacity:1}  /* scan */
+      20%  {left:220px;top:210px;opacity:1}  /* scan */
+      25%  {left:240px;top:285px;opacity:1}  /* over Place Order area */
+      31%  {left:200px;top:250px;opacity:1}  /* click form center (arrow switches here) */
+      40%  {left:145px;top:315px;opacity:1}  /* move to popup */
+      48%  {left:145px;top:357px;opacity:1}  /* Fix it button */
+      55%  {left:145px;top:357px;opacity:1}  /* click Fix it */
+      72%  {left:580px;top:160px;opacity:1}  /* point at sidebar PR */
+      92%  {left:580px;top:160px;opacity:1}  /* hold */
+      96%  {opacity:0}
+      100% {opacity:0}
+    }
+    /* Caption bar */
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 14s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:170px}
+      .sc-form{max-width:100%}
+      .sc-popup{display:none}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WooCommerce</span>
+      <span>April 23, 2026</span>
+      <span>11 min read</span>
+    </div>
+
+    <h1>WooCommerce Checkout Slow? 12 Real Fixes That Cut Page Load by 60%+ (2026)</h1>
+
+    <p class="article-lead">If your WooCommerce checkout takes 4+ seconds to respond — or worse, freezes on shipping or payment updates — the cause is almost always one of a dozen well-known problems. This is a diagnostic guide, not a "install a caching plugin" thread. Each fix tells you what to measure, what to change, and when it actually helps.</p>
+
+    <!-- Narrated video walkthrough -->
+    <video controls preload="metadata" playsinline muted autoplay loop poster="banner-poster.jpg" style="width:100%;max-width:100%;border-radius:12px;margin:0 0 8px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block">
+      <source src="banner.mp4?v=2" type="video/mp4">
+      Your browser does not support video. <a href="banner.mp4">Download the 14-second walkthrough</a>.
+    </video>
+    <p style="font-size:13px;color:#888;text-align:center;margin:0 0 28px">14-second narrated walkthrough: slow checkout → SimpleReview → PR with a fix</p>
+
+    <!-- Animated Banner (14s cycle): crosshair scans entire checkout → red → click Place Order → arrow + Selected → popup → Fix it → spinner → Done → sidebar PR → green fixed state -->
+    <div class="sc-banner" aria-label="Animated demo: SimpleReview selects the entire slow WooCommerce checkout and opens a pull request with the fix">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">yourstore.com/checkout</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-site">
+          <div class="sc-form">
+            <h4>Billing Details</h4>
+            <div class="sc-row"><div class="sc-in"></div><div class="sc-in"></div></div>
+            <div class="sc-row"><div class="sc-in"></div></div>
+            <div class="sc-row"><div class="sc-in"></div></div>
+            <div class="sc-row"><div class="sc-in"></div><div class="sc-in" style="flex:0 0 90px"></div></div>
+            <div class="sc-total"><span class="sc-total-k">Subtotal</span><span class="sc-total-v">$ 128.00</span></div>
+            <div class="sc-total" style="border-top:none;margin-top:-6px"><span class="sc-total-k">Shipping</span><span class="sc-total-v">$ 9.50</span></div>
+            <div class="sc-pay">
+              <div class="sc-pay-btn">Stripe</div>
+              <div class="sc-pay-btn">PayPal</div>
+              <div class="sc-pay-btn">Apple Pay</div>
+            </div>
+            <div class="sc-place">Place Order</div>
+          </div>
+          <!-- Slow (red) state overlay — visible during scan phase -->
+          <div class="sc-overlay">
+            <div class="sc-ov-title"><span class="sc-ov-spinner"></span>update_order_review</div>
+            <div class="sc-ov-row"><span>Load time</span><span class="t">4.8s</span></div>
+            <div class="sc-ov-row"><span>wp_options autoload</span><span class="t">2.1 MB</span></div>
+            <div class="sc-ov-row"><span>Checkout hooks</span><span class="t">34</span></div>
+            <div class="sc-ov-row"><span>PHP queries</span><span class="t">412</span></div>
+          </div>
+          <!-- Fixed (green) state overlay — visible in the final ~3 sec -->
+          <div class="sc-overlay-ok">
+            <div class="sc-ov-ok-title">✓ Checkout optimized</div>
+            <div class="sc-ov-row"><span>Load time</span><span class="t" style="color:#166534">1.2s</span></div>
+            <div class="sc-ov-row"><span>wp_options autoload</span><span class="t" style="color:#166534">480 KB</span></div>
+            <div class="sc-ov-row"><span>Checkout hooks</span><span class="t" style="color:#166534">9</span></div>
+            <div class="sc-ov-row"><span>PHP queries</span><span class="t" style="color:#166534">78</span></div>
+          </div>
+          <!-- Inline popup appears after "Selected" (32%+) with typed comment + Fix it -->
+          <div class="sc-popup">
+            <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+            <div class="sc-popup-ta">Checkout is 4.8s slow — profile and fix<span class="sc-blink">|</span></div>
+            <div class="sc-popup-fix">
+              <span class="sc-fxt">Fix it</span>
+              <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+              <span class="sc-fdn">✓ Done</span>
+            </div>
+          </div>
+        </div>
+        <div class="sc-sidebar">
+          <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+          <div class="sc-sb-hint">waiting for selection…</div>
+          <div class="sc-sb-card sc-sb-c1">
+            <div class="sc-sb-hdr">Profiling checkout</div>
+            <div class="sc-sb-kv"><span class="sc-sb-k">TTFB</span><span class="sc-sb-v">3.4s</span></div>
+            <div class="sc-sb-kv"><span class="sc-sb-k">AJAX tick</span><span class="sc-sb-v">1.4s</span></div>
+          </div>
+          <div class="sc-sb-card sc-sb-c2">
+            <div class="sc-sb-hdr">Root cause</div>
+            <div style="font-size:9px;color:#b91c1c;font-family:monospace;line-height:1.4">hook: update_order_review<br>plugin: custom-tax-sync<br>remote call: 1.2s</div>
+          </div>
+          <div class="sc-sb-card sc-sb-c3">
+            <div class="sc-sb-hdr">Fix suggestion</div>
+            <div style="font-size:9px;color:#166534;line-height:1.4">Cache tax-sync in transient (5 min). Move hook → only on checkout submit.</div>
+          </div>
+          <div class="sc-pr">
+            <div class="sc-pr-title">PR #12 opened</div>
+            <div class="sc-pr-meta">fix: cache tax-sync + move hook<br>−34 hooks → 76% faster TTFB</div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click the SimpleReview icon → select the slow checkout → <strong>Fix it</strong> → pull request</div>
+      <!-- Global cursor (positioned relative to .sc-banner — can reach chrome bar extension icon) -->
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Installed a custom WooCommerce plugin or AI-generated snippet and your checkout got slow the next day? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reviews the repo and sends a PR with the exact hook to remove or cache.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li>WooCommerce checkout is slow on 90%+ of stores because of <em>plugin hooks</em>, not core WooCommerce.</li>
+        <li>Cart fragments (<code>wc-cart-fragments.js</code>) fire AJAX on every page — disable them everywhere except <code>/cart/</code> and <code>/checkout/</code>.</li>
+        <li>Autoloaded options above 1 MB slow every request. Most stores ship 2–5 MB after a year of plugin churn.</li>
+        <li>The <code>update_order_review</code> AJAX re-runs all checkout hooks on every field change. Profile it with Query Monitor — if it takes over 1 second, one plugin is guilty.</li>
+        <li>PHP 8.1+ plus object caching (Redis) gives a 30–50% checkout speedup before any code changes.</li>
+        <li>Page caching does not help checkout — WooCommerce already excludes it — but the rest of the site should be cached so checkout is the only backend-heavy page.</li>
+        <li>Heartbeat API, Google Fonts inlined, and payment gateway JS (especially PayPal Smart Buttons) are the top three front-end offenders.</li>
+      </ul>
+    </div>
+
+    <h2>Fix 1: Profile First, Then Change Code</h2>
+
+    <p>Before touching anything, install <a href="https://wordpress.org/plugins/query-monitor/">Query Monitor</a> (free). Load <code>/checkout/</code> and expand "Hooks & Actions" and "Queries". You are looking for three numbers: total queries, slowest query, and plugins attached to <code>woocommerce_checkout_update_order_review</code>, <code>woocommerce_checkout_process</code>, and <code>woocommerce_after_calculate_totals</code>.</p>
+
+    <p>Healthy checkout: under 80 queries, no query over 200 ms, under 10 hooks per checkout action. If you see 400+ queries or a single query above 1 second, you have a concrete target.</p>
+
+    <h2>Fix 2: Kill Cart Fragments Sitewide (Except Cart/Checkout)</h2>
+
+    <p>The single biggest front-end win. WooCommerce loads <code>wc-cart-fragments.js</code> on every page to refresh the mini-cart count via AJAX. On pages with no cart widget, it is pure waste — and it blocks <code>admin-ajax.php</code>.</p>
+
+    <pre><code>// functions.php
+add_action( 'wp_enqueue_scripts', function() {
+    if ( is_cart() || is_checkout() ) return;
+    wp_dequeue_script( 'wc-cart-fragments' );
+}, 11 );</code></pre>
+
+    <p>Real-world impact: 200–600 ms off every non-cart page, including category and product pages where users browse before checkout.</p>
+
+    <h2>Fix 3: Shrink Autoloaded Options</h2>
+
+    <p>Every WordPress request loads all rows from <code>wp_options</code> with <code>autoload = 'yes'</code>. Plugins dump session data, logs, and transients there and never clean up. Over a year this balloons.</p>
+
+    <p>Check your total:</p>
+
+    <pre><code>SELECT SUM(LENGTH(option_value))/1024/1024 AS autoload_mb
+FROM wp_options WHERE autoload = 'yes';</code></pre>
+
+    <p>Anything over 1 MB is a problem. Above 3 MB and every request — including checkout — pays the tax. Find the biggest offenders:</p>
+
+    <pre><code>SELECT option_name, LENGTH(option_value)/1024 AS kb
+FROM wp_options WHERE autoload = 'yes'
+ORDER BY LENGTH(option_value) DESC LIMIT 20;</code></pre>
+
+    <p>Typical culprits: abandoned plugins, <code>action_scheduler_</code> rows (switch to a cleanup cron), <code>_transient_</code> that should not be autoloaded, session handlers from plugins that never clean up.</p>
+
+    <h2>Fix 4: Object Caching (Redis or Memcached)</h2>
+
+    <p>WooCommerce is query-heavy. Without object cache, every checkout AJAX call re-runs dozens of queries that did not change. With Redis, the second <code>update_order_review</code> tick drops from 1.5 s to 200 ms on most stores.</p>
+
+    <p>If you are on managed WooCommerce hosting (Kinsta, WP Engine, SpinupWP), object cache is usually one click. On a VPS, install Redis and the <code>redis-cache</code> plugin. Verify with Query Monitor: you should see most non-persistent queries disappear after the first load.</p>
+
+    <h2>Fix 5: Audit Plugins Hooked Into Checkout</h2>
+
+    <p>Every plugin that attaches to <code>woocommerce_checkout_update_order_review</code> runs on every field change. A single plugin making a remote API call there can turn a 400 ms checkout into a 3 s one.</p>
+
+    <p>Find them:</p>
+
+    <pre><code>// functions.php — log what runs on update_order_review
+add_action( 'woocommerce_checkout_update_order_review', function( $post_data ) {
+    global $wp_filter;
+    $hooks = $wp_filter['woocommerce_checkout_update_order_review'] ?? null;
+    if ( $hooks ) {
+        error_log( 'checkout hooks: ' . print_r( array_keys( (array) $hooks->callbacks ), true ) );
+    }
+}, 1 );</code></pre>
+
+    <p>The worst offenders historically: tax-sync plugins (Avalara, TaxJar in aggressive mode), shipping quote plugins that hit carrier APIs on every address change, loyalty/points plugins that recalculate on every tick, currency converters that call remote FX APIs.</p>
+
+    <h2>Fix 6: PHP 8.1+ and OPcache</h2>
+
+    <p>If you are still on PHP 7.4, you are leaving 20–40% performance on the table. WooCommerce officially supports PHP 8.1+ as of WooCommerce 9.0. OPcache should be on with <code>opcache.memory_consumption=256</code> and <code>opcache.max_accelerated_files=10000</code>.</p>
+
+    <div class="stat-box"><strong>Benchmark:</strong> Kinsta's 2024 PHP benchmark showed PHP 8.3 handling 2.9× more requests per second than PHP 7.4 on WooCommerce shop pages.</div>
+
+    <h2>Fix 7: Disable or Throttle the Heartbeat API</h2>
+
+    <p>The Heartbeat API polls <code>admin-ajax.php</code> every 15–60 seconds. On the checkout page, admin users sometimes have it firing at 15 s and stacking with <code>update_order_review</code> ticks. Throttle it or disable it on the front end:</p>
+
+    <pre><code>add_action( 'init', function() {
+    wp_deregister_script( 'heartbeat' );
+}, 1 );</code></pre>
+
+    <p>Keep it on the admin dashboard for post locking, but there is no reason for it on <code>/checkout/</code>.</p>
+
+    <h2>Fix 8: Payment Gateway JS Bloat</h2>
+
+    <p>PayPal Smart Buttons, Klarna, Afterpay, and Amazon Pay each load 100–300 KB of third-party JS, often synchronously. If you have all four enabled and the customer only ever uses Stripe, you are paying the full cost on every checkout.</p>
+
+    <p>Audit what the checkout actually loads in Chrome DevTools → Network → JS, sorted by Size. If a gateway JS loads but nobody uses it, disable the gateway or defer its script until the user selects it.</p>
+
+    <h2>Fix 9: Remove Unused Checkout Fields</h2>
+
+    <p>WooCommerce ships with 15 billing fields and 11 shipping fields. Every field you keep is work — validation, AJAX refresh, hook execution. If you sell a digital product and do not need shipping, disable shipping fields entirely. The <code>woocommerce_checkout_fields</code> filter lets you remove them:</p>
+
+    <pre><code>add_filter( 'woocommerce_checkout_fields', function( $fields ) {
+    unset( $fields['billing']['billing_company'] );
+    unset( $fields['billing']['billing_address_2'] );
+    unset( $fields['order']['order_comments'] );
+    return $fields;
+} );</code></pre>
+
+    <h2>Fix 10: Block Checkout Caching (Correctly)</h2>
+
+    <p>WooCommerce already sets <code>DONOTCACHEPAGE</code> on <code>/cart/</code>, <code>/checkout/</code>, and <code>/my-account/</code>. Most caching plugins respect this. But a misconfigured caching plugin can still cache these pages, breaking nonces and session data, which appears to the user as "checkout hangs".</p>
+
+    <p>Verify: open the checkout in an incognito window, check response headers for <code>X-Cache: HIT</code> or Cloudflare's <code>cf-cache-status</code>. Should be MISS or DYNAMIC. If it is HIT, your cache is breaking checkout.</p>
+
+    <h2>Fix 11: Defer Google Fonts and Third-Party Scripts</h2>
+
+    <p>Most themes load 3–5 Google Font families with blocking <code>&lt;link&gt;</code> tags. Self-host them with <code>font-display: swap</code> or defer them. Move analytics, tag manager, chat widgets, A/B test libraries to <code>async</code> or load after checkout is interactive.</p>
+
+    <p>Rule: on <code>/checkout/</code>, nothing non-essential should block the main thread in the first 2 seconds.</p>
+
+    <h2>Fix 12: Review Custom Code — Especially AI-Generated Snippets</h2>
+
+    <p>The single most common cause of "checkout got slow last week" is a custom snippet. AI assistants are very good at generating working WooCommerce code and fairly bad at understanding which hooks run on every AJAX tick. A snippet that "just" calls an external API on <code>woocommerce_checkout_process</code> looks fine in isolation and kills performance in production.</p>
+
+    <p>If you shipped custom code recently — from ChatGPT, Claude, Cursor, Copilot, or a human — and the checkout degraded after, that is almost certainly the cause. Roll back the snippet, confirm the slowdown goes away, then decide whether to rewrite it correctly.</p>
+
+    <div class="cta-block">
+      <h3>Shipped AI-generated WooCommerce code and checkout got slow?</h3>
+      <p>SimpleReview reads your repo, runs the checkout under profiling, finds the exact hook or query causing the slowdown, and opens a pull request with the fix. First fix is free.</p>
+      <a class="cta-btn" href="https://onout.org/vibers/simple-review/">Get a code review →</a>
+    </div>
+
+    <h2>Which Fix Should You Start With?</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Symptom</th><th>Most likely cause</th><th>Fix to try first</th></tr></thead>
+        <tbody>
+          <tr><td>Whole site is slow, not just checkout</td><td>Autoload bloat, no object cache, PHP 7.x</td><td>Fixes 3, 4, 6</td></tr>
+          <tr><td>Checkout slow, shop pages fast</td><td>Plugin hooks on checkout actions</td><td>Fixes 1, 5, 12</td></tr>
+          <tr><td>Address change freezes page for seconds</td><td><code>update_order_review</code> hooked by a tax/shipping plugin</td><td>Fix 5</td></tr>
+          <tr><td>First load fine, subsequent loads slow</td><td>No object cache, Heartbeat stacking</td><td>Fixes 4, 7</td></tr>
+          <tr><td>Checkout stalls with spinner forever</td><td>Page caching plugin caching <code>/checkout/</code></td><td>Fix 10</td></tr>
+          <tr><td>Got slow after adding a custom snippet</td><td>Custom/AI-generated hook misuse</td><td>Fix 12 (roll back, then review)</td></tr>
+          <tr><td>Heavy on mobile, OK on desktop</td><td>Payment gateway JS + Google Fonts</td><td>Fixes 8, 11</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="checklist">
+      <h3>Fast Diagnostic Checklist (15 minutes)</h3>
+      <ol>
+        <li>Open <code>/checkout/</code> in Chrome DevTools → Network. Note the total load time and the largest request.</li>
+        <li>Install Query Monitor → check total queries and slowest query on checkout load.</li>
+        <li>Run the <code>autoload_mb</code> SQL query. If over 1 MB, start there.</li>
+        <li>Check PHP version (<code>&lt;?php phpinfo(); ?&gt;</code>). If under 8.1, upgrade before anything else.</li>
+        <li>Add an address in the checkout, watch the <code>update_order_review</code> AJAX request in Network. If over 1 s, a plugin is the cause.</li>
+        <li>Disable non-essential plugins one by one (or use Health Check plugin's troubleshooting mode) to isolate.</li>
+        <li>If recent custom code — roll it back and retest.</li>
+      </ol>
+    </div>
+
+    <h2>FAQ</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Why is my WooCommerce checkout so slow?</div>
+      <div class="faq-a">Most often: AJAX cart fragments firing on every page, autoloaded wp_options over 1 MB, and a plugin hooked into <code>woocommerce_checkout_update_order_review</code> making a slow remote call. Disable cart fragments sitewide except on cart/checkout, audit autoload, and profile with Query Monitor.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What is wc-ajax=update_order_review and why does it take seconds?</div>
+      <div class="faq-a">It refreshes the order totals every time a checkout field changes. It re-runs all checkout hooks, tax calculations, and shipping queries. Over one second means a plugin is hooked into it and is slow — usually tax, shipping quote, or loyalty plugins with remote API calls.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Should I disable WooCommerce cart fragments?</div>
+      <div class="faq-a">Yes, on every page except <code>/cart/</code> and <code>/checkout/</code>. A one-line dequeue saves 200–600 ms on every other page.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Does a caching plugin fix a slow checkout?</div>
+      <div class="faq-a">No, because WooCommerce already excludes checkout from page caching. The fix that actually helps checkout is object caching (Redis), not page caching.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How fast should a WooCommerce checkout be?</div>
+      <div class="faq-a">Under 3 seconds time-to-interactive on a warm request. Update-order-review AJAX ticks should be under 500 ms. Above those, conversion drops measurably.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can AI-generated snippets cause checkout slowdowns?</div>
+      <div class="faq-a">Yes, frequently. AI assistants often attach work to <code>woocommerce_checkout_process</code> or <code>update_order_review</code> without realizing those fire on every AJAX tick. If the slowdown started right after a new custom snippet, roll it back first.</div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://woocommerce.com/document/configuring-woocommerce-settings/">WooCommerce: Configuring WooCommerce Settings</a></li>
+      <li><a href="https://developer.woocommerce.com/docs/code-snippets/disable-cart-fragments/">WooCommerce Developers: Disable cart fragments</a></li>
+      <li><a href="https://wordpress.org/plugins/query-monitor/">Query Monitor plugin</a></li>
+      <li><a href="https://wordpress.org/plugins/redis-cache/">Redis Object Cache plugin</a></li>
+      <li><a href="https://kinsta.com/blog/php-benchmarks/">Kinsta: PHP benchmarks (WordPress/WooCommerce)</a></li>
+      <li><a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/">WordPress Developers: Heartbeat API</a></li>
+      <li><a href="https://developer.woocommerce.com/docs/">WooCommerce Developer Documentation</a></li>
+    </ul>
+
+    <div class="related-posts">
+      <h3>Related Posts</h3>
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/blog/ai-generated-code-security-vulnerabilities/">AI-Generated Code: Security Vulnerabilities</a>
+          <p>Where LLM-written code quietly opens holes you will not catch in code review.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/blog/vibe-coded-app-production-ready/">How to Make a Vibe-Coded App Production-Ready</a>
+          <p>The production-readiness layer most AI-generated MVPs skip.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/blog/how-to-test-ai-generated-code/">How to Test AI-Generated Code</a>
+          <p>Pragmatic test strategy for code you did not write yourself.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers · <a href="/vibers/">onout.org/vibers</a></span>
+    <span><a href="https://onout.org/vibers/simple-review/">SimpleReview</a> · <a href="/vibers/blog/">Blog</a></span>
+  </footer>
+</div>
+</body>
+</html>

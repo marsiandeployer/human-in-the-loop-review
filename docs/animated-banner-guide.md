@@ -212,6 +212,101 @@ HTML структура курсора:
 ```
 Замените текст на описание нужного исправления.
 
+### 2a. Структура попапа (comment + Fix it) — ОБЯЗАТЕЛЬНЫЙ блок
+
+Попап появляется после того, как курсор переключился на arrow и target получил "Selected" badge. Внутри попапа: поле комментария с курсором-мигалкой + кнопка Fix it, которая проходит 3 состояния (текст → спиннер → Done).
+
+**HTML:**
+
+```html
+<div class="cap-popup">
+  <div class="cap-popup-hdr">
+    <span>Comment</span>
+    <span class="cap-popup-x">×</span>
+  </div>
+  <div class="cap-popup-ta">{описание задачи}<span class="cap-blink">|</span></div>
+  <div class="cap-popup-fix">
+    <span class="fxt">Fix it</span>
+    <span class="fsp"><span class="fsp-icon">⟳</span></span>
+    <span class="fdn">✓ Done</span>
+  </div>
+</div>
+```
+
+**CSS (ключевое):**
+
+```css
+/* Попап появляется после Selected (~32-36%) и держится до ~92% */
+.cap-popup{position:absolute;left:22px;top:260px;width:220px;background:#fff;
+  border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.15);
+  padding:9px;z-index:6;opacity:0;animation:popupShow 14s infinite}
+@keyframes popupShow{
+  0%,32%   {opacity:0;transform:translateY(-6px)}
+  36%,92%  {opacity:1;transform:translateY(0)}
+  96%,100% {opacity:0}
+}
+
+/* Стрелочка сверху попапа — указывает на Selected target */
+.cap-popup::before{content:'';position:absolute;top:-6px;left:18px;width:10px;height:10px;
+  background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
+
+/* Fix it: 3 состояния в одной кнопке, каждое absolute inset:0 */
+.fxt{animation:fxTxt 14s infinite}  /* "Fix it" текст */
+.fsp{animation:fxSpin 14s infinite} /* спиннер */
+.fdn{animation:fxDone 14s infinite} /* "✓ Done" */
+@keyframes fxTxt {0%,45%{opacity:1} 48%,100%{opacity:0}}
+@keyframes fxSpin{0%,46%{opacity:0} 49%,56%{opacity:1} 58%,100%{opacity:0}}
+@keyframes fxDone{0%,56%{opacity:0} 59%,92%{opacity:1} 96%,100%{opacity:0}}
+```
+
+**Частые ошибки:**
+
+- Попап позиционируется относительно `.cap-site`. Если делаешь попап внутри form, `position:absolute` у попапа будет искать ближайшего relative-предка — форма (если у неё position:relative) или site. Удобнее держать попап прямым child `.cap-site`.
+- `top` попапа = расстояние от верха `.cap-site` (padding:16px от верха viewport). Target-кнопка внизу формы → попап с `top:260px` встаёт под формой.
+- Стрелочка `::before` должна указывать на target. Если target справа в форме, стрелочку сдвинуть `left:180px`.
+- Проверь что `.cap-popup-fix` имеет `position:relative` и `height` фиксирован (24px) — иначе absolute-children (fxt/fsp/fdn) схлопнутся.
+
+### 2b. Стартовый клик по extension иконке
+
+Если хочешь показать: "пользователь кликает иконку SimpleReview в chrome bar → открывается sidebar":
+
+1. **Добавь pulse вокруг иконки** в самом начале (0-6%):
+   ```css
+   .cap-ext-icon{animation:extPulse 14s infinite}
+   @keyframes extPulse{
+     0%,4%{box-shadow:0 0 0 0 rgba(255,107,53,.8)}
+     2%  {box-shadow:0 0 0 6px rgba(255,107,53,0)}
+     6%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0)}
+   }
+   ```
+
+2. **Вынеси cursor из `.cap-site` в root `.cap-banner`** (с `position:relative` на баннере).
+   Тогда курсор может достать до chrome bar (extension icon).
+
+3. **Первая точка курсора** — на иконке (top-right chrome bar):
+   ```css
+   @keyframes cCur{
+     0%  {left:695px;top:12px;opacity:0}
+     2%  {left:695px;top:12px;opacity:1}  /* click extension icon */
+     7%  {left:695px;top:12px;opacity:1}  /* hold — sidebar opens */
+     10% {left:80px;top:75px;opacity:1}   /* jump into page */
+     ...
+   }
+   ```
+
+4. **Sidebar reveal** (вместо translateX, проще через ::before overlay):
+   ```css
+   .cap-sidebar{position:relative}
+   .cap-sidebar::before{content:'';position:absolute;inset:0;background:#fafafa;
+     animation:sbReveal 14s infinite}
+   @keyframes sbReveal{
+     0%,4%{opacity:1}    /* сайдбар "закрыт" — серое покрытие */
+     7%,95%{opacity:0}   /* overlay убран — контент виден */
+     98%,100%{opacity:1}
+   }
+   ```
+   Это проще чем transform:translateX — не ломает flex-лэйаут.
+
 ### 3. Изменить результат в сайдбаре
 
 ```html
@@ -436,3 +531,89 @@ blog/
 ```
 
 Копировать секцию `/* ───────── Animated Captcha Banner ───────── */` из `blog/add-captcha-to-website/index.html` и адаптировать.
+
+---
+
+## 🔍 Аудит видео-баннера (обязательно после каждой записи)
+
+После создания `banner.mp4` всегда проверять покадровыми скриншотами.
+
+### Шаг 1: Извлечь ключевые кадры
+
+```bash
+# Кадры для проверки курсора и VO-синхронизации
+ffmpeg -y -i banner.mp4 -ss 2.0  -frames:v 1 /tmp/check_2s.jpg    # иконка кликнута
+ffmpeg -y -i banner.mp4 -ss 4.5  -frames:v 1 /tmp/check_4s.jpg    # курсор кликает форму
+ffmpeg -y -i banner.mp4 -ss 6.5  -frames:v 1 /tmp/check_6s.jpg    # Fix it нажат / Done
+ffmpeg -y -i banner.mp4 -ss 10.0 -frames:v 1 /tmp/check_10s.jpg   # PR-сайдбар
+```
+
+### Шаг 2: Что проверять на каждом кадре
+
+| Кадр (с) | CSS % | Ожидаемое состояние | Курсор |
+|----------|-------|---------------------|--------|
+| 2s  | 14%  | Sidebar открылся, форма начинает краснеть | Около extension icon |
+| 4.5s | 32% | Форма оранжевая "SELECTED", popup появился | Над полем формы или popup |
+| 6.5s | 46% | Popup "Done ✓", ROOT CAUSE в сайдбаре | Точно на кнопке Fix it |
+| 10s | 71% | PR-пузырь в сайдбаре | Слева в сайдбаре |
+
+**Красные флаги:**
+- Курсор в нижней части баннера (y > высота баннера − 30px) — координата `top` в `@keyframes scCur` завышена
+- Кадры 4.5s и 6.5s выглядят одинаково → анимации throttled (см. ниже)
+- Кадр 11s+ показывает "waiting for selection..." → VO сегмент приходится на начало нового цикла, убрать или сдвинуть
+
+### Шаг 3: Калибровка координат курсора
+
+Алгоритм определения правильных `left`/`top` в `@keyframes scCur`:
+
+```javascript
+// В DevTools или CDP — найти позицию элемента относительно .sc-banner
+const banner = document.querySelector('.sc-banner');
+const target = document.querySelector('.sc-popup-fix');  // Fix it button
+const bannerRect = banner.getBoundingClientRect();
+const targetRect = target.getBoundingClientRect();
+console.log({
+  left: Math.round(targetRect.left - bannerRect.left + targetRect.width / 2),
+  top:  Math.round(targetRect.top  - bannerRect.top  + targetRect.height / 2)
+});
+```
+
+Используй полученные числа напрямую в `@keyframes scCur`.
+
+### Шаг 4: Проблема throttled анимаций при записи
+
+**Симптом:** на всех кадрах видео одинаковое состояние (курсор застыл, спиннер не крутится).
+
+**Причина:** Chrome throttles CSS animations для background-tabs или при `--disable-gpu`.
+
+**Решение:**
+1. Убедиться что записываемая вкладка активна (foreground) в chrome-screen
+2. Сбросить анимации через CDP **прямо перед** стартом `ffmpeg`:
+```bash
+node /tmp/prep_record.js "$TAB_ID" && ffmpeg -y -f x11grab ...
+```
+3. Использовать `window.scrollBy(0, bannerTop - 5)` чтобы баннер был вверху viewport
+4. Если throttling сохраняется — проверить что `chrome-screen` запущен с Xvfb (`:20`) и не `--headless`
+
+### Шаг 5: Проверка VO-синхронизации
+
+Для каждого VO-сегмента проверь соответствие:
+
+| VO сегмент | Delay | Соответствующий CSS-процент | Что должно быть на экране |
+|------------|-------|----------------------------|---------------------------|
+| Сег 1 (0.5s) | 500ms  | 3.5% | Курсор над extension icon |
+| Сег 2 (4.3s) | 4300ms | 30%  | Форма красная, crosshair сканирует |
+| Сег 3 (7.0s) | 7000ms | 50%  | Popup видим, Fix it нажат |
+| Сег 4 (9.5s) | 9500ms | 67%  | Done ✓, ROOT CAUSE в сайдбаре |
+
+**Правило:** если на кадре `t=delay/1000` баннер уже перешёл в новый цикл ("waiting for selection...") — этот VO сегмент нужно убрать или перенести.
+
+### Типичные ошибки и фиксы
+
+| Ошибка | Диагностика | Фикс |
+|--------|-------------|------|
+| Курсор ниже кнопки | На кадре cursor.y > target.y | Уменьши `top` в keyframe на разницу |
+| Курсор левее/правее | На кадре cursor.x ≠ target.x | Скорректируй `left` в keyframe |
+| Видео короче 14s | ffprobe duration < 14 | Добавить `-t 14` в ffmpeg |
+| VO слышен на пустом баннере | Кадр 11s+ = начало цикла | Убрать последний VO сегмент |
+| Анимации заморожены | Все кадры одинаковы | Запустить prep_record.js перед ffmpeg |
