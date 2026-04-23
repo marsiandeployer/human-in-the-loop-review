@@ -216,7 +216,7 @@
     .sc-ov-ok-title{font-weight:700;margin-bottom:4px;font-size:10px;color:#166534;display:flex;align-items:center;gap:4px}
     /* Inline popup (comment → Fix it) — appears below the form when it's Selected */
     .sc-popup{position:absolute;left:28px;top:220px;width:230px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 14s infinite}
-    @keyframes popupShow{0%,32%{opacity:0;transform:translateY(-6px)}36%,92%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes popupShow{0%,27%{opacity:0;transform:translateY(-6px)}30%,92%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
     .sc-popup::before{content:'';position:absolute;top:-6px;left:18px;width:10px;height:10px;background:#fff;border-left:1px solid #ddd;border-top:1px solid #ddd;transform:rotate(45deg)}
     .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
     .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
@@ -253,9 +253,9 @@
       20%  {left:220px;top:210px;opacity:1}  /* scan */
       25%  {left:240px;top:285px;opacity:1}  /* over Place Order area */
       31%  {left:200px;top:250px;opacity:1}  /* click form center (arrow switches here) */
-      40%  {left:145px;top:315px;opacity:1}  /* move to popup */
-      48%  {left:145px;top:357px;opacity:1}  /* Fix it button */
-      55%  {left:145px;top:357px;opacity:1}  /* click Fix it */
+      40%  {left:143px;top:310px;opacity:1}  /* move to popup */
+      48%  {left:143px;top:342px;opacity:1}  /* Fix it button center (measured) */
+      55%  {left:143px;top:342px;opacity:1}  /* click Fix it */
       72%  {left:580px;top:160px;opacity:1}  /* point at sidebar PR */
       92%  {left:580px;top:160px;opacity:1}  /* hold */
       96%  {opacity:0}

@@ -580,20 +580,50 @@ console.log({
 
 Используй полученные числа напрямую в `@keyframes scCur`.
 
-### Шаг 4: Проблема throttled анимаций при записи
+### Шаг 4: Синхронизированная запись (правильный алгоритм)
 
-**Симптом:** на всех кадрах видео одинаковое состояние (курсор застыл, спиннер не крутится).
+**Симптомы throttling:**
+- Все кадры выглядят одинаково (skip:98%+ в ffmpeg stats)
+- `animation-play-state: paused` + resume — НЕ помогает (анимации продолжаются с середины цикла)
+- Новый таб через CDP `PUT /json/new` — всегда в фоне → throttled
 
-**Причина:** Chrome throttles CSS animations для background-tabs или при `--disable-gpu`.
+**Корень проблемы:** `animation-play-state: paused` только ставит паузу в текущей точке — после resume анимация продолжается с того же кадра (не с 0%). Кроме того, `querySelectorAll('*')` не захватывает `::before`/`::after`.
 
-**Решение:**
-1. Убедиться что записываемая вкладка активна (foreground) в chrome-screen
-2. Сбросить анимации через CDP **прямо перед** стартом `ffmpeg`:
-```bash
-node /tmp/prep_record.js "$TAB_ID" && ffmpeg -y -f x11grab ...
+**Правильное решение — `animation: none` + reflow + инжект style-тега:**
+
+```javascript
+// В CDP Navigate в СУЩЕСТВУЮЩИЙ kiosk-таб (не создавать новый!)
+// Существующий таб = foreground, новый CDP-таб = background (throttled)
+
+// 1. Навигировать в kiosk-таб:
+ws.send({method:'Page.navigate', params:{url: ARTICLE_URL}});
+
+// 2. После loadEventFired — скроллить + сбросить ВСЕ анимации
+// Используем <style> тег (охватывает ::before/::after, которые querySelectorAll не видит)
+const s = document.createElement('style');
+s.id = '__reset_all';
+s.textContent = '.sc-banner,.sc-banner *,.sc-banner *::before,.sc-banner *::after { animation: none !important; }';
+document.head.appendChild(s);
+void document.body.offsetHeight;  // ОБЯЗАТЕЛЬНЫЙ reflow — сбрасывает animation state to 0
+
+// 3. Старт ffmpeg (0.8s записывает статичную начальную позицию)
+
+// 4. Через 800ms — убрать style-тег, все анимации стартуют с 0% одновременно
+document.getElementById('__reset_all').remove();
+void document.body.offsetHeight;
 ```
-3. Использовать `window.scrollBy(0, bannerTop - 5)` чтобы баннер был вверху viewport
-4. Если throttling сохраняется — проверить что `chrome-screen` запущен с Xvfb (`:20`) и не `--headless`
+
+**Получить ID kiosk-таба:**
+```bash
+curl -s http://localhost:9223/json | python3 -c "
+import sys,json
+tabs = json.load(sys.stdin)
+# Оригинальный kiosk-таб — тот, что был открыт первым (about:blank или самый старый)
+print(tabs[-1]['id'])  # последний в списке — oldest
+"
+```
+
+**Готовый скрипт:** `/tmp/nav_and_record_v3.js` (создан в сессии записи баннера woocommerce-checkout-slow)
 
 ### Шаг 5: Проверка VO-синхронизации
 
