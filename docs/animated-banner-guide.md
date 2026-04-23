@@ -488,50 +488,72 @@ main();
 
 ---
 
-## Voiceover / Subtitle Timing (зашитые субтитры)
+## Voiceover — OpenAI TTS
 
-Каждый баннер должен содержать **скрытый JSON-блок с тайминговыми данными** для озвучки. Пользователь эти данные не видит — они зашиты в `<script type="application/json">` внутри `.cap-banner`.
+Голос генерируется через OpenAI TTS API (не espeak-ng — звучит слишком роботно).
 
-### Формат
+### Выбор длины цикла
 
-```html
-<!-- Voiceover timing data for video/screen recording narration. Not shown to users.
-     Extract: JSON.parse(document.getElementById('cap-voiceover').textContent) -->
-<script type="application/json" id="cap-voiceover">
-{
-  "duration_s": 9,
-  "loop": true,
-  "notes": "Narration script aligned to CSS animation keyframes. t = seconds into loop.",
-  "tracks": [
-    {"t": 0.0, "voice": "Фраза в начале — описание контекста."},
-    {"t": 0.7, "voice": "Что делает пользователь — курсор появляется."},
-    {"t": 1.5, "voice": "Курсор движется к целевому элементу."},
-    {"t": 2.0, "voice": "Элемент выделен."},
-    {"t": 3.0, "voice": "Попап открылся — описываем поле ввода."},
-    {"t": 4.5, "voice": "Текст комментария — то что пишет пользователь."},
-    {"t": 5.0, "voice": "Нажатие Fix it."},
-    {"t": 5.5, "voice": "Идёт создание PR..."},
-    {"t": 7.0, "voice": "Готово — PR создан, сайдбар открылся."}
-  ]
-}
-</script>
+| Тип баннера | Цикл | Когда |
+|-------------|------|-------|
+| Простой (1-2 действия) | 14s | Быстрый demo-гиф стиль |
+| **Сложный (3+ шага, нужно объяснение)** | **28s** | **По умолчанию для статей** |
+
+Для 28s: меняй все `animation: X 14s infinite` → `28s infinite` (python replace `r'(\d+)s (infinite\|linear)'`).
+
+### Скрипт генерации голоса
+
+```python
+import urllib.request, json, subprocess
+
+OPENAI_API_KEY = "sk-..."  # из /root/aisell/botplatform/.env
+
+# 4 сегмента для 28s баннера (delays в ms)
+segments = [
+    (600,  "Install the SimpleReview extension and click its icon"),
+    (4800, "Select any element — like the slow checkout form"),
+    (9500, "Leave a comment and click Fix it"),
+    (18500,"An AI agent reviews your code and auto-deploys the fix"),
+]
+
+for i, (delay_ms, text) in enumerate(segments, 1):
+    out = f"/tmp/vo{i}.mp3"
+    payload = json.dumps({"model":"tts-1","input":text,"voice":"nova","speed":1.0}).encode()
+    req = urllib.request.Request(
+        "https://api.openai.com/v1/audio/speech",
+        data=payload,
+        headers={"Authorization":f"Bearer {OPENAI_API_KEY}","Content-Type":"application/json"}
+    )
+    with urllib.request.urlopen(req) as resp:
+        with open(out,"wb") as f: f.write(resp.read())
+    dur = subprocess.run(["ffprobe","-v","quiet","-show_entries","format=duration",
+                          "-of","csv=p=0",out],capture_output=True,text=True).stdout.strip()
+    print(f"VO{i} @{delay_ms}ms ends {delay_ms+int(float(dur)*1000)}ms: {text}")
 ```
 
-### Таблица тайминга (13-секундный цикл)
+### Таблица тайминга (28s цикл) — 3-click flow
 
-| Время (сек) | CSS keyframe % | Что происходит | Что говорит диктор |
-|-------------|---------------|----------------|--------------------|
-| 0.0 | 0% | Начало | Вводная фраза про инструмент |
-| 0.5 | 4% | Crosshair появился | "Режим сканирования — цель не выбрана" |
-| 1.8 | 14% | Курсор над email | "Email поле в зоне — красная рамка" |
-| 3.3 | 25% | Курсор над textarea | "Textarea в зоне, но не то" |
-| 4.6 | 37% | Cursor → arrow, клик по target | "Нашли — кликаем на captcha slot" |
-| 5.9 | 46% | Элемент подсвечен оранжевым | "Выделен — оранжевая рамка" |
-| 7.0 | 54% | Попап виден | Описание попапа |
-| 8.5 | 65% | Текст напечатан | Озвучка текста комментария |
-| 9.1 | 70% | Нажат Fix it | "Нажимаем Fix it" |
-| 9.7 | 75% | Спиннер | "Создаётся PR..." |
-| 11.2 | 86% | Done ✓ + сайдбар | Итог |
+| Delay (ms) | Анимация (%) | Что на экране | Текст голоса |
+|------------|-------------|---------------|--------------|
+| 600 | 2% | Курсор → extension icon | "Install the extension and click its icon" |
+| 4800 | 17% | Cursor → форма | "Select any element — like the checkout form" |
+| 9500 | 34% | Текст набран, Fix it виден | "Leave a comment and click Fix it" |
+| 18500 | 66% | Done ✓ + сайдбар | "An AI agent reviews your code and auto-deploys the fix" |
+
+### Правила тайминга (обязательно)
+
+1. **Нет перекрытий** — каждый сегмент заканчивается до начала следующего. Проверяй: `delay + duration_ms < next_delay`
+2. **VO опережает событие на ~0.5-1s** — голос начинается чуть раньше того, что показывается на экране
+3. **Последний VO** заканчивается ≥ 5s до конца цикла (иначе слышно в начале следующего)
+4. **Cursor → textarea перед набором текста**: добавь keyframe `23%{left:420px;top:120px}` — курсор должен переместиться в поле ДО начала typewriter-анимации
+
+### Правило для новых баннеров
+
+- Язык: **EN** для международных статей, RU только если сайт на русском
+- Голос: `nova` (EN женский, чёткий) или `alloy` (нейтральный)
+- Скорость: `speed: 1.0` (не ускорять — голос становится неразборчивым)
+- **Точки в конце каждой фразы** — TTS делает естественную паузу на точке, без неё слова сливаются
+- Файлы: `/tmp/vo1.mp3` ... `/tmp/vo4.mp3` — готовый скрипт записи подхватывает автоматически
 
 ### Как извлечь субтитры
 
@@ -675,18 +697,18 @@ print(tabs[-1]['id'])  # последний в списке — oldest
 "
 ```
 
-**Готовый скрипт:** `/tmp/nav_and_record_v3.js` (создан в сессии записи баннера woocommerce-checkout-slow)
+**Готовый скрипт:** `/tmp/record_v5.js` (WooCommerce banner, 29s, x11grab, audio mix через bash)
 
 ### Шаг 5: Проверка VO-синхронизации
 
 Для каждого VO-сегмента проверь соответствие:
 
-| VO сегмент | Delay | Соответствующий CSS-процент | Что должно быть на экране |
-|------------|-------|----------------------------|---------------------------|
-| Сег 1 (0.5s) | 500ms  | 3.5% | Курсор над extension icon |
-| Сег 2 (4.3s) | 4300ms | 30%  | Форма красная, crosshair сканирует |
-| Сег 3 (7.0s) | 7000ms | 50%  | Popup видим, Fix it нажат |
-| Сег 4 (9.5s) | 9500ms | 67%  | Done ✓, ROOT CAUSE в сайдбаре |
+| VO сегмент | Delay | % в 28s цикле | Что должно быть на экране |
+|------------|-------|---------------|---------------------------|
+| Сег 1 | 600ms  | 2%  | Курсор над extension icon |
+| Сег 2 | 4800ms | 17% | Cursor движется к форме |
+| Сег 3 | 9500ms | 34% | Текст набран, Fix it виден |
+| Сег 4 | 18500ms| 66% | Done ✓ + Auto-deployed в сайдбаре |
 
 **Правило:** если на кадре `t=delay/1000` баннер уже перешёл в новый цикл ("waiting for selection...") — этот VO сегмент нужно убрать или перенести.
 
