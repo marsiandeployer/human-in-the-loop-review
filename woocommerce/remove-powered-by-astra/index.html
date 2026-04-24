@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Remove "Powered by Astra" from WordPress Footer (2026) — No Plugin Needed</title>
+  <meta name="description" content="Remove the 'Powered by Astra' and 'Proudly powered by WordPress' credits from your WordPress footer. 3 methods: Astra settings, code snippet, CSS. Works on free and Pro versions.">
+  <link rel="canonical" href="https://onout.org/vibers/woocommerce/remove-powered-by-astra/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Remove 'Powered by Astra' from WordPress Footer (2026)">
+  <meta property="og:description" content="3 methods to remove 'Powered by Astra' and WordPress footer credits. Free code snippets + step-by-step settings guide.">
+  <meta property="og:url" content="https://onout.org/vibers/woocommerce/remove-powered-by-astra/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="remove powered by astra, wordpress remove powered by astra wordpress theme, how to remove powered by astra, astra theme remove footer credit, remove astra branding, astra footer remove, proudly powered by wordpress remove, astra remove footer text, remove powered by astra free">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Remove 'Powered by Astra' from WordPress Footer (2026)",
+    "description": "Step-by-step guide to removing the Powered by Astra and Proudly powered by WordPress footer credits using theme settings, a functions.php snippet, or CSS.",
+    "url": "https://onout.org/vibers/woocommerce/remove-powered-by-astra/",
+    "datePublished": "2026-04-24",
+    "dateModified": "2026-04-24",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/woocommerce/remove-powered-by-astra/" },
+    "keywords": ["remove powered by astra", "astra theme footer credit", "wordpress remove footer branding", "astra free footer remove"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I remove 'Powered by Astra' for free?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. The free method is a three-line functions.php snippet that hooks into astra_footer_copyright_credits and returns an empty string. Astra Pro has a GUI toggle under Appearance → Astra → Footer → Copyright → Remove 'Powered by Astra', but the code method works on both free and Pro without buying anything."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does removing footer credit break Astra or WordPress?",
+        "acceptedAnswer": {"@type": "Answer", "text": "No. Removing the credit text is fully supported and does not affect functionality, licensing, or updates. Astra's license is GPL, which permits redistribution and modification including removing attribution. Many Astra documentation pages describe how to do it."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between 'Powered by Astra' and 'Proudly powered by WordPress'?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Powered by Astra is added by the Astra theme via the astra_footer_copyright_credits filter. Proudly powered by WordPress is a WordPress core footer text added via the WordPress core itself and removable via the same Astra settings or by removing the get_bloginfo('name') credit in your theme's footer.php. Both can be cleared with a single snippet or the Astra Pro toggle."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why does removing the credit with CSS still show it in page source?",
+        "acceptedAnswer": {"@type": "Answer", "text": "CSS only hides the element visually — the HTML and text remain in the page source and are indexed by search engines. Use a functions.php filter or the Astra Pro setting to actually remove the credit from the DOM, not just hide it from view."}
+      },
+      {
+        "@type": "Question",
+        "name": "I added a custom snippet and now my footer is broken. How do I fix it?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Open your site via SFTP or hosting file manager, find wp-content/themes/your-child-theme/functions.php, and remove or comment out the snippet you added. If you cannot access files, use the WordPress theme file editor (Appearance → Theme File Editor) from another browser or device to revert the change."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── Astra Footer Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,4%{box-shadow:0 0 0 0 rgba(255,107,53,.8)}2%{box-shadow:0 0 0 6px rgba(255,107,53,0)}6%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0)}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    /* WP Admin Bar */
+    .sc-adminbar{background:#1d2327;height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:9px;color:#c3c4c7;flex-shrink:0;box-sizing:border-box;border-bottom:1px solid #2c3338}
+    .sc-ab-left,.sc-ab-right{display:flex;align-items:center;gap:5px}
+    .sc-ab-wp{color:#fff;font-size:12px;font-weight:900;letter-spacing:-1px;opacity:.9;padding:0 2px}
+    .sc-ab-site{color:#fff;font-weight:600}
+    .sc-ab-item{color:#c3c4c7;white-space:nowrap}
+    .sc-ab-cnt{background:#d63638;color:#fff;font-size:7px;padding:1px 3px;border-radius:8px;font-weight:700;min-width:12px;text-align:center;display:inline-block}
+    /* Astra site header */
+    .sc-astra-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    .sc-astra-logo{font-size:12px;font-weight:700;color:#1a1a1a}
+    .sc-astra-nav{display:flex;gap:12px}
+    .sc-astra-nav span{font-size:9px;color:#555}
+    /* Main content area */
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
+    .sc-page-content{flex:1;padding:12px 16px;background:#fafafa}
+    .sc-page-h{font-size:12px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-page-line{height:7px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-page-line.short{width:70%}
+    .sc-page-line.med{width:85%}
+    /* Astra footer — the TARGET element */
+    .sc-astra-footer{background:#f9f9f9;border-top:1px solid #e5e5e5;padding:10px 16px;font-size:9px;color:#666;text-align:center;flex-shrink:0;position:relative;animation:footerSel 28s infinite;outline-offset:2px}
+    @keyframes footerSel{
+      0%,19%{outline:none;box-shadow:none}
+      20%,92%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}
+      95%,100%{outline:none;box-shadow:none}
+    }
+    .sc-astra-footer::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,19%{opacity:0}20%,92%{opacity:1}95%,100%{opacity:0}}
+    .sc-footer-brand{animation:footerTextHide 28s infinite}
+    @keyframes footerTextHide{0%,84%{opacity:1}87%,95%{opacity:0;text-decoration:line-through}98%,100%{opacity:1}}
+    .sc-footer-clean{color:#aaa;font-style:italic;opacity:0;animation:footerTextShow 28s infinite}
+    @keyframes footerTextShow{0%,84%{opacity:0}87%,95%{opacity:1}98%,100%{opacity:0}}
+    /* Sidebar */
+    .sc-sidebar{width:200px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:relative}
+    .sc-sidebar::before{content:'';position:absolute;inset:0;background:#fafafa;animation:sbReveal 28s infinite}
+    @keyframes sbReveal{0%,4%{opacity:1}6%,95%{opacity:0}98%,100%{opacity:1}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,18%{opacity:1}22%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup right of footer */
+    .sc-popup{position:absolute;right:210px;bottom:40px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,19%{opacity:0;transform:translateX(6px)}20%,92%{opacity:1;transform:translateX(0)}96%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,20%{max-width:0}30%,92%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,92%{opacity:1}96%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .10s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    /* Cursor */
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,95%{opacity:1}97%,100%{opacity:0}}
+    /* 3 clicks: ext icon → footer → Fix it */
+    @keyframes scCur{
+      0%   {left:695px;top:12px;opacity:0}
+      2%   {left:695px;top:12px;opacity:1}
+      5%   {left:695px;top:12px;opacity:1}
+      15%  {left:140px;top:315px;opacity:1}
+      20%  {left:140px;top:315px;opacity:1}
+      23%  {left:345px;top:295px;opacity:1}
+      47%  {left:345px;top:295px;opacity:1}
+      48%  {left:395px;top:338px;opacity:1}
+      55%  {left:395px;top:338px;opacity:1}
+      72%  {left:620px;top:200px;opacity:1}
+      92%  {left:620px;top:200px;opacity:1}
+      96%  {opacity:0}
+      100% {opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:135px;width:160px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WordPress / Astra</span>
+      <span>April 24, 2026</span>
+      <span>7 min read</span>
+    </div>
+
+    <h1>How to Remove "Powered by Astra" from WordPress Footer (2026) — No Plugin Needed</h1>
+
+    <p class="article-lead">The "Powered by Astra | Proudly powered by WordPress" line in your footer makes every page look like a template, not a finished product. Here are the three methods that actually work — from the one-click Astra Pro toggle to a free three-line snippet you can add right now.</p>
+
+    <!-- Animated Banner (28s cycle) -->
+    <div class="sc-banner" aria-label="Animated demo: SimpleReview selects the Astra footer branding and removes it">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com/about/</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <!-- WP Admin Bar -->
+        <div class="sc-adminbar">
+          <div class="sc-ab-left">
+            <span class="sc-ab-wp">W</span>
+            <span class="sc-ab-site">My WP Site</span>
+            <span class="sc-ab-item">Edit site</span>
+            <span class="sc-ab-cnt">2</span>
+            <span class="sc-ab-item">🔍 AI Review</span>
+          </div>
+          <div class="sc-ab-right">
+            <span class="sc-ab-item">Howdy, admin</span>
+          </div>
+        </div>
+        <!-- Astra site header -->
+        <div class="sc-astra-header">
+          <div class="sc-astra-logo">My Business</div>
+          <div class="sc-astra-nav">
+            <span>Home</span><span>About</span><span>Services</span><span>Contact</span>
+          </div>
+        </div>
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Page content -->
+            <div class="sc-page-content">
+              <div class="sc-page-h">About Us</div>
+              <div class="sc-page-line"></div>
+              <div class="sc-page-line med"></div>
+              <div class="sc-page-line short"></div>
+              <div class="sc-page-line"></div>
+              <div class="sc-page-line med"></div>
+            </div>
+            <!-- Astra Footer — TARGET element -->
+            <div class="sc-astra-footer">
+              <span class="sc-footer-brand">Powered by Astra | Proudly powered by WordPress</span>
+              <span class="sc-footer-clean">© 2026 My Business. All rights reserved.</span>
+              <!-- Popup appears to the LEFT of sidebar, above footer -->
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">Remove Astra branding from footer</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Element detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Hook</span><span class="sc-sb-v">astra_credits</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">footer.php</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Remove <code style="font-size:8px">astra_footer_copyright_credits</code> via functions.php filter</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Footer credit removed. Custom copyright text added.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ Auto-deployed</div>
+              <div class="sc-pr-meta">fix: remove Astra footer credit<br>functions.php +3 lines</div>
+            </div>
+          </div>
+        </div><!-- sc-content-row -->
+      </div><!-- sc-viewport -->
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the Astra footer → <strong>Fix it</strong> → credit removed</div>
+      <!-- Cursor -->
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Added a custom footer snippet from a tutorial and it broke something? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reviews your WordPress repo and sends a PR that removes the branding cleanly, without breaking your theme.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li>"Powered by Astra" is added by the Astra theme via the <code>astra_footer_copyright_credits</code> filter — remove it with a three-line functions.php snippet, free.</li>
+        <li>Astra Pro has a GUI toggle: Appearance → Astra → Footer → Copyright → uncheck "Powered by Astra".</li>
+        <li>CSS tricks (<code>display:none</code>) hide the text visually but leave it in the HTML source — search engines still read it.</li>
+        <li>"Proudly powered by WordPress" is a separate string removable via the same Astra setting or a second filter.</li>
+        <li>Always edit a <strong>child theme</strong> — changes to the parent theme's footer.php are wiped on every Astra update.</li>
+      </ul>
+    </div>
+
+    <h2>Method 1: Free Code Snippet (Works on Astra Free &amp; Pro)</h2>
+
+    <p>Add this to your child theme's <code>functions.php</code> or use a code snippets plugin like <a href="https://wordpress.org/plugins/code-snippets/">Code Snippets</a>:</p>
+
+    <pre><code>// Remove "Powered by Astra" footer credit
+add_filter( 'astra_footer_copyright_credits', '__return_empty_string' );
+
+// Also remove "Proudly powered by WordPress" (optional)
+add_filter( 'astra_footer_copyright_credits', function( $credit ) {
+    return '&copy; ' . date('Y') . ' ' . get_bloginfo('name') . '. All rights reserved.';
+} );</code></pre>
+
+    <p>The first line removes the credit entirely. The second replaces it with your own copyright notice — pick one or the other.</p>
+
+    <div class="warn-box">
+      <strong>Never edit Astra's parent theme files directly.</strong> Astra updates overwrite <code>footer.php</code> on every release. Use a child theme or a plugin for any customization.
+    </div>
+
+    <h2>Method 2: Astra Pro GUI Toggle</h2>
+
+    <p>If you have Astra Pro ($49/year), no code is needed:</p>
+
+    <ol class="steps">
+      <li>Go to <strong>Appearance → Astra</strong> in your WordPress dashboard.</li>
+      <li>Open <strong>Footer → Footer Bar</strong>.</li>
+      <li>Find the Copyright section and delete or replace the <code>[copyright]</code>, <code>[current_year]</code>, <code>[site_title]</code>, <code>[theme_author]</code> shortcodes in the copyright text field.</li>
+      <li>Click <strong>Publish</strong>. The footer updates immediately — no cache clearing needed.</li>
+    </ol>
+
+    <h2>Method 3: What Not to Do — CSS Hide</h2>
+
+    <p>Many tutorials suggest this:</p>
+
+    <pre><code>.ast-footer-copyright p {
+    display: none;
+}</code></pre>
+
+    <p>This hides the text visually but it still exists in the HTML source. Search engines index it, screen readers announce it, and copy-pasting the page includes it. Use Method 1 or 2 instead.</p>
+
+    <h2>Method Comparison</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Method</th><th>Cost</th><th>Removes from DOM?</th><th>Survives updates?</th><th>Difficulty</th></tr>
+        <tr><td>functions.php filter (Method 1)</td><td>Free</td><td>✅ Yes</td><td>✅ Yes (child theme)</td><td>Low</td></tr>
+        <tr><td>Astra Pro toggle (Method 2)</td><td>$49/year</td><td>✅ Yes</td><td>✅ Yes</td><td>None</td></tr>
+        <tr><td>CSS hide (Method 3)</td><td>Free</td><td>❌ No — still in source</td><td>✅ Yes</td><td>None</td></tr>
+        <tr><td>Edit parent footer.php</td><td>Free</td><td>✅ Yes</td><td>❌ Lost on Astra update</td><td>Low</td></tr>
+      </table>
+    </div>
+
+    <h2>How SimpleReview Handles This</h2>
+
+    <p>If you prefer not to touch code manually, <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> can do it in three clicks:</p>
+
+    <ol>
+      <li>Install the Chrome extension and open your WordPress site while logged in.</li>
+      <li>Click the SimpleReview icon, then click the footer area with the "Powered by Astra" text.</li>
+      <li>Type "Remove Astra branding from footer" and click <strong>Fix it</strong>. SimpleReview creates a PR with the correct filter added to your child theme's functions.php.</li>
+    </ol>
+
+    <p>This is particularly useful when you have multiple branding issues to fix at once, or when your footer has been customized by a previous developer and you're not sure what's safe to change.</p>
+
+    <div class="cta-block">
+      <h3>Fix Astra Footer Branding in 3 Clicks</h3>
+      <p>Click on any element on your WordPress site — SimpleReview identifies the hook, writes the fix, and opens a PR.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Free →</a>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I remove "Powered by Astra" for free?</div>
+      <div class="faq-a">Yes. The free method is a three-line functions.php snippet that hooks into <code>astra_footer_copyright_credits</code> and returns an empty string. Astra Pro has a GUI toggle, but the code method works on both free and Pro without buying anything.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does removing footer credit break Astra or violate the license?</div>
+      <div class="faq-a">No. Removing the credit text is fully supported and does not affect functionality, licensing, or updates. Astra is GPL-licensed, which permits modification including removing attribution. Astra's own documentation describes how to do it.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between "Powered by Astra" and "Proudly powered by WordPress"?</div>
+      <div class="faq-a">"Powered by Astra" is added by the Astra theme via the <code>astra_footer_copyright_credits</code> filter. "Proudly powered by WordPress" is the WordPress core credit. Both are removable via the same Astra Pro setting or the functions.php snippet above.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why does hiding with CSS still show the text in page source?</div>
+      <div class="faq-a">CSS <code>display:none</code> removes the element from the visual render but leaves the HTML in the DOM. Search engines like Google still index it, and screen readers may still announce it. Use a PHP filter to remove it from the server-side output instead.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">My snippet broke the footer. How do I revert?</div>
+      <div class="faq-a">Access your site via SFTP or your host's file manager, open <code>wp-content/themes/your-child-theme/functions.php</code>, and remove or comment out the snippet. Alternatively, use WP-CLI: <code>wp eval 'remove_filter("astra_footer_copyright_credits", "__return_empty_string");'</code></div>
+    </div>
+
+    <h2>Related WordPress Fixes</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">WooCommerce Checkout Slow?</a>
+          <p>12 real fixes for slow WooCommerce checkout — cart fragments, autoload bloat, payment JS.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">What is SimpleReview?</a>
+          <p>Human + AI code review for WordPress, WooCommerce, and Shopify sites.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://wpastra.com/docs/remove-powered-by-astra-copyright-credit/">wpastra.com — Official: Remove Powered by Astra</a></li>
+      <li><a href="https://wordpress.org/plugins/code-snippets/">wordpress.org — Code Snippets plugin</a></li>
+      <li><a href="https://developer.wordpress.org/themes/basics/child-themes/">developer.wordpress.org — Child Themes</a></li>
+      <li><a href="https://wpastra.com/pricing/">wpastra.com — Astra Pro pricing</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+</body>
+</html>
