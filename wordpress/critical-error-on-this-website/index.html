@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>"There Has Been a Critical Error on This Website" — How to Fix It in WordPress (2026)</title>
+  <meta name="description" content="WordPress shows 'There has been a critical error on this website'? 6 fixes that work: recovery mode email, WP_DEBUG, disable plugins via FTP, switch theme, raise memory_limit, restore .htaccess.">
+  <link rel="canonical" href="https://onout.org/vibers/wordpress/critical-error-on-this-website/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="'There Has Been a Critical Error on This Website' — Fix It in WordPress (2026)">
+  <meta property="og:description" content="6 fixes for the WordPress critical error screen: recovery mode email, WP_DEBUG, disable plugins via FTP, switch theme, memory limit, .htaccess.">
+  <meta property="og:url" content="https://onout.org/vibers/wordpress/critical-error-on-this-website/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="there has been a critical error on this website wordpress, wordpress there has been a critical error on this website, wordpress critical error, critical error wordpress, wordpress white screen of death, wordpress fatal error, wordpress recovery mode, wp_debug">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix 'There Has Been a Critical Error on This Website' in WordPress (2026)",
+    "description": "Step-by-step guide to fixing the WordPress critical error screen using recovery mode, WP_DEBUG, plugin/theme disable via FTP, memory limit, and .htaccess restore.",
+    "url": "https://onout.org/vibers/wordpress/critical-error-on-this-website/",
+    "datePublished": "2026-04-24",
+    "dateModified": "2026-04-24",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/wordpress/critical-error-on-this-website/" },
+    "keywords": ["there has been a critical error on this website wordpress", "wordpress critical error", "wordpress recovery mode", "wp_debug", "wordpress fatal error"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does 'There has been a critical error on this website' mean in WordPress?",
+        "acceptedAnswer": {"@type": "Answer", "text": "It's the user-facing replacement for the old 'White Screen of Death' (WSOD), introduced in WordPress 5.2. It means PHP threw a fatal error that prevented the page from rendering — usually a plugin or theme calling a non-existent function, hitting a memory limit, or running on an incompatible PHP version. The actual error is hidden from visitors, but WordPress emails the site admin a recovery link that loads the dashboard with the broken plugin paused."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why didn't I get the recovery mode email?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Three common reasons. (1) The fatal error occurs so early that wp_mail() itself can't run — the email never gets sent. (2) Your site uses a transactional mail plugin (SMTP, SendGrid) that's part of the broken plugin chain. (3) The admin email in Settings → General is wrong or its inbox spam-filters @yourdomain.com mail. Check your hosting control panel's mail logs, or fix it via FTP/SSH instead."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I see the actual error message instead of 'critical error'?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Edit wp-config.php and set define('WP_DEBUG', true); define('WP_DEBUG_LOG', true); define('WP_DEBUG_DISPLAY', false); — the error will be written to wp-content/debug.log with the exact file, line number, and stack trace. Don't enable WP_DEBUG_DISPLAY in production: it shows file paths to visitors. Read the log via FTP or hosting file manager, then revert WP_DEBUG to false once you've identified the cause."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can I fix the critical error without FTP access?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes — use the recovery mode link from the WordPress email, your hosting control panel's file manager (cPanel, Plesk, Hostinger), or SSH if your host provides it. Many hosts (SiteGround, WP Engine, Kinsta) also have a 'Disable plugins' or 'Reset .htaccess' button in their WordPress tools panel. As a last resort, enable WP_DEBUG via your host's database editor by setting an option, but FTP/SSH/file manager is the standard path."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why does the critical error appear after a WordPress update?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Updates often bump the minimum PHP version or remove deprecated functions. A plugin or theme that hasn't been updated in years calls a removed function (e.g., create_function() removed in PHP 8.0) and crashes. Roll back via the WP Rollback plugin if you have access, otherwise disable plugins one by one via FTP and update or replace the offender."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── Critical Error Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:30px 16px}
+    /* WP Critical Error Box — TARGET */
+    .sc-error-box{background:#fff;border:1px solid #ccd0d4;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:540px;margin:18px auto 0;padding:18px 26px 22px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-msg{color:#444;font-size:13px;line-height:1.6;margin-bottom:8px;animation:errHide 28s infinite}
+    .sc-err-link{color:#5b44e8;font-size:12px;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered site (appears after fix) */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+    .sc-rec-logo{font-size:12px;font-weight:700;color:#1a1a1a}
+    .sc-rec-nav{display:flex;gap:12px}
+    .sc-rec-nav span{font-size:9px;color:#555}
+    .sc-rec-content{flex:1;padding:14px 18px;background:#fafafa}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    /* Sidebar — extension overlay */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    /* Cursor coords — placeholders, will be measured via CDP */
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:149px;opacity:1}
+      22%  {left:360px;top:149px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:160px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WordPress / Troubleshooting</span>
+      <span>April 24, 2026</span>
+      <span>9 min read</span>
+    </div>
+
+    <h1>"There Has Been a Critical Error on This Website" — How to Fix It in WordPress (2026)</h1>
+
+    <p class="article-lead">A blank page with a single sentence — <em>"There has been a critical error on this website. Learn more about troubleshooting WordPress."</em> — is WordPress's polite way of saying PHP just crashed. Here's how to find the actual error and recover the site, in order from fastest to most thorough.</p>
+
+    <!-- YouTube embed (recorded banner). -->
+    <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin-bottom:0">
+      <iframe src="https://www.youtube.com/embed/8q1MTr89stU?rel=0" title="Fix WordPress Critical Error — SimpleReview Demo"
+        style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div id="sc-banner-fallback" style="margin-top:16px" class="sc-banner" aria-label="Animated demo: SimpleReview reads the WordPress critical error and disables the broken plugin">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- WP Critical Error box — TARGET -->
+            <div class="sc-error-box">
+              <p class="sc-err-msg">There has been a critical error on this website.</p>
+              <p class="sc-err-link">Learn more about troubleshooting WordPress.</p>
+            </div>
+            <!-- Recovered site (appears after Fix it) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-rec-logo">My Blog</div>
+                <div class="sc-rec-nav"><span>Home</span><span>Blog</span><span>About</span></div>
+              </div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Site recovered</span>
+                <div class="sc-rec-h">Hello World — My First Post</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <!-- Popup — appears mid-cycle, hidden after Fix it -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">Fix critical error on this site</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Error detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Type</span><span class="sc-sb-v">PHP Fatal</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">broken-cache.php</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Disable plugin via FTP, rename folder to <code style="font-size:8px">.disabled</code></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Site loads. Broken plugin paused, recovery email sent.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ Auto-deployed</div>
+              <div class="sc-pr-meta">fix: disable broken-cache plugin<br>1 plugin paused via WP_DISABLE_FATAL_ERROR_HANDLER</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the error → <strong>Fix it</strong> → site recovered</div>
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Site is down right now? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads your debug.log over SFTP, finds the broken plugin or theme line, and pushes a PR — even when wp-admin is unreachable.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li>The "critical error" screen replaces the old <em>White Screen of Death</em> — added in WordPress 5.2 along with recovery mode.</li>
+        <li>Always check the admin email first: WordPress sends a recovery link that auto-pauses the broken plugin.</li>
+        <li>If no email arrives, enable <code>WP_DEBUG_LOG</code> in <code>wp-config.php</code> to write the real error to <code>wp-content/debug.log</code>.</li>
+        <li>Most causes (in order): plugin update broke compatibility, theme update, PHP version mismatch, exhausted memory limit, corrupted .htaccess.</li>
+        <li>Disable plugins from FTP/SFTP by renaming <code>wp-content/plugins/PLUGIN-NAME</code> to <code>PLUGIN-NAME.disabled</code> — WordPress treats it as deactivated.</li>
+      </ul>
+    </div>
+
+    <h2>What the Critical Error Screen Actually Means</h2>
+
+    <p>WordPress 5.2 introduced "Site Health" and a new <em>fatal error handler</em>. Before 5.2, a PHP fatal error showed visitors a blank white page (the WSOD). Since 5.2, WordPress catches the error, hides it from the public, and shows a generic message:</p>
+
+    <pre><code>There has been a critical error on this website.
+Learn more about troubleshooting WordPress.</code></pre>
+
+    <p>At the same time, WordPress emails the site administrator a one-time <strong>recovery mode link</strong>. Clicking it loads <code>wp-admin</code> with the broken plugin or theme deactivated, so you can investigate without the site staying down.</p>
+
+    <div class="definition">
+      <strong>Recovery mode</strong> is a special wp-admin session that pauses any plugin or theme that triggered a fatal error in the last hour. The pause lasts until you log out or click <em>Resume</em>. Cookie name: <code>wp-recovery-mode</code>.
+    </div>
+
+    <h2>Fix #1: Check the Admin Email for the Recovery Link</h2>
+
+    <p>This is the fastest path — try it before anything else:</p>
+
+    <ol class="steps">
+      <li>Open the inbox of the email set in <strong>Settings → General → Administration Email Address</strong>. Check spam too.</li>
+      <li>Look for a message with subject like <em>"Your Site is Experiencing a Technical Issue"</em> from <code>wordpress@yourdomain.com</code>.</li>
+      <li>Click the recovery link inside. WordPress logs you into wp-admin with the broken plugin paused.</li>
+      <li>Go to <strong>Plugins</strong> — the offender will have a yellow notice. Update it, replace it, or click <strong>Deactivate</strong>.</li>
+    </ol>
+
+    <div class="warn-box">
+      <strong>No email?</strong> The fatal error may have crashed <code>wp_mail()</code> itself, or your SMTP plugin is the broken one. Skip to Fix #3.
+    </div>
+
+    <h2>Fix #2: Turn On WP_DEBUG to See the Real Error</h2>
+
+    <p>The "critical error" message is intentionally vague to avoid leaking file paths to the public. To see what actually broke, enable debug logging in <code>wp-config.php</code>:</p>
+
+    <pre><code>define( 'WP_DEBUG',         true );
+define( 'WP_DEBUG_LOG',     true );   // writes to wp-content/debug.log
+define( 'WP_DEBUG_DISPLAY', false );  // do NOT show errors to visitors
+@ini_set( 'display_errors', 0 );</code></pre>
+
+    <p>Reload the broken page, then open <code>wp-content/debug.log</code> via FTP or your hosting file manager. You'll see something like:</p>
+
+    <pre><code>PHP Fatal error:  Uncaught Error: Call to undefined function create_function()
+in /wp-content/plugins/old-cache-plugin/loader.php on line 42</code></pre>
+
+    <p>Now you know exactly which file and which line. Once you've identified the cause, set <code>WP_DEBUG</code> back to <code>false</code> — debug logs in production are a security risk.</p>
+
+    <h2>Fix #3: Disable Plugins via FTP / SFTP / File Manager</h2>
+
+    <p>If wp-admin is also unreachable, disable plugins by renaming their folders. WordPress only loads plugins from folders that exactly match the registered name:</p>
+
+    <ol class="steps">
+      <li>Connect to your site via FTP, SFTP, or your host's file manager (cPanel, Plesk, Hostinger).</li>
+      <li>Navigate to <code>/wp-content/plugins/</code>.</li>
+      <li>Rename the entire <code>plugins</code> folder to <code>plugins-off</code>. WordPress will deactivate every plugin in one shot.</li>
+      <li>Reload the site. If it loads now, the issue is plugin-related.</li>
+      <li>Rename <code>plugins-off</code> back to <code>plugins</code>, then rename one plugin folder at a time (e.g., <code>old-plugin</code> → <code>old-plugin.off</code>) until the site breaks again — that's the offender.</li>
+    </ol>
+
+    <p>If your host gives you SSH access, WP-CLI is faster:</p>
+
+    <pre><code># Deactivate every plugin
+wp plugin deactivate --all --skip-plugins --skip-themes
+
+# Or one by one
+wp plugin deactivate old-cache-plugin --skip-plugins --skip-themes</code></pre>
+
+    <h2>Fix #4: Switch to a Default Theme</h2>
+
+    <p>If renaming the plugins folder didn't help, the theme is the culprit. Same trick:</p>
+
+    <ol class="steps">
+      <li>Open <code>/wp-content/themes/</code>.</li>
+      <li>Rename your active theme's folder (e.g., <code>my-theme</code> → <code>my-theme.off</code>).</li>
+      <li>WordPress falls back to <code>twentytwentyfive</code> (or the latest default). If the site loads, your theme had a fatal error.</li>
+      <li>Restore the folder name and edit the broken file directly, or roll back to a previous theme version.</li>
+    </ol>
+
+    <h2>Fix #5: Raise PHP Memory Limit</h2>
+
+    <p>If the error log says <em>"Allowed memory size of X bytes exhausted"</em>, you need more PHP memory. Add to <code>wp-config.php</code>, above the <em>"Happy publishing"</em> line:</p>
+
+    <pre><code>define( 'WP_MEMORY_LIMIT',       '256M' );
+define( 'WP_MAX_MEMORY_LIMIT',   '512M' ); // for admin pages</code></pre>
+
+    <p>If your hosting plan caps PHP memory below this, you'll need to set <code>memory_limit</code> in <code>php.ini</code> or <code>.htaccess</code> — or upgrade plan. Shared hosting often locks this at 64M or 128M.</p>
+
+    <h2>Fix #6: Restore .htaccess and Check PHP Version</h2>
+
+    <p>A corrupted <code>.htaccess</code> can cause infinite redirect or 500 errors that surface as the critical error:</p>
+
+    <ol class="steps">
+      <li>Rename <code>.htaccess</code> in your site root to <code>.htaccess.bak</code>.</li>
+      <li>Reload the site. If it loads, log into wp-admin and go to <strong>Settings → Permalinks</strong> → just click <strong>Save Changes</strong>. WordPress regenerates a fresh .htaccess.</li>
+      <li>While you're there, check <strong>Tools → Site Health → Info → Server</strong>. WordPress 6.5+ requires PHP 7.4 minimum, recommends 8.1+. If your host is still on PHP 7.0 or 7.2, plugins built for 8.x will break.</li>
+    </ol>
+
+    <h2>Cause Cheat Sheet</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Symptom in debug.log</th><th>Likely cause</th><th>Fix</th></tr>
+        <tr><td>Call to undefined function</td><td>Plugin uses removed PHP function (e.g. create_function)</td><td>Update plugin or PHP downgrade</td></tr>
+        <tr><td>Allowed memory size exhausted</td><td>Plugin loads too much in memory</td><td>Raise WP_MEMORY_LIMIT or disable plugin</td></tr>
+        <tr><td>Maximum execution time exceeded</td><td>Slow query, big import</td><td>Raise max_execution_time, optimize</td></tr>
+        <tr><td>Cannot redeclare function</td><td>Two plugins declare same function</td><td>Disable one, rename function</td></tr>
+        <tr><td>Class not found</td><td>Composer autoload broken / plugin missing</td><td>Reinstall plugin, run composer install</td></tr>
+        <tr><td>White page, no log entry</td><td>Crash before WP loads (wp-config typo)</td><td>Fix wp-config.php syntax</td></tr>
+      </table>
+    </div>
+
+    <h2>How SimpleReview Handles This</h2>
+
+    <p>If your site is down right now and you don't want to dig through FTP, <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> can do it from the browser:</p>
+
+    <ol>
+      <li>Install the Chrome extension and open the broken site.</li>
+      <li>Click the SimpleReview icon, then click the "There has been a critical error" message.</li>
+      <li>Type "Fix critical error on this site" and click <strong>Fix it</strong>. SimpleReview connects to your repo, reads the latest debug.log, identifies the file and line that crashed, and opens a PR that disables the offending plugin (or replaces the broken function).</li>
+    </ol>
+
+    <p>This is particularly useful when wp-admin is unreachable, the recovery email never arrived, and you'd rather not spend 20 minutes renaming folders over SFTP.</p>
+
+    <div class="cta-block">
+      <h3>Recover Your WordPress Site Without FTP Spelunking</h3>
+      <p>Click on the error message — SimpleReview reads your repo, finds the broken plugin, and opens a PR.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="https://onout.org/vibers/simple-review-wordpress/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What does "There has been a critical error on this website" mean?</div>
+      <div class="faq-a">PHP threw a fatal error and WordPress's fatal-error handler caught it, replacing the page output with this message and sending a recovery link to the admin email. The actual error (file, line, message) is logged in <code>wp-content/debug.log</code> if <code>WP_DEBUG_LOG</code> is enabled.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why didn't I get the recovery mode email?</div>
+      <div class="faq-a">Either <code>wp_mail()</code> itself crashed, your SMTP plugin is part of the broken chain, your admin email is wrong, or the message went to spam. Use Fix #2 (debug log) or Fix #3 (rename plugins folder) instead.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I see the actual error message instead of "critical error"?</div>
+      <div class="faq-a">Edit <code>wp-config.php</code> and set <code>WP_DEBUG</code>, <code>WP_DEBUG_LOG</code> to <code>true</code> and <code>WP_DEBUG_DISPLAY</code> to <code>false</code>. The error appears in <code>wp-content/debug.log</code> with file path and line number.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I fix the critical error without FTP?</div>
+      <div class="faq-a">Yes. Use the recovery email link, your hosting control panel's file manager, an SSH terminal, or your host's "Disable plugins" button (most managed WP hosts have one). The recovery link is the fastest path if it arrives.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why did the critical error appear right after a WordPress update?</div>
+      <div class="faq-a">WordPress core updates often bump the minimum PHP version or remove deprecated functions. Old plugins or themes that call removed functions (e.g., <code>create_function()</code> removed in PHP 8.0, or <code>each()</code> removed in 8.0) crash. Roll back the plugin or update to its latest version.</div>
+    </div>
+
+    <h2>Related WordPress Fixes</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/disable-comments-wordpress/">Disable WordPress Comments</a>
+          <p>4 methods to stop comment spam — Discussion settings, Bulk Edit, functions.php filter, plugin.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/wordpress/remove-powered-by-astra/">Remove "Powered by Astra"</a>
+          <p>Three ways to remove the Astra footer credit — snippet, Pro toggle, why CSS hide doesn't work.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">WooCommerce Checkout Slow?</a>
+          <p>12 real fixes for slow WooCommerce checkout — cart fragments, autoload bloat, payment JS.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://wordpress.org/documentation/article/faq-troubleshooting/#how-do-i-fix-there-has-been-a-critical-error-on-this-website">wordpress.org — How do I fix "There has been a critical error on this website"</a></li>
+      <li><a href="https://make.wordpress.org/core/2019/04/16/fatal-error-recovery-mode-in-5-2/">make.wordpress.org — Fatal Error Recovery Mode in 5.2</a></li>
+      <li><a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">wordpress.org — Debugging in WordPress (WP_DEBUG)</a></li>
+      <li><a href="https://wordpress.org/documentation/article/common-wordpress-errors/">wordpress.org — Common WordPress Errors</a></li>
+      <li><a href="https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#debug">developer.wordpress.org — wp-config.php debug constants</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  var audio = new Audio('vo.mp3');
+  audio.loop = false;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+    audio.currentTime = 0;
+    audio.play().catch(function(){});
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>
