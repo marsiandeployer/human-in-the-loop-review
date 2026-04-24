@@ -1,0 +1,10 @@
+# One primary keyword per published article (lowercase).
+# Used by scripts/find-keyword-opportunities.py to skip clusters we already cover.
+remove powered by astra
+disable comments wordpress
+turn off comments wordpress
+remove comments wordpress
+there has been a critical error on this website wordpress
+fix wordpress critical error
+wordpress http error
+fix woocommerce checkout slow
