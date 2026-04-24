@@ -34,6 +34,7 @@
 | Blog | https://onout.org/vibers/blog/ |
 | Contact email | hello@onout.org |
 | Product video (YouTube) | https://youtu.be/Qp_wiXltaQw |
+| Demo: Remove Powered by Astra (YouTube) | https://youtu.be/FRdxDrELAko |
 
 ---
 
