@@ -181,7 +181,7 @@
     /* Копирайт просто исчезает в конце — никакого зачёркивания */
     .sc-footer-brand{animation:footerTextHide 28s infinite}
     @keyframes footerTextHide{0%,87%{opacity:1}90%,99%{opacity:0}100%{opacity:1}}
-    .sc-footer-clean{color:#aaa;font-style:italic;opacity:0;animation:footerTextShow 28s infinite}
+    .sc-footer-clean{color:#aaa;font-style:italic;opacity:0;animation:footerTextShow 28s infinite;position:absolute;left:0;right:0;text-align:center}
     @keyframes footerTextShow{0%,87%{opacity:0}90%,99%{opacity:1}100%{opacity:0}}
     /* Sidebar — extension overlay поверх контента, слайдится справа */
     .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
@@ -283,7 +283,7 @@
     <p class="article-lead">The "Powered by Astra | Proudly powered by WordPress" line in your footer makes every page look like a template, not a finished product. Here are the three methods that actually work — from the one-click Astra Pro toggle to a free three-line snippet you can add right now.</p>
 
     <!-- Video banner (recorded from CSS animation). After upload to YouTube replace with embed. -->
-    <video src="banner_voiced.mp4?v=5" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
+    <video src="banner_voiced_v2.mp4" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
       onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
     </video>
     <!-- Live CSS animation (red/orange SimpleReview branding) — always visible below video -->
