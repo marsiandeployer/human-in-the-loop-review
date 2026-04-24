@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>"WordPress 6.9 Broke My Site" — How to Recover (2026 Field Guide)</title>
+  <meta name="description" content="WordPress 6.9 update broke your site? Here's the field guide: roll back the core, identify the deprecated function, fix Slider Revolution / Elementor / classic widgets, and prevent it next time.">
+  <link rel="canonical" href="https://onout.org/vibers/wordpress/wordpress-6-9-broke-my-site/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="'WordPress 6.9 Broke My Site' — How to Recover (2026 Field Guide)">
+  <meta property="og:description" content="Rollback, identify the deprecated function, fix Slider Revolution / Elementor / classic widgets after the WP 6.9 update.">
+  <meta property="og:url" content="https://onout.org/vibers/wordpress/wordpress-6-9-broke-my-site/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="wordpress 6.9 broke my site, wordpress 6.9 broke slider revolution, wordpress 6.9 update broke, wordpress update broke site, wordpress 6.9 elementor broken, wp rollback 6.9, wordpress 6.9 fatal error, wordpress 6.9 deprecated function">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "WordPress 6.9 Broke My Site — How to Recover (2026 Field Guide)",
+    "description": "Step-by-step recovery from a WordPress 6.9 update that broke the site: rollback core, identify deprecated functions, patch Slider Revolution / Elementor / classic widgets, prevent next time.",
+    "url": "https://onout.org/vibers/wordpress/wordpress-6-9-broke-my-site/",
+    "datePublished": "2026-04-24",
+    "dateModified": "2026-04-24",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/wordpress/wordpress-6-9-broke-my-site/" },
+    "keywords": ["wordpress 6.9 broke my site", "wordpress 6.9 broke slider revolution", "wordpress update broke site", "wp rollback", "wordpress 6.9 fatal error"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I roll back from WordPress 6.9 to 6.8?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Install the WP Downgrade plugin or the WP Rollback plugin (both free, both maintained). In WP Downgrade, set Settings → WP Downgrade → WordPress Target Version to 6.8.2, click Save, then go to Dashboard → Updates → Re-install Now. Or, if wp-admin is unreachable, FTP into the site, delete wp-admin and wp-includes, then upload the 6.8.2 zip from wordpress.org/download/releases/. Keep wp-config.php and wp-content untouched."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why did WordPress 6.9 break Slider Revolution?",
+        "acceptedAnswer": {"@type": "Answer", "text": "WordPress 6.9 deprecated the legacy create_function() polyfill that older Slider Revolution builds (versions before 6.6) still depended on, and bumped jQuery to 3.7. Slider Revolution 6.6+ ships a compatibility shim. Update Slider Revolution to the latest version, or, if you can't update, add a compatibility plugin from the ThemePunch support note before re-enabling the slider."}
+      },
+      {
+        "@type": "Question",
+        "name": "WP 6.9 broke Elementor — what's the fastest fix?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Update Elementor to its latest 3.x release first; the Elementor team typically pushes a compatibility patch within 48 hours of a WordPress major. If your site is down right now, deactivate Elementor via FTP (rename /wp-content/plugins/elementor to /wp-content/plugins/elementor.disabled), reload the site, then update inside wp-admin. If your custom widgets stop working, check the deprecated PHP functions list in WP 6.9 release notes — usually one or two functions need a one-line replacement."}
+      },
+      {
+        "@type": "Question",
+        "name": "How can I see exactly which function or plugin broke after the WP update?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Enable WP_DEBUG_LOG in wp-config.php (define WP_DEBUG, WP_DEBUG_LOG to true and WP_DEBUG_DISPLAY to false), reload the broken page, then read wp-content/debug.log via FTP or your hosting file manager. The log shows the exact file, line number, and function name that crashed — usually a deprecated PHP function call from an old plugin."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I prevent the next major WordPress update from breaking my site?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Three habits. (1) Run a staging environment (most managed hosts give one click) and test major updates there for 24-48 hours before applying to production. (2) Disable auto-updates for major WP versions: add define( 'WP_AUTO_UPDATE_CORE', 'minor' ); to wp-config.php — minor security patches still auto-apply, but you control when 6.9 → 7.0 happens. (3) Subscribe to make.wordpress.org/core/ field guides — they list deprecated functions and breaking plugin patterns 2-3 weeks before the release."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── 6.9-broke-my-site Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:18px 16px}
+    /* Update banner (admin notice red) — TARGET */
+    .sc-error-box{background:#fff;border:1px solid #ccd0d4;border-left:4px solid #d63638;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:560px;margin:14px auto 0;padding:14px 22px 16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:13px;color:#d63638;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:6px;animation:errHide 28s infinite;font-family:'SF Mono',Monaco,Consolas,monospace}
+    .sc-err-msg .sc-fpath{color:#b91c1c}
+    .sc-err-meta{color:#666;font-size:10px;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered admin (appears after fix) */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+    .sc-rec-logo{font-size:12px;font-weight:700;color:#1a1a1a}
+    .sc-rec-nav{display:flex;gap:12px}
+    .sc-rec-nav span{font-size:9px;color:#555}
+    .sc-rec-content{flex:1;padding:14px 18px;background:#fafafa}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    /* Cursor coords — placeholders, will be measured via CDP */
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:136px;opacity:1}
+      22%  {left:360px;top:136px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:160px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WordPress / Updates</span>
+      <span>April 24, 2026</span>
+      <span>9 min read</span>
+    </div>
+
+    <h1>"WordPress 6.9 Broke My Site" — How to Recover (2026 Field Guide)</h1>
+
+    <p class="article-lead">You hit <em>Update Now</em>, the page reloaded — and either the front-end shows a critical error, or wp-admin is unreachable, or Slider Revolution stopped rendering, or Elementor Edit-with shows a blank canvas. Here's the field-tested recovery path: roll back the core in 5 minutes, identify the one deprecated function that did it, patch the offender, and stop it from happening on 7.0.</p>
+
+    <!-- Banner placeholder, will be replaced with YouTube embed after upload -->
+    <video src="banner_voiced.mp4" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
+      onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
+    </video>
+    <div id="sc-banner-fallback" style="margin-top:16px" class="sc-banner" aria-label="Animated demo: SimpleReview reads the WP 6.9 fatal-error log and patches the deprecated function call">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com/wp-admin</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Fatal error notice (TARGET) -->
+            <div class="sc-error-box">
+              <div class="sc-err-title">⚠ Fatal error after WordPress 6.9 update</div>
+              <div class="sc-err-msg">Uncaught Error: Call to undefined function <strong>create_function()</strong><br>in <span class="sc-fpath">/wp-content/plugins/revslider/includes/operations.class.php:1842</span></div>
+              <div class="sc-err-meta">Plugin: Slider Revolution 6.5.27 · WordPress 6.9 · PHP 8.2</div>
+            </div>
+            <!-- Recovered admin -->
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-rec-logo">My Blog · wp-admin</div>
+                <div class="sc-rec-nav"><span>Plugins</span><span>Updates</span><span>Tools</span></div>
+              </div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Site recovered · Slider Revolution patched</span>
+                <div class="sc-rec-h">Dashboard</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">Patch deprecated PHP function</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Deprecated</span><span class="sc-sb-v">create_function</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Plugin</span><span class="sc-sb-v">revslider 6.5.27</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Replace <code style="font-size:8px">create_function()</code> with anonymous function (PHP 7.2+ pattern)</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Site loads. Slider Revolution renders. WP 6.9 stays.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">fix: replace create_function with closure<br>operations.class.php · 1 line</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the fatal error → <strong>Fix it</strong> → site recovered without rolling back 6.9</div>
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Site is down right now after the 6.9 update? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads your debug.log over SFTP, identifies which plugin or theme called the deprecated function, and opens a one-line PR — usually faster than rolling back the whole core.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li>The fastest recovery is a <strong>rollback</strong> via WP Downgrade or by replacing <code>wp-admin</code> + <code>wp-includes</code> over FTP. Buys you time, but keeps you on the old core.</li>
+        <li>The <strong>real fix</strong> is to identify the one deprecated PHP function call (usually one-line patch) and stay on 6.9.</li>
+        <li>Most-broken plugins after a major WP update: <strong>Slider Revolution</strong> (older builds), <strong>Elementor</strong> (custom widgets), <strong>WooCommerce</strong> (deprecated hooks), classic-widgets / WPBakery / cache plugins.</li>
+        <li>Always enable <code>WP_DEBUG_LOG</code> first — the actual error file/line is in <code>wp-content/debug.log</code>, hidden behind the generic "critical error" page.</li>
+        <li>Disable major-core auto-updates with <code>define( 'WP_AUTO_UPDATE_CORE', 'minor' );</code> in <code>wp-config.php</code> so the next 7.0 doesn't surprise you.</li>
+      </ul>
+    </div>
+
+    <h2>Step 1: Roll Back to 6.8 (10-Minute Triage)</h2>
+
+    <p>If your site is down and a paying customer is on the phone, get the old core back first. Two paths:</p>
+
+    <h3>Path A: WP Downgrade plugin (if wp-admin still works)</h3>
+
+    <ol class="steps">
+      <li>Install the <a href="https://wordpress.org/plugins/wp-downgrade/">WP Downgrade</a> plugin (free).</li>
+      <li>Go to <strong>Settings → WP Downgrade</strong> and set <em>WordPress Target Version</em> to <code>6.8.2</code>.</li>
+      <li>Click <strong>Save Changes</strong>.</li>
+      <li>Go to <strong>Dashboard → Updates</strong> and click <strong>Re-install Now</strong> for the WordPress version. The plugin tricks Updates into pulling 6.8.2 instead of 6.9.</li>
+    </ol>
+
+    <h3>Path B: Manual rollback over FTP (if wp-admin is unreachable)</h3>
+
+    <ol class="steps">
+      <li>Download WordPress 6.8.2 from <a href="https://wordpress.org/download/releases/">wordpress.org/download/releases/</a>.</li>
+      <li>Connect via FTP / SFTP. <strong>Delete</strong> the <code>wp-admin</code> and <code>wp-includes</code> folders from your site root. <em>Do not touch</em> <code>wp-content</code> or <code>wp-config.php</code>.</li>
+      <li>Upload the <code>wp-admin</code> and <code>wp-includes</code> folders from the 6.8.2 zip.</li>
+      <li>Visit <code>yoursite.com/wp-admin/</code>. WordPress will prompt you to run a database update — click it.</li>
+    </ol>
+
+    <div class="warn-box">
+      <strong>Rollback is triage, not a fix.</strong> Sooner or later you have to upgrade to 6.9 (security patches stop landing on old branches). Use the time you bought to do Steps 2-4 properly.
+    </div>
+
+    <h2>Step 2: Find the Actual Error in debug.log</h2>
+
+    <p>The "There has been a critical error" page is intentionally vague. The real error is in <code>wp-content/debug.log</code> once you enable logging in <code>wp-config.php</code>:</p>
+
+    <pre><code>define( 'WP_DEBUG',         true );
+define( 'WP_DEBUG_LOG',     true );    // writes to wp-content/debug.log
+define( 'WP_DEBUG_DISPLAY', false );   // hide errors from visitors
+@ini_set( 'display_errors', 0 );</code></pre>
+
+    <p>Reload the broken page, then read the log:</p>
+
+    <pre><code>PHP Fatal error:  Uncaught Error: Call to undefined function create_function()
+in /wp-content/plugins/revslider/includes/operations.class.php on line 1842
+
+PHP Fatal error:  Uncaught Error: Class "WP_Widget_Factory" not found
+in /wp-content/themes/old-theme/functions.php on line 88</code></pre>
+
+    <p>Now you know the file, the line, and the deprecated function. That's 80% of the recovery.</p>
+
+    <h2>Step 3: Patch the Most Common Breakages</h2>
+
+    <h3>Slider Revolution (older versions)</h3>
+
+    <p>Symptom: <code>create_function() not found</code> in <code>revslider/includes/operations.class.php</code>. WP 6.9 dropped the polyfill that was bridging the PHP 7.2 removal. Two fixes:</p>
+
+    <ol>
+      <li><strong>Update Slider Revolution to the latest 6.7+</strong> via the plugin's License → Check for Updates page (it ships its own updater, not the WP plugin store).</li>
+      <li>If you can't update (license expired), find the <code>create_function()</code> call in <code>operations.class.php</code> and replace with an anonymous function:
+<pre><code>// Before:
+$cb = create_function('$a', 'return strtolower($a);');
+
+// After:
+$cb = function($a) { return strtolower($a); };</code></pre>
+      </li>
+    </ol>
+
+    <h3>Elementor — custom widgets blank</h3>
+
+    <p>Update Elementor to the latest 3.x (the team usually pushes a 6.9-compat patch within 48 hours of release). If your custom widgets stop rendering, it's almost always one of:</p>
+    <ul>
+      <li>A removed Elementor controls API class — check the <code>elementor/changelog.txt</code> deprecation list.</li>
+      <li>A jQuery 3.7 incompatibility (WP 6.9 bumped jQuery). Replace <code>$(...).live(...)</code> with <code>$(...).on(...)</code>.</li>
+    </ul>
+
+    <h3>Classic widgets / WPBakery</h3>
+
+    <p>Some classic page builders relied on hooks removed in 6.9 (<code>widget_init</code> arity changed). Updating to the latest version fixes most of them. If the vendor abandoned the plugin, use the <a href="https://wordpress.org/plugins/classic-widgets/">Classic Widgets</a> plugin from Automattic as a fallback.</p>
+
+    <h3>WooCommerce — deprecated hooks</h3>
+
+    <p>Custom WooCommerce extensions often hook into filters that get renamed across major versions. Search the WooCommerce GitHub repo for the specific hook in your debug.log error and check its <em>since</em> / <em>deprecated</em> annotations.</p>
+
+    <h3>Cache plugins (W3 Total Cache, WP Rocket, LiteSpeed)</h3>
+
+    <p>Cache plugins serialize PHP objects to disk. After a WP version bump, those serialized objects can fail to unserialize and trigger fatal errors on every page load. Fix: clear the cache via FTP — delete everything in <code>wp-content/cache/</code>.</p>
+
+    <h2>Step 4: Prevent the Next Major Update From Doing This</h2>
+
+    <ol class="steps">
+      <li><strong>Use a staging environment.</strong> Most managed WordPress hosts (SiteGround, Kinsta, WP Engine, Cloudways) give you one-click staging. Apply the major update to staging first, click around for 48 hours, then push to production.</li>
+      <li><strong>Disable auto major updates.</strong> Add to <code>wp-config.php</code>:
+<pre><code>// Allow automatic minor security patches (6.9.1, 6.9.2)
+// but require manual click for majors (6.9 → 7.0)
+define( 'WP_AUTO_UPDATE_CORE', 'minor' );</code></pre>
+      </li>
+      <li><strong>Subscribe to the WP Core Field Guide</strong> at <a href="https://make.wordpress.org/core/">make.wordpress.org/core/</a>. They publish a list of deprecated functions and breaking changes 2-3 weeks before each major.</li>
+      <li><strong>Run PHPCompatibility scans.</strong> Install the <a href="https://wordpress.org/plugins/php-compatibility-checker/">PHP Compatibility Checker</a> plugin — it scans every plugin and theme for deprecated function calls and tells you what will break <em>before</em> you click Update.</li>
+    </ol>
+
+    <h2>Quick-Reference: What Broke in WP 6.9</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Symptom</th><th>Likely cause</th><th>Fast fix</th></tr>
+        <tr><td>Slider Revolution blank / fatal error</td><td>create_function removed; old build</td><td>Update Slider Revolution to 6.7+ or patch operations.class.php</td></tr>
+        <tr><td>Elementor canvas blank</td><td>Controls API breakage</td><td>Update Elementor to latest 3.x</td></tr>
+        <tr><td>jQuery .live() / .size() not a function</td><td>jQuery 3.7 dropped legacy</td><td>Replace with .on() / .length in custom JS</td></tr>
+        <tr><td>WooCommerce checkout fatal</td><td>Renamed filter hook</td><td>Update WooCommerce + extensions</td></tr>
+        <tr><td>Widgets section empty</td><td>widget_init arity changed</td><td>Install Classic Widgets plugin</td></tr>
+        <tr><td>Random "Class not found" everywhere</td><td>Stale cache plugin serialized data</td><td>Delete wp-content/cache/* via FTP</td></tr>
+        <tr><td>Site loads but admin bar missing</td><td>Theme calls deprecated wp_get_current_user pattern</td><td>Replace with current PHP signature</td></tr>
+      </table>
+    </div>
+
+    <h2>How SimpleReview Handles This</h2>
+
+    <p>If you don't want to spelunk through debug.log and patch deprecated functions by hand, <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> can do it from a single browser click:</p>
+
+    <ol>
+      <li>Install the Chrome extension and open the broken site (or wp-admin if it loads).</li>
+      <li>Click the SimpleReview icon, then click the fatal-error notice or the broken slider.</li>
+      <li>Type "Patch deprecated PHP function" and click <strong>Fix it</strong>. SimpleReview pulls your debug.log over SFTP, identifies the file and line, and opens a PR with the one-line replacement (e.g., <code>create_function()</code> → anonymous function).</li>
+    </ol>
+
+    <p>Useful when you have a custom-coded plugin or theme and rolling back the WP core isn't an option (because, for example, 6.9 also shipped a security patch you actually want to keep).</p>
+
+    <div class="cta-block">
+      <h3>Patch the WP 6.9 Breakage Without Rolling Back the Core</h3>
+      <p>Click on the fatal error — SimpleReview reads your repo, finds the deprecated call, and opens a PR.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="https://onout.org/vibers/simple-review-wordpress/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I roll back from WordPress 6.9 to 6.8?</div>
+      <div class="faq-a">Install the <a href="https://wordpress.org/plugins/wp-downgrade/">WP Downgrade</a> plugin, set Target Version to <code>6.8.2</code>, then re-install via Dashboard → Updates. Or, manually replace <code>wp-admin</code> + <code>wp-includes</code> folders over FTP from the 6.8.2 zip — leave <code>wp-content</code> and <code>wp-config.php</code> untouched.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why did WordPress 6.9 break Slider Revolution?</div>
+      <div class="faq-a">Older Slider Revolution builds (before 6.6) call PHP's <code>create_function()</code>, which was deprecated in 7.2 and the WP polyfill was finally removed in 6.9. Update Slider Revolution to the latest version (preferred) or replace the call with an anonymous function manually.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">WP 6.9 broke Elementor — what's the fastest fix?</div>
+      <div class="faq-a">Update Elementor to the latest 3.x release; the Elementor team typically ships a compatibility patch within 48 hours of a WordPress major. If wp-admin is unreachable, deactivate Elementor over FTP first (rename its plugin folder), then update.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How can I see exactly which function or plugin broke?</div>
+      <div class="faq-a">Enable <code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> in <code>wp-config.php</code>, reload the page, then read <code>wp-content/debug.log</code>. The exact file, line, and function name appear there — it's the same info hidden behind the generic "critical error" page.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I prevent the next major WordPress update from breaking my site?</div>
+      <div class="faq-a">Use a staging environment first, disable major-core auto-updates (<code>define( 'WP_AUTO_UPDATE_CORE', 'minor' );</code>), and subscribe to the WP Core Field Guide on <a href="https://make.wordpress.org/core/">make.wordpress.org/core/</a> for breaking-change pre-announcements.</div>
+    </div>
+
+    <h2>Related WordPress Fixes</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/critical-error-on-this-website/">"Critical Error on This Website"</a>
+          <p>The generic WP fatal-error screen — 6 ways to recover, including reading the debug.log.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/wordpress/disable-comments-wordpress/">Disable WordPress Comments</a>
+          <p>Stop comment spam — Discussion settings, Bulk Edit, functions.php filter, plugin.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/wordpress/remove-powered-by-astra/">Remove "Powered by Astra"</a>
+          <p>Three ways to remove the Astra footer credit — snippet, Pro toggle, why CSS hide doesn't work.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://make.wordpress.org/core/">make.wordpress.org/core/ — Core Field Guides per release</a></li>
+      <li><a href="https://wordpress.org/plugins/wp-downgrade/">wordpress.org — WP Downgrade plugin</a></li>
+      <li><a href="https://wordpress.org/download/releases/">wordpress.org — Release archive (older versions)</a></li>
+      <li><a href="https://wordpress.org/plugins/php-compatibility-checker/">wordpress.org — PHP Compatibility Checker plugin</a></li>
+      <li><a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">wordpress.org — Debugging in WordPress (WP_DEBUG_LOG)</a></li>
+      <li><a href="https://wordpress.org/plugins/classic-widgets/">wordpress.org — Classic Widgets fallback plugin</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  var audio = new Audio('vo.mp3');
+  audio.loop = false;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+    audio.currentTime = 0;
+    audio.play().catch(function(){});
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>
