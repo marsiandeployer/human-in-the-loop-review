@@ -140,7 +140,7 @@
     .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
     .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
 
-    /* ─────── Astra Footer Banner (28s cycle) ─────── */
+    /* ─────── Astra Footer Banner (30s cycle) ─────── */
     .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
     .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
     .sc-dots{display:flex;gap:5px}
@@ -150,7 +150,8 @@
     .sc-dots span:nth-child(3){background:#28c840}
     .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
     .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
-    @keyframes extPulse{0%,4%{box-shadow:0 0 0 0 rgba(255,107,53,.8)}2%{box-shadow:0 0 0 6px rgba(255,107,53,0)}6%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0)}}
+    /* Pulse на иконке когда курсор добирается до неё (~11-13%) */
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
     .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
     /* WP Admin Bar */
     .sc-adminbar{background:#1d2327;height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:9px;color:#c3c4c7;flex-shrink:0;box-sizing:border-box;border-bottom:1px solid #2c3338}
@@ -172,51 +173,49 @@
     .sc-page-line{height:7px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
     .sc-page-line.short{width:70%}
     .sc-page-line.med{width:85%}
-    /* Astra footer — the TARGET element */
+    /* Astra footer — TARGET: оранжевая рамка после клика курсора (22%) */
     .sc-astra-footer{background:#f9f9f9;border-top:1px solid #e5e5e5;padding:10px 16px;font-size:9px;color:#666;text-align:center;flex-shrink:0;position:relative;animation:footerSel 28s infinite;outline-offset:2px}
-    @keyframes footerSel{
-      0%,19%{outline:none;box-shadow:none}
-      20%,92%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}
-      95%,100%{outline:none;box-shadow:none}
-    }
+    @keyframes footerSel{0%,21%{outline:none;box-shadow:none}23%,93%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}96%,100%{outline:none;box-shadow:none}}
     .sc-astra-footer::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
-    @keyframes selBadge{0%,19%{opacity:0}20%,92%{opacity:1}95%,100%{opacity:0}}
+    @keyframes selBadge{0%,21%{opacity:0}23%,93%{opacity:1}96%,100%{opacity:0}}
+    /* Копирайт просто исчезает в конце — никакого зачёркивания */
     .sc-footer-brand{animation:footerTextHide 28s infinite}
-    @keyframes footerTextHide{0%,84%{opacity:1}87%,95%{opacity:0;text-decoration:line-through}98%,100%{opacity:1}}
+    @keyframes footerTextHide{0%,87%{opacity:1}90%,93%{opacity:0}96%,100%{opacity:1}}
     .sc-footer-clean{color:#aaa;font-style:italic;opacity:0;animation:footerTextShow 28s infinite}
-    @keyframes footerTextShow{0%,84%{opacity:0}87%,95%{opacity:1}98%,100%{opacity:0}}
+    @keyframes footerTextShow{0%,87%{opacity:0}90%,93%{opacity:1}96%,100%{opacity:0}}
     /* Sidebar */
     .sc-sidebar{width:200px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:relative}
+    /* Оверлей исчезает после клика по ext icon (~13%) */
     .sc-sidebar::before{content:'';position:absolute;inset:0;background:#fafafa;animation:sbReveal 28s infinite}
-    @keyframes sbReveal{0%,4%{opacity:1}6%,95%{opacity:0}98%,100%{opacity:1}}
+    @keyframes sbReveal{0%,11%{opacity:1}14%,93%{opacity:0}96%,100%{opacity:1}}
     .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
     .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
     .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
-    @keyframes sbHintFade{0%,18%{opacity:1}22%,100%{opacity:0}}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
     .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
     .sc-sb-c1{animation:sbC1 28s infinite}
     .sc-sb-c2{animation:sbC2 28s infinite}
     .sc-sb-c3{animation:sbC3 28s infinite}
-    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
-    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
-    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
     .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
     .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
     .sc-sb-k{color:#666}
     .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700}
     .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
-    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,95%{opacity:1;transform:translateY(0)}98%,100%{opacity:0}}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
     .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
     .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
-    /* Popup right of footer */
+    /* Popup */
     .sc-popup{position:absolute;right:210px;bottom:40px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
-    @keyframes popupShow{0%,19%{opacity:0;transform:translateX(6px)}20%,92%{opacity:1;transform:translateX(0)}96%,100%{opacity:0}}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,93%{opacity:1;transform:translateX(0)}96%,100%{opacity:0}}
     .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
     .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
     .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
     .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
     .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
-    @keyframes typeText{0%,20%{max-width:0}30%,92%{max-width:190px}96%,100%{max-width:0}}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
     .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
     @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
     .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
@@ -226,32 +225,31 @@
     .sc-fdn{animation:fxDone 28s infinite}
     @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
     @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
-    @keyframes fxDone{0%,63%{opacity:0}66%,92%{opacity:1}96%,100%{opacity:0}}
-    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .10s linear infinite}
+    @keyframes fxDone{0%,63%{opacity:0}66%,93%{opacity:1}96%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
     @keyframes fxSpinRot{to{transform:rotate(360deg)}}
-    /* Cursor */
+    /* Cursor: стартует в ЦЕНТРЕ баннера, потом → ext icon → footer → popup → Fix it → sidebar */
     .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
     .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
     .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
     .sc-cross{animation:crossVis 28s infinite}
     .sc-arrow{animation:arrowVis 28s infinite}
     @keyframes crossVis{0%,100%{opacity:0}}
-    @keyframes arrowVis{0%,95%{opacity:1}97%,100%{opacity:0}}
-    /* 3 clicks: ext icon → footer text → popup textarea → Fix it → sidebar */
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
     @keyframes scCur{
-      0%   {left:692px;top:23px;opacity:0}
-      2%   {left:692px;top:23px;opacity:1}
-      5%   {left:692px;top:23px;opacity:1}
-      15%  {left:260px;top:430px;opacity:1}
+      0%   {left:360px;top:240px;opacity:0}
+      2%   {left:360px;top:240px;opacity:1}
+      10%  {left:692px;top:23px;opacity:1}
+      14%  {left:692px;top:23px;opacity:1}
       20%  {left:260px;top:430px;opacity:1}
-      23%  {left:205px;top:350px;opacity:1}
+      22%  {left:260px;top:430px;opacity:1}
+      26%  {left:205px;top:350px;opacity:1}
       47%  {left:205px;top:350px;opacity:1}
-      48%  {left:205px;top:387px;opacity:1}
-      55%  {left:205px;top:387px;opacity:1}
-      72%  {left:618px;top:220px;opacity:1}
-      92%  {left:618px;top:220px;opacity:1}
-      96%  {opacity:0}
-      100% {opacity:0}
+      49%  {left:205px;top:387px;opacity:1}
+      58%  {left:205px;top:387px;opacity:1}
+      74%  {left:618px;top:220px;opacity:1}
+      93%  {left:618px;top:220px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
     }
     .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
     .sc-caption strong{color:#FF6B35}
@@ -286,12 +284,12 @@
 
     <p class="article-lead">The "Powered by Astra | Proudly powered by WordPress" line in your footer makes every page look like a template, not a finished product. Here are the three methods that actually work — from the one-click Astra Pro toggle to a free three-line snippet you can add right now.</p>
 
-    <!-- Video banner (recorded from CSS animation) -->
-    <video src="banner.mp4" width="100%" style="border-radius:12px;margin-bottom:32px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline
+    <!-- Video banner (recorded from CSS animation). After upload to YouTube replace with embed. -->
+    <video src="banner_voiced.mp4" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
       onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
     </video>
-    <!-- CSS animation fallback -->
-    <div id="sc-banner-fallback" style="display:none" class="sc-banner" aria-label="Animated demo: SimpleReview selects the Astra footer branding and removes it">
+    <!-- Live CSS animation (red/orange SimpleReview branding) — always visible below video -->
+    <div id="sc-banner-fallback" style="margin-top:16px" class="sc-banner" aria-label="Animated demo: SimpleReview selects the Astra footer branding and removes it">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com/about/</div>
@@ -519,5 +517,47 @@ add_filter( 'astra_footer_copyright_credits', function( $credit ) {
     <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
   </footer>
 </div>
+
+<script>
+// Restart CSS animations + play voiceover when banner enters viewport
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  // Create audio element for voiceover
+  var audio = new Audio('vo.mp3');
+  audio.loop = false;
+
+  function restartAll(){
+    // Restart CSS animations
+    var els = Array.prototype.slice.call(banner.querySelectorAll('*'));
+    els.push(banner);
+    els.forEach(function(el){
+      var cs = window.getComputedStyle(el);
+      if(cs.animationName && cs.animationName !== 'none'){
+        el.style.animationName = 'none';
+        void el.offsetWidth;
+        el.style.animationName = '';
+      }
+    });
+    // Restart voiceover
+    audio.currentTime = 0;
+    audio.play().catch(function(){});
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        // Re-arm after one full cycle (28s)
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
 </body>
 </html>
