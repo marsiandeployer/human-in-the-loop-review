@@ -183,10 +183,9 @@
     @keyframes footerTextHide{0%,87%{opacity:1}90%,93%{opacity:0}96%,100%{opacity:1}}
     .sc-footer-clean{color:#aaa;font-style:italic;opacity:0;animation:footerTextShow 28s infinite}
     @keyframes footerTextShow{0%,87%{opacity:0}90%,93%{opacity:1}96%,100%{opacity:0}}
-    /* Sidebar */
+    /* Sidebar — виден всегда в layout, но ::before перекрывает содержимое до клика на ext icon */
     .sc-sidebar{width:200px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:relative}
-    /* Оверлей исчезает после клика по ext icon (~13%) */
-    .sc-sidebar::before{content:'';position:absolute;inset:0;background:#fafafa;animation:sbReveal 28s infinite}
+    .sc-sidebar::before{content:'';position:absolute;inset:0;background:#f7f7f7;z-index:1;animation:sbReveal 28s infinite;pointer-events:none}
     @keyframes sbReveal{0%,11%{opacity:1}14%,93%{opacity:0}96%,100%{opacity:1}}
     .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
     .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
@@ -285,7 +284,7 @@
     <p class="article-lead">The "Powered by Astra | Proudly powered by WordPress" line in your footer makes every page look like a template, not a finished product. Here are the three methods that actually work — from the one-click Astra Pro toggle to a free three-line snippet you can add right now.</p>
 
     <!-- Video banner (recorded from CSS animation). After upload to YouTube replace with embed. -->
-    <video src="banner_voiced.mp4?v=2" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
+    <video src="banner_voiced.mp4?v=3" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
       onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
     </video>
     <!-- Live CSS animation (red/orange SimpleReview branding) — always visible below video -->
@@ -525,21 +524,18 @@ add_filter( 'astra_footer_copyright_credits', function( $credit ) {
   if(!banner) return;
 
   // Create audio element for voiceover
-  var audio = new Audio('vo.mp3?v=2');
+  var audio = new Audio('vo.mp3?v=3');
   audio.loop = false;
 
   function restartAll(){
-    // Restart CSS animations
-    var els = Array.prototype.slice.call(banner.querySelectorAll('*'));
-    els.push(banner);
-    els.forEach(function(el){
-      var cs = window.getComputedStyle(el);
-      if(cs.animationName && cs.animationName !== 'none'){
-        el.style.animationName = 'none';
-        void el.offsetWidth;
-        el.style.animationName = '';
-      }
-    });
+    // CSS class reset — covers ::before/::after (critical for sbReveal)
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
     // Restart voiceover
     audio.currentTime = 0;
     audio.play().catch(function(){});
