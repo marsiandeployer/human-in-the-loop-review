@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>How to Remove "Powered by Astra" from WordPress Footer (2026) — No Plugin Needed</title>
-  <meta name="description" content="Remove the 'Powered by Astra' and 'Proudly powered by WordPress' credits from your WordPress footer. 3 methods: Astra settings, code snippet, CSS. Works on free and Pro versions.">
-  <link rel="canonical" href="https://onout.org/vibers/wordpress/remove-powered-by-astra/">
+  <title>How to Disable Comments in WordPress (2026) — 4 Methods Without a Plugin</title>
+  <meta name="description" content="Disable comments in WordPress site-wide or per post type. 4 methods: Discussion settings, bulk edit, functions.php snippet, plugin. Includes spam-proof code.">
+  <link rel="canonical" href="https://onout.org/vibers/wordpress/disable-comments-wordpress/">
   <link rel="icon" type="image/x-icon" href="../../favicon.ico">
   <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="How to Remove 'Powered by Astra' from WordPress Footer (2026)">
-  <meta property="og:description" content="3 methods to remove 'Powered by Astra' and WordPress footer credits. Free code snippets + step-by-step settings guide.">
-  <meta property="og:url" content="https://onout.org/vibers/wordpress/remove-powered-by-astra/">
+  <meta property="og:title" content="How to Disable Comments in WordPress (2026)">
+  <meta property="og:description" content="4 ways to disable WordPress comments — site-wide or per post. Free code snippet included.">
+  <meta property="og:url" content="https://onout.org/vibers/wordpress/disable-comments-wordpress/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
-  <meta name="keywords" content="remove powered by astra, wordpress remove powered by astra wordpress theme, how to remove powered by astra, astra theme remove footer credit, remove astra branding, astra footer remove, proudly powered by wordpress remove, astra remove footer text, remove powered by astra free">
+  <meta name="keywords" content="disable comments wordpress, wordpress disable comments, turn off comments wordpress, wordpress deactivate comments, disable comments in wordpress, how to disable comments on wordpress, how to disable comments in wordpress, wordpress remove comments, how to remove comments wordpress, disable comments plugin wordpress, wordpress turn off comments, wordpress stop comments">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,9 +26,9 @@
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "How to Remove 'Powered by Astra' from WordPress Footer (2026)",
-    "description": "Step-by-step guide to removing the Powered by Astra and Proudly powered by WordPress footer credits using theme settings, a functions.php snippet, or CSS.",
-    "url": "https://onout.org/vibers/wordpress/remove-powered-by-astra/",
+    "headline": "How to Disable Comments in WordPress (2026) — 4 Methods Without a Plugin",
+    "description": "Step-by-step guide to disabling WordPress comments site-wide, per post type, or per post — using Discussion settings, bulk edit, a functions.php snippet, or the Disable Comments plugin.",
+    "url": "https://onout.org/vibers/wordpress/disable-comments-wordpress/",
     "datePublished": "2026-04-24",
     "dateModified": "2026-04-24",
     "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
@@ -38,8 +38,8 @@
       "url": "https://onout.org/vibers/",
       "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
     },
-    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/wordpress/remove-powered-by-astra/" },
-    "keywords": ["remove powered by astra", "astra theme footer credit", "wordpress remove footer branding", "astra free footer remove"]
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/wordpress/disable-comments-wordpress/" },
+    "keywords": ["disable comments wordpress", "wordpress disable comments", "turn off comments wordpress", "wordpress remove comments", "disable comments plugin wordpress"]
   }
   </script>
 
@@ -50,28 +50,28 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Can I remove 'Powered by Astra' for free?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Yes. The free method is a three-line functions.php snippet that hooks into astra_footer_copyright_credits and returns an empty string. Astra Pro has a GUI toggle under Appearance → Astra → Footer → Copyright → Remove 'Powered by Astra', but the code method works on both free and Pro without buying anything."}
+        "name": "How do I disable comments on all posts in WordPress at once?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Two options. (1) Posts → All Posts → check the top checkbox to select all → Bulk actions → Edit → Apply → set Comments to 'Do not allow' → Update. This affects all visible posts on the screen — increase 'Screen Options' per-page count first to cover everything in one pass. (2) Faster: WP-CLI command wp post update $(wp post list --post_type=post --format=ids) --comment_status=closed runs across the entire site in one shot."}
       },
       {
         "@type": "Question",
-        "name": "Does removing footer credit break Astra or WordPress?",
-        "acceptedAnswer": {"@type": "Answer", "text": "No. Removing the credit text is fully supported and does not affect functionality, licensing, or updates. Astra's license is GPL, which permits redistribution and modification including removing attribution. Many Astra documentation pages describe how to do it."}
+        "name": "What's the difference between disabling comments and closing comments?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Closing comments stops new comments but keeps the existing ones visible. Disabling comments hides the entire comment section, including past comments and the reply form. Discussion → Settings → 'Automatically close comments on posts older than X days' is the close behavior. To fully disable, you also need to remove existing comments via the Comments admin screen or filter them out with a comments_array filter."}
       },
       {
         "@type": "Question",
-        "name": "What is the difference between 'Powered by Astra' and 'Proudly powered by WordPress'?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Powered by Astra is added by the Astra theme via the astra_footer_copyright_credits filter. Proudly powered by WordPress is a WordPress core footer text added via the WordPress core itself and removable via the same Astra settings or by removing the get_bloginfo('name') credit in your theme's footer.php. Both can be cleared with a single snippet or the Astra Pro toggle."}
+        "name": "Why are comments still showing after I disabled them in Discussion settings?",
+        "acceptedAnswer": {"@type": "Answer", "text": "The Discussion → Settings → 'Allow people to submit comments on new posts' toggle only affects posts created after the change — existing posts keep their original setting. Use Bulk Edit on Posts → All Posts to update existing posts, or use a comments_open filter that returns false unconditionally to override every post regardless of its saved meta."}
       },
       {
         "@type": "Question",
-        "name": "Why does removing the credit with CSS still show it in page source?",
-        "acceptedAnswer": {"@type": "Answer", "text": "CSS only hides the element visually — the HTML and text remain in the page source and are indexed by search engines. Use a functions.php filter or the Astra Pro setting to actually remove the credit from the DOM, not just hide it from view."}
+        "name": "Can I disable comments only for pages but keep them on blog posts?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes — use a comments_open filter that returns false only when get_post_type() === 'page'. Or use the Disable Comments plugin which has a 'On certain post types' option in its settings. The functions.php approach is cleaner and avoids loading another plugin."}
       },
       {
         "@type": "Question",
-        "name": "I added a custom snippet and now my footer is broken. How do I fix it?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Open your site via SFTP or hosting file manager, find wp-content/themes/your-child-theme/functions.php, and remove or comment out the snippet you added. If you cannot access files, use the WordPress theme file editor (Appearance → Theme File Editor) from another browser or device to revert the change."}
+        "name": "Will disabling comments hurt my SEO?",
+        "acceptedAnswer": {"@type": "Answer", "text": "No direct ranking penalty. Comments can add user-generated content that helps long-tail SEO, but they also attract spam, slow page load (Gravatar requests, JS), and add noise. If your comments are mostly spam or empty, disabling them improves Core Web Vitals and reduces moderation work without hurting rankings."}
       }
     ]
   }
@@ -140,7 +140,7 @@
     .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
     .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
 
-    /* ─────── Astra Footer Banner (30s cycle) ─────── */
+    /* ─────── Disable Comments Banner (28s cycle) ─────── */
     .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
     .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
     .sc-dots{display:flex;gap:5px}
@@ -150,40 +150,45 @@
     .sc-dots span:nth-child(3){background:#28c840}
     .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
     .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
-    /* Pulse на иконке когда курсор добирается до неё (~11-13%) */
     @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
     .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
-    /* WP Admin Bar */
     .sc-adminbar{background:#1d2327;height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:9px;color:#c3c4c7;flex-shrink:0;box-sizing:border-box;border-bottom:1px solid #2c3338}
     .sc-ab-left,.sc-ab-right{display:flex;align-items:center;gap:5px}
     .sc-ab-wp{color:#fff;font-size:12px;font-weight:900;letter-spacing:-1px;opacity:.9;padding:0 2px}
     .sc-ab-site{color:#fff;font-weight:600}
     .sc-ab-item{color:#c3c4c7;white-space:nowrap}
     .sc-ab-cnt{background:#d63638;color:#fff;font-size:7px;padding:1px 3px;border-radius:8px;font-weight:700;min-width:12px;text-align:center;display:inline-block}
-    /* Astra site header */
     .sc-astra-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
     .sc-astra-logo{font-size:12px;font-weight:700;color:#1a1a1a}
     .sc-astra-nav{display:flex;gap:12px}
     .sc-astra-nav span{font-size:9px;color:#555}
-    /* Main content area */
     .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden}
     .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
-    .sc-page-content{flex:1;padding:12px 16px;background:#fafafa}
-    .sc-page-h{font-size:12px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
-    .sc-page-line{height:7px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-page-content{flex:1;padding:10px 16px 6px;background:#fafafa}
+    .sc-page-h{font-size:12px;font-weight:700;color:#1a1a1a;margin-bottom:4px}
+    .sc-page-line{height:5px;background:#e0e0e0;border-radius:2px;margin-bottom:4px}
     .sc-page-line.short{width:70%}
     .sc-page-line.med{width:85%}
-    /* Astra footer — TARGET: оранжевая рамка после клика курсора (22%) */
-    .sc-astra-footer{background:#f9f9f9;border-top:1px solid #e5e5e5;padding:10px 16px;font-size:9px;color:#666;text-align:center;flex-shrink:0;position:relative;animation:footerSel 28s infinite;outline-offset:2px}
-    @keyframes footerSel{0%,21%{outline:none;box-shadow:none}23%,93%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}96%,100%{outline:none;box-shadow:none}}
-    .sc-astra-footer::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    /* Comments section — TARGET */
+    .sc-comments{background:#fff;border-top:1px solid #e5e5e5;padding:8px 16px 10px;flex-shrink:0;position:relative;animation:cmSel 28s infinite;outline-offset:2px}
+    @keyframes cmSel{0%,21%{outline:none;box-shadow:none}23%,93%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}96%,100%{outline:none;box-shadow:none}}
+    .sc-comments::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
     @keyframes selBadge{0%,21%{opacity:0}23%,93%{opacity:1}96%,100%{opacity:0}}
-    /* Копирайт просто исчезает в конце — никакого зачёркивания */
-    .sc-footer-brand{animation:footerTextHide 28s infinite}
-    @keyframes footerTextHide{0%,87%{opacity:1}90%,99%{opacity:0}100%{opacity:1}}
-    .sc-footer-clean{color:#aaa;font-style:italic;opacity:0;animation:footerTextShow 28s infinite;position:absolute;left:0;right:0;text-align:center}
-    @keyframes footerTextShow{0%,87%{opacity:0}90%,99%{opacity:1}100%{opacity:0}}
-    /* Sidebar — extension overlay поверх контента, слайдится справа */
+    .sc-cm-block{animation:cmHide 28s infinite}
+    @keyframes cmHide{0%,87%{opacity:1}90%,99%{opacity:0}100%{opacity:1}}
+    .sc-cm-h{font-size:10px;font-weight:700;color:#222;margin-bottom:4px}
+    .sc-cm-item{display:flex;gap:6px;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:9px;color:#444}
+    .sc-cm-av{width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#5b44e8);flex-shrink:0}
+    .sc-cm-body{flex:1;line-height:1.3}
+    .sc-cm-name{font-weight:700;color:#222;font-size:9px}
+    .sc-cm-form{margin-top:5px;padding-top:5px;border-top:1px dashed #ddd}
+    .sc-cm-flabel{font-size:9px;font-weight:700;color:#222;margin-bottom:3px}
+    .sc-cm-fta{height:24px;background:#fafafa;border:1px solid #ddd;border-radius:3px}
+    .sc-cm-closed{color:#15803d;font-style:italic;opacity:0;font-size:11px;text-align:center;animation:cmClosedShow 28s infinite;position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);padding:8px}
+    @keyframes cmClosedShow{0%,87%{opacity:0}90%,99%{opacity:1}100%{opacity:0}}
+    /* Footer */
+    .sc-astra-footer{background:#f9f9f9;border-top:1px solid #e5e5e5;padding:6px 16px;font-size:9px;color:#666;text-align:center;flex-shrink:0}
+    /* Sidebar */
     .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
     @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
     .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
@@ -226,7 +231,6 @@
     @keyframes fxDone{0%,63%{opacity:0}66%,93%{opacity:1}96%,100%{opacity:0}}
     .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
     @keyframes fxSpinRot{to{transform:rotate(360deg)}}
-    /* Cursor: стартует в ЦЕНТРЕ баннера, потом → ext icon → footer → popup → Fix it → sidebar */
     .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
     .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
     .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
@@ -234,17 +238,18 @@
     .sc-arrow{animation:arrowVis 28s infinite}
     @keyframes crossVis{0%,100%{opacity:0}}
     @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    /* Cursor coords — placeholders, replaced after CDP measurement */
     @keyframes scCur{
       0%   {left:360px;top:223px;opacity:0}
       2%   {left:360px;top:223px;opacity:1}
       10%  {left:698px;top:23px;opacity:1}
       14%  {left:698px;top:23px;opacity:1}
-      20%  {left:360px;top:389px;opacity:1}
-      22%  {left:360px;top:389px;opacity:1}
-      26%  {left:211px;top:311px;opacity:1}
-      47%  {left:211px;top:311px;opacity:1}
-      49%  {left:211px;top:344px;opacity:1}
-      58%  {left:211px;top:344px;opacity:1}
+      20%  {left:360px;top:311px;opacity:1}
+      22%  {left:360px;top:311px;opacity:1}
+      26%  {left:205px;top:283px;opacity:1}
+      47%  {left:205px;top:283px;opacity:1}
+      49%  {left:205px;top:316px;opacity:1}
+      58%  {left:205px;top:316px;opacity:1}
       74%  {left:621px;top:208px;opacity:1}
       93%  {left:621px;top:208px;opacity:1}
       96%  {opacity:0} 100%{opacity:0}
@@ -273,66 +278,74 @@
 
   <article>
     <div class="article-meta">
-      <span>WordPress / Astra</span>
+      <span>WordPress / Discussion</span>
       <span>April 24, 2026</span>
-      <span>7 min read</span>
+      <span>8 min read</span>
     </div>
 
-    <h1>How to Remove "Powered by Astra" from WordPress Footer (2026) — No Plugin Needed</h1>
+    <h1>How to Disable Comments in WordPress (2026) — 4 Methods Without a Plugin</h1>
 
-    <p class="article-lead">The "Powered by Astra | Proudly powered by WordPress" line in your footer makes every page look like a template, not a finished product. Here are the three methods that actually work — from the one-click Astra Pro toggle to a free three-line snippet you can add right now.</p>
+    <p class="article-lead">WordPress comments attract more spam than conversation, slow down page load with Gravatar requests, and clutter pages where you never wanted them in the first place. Here are the four methods that actually disable them — site-wide, per post type, or per post — including the one-line filter that overrides everything else.</p>
 
     <!-- Video banner (recorded from CSS animation). After upload to YouTube replace with embed. -->
-    <video src="banner_voiced_v3.mp4" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
+    <video src="banner_voiced.mp4" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
       onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
     </video>
-    <!-- Live CSS animation (red/orange SimpleReview branding) — always visible below video -->
-    <div id="sc-banner-fallback" style="margin-top:16px" class="sc-banner" aria-label="Animated demo: SimpleReview selects the Astra footer branding and removes it">
+    <div id="sc-banner-fallback" style="margin-top:16px" class="sc-banner" aria-label="Animated demo: SimpleReview selects the WordPress comments section and disables it">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
-        <div class="sc-url">mysite.com/about/</div>
+        <div class="sc-url">mysite.com/blog/hello-world/</div>
         <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
       </div>
       <div class="sc-viewport">
-        <!-- WP Admin Bar -->
         <div class="sc-adminbar">
           <div class="sc-ab-left">
             <span class="sc-ab-wp">W</span>
             <span class="sc-ab-site">My WP Site</span>
-            <span class="sc-ab-item">Edit site</span>
-            <span class="sc-ab-cnt">2</span>
+            <span class="sc-ab-item">Edit Post</span>
+            <span class="sc-ab-cnt">12</span>
             <span class="sc-ab-item">🔍 AI Review</span>
           </div>
           <div class="sc-ab-right">
             <span class="sc-ab-item">Howdy, admin</span>
           </div>
         </div>
-        <!-- Astra site header -->
         <div class="sc-astra-header">
-          <div class="sc-astra-logo">My Business</div>
+          <div class="sc-astra-logo">My Blog</div>
           <div class="sc-astra-nav">
-            <span>Home</span><span>About</span><span>Services</span><span>Contact</span>
+            <span>Home</span><span>Blog</span><span>About</span><span>Contact</span>
           </div>
         </div>
         <div class="sc-content-row">
           <div class="sc-site">
-            <!-- Page content -->
             <div class="sc-page-content">
-              <div class="sc-page-h">About Us</div>
+              <div class="sc-page-h">Hello World — My First Post</div>
               <div class="sc-page-line"></div>
               <div class="sc-page-line med"></div>
               <div class="sc-page-line short"></div>
-              <div class="sc-page-line"></div>
-              <div class="sc-page-line med"></div>
             </div>
-            <!-- Astra Footer — TARGET element -->
-            <div class="sc-astra-footer">
-              <span class="sc-footer-brand">Powered by Astra | Proudly powered by WordPress</span>
-              <span class="sc-footer-clean">© 2026 My Business. All rights reserved.</span>
-              <!-- Popup appears to the LEFT of sidebar, above footer -->
+            <!-- Comments section — TARGET -->
+            <div class="sc-comments">
+              <div class="sc-cm-block">
+                <div class="sc-cm-h">12 Comments</div>
+                <div class="sc-cm-item">
+                  <span class="sc-cm-av"></span>
+                  <div class="sc-cm-body"><span class="sc-cm-name">cheap_meds_bot</span> Buy v1agra cheap online click here…</div>
+                </div>
+                <div class="sc-cm-item">
+                  <span class="sc-cm-av"></span>
+                  <div class="sc-cm-body"><span class="sc-cm-name">seo_link_farm</span> Great post! Visit my casino site…</div>
+                </div>
+                <div class="sc-cm-form">
+                  <div class="sc-cm-flabel">Leave a Reply</div>
+                  <div class="sc-cm-fta"></div>
+                </div>
+              </div>
+              <div class="sc-cm-closed">✓ Comments are closed.</div>
+              <!-- Popup -->
               <div class="sc-popup">
                 <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
-                <div class="sc-popup-ta"><span class="sc-ta-inner">Remove Astra branding from footer</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">Disable comments site-wide</span><span class="sc-blink">|</span></div>
                 <div class="sc-popup-fix">
                   <span class="sc-fxt">Fix it</span>
                   <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
@@ -340,34 +353,33 @@
                 </div>
               </div>
             </div>
+            <div class="sc-astra-footer">© 2026 My Blog</div>
           </div>
-          <!-- Sidebar -->
           <div class="sc-sidebar">
             <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
             <div class="sc-sb-hint">waiting for selection…</div>
             <div class="sc-sb-card sc-sb-c1">
               <div class="sc-sb-hdr">Element detected</div>
-              <div class="sc-sb-kv"><span class="sc-sb-k">Hook</span><span class="sc-sb-v">astra_credits</span></div>
-              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">footer.php</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Hook</span><span class="sc-sb-v">comments_open</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">functions.php</span></div>
             </div>
             <div class="sc-sb-card sc-sb-c2">
               <div class="sc-sb-hdr">Fix plan</div>
-              <div style="font-size:9px;color:#333;line-height:1.4">Remove <code style="font-size:8px">astra_footer_copyright_credits</code> via functions.php filter</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Add <code style="font-size:8px">comments_open</code> filter returning <code style="font-size:8px">false</code> for all post types</div>
             </div>
             <div class="sc-sb-card sc-sb-c3">
               <div class="sc-sb-hdr">Result</div>
-              <div style="font-size:9px;color:#166534;line-height:1.4">Footer credit removed. Custom copyright text added.</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Comments disabled site-wide. Existing spam hidden.</div>
             </div>
             <div class="sc-pr">
               <div class="sc-pr-title">✓ Auto-deployed</div>
-              <div class="sc-pr-meta">fix: remove Astra footer credit<br>functions.php +3 lines</div>
+              <div class="sc-pr-meta">fix: disable WP comments site-wide<br>functions.php +4 lines</div>
             </div>
           </div>
-        </div><!-- sc-content-row -->
-      </div><!-- sc-viewport -->
+        </div>
+      </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click SimpleReview → select the Astra footer → <strong>Fix it</strong> → credit removed</div>
-      <!-- Cursor -->
+      <div class="sc-caption">Click SimpleReview → select the comments section → <strong>Fix it</strong> → comments disabled</div>
       <div class="sc-cursor">
         <span class="sc-cross"><svg viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
@@ -381,86 +393,131 @@
     </div>
 
     <div class="ext-callout">
-      Added a custom footer snippet from a tutorial and it broke something? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reviews your WordPress repo and sends a PR that removes the branding cleanly, without breaking your theme.
+      Already drowning in spam comments? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads your theme, picks the safest disable method for your setup, and sends a PR — no Discussion settings hunt, no broken pages.
     </div>
 
     <div class="key-takeaways">
       <h3>Key Takeaways</h3>
       <ul>
-        <li>"Powered by Astra" is added by the Astra theme via the <code>astra_footer_copyright_credits</code> filter — remove it with a three-line functions.php snippet, free.</li>
-        <li>Astra Pro has a GUI toggle: Appearance → Astra → Footer → Copyright → uncheck "Powered by Astra".</li>
-        <li>CSS tricks (<code>display:none</code>) hide the text visually but leave it in the HTML source — search engines still read it.</li>
-        <li>"Proudly powered by WordPress" is a separate string removable via the same Astra setting or a second filter.</li>
-        <li>Always edit a <strong>child theme</strong> — changes to the parent theme's footer.php are wiped on every Astra update.</li>
+        <li><strong>Discussion → Settings</strong> only affects new posts — existing posts keep their original setting.</li>
+        <li>To disable comments on all existing posts: <strong>Bulk Edit</strong> in Posts → All Posts, or one WP-CLI command.</li>
+        <li>The most reliable method is a <code>comments_open</code> filter that returns <code>false</code> — overrides every per-post setting.</li>
+        <li>The popular <strong>Disable Comments</strong> plugin (by WPDeveloper, 2M+ installs) does all of this through a UI, including removing the comments admin menu.</li>
+        <li>CSS hide tricks leave the comment markup in the HTML source — search engines and screen readers still see it. Use a real filter instead.</li>
       </ul>
     </div>
 
-    <h2>Method 1: Free Code Snippet (Works on Astra Free &amp; Pro)</h2>
+    <h2>Method 1: Discussion Settings (New Posts Only)</h2>
 
-    <p>Add this to your child theme's <code>functions.php</code> or use a code snippets plugin like <a href="https://wordpress.org/plugins/code-snippets/">Code Snippets</a>:</p>
-
-    <pre><code>// Remove "Powered by Astra" footer credit
-add_filter( 'astra_footer_copyright_credits', '__return_empty_string' );
-
-// Also remove "Proudly powered by WordPress" (optional)
-add_filter( 'astra_footer_copyright_credits', function( $credit ) {
-    return '&copy; ' . date('Y') . ' ' . get_bloginfo('name') . '. All rights reserved.';
-} );</code></pre>
-
-    <p>The first line removes the credit entirely. The second replaces it with your own copyright notice — pick one or the other.</p>
-
-    <div class="warn-box">
-      <strong>Never edit Astra's parent theme files directly.</strong> Astra updates overwrite <code>footer.php</code> on every release. Use a child theme or a plugin for any customization.
-    </div>
-
-    <h2>Method 2: Astra Pro GUI Toggle</h2>
-
-    <p>If you have Astra Pro ($49/year), no code is needed:</p>
+    <p>The simplest way to stop comments on <em>future</em> posts:</p>
 
     <ol class="steps">
-      <li>Go to <strong>Appearance → Astra</strong> in your WordPress dashboard.</li>
-      <li>Open <strong>Footer → Footer Bar</strong>.</li>
-      <li>Find the Copyright section and delete or replace the <code>[copyright]</code>, <code>[current_year]</code>, <code>[site_title]</code>, <code>[theme_author]</code> shortcodes in the copyright text field.</li>
-      <li>Click <strong>Publish</strong>. The footer updates immediately — no cache clearing needed.</li>
+      <li>Go to <strong>Settings → Discussion</strong> in your WordPress dashboard.</li>
+      <li>Uncheck <strong>"Allow people to submit comments on new posts"</strong>.</li>
+      <li>Click <strong>Save Changes</strong>.</li>
     </ol>
 
-    <h2>Method 3: What Not to Do — CSS Hide</h2>
+    <div class="warn-box">
+      <strong>This only affects new posts.</strong> Every post created before you unchecked the box keeps its previous setting. You'll need Method 2 or 3 to disable comments on existing posts.
+    </div>
 
-    <p>Many tutorials suggest this:</p>
+    <h2>Method 2: Bulk Edit (Disable on All Existing Posts)</h2>
 
-    <pre><code>.ast-footer-copyright p {
-    display: none;
-}</code></pre>
+    <p>Use this to retroactively disable comments on posts you already published:</p>
 
-    <p>This hides the text visually but it still exists in the HTML source. Search engines index it, screen readers announce it, and copy-pasting the page includes it. Use Method 1 or 2 instead.</p>
+    <ol class="steps">
+      <li>Go to <strong>Posts → All Posts</strong>.</li>
+      <li>Click <strong>Screen Options</strong> (top right) → set <strong>Number of items per page</strong> to a number larger than your post count (e.g., 999).</li>
+      <li>Check the <strong>top checkbox</strong> in the table header to select every post.</li>
+      <li>From the <strong>Bulk actions</strong> dropdown, choose <strong>Edit</strong> → click <strong>Apply</strong>.</li>
+      <li>In the bulk edit panel, set <strong>Comments</strong> to <strong>Do not allow</strong> → click <strong>Update</strong>.</li>
+    </ol>
+
+    <p>Repeat for the <strong>Pages</strong> screen if you want to disable comments on pages too. For sites with thousands of posts, use WP-CLI instead:</p>
+
+    <pre><code># Disable comments on every post
+wp post update $(wp post list --post_type=post --format=ids) --comment_status=closed
+
+# Same for pages
+wp post update $(wp post list --post_type=page --format=ids) --comment_status=closed</code></pre>
+
+    <h2>Method 3: Code Snippet (The Definitive Fix)</h2>
+
+    <p>For total control, add this to your child theme's <code>functions.php</code> or to a <a href="https://wordpress.org/plugins/code-snippets/">Code Snippets</a> entry:</p>
+
+    <pre><code>// 1. Disable comments and pings on all post types, ignoring per-post settings
+add_filter( 'comments_open', '__return_false', 20, 2 );
+add_filter( 'pings_open',    '__return_false', 20, 2 );
+
+// 2. Hide existing comments from the front-end (return empty array)
+add_filter( 'comments_array', '__return_empty_array', 10, 2 );
+
+// 3. Remove the Comments admin menu item
+add_action( 'admin_menu', function() {
+    remove_menu_page( 'edit-comments.php' );
+} );
+
+// 4. Remove Comments from the admin bar
+add_action( 'wp_before_admin_bar_render', function() {
+    global $wp_admin_bar;
+    $wp_admin_bar-&gt;remove_menu( 'comments' );
+} );</code></pre>
+
+    <p>This four-block snippet covers every surface where comments appear: the front-end form, existing comment listings, the WP-Admin sidebar, and the top admin bar counter. Because <code>comments_open</code> is filtered with priority <code>20</code>, it overrides the per-post <em>Discussion</em> meta box and any plugin that sets it earlier.</p>
+
+    <div class="definition">
+      <strong>Why a filter beats Discussion settings:</strong> the Discussion setting writes a meta value to each post when it's created. A <code>comments_open</code> filter intercepts <em>every</em> call site-wide at runtime, so it works even on posts that were saved with comments allowed years ago.
+    </div>
+
+    <h2>Method 4: Disable Comments Plugin</h2>
+
+    <p>If you'd rather not edit code, the <a href="https://wordpress.org/plugins/disable-comments/">Disable Comments plugin by WPDeveloper</a> (2M+ active installs) does the same thing through a settings panel:</p>
+
+    <ol class="steps">
+      <li>Install <strong>Disable Comments</strong> from <strong>Plugins → Add New</strong>.</li>
+      <li>Go to <strong>Settings → Disable Comments</strong>.</li>
+      <li>Choose <strong>Everywhere</strong> to disable site-wide, or <strong>On certain post types</strong> to keep comments on, e.g., posts but not pages.</li>
+      <li>Click <strong>Save Changes</strong>. The plugin also offers a one-click <strong>Delete Comments</strong> tool to wipe existing spam from the database.</li>
+    </ol>
+
+    <p>The plugin is multisite-aware, has no settings page bloat, and unlike a code snippet it can be reverted by deactivating. For most non-developers, it's the right choice.</p>
+
+    <h2>What Not to Do — CSS Hide</h2>
+
+    <p>Tutorials sometimes suggest:</p>
+
+    <pre><code>#comments, #respond { display: none; }</code></pre>
+
+    <p>This hides the visual section but the comment HTML and form action still ship to the browser. Spambots scrape the markup and submit anyway, search engines index the spam, and screen readers announce it. Use Method 3 or 4 to remove it from the server-side render.</p>
 
     <h2>Method Comparison</h2>
 
     <div class="table-wrap">
       <table>
-        <tr><th>Method</th><th>Cost</th><th>Removes from DOM?</th><th>Survives updates?</th><th>Difficulty</th></tr>
-        <tr><td>functions.php filter (Method 1)</td><td>Free</td><td>✅ Yes</td><td>✅ Yes (child theme)</td><td>Low</td></tr>
-        <tr><td>Astra Pro toggle (Method 2)</td><td>$49/year</td><td>✅ Yes</td><td>✅ Yes</td><td>None</td></tr>
-        <tr><td>CSS hide (Method 3)</td><td>Free</td><td>❌ No — still in source</td><td>✅ Yes</td><td>None</td></tr>
-        <tr><td>Edit parent footer.php</td><td>Free</td><td>✅ Yes</td><td>❌ Lost on Astra update</td><td>Low</td></tr>
+        <tr><th>Method</th><th>Affects existing posts?</th><th>Removes admin menu?</th><th>Survives theme updates?</th><th>Best for</th></tr>
+        <tr><td>Discussion settings</td><td>❌ No</td><td>❌ No</td><td>✅ Yes</td><td>Brand-new sites</td></tr>
+        <tr><td>Bulk Edit / WP-CLI</td><td>✅ Yes</td><td>❌ No</td><td>✅ Yes</td><td>One-time cleanup</td></tr>
+        <tr><td>functions.php filter</td><td>✅ Yes (overrides)</td><td>✅ Yes</td><td>✅ Yes (child theme)</td><td>Developers, permanent fix</td></tr>
+        <tr><td>Disable Comments plugin</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td><td>Non-coders, multisite</td></tr>
+        <tr><td>CSS hide</td><td>❌ Visual only</td><td>❌ No</td><td>✅ Yes</td><td>Don't use</td></tr>
       </table>
     </div>
 
     <h2>How SimpleReview Handles This</h2>
 
-    <p>If you prefer not to touch code manually, <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> can do it in three clicks:</p>
+    <p>If your site is already loaded with thousands of spam comments and you don't trust yourself to pick the right method, <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> can do it in three clicks:</p>
 
     <ol>
-      <li>Install the Chrome extension and open your WordPress site while logged in.</li>
-      <li>Click the SimpleReview icon, then click the footer area with the "Powered by Astra" text.</li>
-      <li>Type "Remove Astra branding from footer" and click <strong>Fix it</strong>. SimpleReview creates a PR with the correct filter added to your child theme's functions.php.</li>
+      <li>Install the Chrome extension and open any post on your WordPress site.</li>
+      <li>Click the SimpleReview icon, then click the comments section below the post.</li>
+      <li>Type "Disable comments site-wide" and click <strong>Fix it</strong>. SimpleReview adds the four-block <code>comments_open</code> snippet to your child theme's functions.php, opens a PR, and (optionally) runs a WP-CLI command to delete existing spam.</li>
     </ol>
 
-    <p>This is particularly useful when you have multiple branding issues to fix at once, or when your footer has been customized by a previous developer and you're not sure what's safe to change.</p>
+    <p>It's particularly useful when you have a custom theme with comment templates spread across multiple files, or when a previous developer added their own filters that you'd rather not break.</p>
 
     <div class="cta-block">
-      <h3>Fix Astra Footer Branding in 3 Clicks</h3>
-      <p>Click on any element on your WordPress site — SimpleReview identifies the hook, writes the fix, and opens a PR.</p>
+      <h3>Disable WordPress Comments in 3 Clicks</h3>
+      <p>Click on any element on your site — SimpleReview identifies the right hook, writes the snippet, and opens a PR.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="https://onout.org/vibers/simple-review-wordpress/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
     </div>
@@ -468,29 +525,33 @@ add_filter( 'astra_footer_copyright_credits', function( $credit ) {
     <h2>Frequently Asked Questions</h2>
 
     <div class="faq-item">
-      <div class="faq-q">Can I remove "Powered by Astra" for free?</div>
-      <div class="faq-a">Yes. The free method is a three-line functions.php snippet that hooks into <code>astra_footer_copyright_credits</code> and returns an empty string. Astra Pro has a GUI toggle, but the code method works on both free and Pro without buying anything.</div>
+      <div class="faq-q">How do I disable comments on all posts at once?</div>
+      <div class="faq-a">Use Posts → All Posts → check the top checkbox → Bulk actions → Edit → set Comments to "Do not allow" → Update. For sites with hundreds of posts, run <code>wp post update $(wp post list --post_type=post --format=ids) --comment_status=closed</code> in WP-CLI instead.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">Does removing footer credit break Astra or violate the license?</div>
-      <div class="faq-a">No. Removing the credit text is fully supported and does not affect functionality, licensing, or updates. Astra is GPL-licensed, which permits modification including removing attribution. Astra's own documentation describes how to do it.</div>
+      <div class="faq-q">Why are comments still showing after I disabled them in Discussion settings?</div>
+      <div class="faq-a">The Discussion setting only affects posts created after the change. Existing posts keep their previous comment status. Use Bulk Edit (Method 2) or the <code>comments_open</code> filter (Method 3) to override per-post settings retroactively.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">What is the difference between "Powered by Astra" and "Proudly powered by WordPress"?</div>
-      <div class="faq-a">"Powered by Astra" is added by the Astra theme via the <code>astra_footer_copyright_credits</code> filter. "Proudly powered by WordPress" is the WordPress core credit. Both are removable via the same Astra Pro setting or the functions.php snippet above.</div>
+      <div class="faq-q">What's the difference between disabling and closing comments?</div>
+      <div class="faq-a">"Closed" stops new comments but keeps existing ones visible. "Disabled" hides the entire section, including past comments and the reply form. The <code>comments_array</code> filter returning an empty array (Method 3) removes existing comments from the front-end without deleting them from the database.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">Why does hiding with CSS still show the text in page source?</div>
-      <div class="faq-a">CSS <code>display:none</code> removes the element from the visual render but leaves the HTML in the DOM. Search engines like Google still index it, and screen readers may still announce it. Use a PHP filter to remove it from the server-side output instead.</div>
+      <div class="faq-q">Can I disable comments only on pages, not on blog posts?</div>
+      <div class="faq-a">Yes — wrap the filter in a post-type check: <code>add_filter('comments_open', function($open, $post_id){ return get_post_type($post_id) === 'page' ? false : $open; }, 20, 2);</code> Or use the Disable Comments plugin's "On certain post types" option.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">My snippet broke the footer. How do I revert?</div>
-      <div class="faq-a">Access your site via SFTP or your host's file manager, open <code>wp-content/themes/your-child-theme/functions.php</code>, and remove or comment out the snippet. Alternatively, use WP-CLI: <code>wp eval 'remove_filter("astra_footer_copyright_credits", "__return_empty_string");'</code></div>
+      <div class="faq-q">Will disabling comments hurt my SEO?</div>
+      <div class="faq-a">No direct ranking penalty. Comments can add long-tail content, but they also load Gravatar requests, comment-reply JavaScript, and spam links — all of which hurt Core Web Vitals. If your comments are mostly empty or spam, disabling them improves page speed without affecting rankings.</div>
     </div>
 
     <h2>Related WordPress Fixes</h2>
     <div class="related-posts">
       <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/remove-powered-by-astra/">Remove "Powered by Astra"</a>
+          <p>Three ways to remove the Astra footer credit — one-line snippet, Pro toggle, why CSS hide doesn't work.</p>
+        </div>
         <div class="related-card">
           <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">WooCommerce Checkout Slow?</a>
           <p>12 real fixes for slow WooCommerce checkout — cart fragments, autoload bloat, payment JS.</p>
@@ -504,10 +565,11 @@ add_filter( 'astra_footer_copyright_credits', function( $credit ) {
 
     <h2>Sources</h2>
     <ul class="sources-list">
-      <li><a href="https://wpastra.com/docs/remove-powered-by-astra-copyright-credit/">wpastra.com — Official: Remove Powered by Astra</a></li>
+      <li><a href="https://wordpress.org/documentation/article/comments-in-wordpress/">wordpress.org — Comments in WordPress</a></li>
+      <li><a href="https://wordpress.org/plugins/disable-comments/">wordpress.org — Disable Comments plugin (WPDeveloper)</a></li>
+      <li><a href="https://developer.wordpress.org/reference/hooks/comments_open/">developer.wordpress.org — comments_open filter reference</a></li>
+      <li><a href="https://developer.wordpress.org/cli/commands/post/update/">developer.wordpress.org — wp post update WP-CLI command</a></li>
       <li><a href="https://wordpress.org/plugins/code-snippets/">wordpress.org — Code Snippets plugin</a></li>
-      <li><a href="https://developer.wordpress.org/themes/basics/child-themes/">developer.wordpress.org — Child Themes</a></li>
-      <li><a href="https://wpastra.com/pricing/">wpastra.com — Astra Pro pricing</a></li>
     </ul>
   </article>
 
@@ -518,17 +580,14 @@ add_filter( 'astra_footer_copyright_credits', function( $credit ) {
 </div>
 
 <script>
-// Restart CSS animations + play voiceover when banner enters viewport
 (function(){
   var banner = document.querySelector('#sc-banner-fallback');
   if(!banner) return;
 
-  // Create audio element for voiceover
-  var audio = new Audio('vo.mp3?v=3');
+  var audio = new Audio('vo.mp3');
   audio.loop = false;
 
   function restartAll(){
-    // CSS class reset — covers ::before/::after (critical for sbReveal)
     var s = document.createElement('style');
     s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
     document.head.appendChild(s);
@@ -536,7 +595,6 @@ add_filter( 'astra_footer_copyright_credits', function( $credit ) {
     void banner.offsetWidth;
     banner.classList.remove('r');
     document.head.removeChild(s);
-    // Restart voiceover
     audio.currentTime = 0;
     audio.play().catch(function(){});
   }
@@ -547,7 +605,6 @@ add_filter( 'astra_footer_copyright_credits', function( $credit ) {
       if(e.isIntersecting && !triggered){
         triggered = true;
         restartAll();
-        // Re-arm after one full cycle (28s)
         setTimeout(function(){ triggered = false; }, 28000);
       }
     });
