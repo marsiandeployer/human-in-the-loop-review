@@ -36,20 +36,29 @@ filtered = [k for k in csv if
 ]
 ```
 
-### Pass 2 — Action regex (положительный сигнал)
+### Pass 2 — Семантическая оценка через Haiku (parallel agents)
 
-Каждый кей получает score = volume × intent_multiplier:
+Regex-скоринг отбрасывает релевантные ключи из-за нестандартных формулировок и не понимает интент. Вместо этого — параллельная оценка через `haiku` нейронку.
 
-| Pattern | Multiplier | Пример |
-|---------|-----------|--------|
-| Точная цитата ошибки | 3.0 | `there has been a critical error...` |
-| `how to (fix\|remove\|disable\|delete...) wordpress` | 2.5 | `how to remove date from wordpress url` |
-| `(fix\|repair\|recover) wordpress` | 2.5 | `fix wordpress site` |
-| `wordpress (X) not working\|broken\|error\|fails` | 2.5 | `wordpress images not loading` |
-| `(disable\|remove\|hide\|stop) wordpress (X)` | 2.0 | `disable comments wordpress` |
-| `(change\|update\|reset) wordpress (X)` | 1.5 | `change wordpress url` |
-| `how to install\|setup\|configure (X) wordpress` | 1.0 | `how to install yoast` |
-| Просто WP проблема без явного действия | 0.5 | `wordpress slow` |
+**Идея:** каждому ключу LLM-агент с описанием продукта SimpleReview ставит балл 0–3:
+- **3** = SimpleReview напрямую решает в один клик (понятный элемент → PR с фиксом)
+- **2** = Помогает с контекстом (debug.log, multi-file)
+- **1** = Tangential — статья может упомянуть SimpleReview как опцию
+- **0** = Не релевантно (туториалы, hosting, comparisons, news)
+
+**Реализация:**
+1. `extract_candidates.py` — Pass 1 фильтр (Informational, KD ≤25, vol ≥100), сортировка по volume → JSON
+2. Разбиваем на 10 батчей по ~107 ключей (`/tmp/kw_batch_N.txt`, TSV)
+3. Спавним 10 параллельных Agent-ов с `model: haiku`. Каждый получает self-contained prompt:
+   - Описание продукта SimpleReview
+   - Шкала 0–3
+   - Read `/tmp/kw_batch_N.txt`, write `/tmp/kw_verdict_N.json` (массив `{kw, vol, kd, score, angle}`)
+   - Angle ≤15 слов: как именно SimpleReview решит
+4. `aggregate-keyword-verdicts.py` — собирает все verdicts, фильтрует score≥2, кластеризует, дедупит против `covered-keywords.txt`, ранжирует по `vol × max_score / sqrt(kd)`
+
+**Стоимость:** 1065 ключей × Haiku ≈ $0.05–0.10, время ~1 минута (10 параллельно).
+
+**Результат пилота (1065 ключей):** 158 кластеров со score≥2; распределение 0=598 / 1=242 / 2=158 / 3=53. Качество отбора — заметно лучше regex (ловит non-standard phrasings типа "wordpress 6.9 broke my site", "wordpress emergency help").
 
 ### Pass 3 — Кластеризация (избегаем дублей)
 

@@ -1,0 +1,744 @@
+[
+  {
+    "kw": "there has been a critical error on this website. wordpress",
+    "vol": 2400,
+    "kd": 9,
+    "score": 3,
+    "angle": "Diagnose fatal PHP error, find problematic hook, PR the fix"
+  },
+  {
+    "kw": "wordpress maintenance services",
+    "vol": 1900,
+    "kd": 23,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "plugin not working in wordpress",
+    "vol": 1000,
+    "kd": 17,
+    "score": 2,
+    "angle": "Detect broken hook/filter, generate PR to restore functionality"
+  },
+  {
+    "kw": "cannot delete images on wordpress media library",
+    "vol": 880,
+    "kd": 14,
+    "score": 3,
+    "angle": "Find blocking code/permissions issue, PR removes or fixes it"
+  },
+  {
+    "kw": "wordpress website maintenance packages",
+    "vol": 880,
+    "kd": 7,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "tow truck company wordpress theme",
+    "vol": 720,
+    "kd": 11,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress clear cache",
+    "vol": 590,
+    "kd": 22,
+    "score": 1,
+    "angle": "SimpleReview can disable problematic cache plugins"
+  },
+  {
+    "kw": "disable comments wordpress",
+    "vol": 480,
+    "kd": 20,
+    "score": 3,
+    "angle": "One-click PR to disable comments via theme/plugin hook"
+  },
+  {
+    "kw": "wordpress 6.7 release news october 2025",
+    "vol": 480,
+    "kd": 23,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress video seo",
+    "vol": 480,
+    "kd": 17,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "free cdn for wordpress",
+    "vol": 390,
+    "kd": 19,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "keywords in wordpress",
+    "vol": 390,
+    "kd": 25,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress 6.8.1 php version",
+    "vol": 390,
+    "kd": 24,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress news today december 2025",
+    "vol": 390,
+    "kd": 14,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "can bolt.new build a wordpress site",
+    "vol": 320,
+    "kd": 21,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "hire wordpress developer india",
+    "vol": 320,
+    "kd": 16,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "members plugin wordpress post page restrictions compatibility",
+    "vol": 320,
+    "kd": 17,
+    "score": 2,
+    "angle": "Fix compatibility conflict by tweaking hook priority in PR"
+  },
+  {
+    "kw": "using meta ai in wordpress integration guide",
+    "vol": 320,
+    "kd": 12,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress care",
+    "vol": 320,
+    "kd": 23,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress malware removal service",
+    "vol": 320,
+    "kd": 22,
+    "score": 1,
+    "angle": "Could help remove malicious code via PR, but service-oriented query"
+  },
+  {
+    "kw": "wordpress to html converter",
+    "vol": 320,
+    "kd": 24,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "can replit build a wordpress plugins",
+    "vol": 260,
+    "kd": 1,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "file protection wordpress multisite",
+    "vol": 260,
+    "kd": 10,
+    "score": 1,
+    "angle": "SimpleReview could help add file-protection hooks/code"
+  },
+  {
+    "kw": "how to delete a site wordpress",
+    "vol": 260,
+    "kd": 22,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "loopnet wordpress integration",
+    "vol": 260,
+    "kd": 1,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "shein like wordpress theme free",
+    "vol": 260,
+    "kd": 5,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress 6.9.1 release",
+    "vol": 260,
+    "kd": 25,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress edit footer",
+    "vol": 260,
+    "kd": 22,
+    "score": 2,
+    "angle": "Locate footer hook in theme, PR modifies footer content/layout"
+  },
+  {
+    "kw": "wordpress redirects",
+    "vol": 260,
+    "kd": 21,
+    "score": 2,
+    "angle": "Find redirect rule, PR adds/removes/fixes redirect code"
+  },
+  {
+    "kw": "wordpress website company",
+    "vol": 260,
+    "kd": 23,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "como agregar el codigo para un chat widget en wordpress",
+    "vol": 210,
+    "kd": 12,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "error 500 elementor wordpress",
+    "vol": 210,
+    "kd": 19,
+    "score": 3,
+    "angle": "Diagnose 500 error root cause in Elementor code, PR fixes it"
+  },
+  {
+    "kw": "how to create a directory in wordpress",
+    "vol": 210,
+    "kd": 20,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "how to undo theme editor change wordpress",
+    "vol": 210,
+    "kd": 11,
+    "score": 2,
+    "angle": "Revert theme change via PR, restore original hook/template"
+  },
+  {
+    "kw": "localhost / wordpress",
+    "vol": 210,
+    "kd": 19,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "open wordpress site by ip instead of domain name",
+    "vol": 210,
+    "kd": 16,
+    "score": 1,
+    "angle": "Could help modify home/siteurl in functions.php via PR"
+  },
+  {
+    "kw": "top wordpress web development agencies usa 2023",
+    "vol": 210,
+    "kd": 14,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress 6.6.2 security release september 2025",
+    "vol": 210,
+    "kd": 12,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress content restriction",
+    "vol": 210,
+    "kd": 8,
+    "score": 2,
+    "angle": "Add/modify content restriction hooks in theme or plugin via PR"
+  },
+  {
+    "kw": "wordpress for nonprofits",
+    "vol": 210,
+    "kd": 23,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress optimization service",
+    "vol": 210,
+    "kd": 12,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress timeline plugin",
+    "vol": 210,
+    "kd": 15,
+    "score": 1,
+    "angle": "SimpleReview could help disable/fix broken timeline plugin code"
+  },
+  {
+    "kw": "agentur wordpress",
+    "vol": 170,
+    "kd": 24,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "copy a wordpress page",
+    "vol": 170,
+    "kd": 25,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "fix wordpress issues",
+    "vol": 170,
+    "kd": 21,
+    "score": 2,
+    "angle": "Broad fix-friendly query; SimpleReview fixes visible bugs via PR"
+  },
+  {
+    "kw": "how to check wordpress error logs",
+    "vol": 170,
+    "kd": 17,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "how to transfer wordpress site",
+    "vol": 170,
+    "kd": 23,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "launch wordpress",
+    "vol": 170,
+    "kd": 24,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "pros and cons of wordpress",
+    "vol": 170,
+    "kd": 13,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "updating failed. you are probably offline. wordpress",
+    "vol": 170,
+    "kd": 5,
+    "score": 1,
+    "angle": "SimpleReview can fix blocking code preventing updates"
+  },
+  {
+    "kw": "wordpress 6.7 release date december 2025 news",
+    "vol": 170,
+    "kd": 14,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress developer long island",
+    "vol": 170,
+    "kd": 3,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress maintenance pricing",
+    "vol": 170,
+    "kd": 7,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress personalization",
+    "vol": 170,
+    "kd": 18,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress to shopify migration",
+    "vol": 170,
+    "kd": 17,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "agence wordpress paris",
+    "vol": 140,
+    "kd": 4,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "change website domain wordpress",
+    "vol": 140,
+    "kd": 25,
+    "score": 1,
+    "angle": "SimpleReview could help update siteurl/home in functions.php"
+  },
+  {
+    "kw": "delete site on wordpress",
+    "vol": 140,
+    "kd": 11,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "file manager plugin wordpress",
+    "vol": 140,
+    "kd": 16,
+    "score": 1,
+    "angle": "Could help fix broken file manager plugin via PR"
+  },
+  {
+    "kw": "how to add title tag in wordpress",
+    "vol": 140,
+    "kd": 24,
+    "score": 1,
+    "angle": "SimpleReview can locate title tag hook and add it via PR"
+  },
+  {
+    "kw": "how to duplicate wordpress page",
+    "vol": 140,
+    "kd": 14,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "how to tell if a site is wordpress",
+    "vol": 140,
+    "kd": 25,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "iframe wordpress",
+    "vol": 140,
+    "kd": 22,
+    "score": 2,
+    "angle": "Add iframe embed code via PR in appropriate WP hook"
+  },
+  {
+    "kw": "meta tags wordpress",
+    "vol": 140,
+    "kd": 24,
+    "score": 1,
+    "angle": "SimpleReview can add meta tags via wp_head hook PR"
+  },
+  {
+    "kw": "plugin uri wordpress",
+    "vol": 140,
+    "kd": 23,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "single account multi-domain option wordpress creator mode",
+    "vol": 140,
+    "kd": 19,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "what is a wordpress plugin",
+    "vol": 140,
+    "kd": 23,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress auto update",
+    "vol": 140,
+    "kd": 18,
+    "score": 1,
+    "angle": "SimpleReview could disable/fix auto-update hooks via PR"
+  },
+  {
+    "kw": "wordpress delete site",
+    "vol": 140,
+    "kd": 20,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress ecommerce developer",
+    "vol": 140,
+    "kd": 25,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress how to edit footer",
+    "vol": 140,
+    "kd": 22,
+    "score": 3,
+    "angle": "Locate footer template/hook, PR edits footer content directly"
+  },
+  {
+    "kw": "wordpress maintenance tips",
+    "vol": 140,
+    "kd": 7,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress multisite setup",
+    "vol": 140,
+    "kd": 25,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress recovery mode",
+    "vol": 140,
+    "kd": 10,
+    "score": 1,
+    "angle": "SimpleReview can fix fatal error causing recovery mode"
+  },
+  {
+    "kw": "wordpress speed service",
+    "vol": 140,
+    "kd": 13,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress website design nj",
+    "vol": 140,
+    "kd": 4,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "affordable wordpress development",
+    "vol": 110,
+    "kd": 25,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "caption wordpress image",
+    "vol": 110,
+    "kd": 19,
+    "score": 1,
+    "angle": "SimpleReview can add caption hook to image output via PR"
+  },
+  {
+    "kw": "cookiebotin kytkentä wordpress-sivustolle",
+    "vol": 110,
+    "kd": 1,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "delete site in wordpress",
+    "vol": 110,
+    "kd": 18,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "experto wordpress",
+    "vol": 110,
+    "kd": 8,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "gazduire wordpress",
+    "vol": 110,
+    "kd": 25,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "how do i edit a wordpress theme",
+    "vol": 110,
+    "kd": 17,
+    "score": 2,
+    "angle": "SimpleReview finds theme file, PR edits template directly"
+  },
+  {
+    "kw": "how to change favicon wordpress",
+    "vol": 110,
+    "kd": 21,
+    "score": 2,
+    "angle": "Locate favicon code in header, PR replaces it via functions.php"
+  },
+  {
+    "kw": "how to check if a site is wordpress",
+    "vol": 110,
+    "kd": 17,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "how to delete account in wordpress",
+    "vol": 110,
+    "kd": 25,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "how to hide pages on wordpress",
+    "vol": 110,
+    "kd": 20,
+    "score": 2,
+    "angle": "Add page-hiding filter hook via PR to exclude from nav"
+  },
+  {
+    "kw": "how to reset wordpress site",
+    "vol": 110,
+    "kd": 19,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "how to upgrade wordpress php",
+    "vol": 110,
+    "kd": 12,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "magento wordpress",
+    "vol": 110,
+    "kd": 23,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "permalink wordpress",
+    "vol": 110,
+    "kd": 25,
+    "score": 1,
+    "angle": "SimpleReview could fix broken permalink structure via rewrite hook"
+  },
+  {
+    "kw": "react with wordpress",
+    "vol": 110,
+    "kd": 22,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "theme church wordpress",
+    "vol": 110,
+    "kd": 17,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "upgrade wordpress php",
+    "vol": 110,
+    "kd": 12,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "what is permalink in wordpress",
+    "vol": 110,
+    "kd": 18,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress admin ajax php",
+    "vol": 110,
+    "kd": 23,
+    "score": 1,
+    "angle": "SimpleReview could fix admin-ajax issues via hook PR"
+  },
+  {
+    "kw": "wordpress change site url",
+    "vol": 110,
+    "kd": 23,
+    "score": 1,
+    "angle": "PR can update home/siteurl via wp-config or functions.php"
+  },
+  {
+    "kw": "wordpress development services denver",
+    "vol": 110,
+    "kd": 4,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress files",
+    "vol": 110,
+    "kd": 15,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress importer plugin",
+    "vol": 110,
+    "kd": 25,
+    "score": 1,
+    "angle": "SimpleReview can fix broken importer plugin via code PR"
+  },
+  {
+    "kw": "wordpress newsletter plugins",
+    "vol": 110,
+    "kd": 22,
+    "score": 1,
+    "angle": "Could fix broken newsletter plugin code via PR fix"
+  },
+  {
+    "kw": "wordpress png logo",
+    "vol": 110,
+    "kd": 19,
+    "score": 1,
+    "angle": "SimpleReview can add logo via theme customizer hook"
+  },
+  {
+    "kw": "wordpress security experts",
+    "vol": 110,
+    "kd": 15,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress site slow",
+    "vol": 110,
+    "kd": 24,
+    "score": 0,
+    "angle": ""
+  },
+  {
+    "kw": "wordpress troubleshooting",
+    "vol": 110,
+    "kd": 25,
+    "score": 2,
+    "angle": "General troubleshooting; SimpleReview fixes visible WP bugs via PR"
+  },
+  {
+    "kw": "wordpress webmaster",
+    "vol": 110,
+    "kd": 17,
+    "score": 0,
+    "angle": ""
+  }
+]
