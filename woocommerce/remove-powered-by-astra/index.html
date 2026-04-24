@@ -183,10 +183,9 @@
     @keyframes footerTextHide{0%,87%{opacity:1}90%,93%{opacity:0}96%,100%{opacity:1}}
     .sc-footer-clean{color:#aaa;font-style:italic;opacity:0;animation:footerTextShow 28s infinite}
     @keyframes footerTextShow{0%,87%{opacity:0}90%,93%{opacity:1}96%,100%{opacity:0}}
-    /* Sidebar — виден всегда в layout, но ::before перекрывает содержимое до клика на ext icon */
-    .sc-sidebar{width:200px;flex-shrink:0;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:relative}
-    .sc-sidebar::before{content:'';position:absolute;inset:0;background:#f7f7f7;z-index:1;animation:sbReveal 28s infinite;pointer-events:none}
-    @keyframes sbReveal{0%,11%{opacity:1}14%,93%{opacity:0}96%,100%{opacity:1}}
+    /* Sidebar — extension overlay поверх контента, слайдится справа */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
     .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
     .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
     .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
@@ -207,7 +206,7 @@
     .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
     .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
     /* Popup */
-    .sc-popup{position:absolute;right:210px;bottom:40px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    .sc-popup{position:absolute;right:410px;bottom:40px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
     @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,93%{opacity:1;transform:translateX(0)}96%,100%{opacity:0}}
     .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
     .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
@@ -257,7 +256,7 @@
     @keyframes progFill{0%{width:0}100%{width:100%}}
     @media(max-width:640px){
       .sc-sidebar{width:130px}
-      .sc-popup{right:135px;width:160px}
+      .sc-popup{right:265px;width:160px}
     }
   </style>
 </head>
@@ -284,7 +283,7 @@
     <p class="article-lead">The "Powered by Astra | Proudly powered by WordPress" line in your footer makes every page look like a template, not a finished product. Here are the three methods that actually work — from the one-click Astra Pro toggle to a free three-line snippet you can add right now.</p>
 
     <!-- Video banner (recorded from CSS animation). After upload to YouTube replace with embed. -->
-    <video src="banner_voiced.mp4?v=3" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
+    <video src="banner_voiced.mp4?v=4" width="100%" style="border-radius:12px;margin-bottom:0;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline controls
       onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
     </video>
     <!-- Live CSS animation (red/orange SimpleReview branding) — always visible below video -->
