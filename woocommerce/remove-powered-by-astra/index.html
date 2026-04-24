@@ -286,8 +286,12 @@
 
     <p class="article-lead">The "Powered by Astra | Proudly powered by WordPress" line in your footer makes every page look like a template, not a finished product. Here are the three methods that actually work — from the one-click Astra Pro toggle to a free three-line snippet you can add right now.</p>
 
-    <!-- Animated Banner (28s cycle) -->
-    <div class="sc-banner" aria-label="Animated demo: SimpleReview selects the Astra footer branding and removes it">
+    <!-- Video banner (recorded from CSS animation) -->
+    <video src="banner.mp4" width="100%" style="border-radius:12px;margin-bottom:32px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block" autoplay muted loop playsinline
+      onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
+    </video>
+    <!-- CSS animation fallback -->
+    <div id="sc-banner-fallback" style="display:none" class="sc-banner" aria-label="Animated demo: SimpleReview selects the Astra footer branding and removes it">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com/about/</div>
