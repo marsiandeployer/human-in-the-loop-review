@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Error Establishing a Database Connection WordPress — Fix Guide (2026)</title>
+  <meta name="description" content="'Error establishing a database connection' in WordPress? Step-by-step fix: verify wp-config credentials, repair MySQL, fix corrupted tables, check host limits, and let AI patch your wp-config via PR.">
+  <link rel="canonical" href="https://onout.org/vibers/wordpress/error-establishing-a-database-connection-wordpress/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Error Establishing a Database Connection WordPress — Fix Guide (2026)">
+  <meta property="og:description" content="Verify wp-config credentials, repair MySQL, fix corrupted tables, check host limits — fix the WordPress DB connection error in under 15 minutes.">
+  <meta property="og:url" content="https://onout.org/vibers/wordpress/error-establishing-a-database-connection-wordpress/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="error establishing a database connection wordpress, wordpress error establishing a database connection, wordpress database connection error, wp-config database credentials, wordpress mysql down, wordpress repair database, wordpress db connection fix">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Error Establishing a Database Connection WordPress — Fix Guide (2026)",
+    "description": "Step-by-step recovery from the WordPress 'Error establishing a database connection' screen: verify wp-config credentials, restart MySQL, repair corrupted tables, check host limits, and patch PHP DB config automatically.",
+    "url": "https://onout.org/vibers/wordpress/error-establishing-a-database-connection-wordpress/",
+    "datePublished": "2026-04-24",
+    "dateModified": "2026-04-24",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/wordpress/error-establishing-a-database-connection-wordpress/" },
+    "keywords": ["error establishing a database connection wordpress", "wordpress error establishing a database connection", "wordpress database connection error", "wp-config credentials", "wordpress repair database"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does 'Error establishing a database connection' mean in WordPress?",
+        "acceptedAnswer": {"@type": "Answer", "text": "It means PHP tried to connect to MySQL/MariaDB using the credentials in wp-config.php and the connection failed. Four common reasons: (1) the DB_USER / DB_PASSWORD / DB_HOST values in wp-config.php are wrong, (2) the MySQL service on your host is down or crashed, (3) one or more WordPress tables (usually wp_options) are corrupted, or (4) your host killed the DB connection because of a resource limit or disk-full condition."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I fix the WordPress database connection error?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Work through a 4-step triage: (1) Open wp-config.php and confirm DB_NAME, DB_USER, DB_PASSWORD, DB_HOST match what your hosting control panel shows — a silent password reset from the host is the #1 cause. (2) SSH in and run 'systemctl status mysql' (or 'mariadb') — restart if it's not active. (3) Add define('WP_ALLOW_REPAIR', true); to wp-config.php, then visit /wp-admin/maint/repair.php to run WordPress's built-in table repair. (4) Check 'df -h' for a full disk and your host dashboard for a max-connections limit."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I know if my WordPress database is corrupted?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Enable WP_DEBUG_LOG in wp-config.php and reload the page. If the front-end shows 'Error establishing a database connection' but wp-admin shows 'One or more database tables are unavailable', that's the signature of a corrupted table — almost always wp_options or wp_postmeta. Fix it with the built-in repair tool (WP_ALLOW_REPAIR flag) or run 'wp db repair' via WP-CLI."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can I edit wp-config.php to fix the database connection?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes — wp-config.php at the site root holds the four values that control the DB connection: DB_NAME, DB_USER, DB_PASSWORD, and DB_HOST. Edit them via FTP/SFTP or your host's File Manager to match the credentials shown in your hosting control panel (cPanel → MySQL Databases, or the managed-host dashboard). Save, reload the site. Always keep a backup before editing."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is DB_HOST supposed to be in WordPress?",
+        "acceptedAnswer": {"@type": "Answer", "text": "On most shared hosts DB_HOST is 'localhost' or '127.0.0.1'. Some hosts use a dedicated DB server — for example Bluehost uses 'localhost' but DreamHost uses 'mysql.yourdomain.com', SiteGround uses 'localhost:/var/run/mysqld/mysqld.sock', and AWS RDS uses an instance endpoint like 'mydb.xxx.us-east-1.rds.amazonaws.com'. Check your host's knowledge base — a wrong DB_HOST value is the second most common cause of this error after a reset password."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why does this error appear after I migrated my WordPress site?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Migrations almost always break wp-config.php. The old credentials point to the previous host's database. After a migration, you must update DB_NAME, DB_USER, DB_PASSWORD, and DB_HOST to match the new server. Also import the SQL dump and run a search-replace on siteurl and home in wp_options — but the connection error itself is purely a wp-config credentials problem."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── DB-connection Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:18px 16px;background:#fff}
+    /* DB error screen (WordPress default) — TARGET */
+    .sc-error-box{background:#fff;border:1px solid #ccd0d4;border-left:4px solid #d63638;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:560px;margin:14px auto 0;padding:14px 22px 16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:13px;color:#d63638;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:6px;animation:errHide 28s infinite;font-family:'SF Mono',Monaco,Consolas,monospace}
+    .sc-err-msg .sc-fpath{color:#b91c1c}
+    .sc-err-meta{color:#666;font-size:10px;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered site (appears after fix) */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+    .sc-rec-logo{font-size:12px;font-weight:700;color:#1a1a1a}
+    .sc-rec-nav{display:flex;gap:12px}
+    .sc-rec-nav span{font-size:9px;color:#555}
+    .sc-rec-content{flex:1;padding:14px 18px;background:#fafafa}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:136px;opacity:1}
+      22%  {left:360px;top:136px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:160px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WordPress / Database</span>
+      <span>April 24, 2026</span>
+      <span>10 min read</span>
+    </div>
+
+    <h1>"Error Establishing a Database Connection" in WordPress — The Real Fix Guide</h1>
+
+    <p class="article-lead">A white screen with one sentence — <em>"Error establishing a database connection."</em> — and the whole site is gone: front-end, wp-admin, everything. Ninety percent of the time it's one of four things: wrong credentials in <code>wp-config.php</code>, a MySQL service that crashed, a corrupted <code>wp_options</code> table, or the host hit a resource limit. Here's how to diagnose which one in under 10 minutes, then fix it.</p>
+
+    <!-- Animated banner (later screen-recorded into banner.mp4). -->
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview reads the WordPress DB connection error, detects wrong wp-config credentials, and opens a one-line PR fix">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- DB connection error notice (TARGET) -->
+            <div class="sc-error-box">
+              <div class="sc-err-title">⚠ Error establishing a database connection</div>
+              <div class="sc-err-msg">This either means that the username and password information in your <span class="sc-fpath">wp-config.php</span> file is incorrect, or that contact with the database server at <strong>localhost</strong> could not be established.</div>
+              <div class="sc-err-meta">WordPress 6.8 · PHP 8.2 · DB_HOST: localhost · DB_USER: wp_user</div>
+            </div>
+            <!-- Recovered site -->
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-rec-logo">My Blog</div>
+                <div class="sc-rec-nav"><span>Home</span><span>About</span><span>Contact</span></div>
+              </div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Connection restored · wp-config patched</span>
+                <div class="sc-rec-h">Latest Posts</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">Fix DB credentials in wp-config.php</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Error</span><span class="sc-sb-v">DB connect fail</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">wp-config.php</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Update <code style="font-size:8px">DB_PASSWORD</code> to match cPanel value · ping <code style="font-size:8px">localhost</code> to confirm MySQL up</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">mysqli_connect OK. Front-end and wp-admin restored.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">fix: update DB_PASSWORD in wp-config.php<br>wp-config.php · 1 line</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the DB error → <strong>Fix it</strong> → wp-config patched, site back online</div>
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Site is offline right now? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads your <code>wp-config.php</code> over SFTP, tests the DB credentials, compares them against your host dashboard, and opens a one-line PR — faster than SSHing in and editing by hand.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>Check <code>wp-config.php</code> first.</strong> Wrong <code>DB_USER</code>, <code>DB_PASSWORD</code>, or <code>DB_HOST</code> causes 60%+ of cases — especially after a password reset or site migration.</li>
+        <li><strong>If credentials are correct, MySQL is down.</strong> SSH in and run <code>systemctl status mysql</code> or <code>mariadb</code>. Restart the service.</li>
+        <li><strong>Front-end dies but wp-admin shows "one or more tables unavailable" = corrupted table.</strong> Add <code>define('WP_ALLOW_REPAIR', true);</code> and run <code>/wp-admin/maint/repair.php</code>.</li>
+        <li><strong>Check disk space and max_connections.</strong> <code>df -h</code> for full disk, host dashboard for connection limits — both kill the DB silently.</li>
+        <li><strong>WP-CLI shortcut:</strong> <code>wp db check</code> / <code>wp db repair</code> — instant diagnosis without touching wp-config.</li>
+      </ul>
+    </div>
+
+    <h2>What the Error Actually Means</h2>
+
+    <p>WordPress renders every page by making a <code>mysqli_connect()</code> call to your database. If that call returns <code>false</code>, PHP gets no data, so WP throws the generic error screen:</p>
+
+    <pre><code>Error establishing a database connection
+
+This either means that the username and password information in your
+wp-config.php file is incorrect or that contact with the database server
+at localhost could not be established. This could mean your host's
+database server is down.</code></pre>
+
+    <p>The WordPress message itself doesn't tell you which of the four failure modes happened. To figure that out you need one debug line in <code>wp-config.php</code>:</p>
+
+    <pre><code>define( 'WP_DEBUG',         true );
+define( 'WP_DEBUG_LOG',     true );
+define( 'WP_DEBUG_DISPLAY', false );
+@ini_set( 'display_errors', 0 );</code></pre>
+
+    <p>Reload the site, then open <code>wp-content/debug.log</code>. The real PHP error appears there — for example:</p>
+
+    <pre><code>PHP Warning: mysqli_real_connect(): (HY000/1045):
+  Access denied for user 'wp_user'@'localhost' (using password: YES)
+  in /wp-includes/class-wpdb.php on line 1987
+
+PHP Warning: mysqli_real_connect(): (HY000/2002):
+  No such file or directory in /wp-includes/class-wpdb.php on line 1987
+
+PHP Warning: mysqli_real_connect(): (HY000/1040):
+  Too many connections in /wp-includes/class-wpdb.php on line 1987</code></pre>
+
+    <p>Each error code maps to a different root cause:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>MySQL code</th><th>Meaning</th><th>Where to look</th></tr>
+        <tr><td><code>1045</code></td><td>Access denied — wrong user or password</td><td>wp-config.php <code>DB_USER</code> / <code>DB_PASSWORD</code></td></tr>
+        <tr><td><code>2002</code></td><td>Can't find the socket — MySQL service down</td><td><code>systemctl status mysql</code></td></tr>
+        <tr><td><code>1040</code></td><td>Too many connections — host or config limit</td><td><code>max_connections</code> in my.cnf, or host plan</td></tr>
+        <tr><td><code>1049</code></td><td>Unknown database — wrong DB_NAME or dropped DB</td><td>cPanel → MySQL Databases</td></tr>
+        <tr><td><code>2005</code></td><td>Unknown host — wrong DB_HOST value</td><td>wp-config.php <code>DB_HOST</code></td></tr>
+        <tr><td><code>145</code> / <code>126</code></td><td>Corrupted MyISAM table</td><td>WP_ALLOW_REPAIR or <code>wp db repair</code></td></tr>
+      </table>
+    </div>
+
+    <h2>Step 1: Verify Credentials in wp-config.php</h2>
+
+    <p>This is the highest-probability fix. Connect via SFTP or your host's File Manager and open <code>wp-config.php</code> at the site root. You're looking for these four lines:</p>
+
+    <pre><code>define( 'DB_NAME',     'my_wp_db' );
+define( 'DB_USER',     'wp_user' );
+define( 'DB_PASSWORD', 'KhUj9!sQp2z...' );
+define( 'DB_HOST',     'localhost' );</code></pre>
+
+    <p>Now cross-check each value against your hosting control panel:</p>
+
+    <ul>
+      <li><strong>cPanel:</strong> MySQL Databases → compare DB name + username. Click "Add User to Database" to reset the password if you don't remember it.</li>
+      <li><strong>Managed hosts</strong> (SiteGround, Kinsta, WP Engine, Cloudways): Sites → Database → show credentials.</li>
+      <li><strong>AWS / DigitalOcean / VPS:</strong> check your provisioning script or <code>mysql -u root -p</code> then <code>SELECT user, host FROM mysql.user;</code></li>
+    </ul>
+
+    <div class="warn-box">
+      <strong>Special characters break things.</strong> If your password contains <code>$</code>, <code>!</code>, <code>#</code>, or <code>'</code>, make sure it's wrapped in <em>single</em> quotes in <code>wp-config.php</code> — PHP expands variables in double quotes and will silently corrupt your password.
+    </div>
+
+    <h3>Test the credentials without WordPress</h3>
+
+    <p>Upload a tiny test file next to wp-config.php called <code>db-test.php</code>:</p>
+
+    <pre><code>&lt;?php
+$link = mysqli_connect('localhost', 'wp_user', 'YOUR_PASSWORD', 'my_wp_db');
+if (!$link) {
+  echo 'FAIL: ' . mysqli_connect_error();
+} else {
+  echo 'OK — connected to ' . mysqli_get_host_info($link);
+}</code></pre>
+
+    <p>Visit <code>yoursite.com/db-test.php</code>. If this returns "OK" but WordPress still errors, the problem isn't credentials — skip to Step 3. If this returns <code>FAIL: Access denied</code>, you've confirmed the password is wrong. <strong>Delete db-test.php when you're done.</strong></p>
+
+    <h2>Step 2: Is MySQL Actually Running?</h2>
+
+    <p>If MySQL itself crashed, no credentials will help. SSH into the server and check:</p>
+
+    <pre><code># Debian / Ubuntu
+sudo systemctl status mysql
+sudo systemctl restart mysql
+
+# CentOS / RHEL / AlmaLinux
+sudo systemctl status mariadb
+sudo systemctl restart mariadb
+
+# Check error log for the crash reason
+sudo tail -n 100 /var/log/mysql/error.log</code></pre>
+
+    <p>Common crash causes: out of memory (OOM killer logged in <code>dmesg</code>), corrupted InnoDB redo log (need <code>innodb_force_recovery = 1</code> in my.cnf), or a stuck table lock. On shared hosting you can't restart the service — open a support ticket quoting the MySQL error code you found in debug.log.</p>
+
+    <h3>Check disk space</h3>
+
+    <p>A full disk silently kills MySQL writes. Run:</p>
+
+    <pre><code>df -h
+du -sh /var/lib/mysql/*</code></pre>
+
+    <p>If any partition is at 100%, free space (clear old logs in <code>/var/log/</code>, old backups, <code>/tmp/</code>) then restart MySQL.</p>
+
+    <h2>Step 3: Repair Corrupted Tables</h2>
+
+    <p>If the front-end shows the generic DB error but <code>/wp-admin/</code> shows a different message — <em>"One or more database tables are unavailable"</em> — that's a corrupted-table signature. Usually <code>wp_options</code> (after a plugin deactivation interruption) or <code>wp_postmeta</code> (after a disk-full write).</p>
+
+    <h3>Method A: Built-in WordPress repair</h3>
+
+    <p>Add this line to <code>wp-config.php</code> (anywhere above the "That's all, stop editing" marker):</p>
+
+    <pre><code>define( 'WP_ALLOW_REPAIR', true );</code></pre>
+
+    <p>Visit <code>https://yoursite.com/wp-admin/maint/repair.php</code>. Click <strong>Repair Database</strong> (safe) or <strong>Repair and Optimize Database</strong> (slower, defragments too). <strong>Remove that line when done</strong> — the repair page is public and doesn't require login.</p>
+
+    <h3>Method B: WP-CLI (faster, safer)</h3>
+
+    <p>If you have SSH access and WP-CLI installed:</p>
+
+    <pre><code># Check all tables for corruption
+wp db check
+
+# Repair corrupted tables
+wp db repair
+
+# Optimize after repair
+wp db optimize
+
+# Nuclear option: dump, drop, recreate, import
+wp db export backup.sql
+wp db reset --yes
+wp db import backup.sql</code></pre>
+
+    <h3>Method C: Direct MySQL</h3>
+
+    <pre><code>mysql -u root -p my_wp_db
+mysql&gt; CHECK TABLE wp_options;
+mysql&gt; REPAIR TABLE wp_options;
+mysql&gt; REPAIR TABLE wp_postmeta;</code></pre>
+
+    <h2>Step 4: Host Resource Limits</h2>
+
+    <p>On shared hosting, DB errors that appear only during traffic spikes usually mean you hit the <code>max_connections</code> limit (often set to 15-30 on cheap plans). Signs:</p>
+
+    <ul>
+      <li>Error appears intermittently, not constantly.</li>
+      <li><code>debug.log</code> shows MySQL error <code>1040: Too many connections</code>.</li>
+      <li>Site recovers on its own after 30-60 seconds.</li>
+    </ul>
+
+    <p>Fixes, in order of cost:</p>
+
+    <ol>
+      <li><strong>Install a cache plugin</strong> (WP Rocket, LiteSpeed Cache, W3 Total Cache). Static HTML pages don't hit MySQL — this often fixes 90% of the spikes.</li>
+      <li><strong>Disable heavy plugins</strong> that fire queries on every page load (related-posts plugins, visitor counters, admin-ajax abuse).</li>
+      <li><strong>Kill bad bots.</strong> Add aggressive crawlers to <code>robots.txt</code> or block by user-agent in nginx/.htaccess. AhrefsBot, SemrushBot, and scraper farms can easily exhaust connections.</li>
+      <li><strong>Upgrade the plan.</strong> Shared → VPS or managed WordPress host with proper DB tuning.</li>
+    </ol>
+
+    <h2>Step 5: After a Migration</h2>
+
+    <p>Migrations are the classic cause of this error. Anyone who just moved a site from one host to another and sees "Error establishing a database connection" should:</p>
+
+    <ol class="steps">
+      <li>Update <code>DB_NAME</code>, <code>DB_USER</code>, <code>DB_PASSWORD</code>, <code>DB_HOST</code> in <code>wp-config.php</code> to the new host's values.</li>
+      <li>Confirm the SQL dump actually imported — <code>SHOW TABLES FROM my_wp_db;</code> should list <code>wp_posts</code>, <code>wp_options</code>, etc.</li>
+      <li>If the new host uses a non-standard <code>DB_HOST</code> (DreamHost, RDS, Hostinger, some SiteGround setups), use the exact value from the host's knowledge base — not "localhost".</li>
+      <li>Once connected, run <code>wp search-replace 'https://oldsite.com' 'https://newsite.com'</code> to fix <code>siteurl</code> and post URLs.</li>
+    </ol>
+
+    <div class="definition">
+      <strong>Rule of thumb:</strong> After a migration, read the new host's database connection doc <em>before</em> editing wp-config. Two minutes reading saves two hours debugging.
+    </div>
+
+    <h2>When to Hand It Off to AI</h2>
+
+    <p>Manual debugging works, but requires SSH, patience, and a tolerance for MySQL error codes. <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> (Chrome extension or <a href="https://onout.org/vibers/simple-review-wordpress/">WordPress plugin</a>) automates the whole triage:</p>
+
+    <ol>
+      <li>Install the extension and open the broken site. The DB-error screen loads — that's fine, SimpleReview doesn't need the site to work.</li>
+      <li>Click the SimpleReview icon, then click the error text.</li>
+      <li>Type <em>"Fix DB connection"</em> and click <strong>Fix it</strong>.</li>
+      <li>SimpleReview reads <code>wp-config.php</code> over SFTP, compares credentials against your hosting API (when available), tests <code>mysqli_connect</code>, inspects disk + max_connections, and opens a PR with the one-line fix — usually an updated <code>DB_PASSWORD</code> or a corrected <code>DB_HOST</code>.</li>
+    </ol>
+
+    <p>Useful when you're on mobile, in a client meeting, or just don't feel like SSHing into a production server at 2 AM.</p>
+
+    <div class="cta-block">
+      <h3>Fix the DB Connection Without Touching the Terminal</h3>
+      <p>Click on the error — SimpleReview inspects your wp-config, tests MySQL, and opens a PR with the one-line fix.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="https://onout.org/vibers/simple-review-wordpress/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What does "Error establishing a database connection" mean in WordPress?</div>
+      <div class="faq-a">It means PHP tried to connect to MySQL using the credentials in <code>wp-config.php</code> and the connection failed. Four possible causes: wrong DB_USER/DB_PASSWORD/DB_HOST values, MySQL service down, corrupted tables, or host resource limits (full disk, max_connections).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I fix the WordPress database connection error?</div>
+      <div class="faq-a">Work through a 4-step triage: (1) verify <code>DB_NAME</code>/<code>DB_USER</code>/<code>DB_PASSWORD</code>/<code>DB_HOST</code> in <code>wp-config.php</code> against your host dashboard, (2) <code>systemctl status mysql</code> and restart if not active, (3) add <code>define('WP_ALLOW_REPAIR', true);</code> and visit <code>/wp-admin/maint/repair.php</code>, (4) check <code>df -h</code> and your host's max_connections setting.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I know if my WordPress database is corrupted?</div>
+      <div class="faq-a">If the front-end shows "Error establishing a database connection" but <code>/wp-admin/</code> shows "One or more database tables are unavailable", one or more tables are corrupted (usually <code>wp_options</code>). Fix with the WP_ALLOW_REPAIR built-in tool or <code>wp db repair</code> via WP-CLI.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is DB_HOST supposed to be in WordPress?</div>
+      <div class="faq-a">Depends on the host. Most shared hosts: <code>localhost</code> or <code>127.0.0.1</code>. DreamHost: <code>mysql.yourdomain.com</code>. AWS RDS: the instance endpoint. SiteGround sometimes uses a socket path. Always check your host's specific docs.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why does this error appear after I migrated my WordPress site?</div>
+      <div class="faq-a">Because <code>wp-config.php</code> still has the old host's DB credentials. Update all four DB_* constants to match the new server, confirm the SQL dump imported, then run <code>wp search-replace</code> for the site URL change.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I use WP-CLI to fix a broken database?</div>
+      <div class="faq-a">Yes. <code>wp db check</code> reports corrupted tables, <code>wp db repair</code> fixes MyISAM corruption, and <code>wp db optimize</code> defragments. For total reset: <code>wp db export backup.sql</code>, <code>wp db reset --yes</code>, <code>wp db import backup.sql</code>.</div>
+    </div>
+
+    <h2>Related WordPress Fixes</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="../critical-error-on-this-website/">"Critical Error on This Website"</a>
+          <p>The generic WP fatal-error screen — 6 recovery paths, including reading debug.log.</p>
+        </div>
+        <div class="related-card">
+          <a href="../wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
+          <p>Recovery field guide after a major WP update — rollback, deprecated-function fixes.</p>
+        </div>
+        <div class="related-card">
+          <a href="../../simple-review/">SimpleReview</a>
+          <p>Click any broken element → AI generates a PR with the one-line fix. Chrome + WordPress.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://wordpress.org/documentation/article/how-to-deal-with-the-error-establishing-database-connection/">wordpress.org — Handling the DB connection error</a></li>
+      <li><a href="https://wordpress.org/documentation/article/editing-wp-config-php/">wordpress.org — Editing wp-config.php</a></li>
+      <li><a href="https://developer.wordpress.org/cli/commands/db/">developer.wordpress.org — WP-CLI db commands</a></li>
+      <li><a href="https://dev.mysql.com/doc/refman/8.0/en/error-handling.html">dev.mysql.com — MySQL error code reference</a></li>
+      <li><a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">wordpress.org — Debugging in WordPress (WP_DEBUG_LOG)</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        var s = document.createElement('style');
+        s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+        document.head.appendChild(s);
+        banner.classList.add('r');
+        void banner.offsetWidth;
+        banner.classList.remove('r');
+        document.head.removeChild(s);
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

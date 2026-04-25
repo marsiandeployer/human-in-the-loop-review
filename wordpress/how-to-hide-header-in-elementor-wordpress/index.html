@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Hide the Header in Elementor (Site Nav + Page Title) — 2026 Guide</title>
+  <meta name="description" content="Two different 'headers' in Elementor: the site navigation bar and the page title H1. This guide covers both — Elementor Canvas template for full header removal, Hide Title toggle for H1, plus scoped CSS fallback for stubborn themes.">
+  <link rel="canonical" href="https://onout.org/vibers/wordpress/how-to-hide-header-in-elementor-wordpress/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Hide Header in Elementor WordPress (2026) — 3 Methods">
+  <meta property="og:description" content="Hide the Elementor header on one page, a group, or conditionally. Page Settings, scoped CSS, Theme Builder conditional display — plus a one-click PR option.">
+  <meta property="og:url" content="https://onout.org/vibers/wordpress/how-to-hide-header-in-elementor-wordpress/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="how to hide header in elementor wordpress, hide header elementor, elementor hide header on one page, elementor hide header landing page, elementor theme builder hide header, hide elementor header css, elementor page settings hide title, elementor hide header conditionally">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Hide Header in Elementor WordPress (2026) — 3 Methods + One-Click Fix",
+    "description": "Three ways to hide the header in Elementor WordPress: Page Settings (Hide Title + hide header template), a scoped CSS snippet using body.page-id selectors, and Theme Builder conditional display in Elementor Pro.",
+    "url": "https://onout.org/vibers/wordpress/how-to-hide-header-in-elementor-wordpress/",
+    "datePublished": "2026-04-24",
+    "dateModified": "2026-04-24",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/wordpress/how-to-hide-header-in-elementor-wordpress/" },
+    "keywords": ["how to hide header in elementor wordpress", "hide header elementor one page", "elementor theme builder hide header", "elementor hide header css", "elementor page settings hide title"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I hide the header in Elementor on only one page?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Open the page in the Elementor editor. Click the gear icon at the bottom-left to open Page Settings. Toggle on 'Hide Title'. If the page still shows the theme's header (logo + menu), add a scoped CSS snippet to Elementor → Custom CSS (Pro) or Appearance → Customize → Additional CSS: body.page-id-123 .site-header, body.page-id-123 header#masthead { display: none !important; }. Replace 123 with your actual page ID (visible in the URL when you edit the page in wp-admin)."}
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between 'Hide Title' and hiding the full header?",
+        "acceptedAnswer": {"@type": "Answer", "text": "'Hide Title' in Elementor Page Settings only hides the H1 page title that the theme renders above your content — it does not hide the site header with logo, navigation menu, or search bar. To hide the full site header you need either a CSS rule targeting the theme's header element (<header> or .site-header) or, with Elementor Pro, a Theme Builder conditional that disables the custom Elementor Header for that page."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I hide the Elementor header on a landing page only?",
+        "acceptedAnswer": {"@type": "Answer", "text": "The cleanest way: in the page's Page Settings (gear icon, Elementor editor), change Page Layout to 'Elementor Canvas'. Canvas strips the theme's header, footer, and sidebar — leaving you a blank page for your landing. If you don't want Canvas-blank (e.g. you still want the footer), use Elementor Pro Theme Builder: Templates → Theme Builder → Header → Display Conditions → Exclude → Specific Page → pick the landing page."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why does my display:none CSS not hide the Elementor header?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Three common reasons. (1) The selector is wrong — open the page, inspect the header element, and copy the exact class or ID from DevTools. Common correct selectors: .site-header, header#masthead, .elementor-location-header. (2) Your theme's CSS has higher specificity — add !important and/or prefix with body: body .site-header { display: none !important; }. (3) The header is rendered inside an Elementor template loaded via Theme Builder — CSS hides it but it still renders, which hurts performance; use Theme Builder display conditions instead."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can I hide the header on a whole page group (like /shop/ or a category) in Elementor?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes, with Elementor Pro. Templates → Theme Builder → Header → open your header template → Display Conditions → Exclude → add a rule like 'In WooCommerce Products Archive' or 'Pages → All children of About'. Without Pro, use CSS body selectors: body.woocommerce-shop header, body.parent-pageid-42 header { display: none !important; } — .parent-pageid-42 means 'all children of page ID 42'."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── Hide-header Elementor Banner (28s cycle) — Canvas Template Fix ─────── */
+    /* Timeline (28s total):
+       Act 1 (0–7s / 0–25%):   Landing page with site nav header visible, red callout
+       Act 2 (7–14s / 25–50%): SimpleReview sidebar slides in, user types, "WHICH HEADER?" disambiguation card
+       Act 3 (14–22s / 50–78%): Fix plan — flip Page Template → Elementor Canvas, diff shown
+       Act 4 (22–28s / 78–100%): Header gone on this page; rest of site keeps header
+    */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,25%{box-shadow:none}27%,32%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}34%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    /* Site nav header — disappears in Act 4 */
+    .sc-elem-header{background:#fff;border-bottom:1px solid #eee;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;animation:headerCanvasHide 28s infinite;overflow:hidden}
+    @keyframes headerCanvasHide{
+      0%,77%{max-height:60px;opacity:1;padding:10px 16px;border-bottom:1px solid #eee}
+      80%,99%{max-height:0;opacity:0;padding:0 16px;border-bottom:0 solid transparent}
+      100%{max-height:60px;opacity:1;padding:10px 16px;border-bottom:1px solid #eee}
+    }
+    .sc-elem-logo{font-size:13px;font-weight:700;color:#1a1a1a}
+    .sc-elem-nav{display:flex;gap:14px}
+    .sc-elem-nav span{font-size:10px;color:#555}
+    .sc-elem-cta{font-size:9px;background:#FF6B35;color:#fff;padding:3px 8px;border-radius:3px;font-weight:700}
+    /* Red circle callout over site header in Act 1 */
+    .sc-callout{position:absolute;top:2px;left:6px;right:auto;width:240px;height:44px;border:2px dashed #dc2626;border-radius:40px;z-index:7;opacity:0;animation:calloutShow 28s infinite;pointer-events:none}
+    @keyframes calloutShow{0%{opacity:0}4%,23%{opacity:1}27%,100%{opacity:0}}
+    .sc-callout-label{position:absolute;top:50px;left:20px;background:#dc2626;color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:3px;white-space:nowrap;z-index:7;opacity:0;animation:calloutShow 28s infinite}
+    /* Landing hero */
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#fafafa}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:22px 20px}
+    .sc-hero-eyebrow{font-size:9px;color:#FF6B35;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px}
+    .sc-hero-h{font-size:18px;font-weight:700;color:#1a1a1a;line-height:1.25;margin-bottom:8px;max-width:340px}
+    .sc-hero-sub{font-size:11px;color:#666;line-height:1.5;margin-bottom:12px;max-width:320px}
+    .sc-hero-btn{display:inline-block;background:#1a1a1a;color:#fff;font-size:10px;padding:6px 14px;border-radius:4px;font-weight:600}
+    /* Green "Canvas" badge — Act 4 */
+    .sc-canvas-badge{position:absolute;top:8px;left:20px;background:#16a34a;color:#fff;font-size:9px;font-weight:700;padding:4px 9px;border-radius:4px;z-index:5;opacity:0;animation:canvasBadge 28s infinite}
+    @keyframes canvasBadge{0%,78%{opacity:0}82%,99%{opacity:1}100%{opacity:0}}
+    /* Mini-sitemap (Act 4) — rest of site keeps header */
+    .sc-sitemap{position:absolute;bottom:12px;left:20px;background:#fff;border:1px solid #ddd;border-radius:6px;padding:7px 10px;font-size:9px;color:#444;z-index:5;opacity:0;animation:sitemapShow 28s infinite;max-width:220px}
+    @keyframes sitemapShow{0%,78%{opacity:0;transform:translateY(4px)}82%,99%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    .sc-sitemap b{color:#16a34a;font-weight:700;display:block;margin-bottom:2px;font-size:8px;text-transform:uppercase;letter-spacing:.3px}
+    .sc-sitemap i{font-style:normal;color:#666}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:70px;width:215px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,27%{opacity:0;transform:translateX(6px)}30%,77%{opacity:1;transform:translateX(0)}80%,100%{opacity:0}}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,29%{max-width:0}37%,77%{max-width:200px}80%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    /* Sidebar */
+    .sc-sidebar{width:215px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:6px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite;overflow-y:auto}
+    @keyframes sbSlide{0%,23%{transform:translateX(100%);opacity:0}27%,99%{transform:translateX(0);opacity:1}100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    /* WHICH HEADER? disambiguation card */
+    .sc-disambig{background:#fff;border:1px solid #e5e5e5;border-radius:5px;padding:7px 8px;opacity:0;animation:disambigShow 28s infinite}
+    @keyframes disambigShow{0%,39%{opacity:0;transform:translateY(3px)}43%,55%{opacity:1;transform:translateY(0)}58%,100%{opacity:0;max-height:0;padding:0;margin:0;border-width:0;overflow:hidden}}
+    .sc-disambig-title{font-size:8px;text-transform:uppercase;letter-spacing:.5px;font-weight:800;color:#5b44e8;margin-bottom:5px}
+    .sc-opt{display:block;padding:5px 7px;border:1px solid #e0e0e0;border-radius:4px;font-size:9px;margin-bottom:3px;line-height:1.3}
+    .sc-opt-a{background:#FF6B35;color:#fff;border-color:#FF6B35;font-weight:700;position:relative;animation:optAPulse 28s infinite}
+    @keyframes optAPulse{0%,45%{box-shadow:none}47%,50%{box-shadow:0 0 0 3px rgba(255,107,53,.35)}52%,100%{box-shadow:none}}
+    .sc-opt-b{background:#eee;color:#999}
+    .sc-opt small{display:block;font-size:7px;opacity:.85;margin-top:1px;font-weight:500}
+    /* Fix plan cards */
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,55%{opacity:0;transform:translateY(3px)}59%,99%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    @keyframes sbC2{0%,61%{opacity:0;transform:translateY(3px)}65%,99%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    @keyframes sbC3{0%,68%{opacity:0;transform:translateY(3px)}72%,99%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-diff{background:#0f172a;border-radius:3px;padding:4px 6px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:7.5px;line-height:1.4;margin-top:3px}
+    .sc-diff .m{color:#f87171}
+    .sc-diff .p{color:#4ade80}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:9px;color:#166534;opacity:0;animation:prShow 28s infinite;margin-top:auto}
+    @keyframes prShow{0%,75%{opacity:0;transform:translateY(3px)}79%,99%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Cursor — always ≥0.6 opacity */
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:1;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      /* Act 1 (0–25%): hover the site nav header ("My Business" area) */
+      0%   {left:60px;top:30px;opacity:1}
+      21%  {left:200px;top:35px;opacity:1}
+      /* Transition to extension icon top-right (25–39%) */
+      25%  {left:720px;top:20px;opacity:1}
+      39%  {left:720px;top:20px;opacity:1}
+      /* Move to disambiguation Option A "Site navigation header" (43–53%) */
+      43%  {left:620px;top:120px;opacity:1}
+      53%  {left:620px;top:120px;opacity:1}
+      /* Move down over Fix plan cards (57–75%) */
+      60%  {left:630px;top:175px;opacity:1}
+      75%  {left:630px;top:230px;opacity:1}
+      /* Rest over clean landing hero (Act 4) */
+      82%  {left:220px;top:145px;opacity:1}
+      99%  {left:220px;top:145px;opacity:1}
+      100% {left:60px;top:30px;opacity:1}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:140px}
+      .sc-popup{right:185px;width:160px;top:55px}
+      .sc-callout{width:150px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WordPress / Elementor</span>
+      <span>April 24, 2026</span>
+      <span>8 min read</span>
+    </div>
+
+    <h1>How to Hide Header in Elementor WordPress (2026) — 3 Methods + One-Click Fix</h1>
+
+    <p class="article-lead">Half the people asking this want to hide the <strong>site navigation bar</strong> (logo + menu); the other half want to hide the <strong>page title H1</strong>. This guide covers both. The #1 fix for the site nav header on a single landing page is <strong>Page Attributes → Template → Elementor Canvas</strong> — built into Elementor core (free, no Pro), one click, no CSS. For the page title, use Elementor's <strong>Hide Title</strong> toggle. Scoped CSS is kept below as a fallback for stubborn themes.</p>
+
+    <!-- Animated banner: disambiguate Site nav vs Page title, then flip Page Template → Elementor Canvas -->
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview disambiguates 'Site navigation header' vs 'Page title', then flips Page Template to Elementor Canvas">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com/landing/  ·  Elementor editor</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <!-- Site navigation header (will disappear in Act 4 when Elementor Canvas is applied) -->
+        <div class="sc-elem-header">
+          <div class="sc-elem-logo">My Business</div>
+          <div class="sc-elem-nav">
+            <span>Home</span><span>About</span><span>Services</span><span>Blog</span><span>Contact</span>
+          </div>
+          <div class="sc-elem-cta">Get Demo</div>
+        </div>
+        <!-- Red callout: "Header competes with CTA" (Act 1) -->
+        <div class="sc-callout"></div>
+        <div class="sc-callout-label">Header competes with CTA</div>
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Act 4 badge + mini-sitemap (hidden until end) -->
+            <div class="sc-canvas-badge">Page Template = Elementor Canvas · Page 421 only</div>
+            <div class="sc-hero-eyebrow">Landing Page</div>
+            <div class="sc-hero-h">Convert more visitors with a focused, header-free page.</div>
+            <div class="sc-hero-sub">One message. One CTA. Built in Elementor.</div>
+            <div class="sc-hero-btn">Start Free Trial →</div>
+            <div class="sc-sitemap">
+              <b>Rest of site (untouched)</b>
+              <i>Home / About / Services — still keeping the header</i>
+            </div>
+            <!-- Popup with ambiguous user message -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>SimpleReview</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">Hide the header on this landing page only</span><span class="sc-blink">|</span></div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+
+            <!-- WHICH HEADER? Disambiguation card (Act 2) -->
+            <div class="sc-disambig">
+              <div class="sc-disambig-title">⚠ WHICH HEADER?</div>
+              <div class="sc-opt sc-opt-a">🧭 Site navigation header<small>logo + menu bar · most common</small></div>
+              <div class="sc-opt sc-opt-b">📝 Page title (H1)<small>Elementor "Hide Title" toggle</small></div>
+            </div>
+
+            <!-- Fix plan cards (Act 3) -->
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div style="font-size:9px;line-height:1.4">Site navigation header on landing page<br><span style="color:#888">Theme: Astra · Page ID 421</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;line-height:1.4">Flip <b>Page Attributes → Template → Elementor Canvas</b> (free, built-in, no code). Fallback: scoped CSS for themes that override Canvas.</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">PR diff</div>
+              <div class="sc-diff">
+                <div class="m">-  _wp_page_template: default</div>
+                <div class="p">+  _wp_page_template: elementor_canvas</div>
+              </div>
+              <div style="font-size:8px;color:#666;margin-top:4px">One meta change. Rest of site untouched.</div>
+            </div>
+
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">flip _wp_page_template → elementor_canvas<br>child-theme safe · 1 meta key · page 421 only</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">One click → <strong>Page Template = Elementor Canvas</strong> → site nav header gone on this page only</div>
+      <!-- Always-visible cursor -->
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Don't want to look up page IDs, selectors, and CSS syntax? → <a href="../../simple-review/">SimpleReview</a> lets you click the header element in your browser, type what you want, and get a PR with a scoped CSS override added to your child theme.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li>For a <strong>single landing page</strong>, the cleanest trick is <strong>Page Settings → Page Layout → Elementor Canvas</strong> — strips header, footer, and sidebar in one click.</li>
+        <li>For <strong>per-page header hide without Canvas</strong>, use a scoped CSS snippet: <code>body.page-id-XX header { display: none !important; }</code>.</li>
+        <li><strong>Elementor Pro</strong> adds a proper solution — Theme Builder → Header → Display Conditions → <em>Exclude</em> specific pages or page groups. Header isn't even rendered.</li>
+        <li><code>Hide Title</code> in Page Settings only hides the H1 — not the site header with logo and menu.</li>
+        <li>Always write CSS to a <strong>child theme</strong> or to Elementor Custom CSS — direct parent theme edits get wiped on every update.</li>
+      </ul>
+    </div>
+
+    <h2>Method 1: Elementor Page Settings (Hide Title + Canvas Layout)</h2>
+
+    <p>If the "header" you want to hide is actually the theme's <em>page title block</em> (the big H1 above your content), the toggle is built in:</p>
+
+    <ol class="steps">
+      <li>Open the page in <strong>Elementor editor</strong>.</li>
+      <li>Click the gear icon at the bottom-left to open <strong>Page Settings</strong>.</li>
+      <li>Toggle on <strong>Hide Title</strong>. The theme's H1 disappears immediately in the preview.</li>
+      <li>If you also want to hide the <em>site header</em> (logo + menu bar), change <strong>Page Layout</strong> from "Default" to <strong>Elementor Canvas</strong>. Canvas strips the theme's header, footer, and sidebar — you get a blank slate to build your landing on.</li>
+    </ol>
+
+    <div class="definition">
+      <strong>Canvas vs Full Width vs Default:</strong> <em>Canvas</em> removes header, footer, sidebar. <em>Elementor Full Width</em> removes the sidebar but keeps header and footer. <em>Default</em> respects the theme's layout.
+    </div>
+
+    <p>Canvas works on Elementor free — you don't need Pro for it. Downside: if you want to <em>keep</em> the footer (for legal links, contact info) and only hide the header, Canvas is too aggressive. Use Method 2.</p>
+
+    <h2>Method 2: Scoped CSS Snippet (Keeps the Footer, Hides the Header)</h2>
+
+    <p>WordPress adds a unique body class like <code>page-id-123</code> for every page. You can use that class as a scope so the CSS only affects one page and leaves everything else untouched.</p>
+
+    <h3>Step 1 — Find your page ID</h3>
+
+    <p>In wp-admin, open <strong>Pages → All Pages</strong>, hover the page, and click <em>Edit</em>. The URL will look like <code>…/post.php?post=421&action=edit</code> — <strong>421</strong> is the page ID.</p>
+
+    <h3>Step 2 — Find the correct header selector</h3>
+
+    <p>Open the page in Chrome, right-click on the header, choose <strong>Inspect</strong>. Common correct selectors, depending on theme:</p>
+    <ul>
+      <li><code>header#masthead</code> — Twenty Twenty-One/Twenty Twenty-Two, many classic themes.</li>
+      <li><code>.site-header</code> — Astra, GeneratePress, Kadence.</li>
+      <li><code>.elementor-location-header</code> — Elementor Pro Theme Builder custom header.</li>
+      <li><code>header.ast-primary-header</code> — Astra Pro.</li>
+    </ul>
+
+    <h3>Step 3 — Add the scoped CSS</h3>
+
+    <p>Go to <strong>Appearance → Customize → Additional CSS</strong> (or Elementor → Custom CSS, Pro), and paste:</p>
+
+    <pre><code>/* Hide the site header on page ID 421 only.
+   Replace 421 with your page ID. */
+body.page-id-421 :is(.site-header, header#masthead, .elementor-location-header) {
+    display: none !important;
+}
+
+/* Optional: remove the gap the header left behind */
+body.page-id-421 :is(#content, .site-content) {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}</code></pre>
+
+    <p>Need it on a page <em>group</em> instead of one page? Swap the body class:</p>
+
+    <pre><code>/* All children of page ID 42 (e.g. /services/seo/, /services/ads/) */
+body.parent-pageid-42 header { display: none !important; }
+
+/* All WooCommerce shop / product archive pages */
+body.woocommerce-shop header,
+body.post-type-archive-product header { display: none !important; }
+
+/* Every single blog post (hide header only in blog reading view) */
+body.single-post header { display: none !important; }</code></pre>
+
+    <div class="warn-box">
+      <strong>Don't hide the whole <code>&lt;header&gt;</code> site-wide.</strong> That removes navigation from every page and destroys usability. Always scope with <code>body.page-id-XX</code>, <code>.parent-pageid-XX</code>, or a similar body class.
+    </div>
+
+    <h2>Method 3: Elementor Pro Theme Builder Conditional Display</h2>
+
+    <p>If you already have <a href="https://elementor.com/pro/">Elementor Pro</a>, the header is probably a Theme Builder template, not a theme file. That means you can <em>conditionally not render it</em> — far better than CSS hiding (the header never loads, zero JS/CSS/HTTP cost).</p>
+
+    <ol class="steps">
+      <li>Go to <strong>Templates → Theme Builder</strong> in wp-admin.</li>
+      <li>Hover your <strong>Header</strong> template and click <strong>Edit Conditions</strong> (or open the template and click the gear icon → Display Conditions).</li>
+      <li>You'll have a default rule like <em>Include → Entire Site</em>. Click <strong>Add Condition</strong>.</li>
+      <li>Pick <strong>Exclude</strong> from the dropdown, then the scope:
+        <ul>
+          <li><em>Specific Page</em> → pick your landing page.</li>
+          <li><em>Pages → All children of</em> → pick a parent (hides header on the whole branch).</li>
+          <li><em>In WooCommerce Products</em> → hides on every product page.</li>
+          <li><em>By Custom Field / URL / Role</em> → advanced conditional logic.</li>
+        </ul>
+      </li>
+      <li>Click <strong>Save &amp; Close</strong>. Visit the excluded page — the header isn't there, and it isn't even rendered in the HTML source.</li>
+    </ol>
+
+    <p>This is the "right" way in 2026. CSS hiding is a workaround; Theme Builder conditions are the native feature. If you're on Pro, prefer this every time.</p>
+
+    <h2>Method Comparison</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Method</th><th>Cost</th><th>Header removed from DOM?</th><th>Per-page / per-group control?</th><th>Difficulty</th></tr>
+        <tr><td>Page Settings → Canvas (M1)</td><td>Free</td><td>Yes</td><td>Per page (also kills footer)</td><td>None</td></tr>
+        <tr><td>Scoped CSS (M2)</td><td>Free</td><td>No — hidden but in source</td><td>Page, page-group, template</td><td>Low</td></tr>
+        <tr><td>Theme Builder conditional (M3)</td><td>Pro ($59/yr)</td><td>Yes — not rendered</td><td>Full conditional logic</td><td>None</td></tr>
+        <tr><td>Edit theme's header.php directly</td><td>Free</td><td>Yes</td><td>Needs PHP logic</td><td>Medium + wiped on update</td></tr>
+      </table>
+    </div>
+
+    <h2>How SimpleReview Handles This</h2>
+
+    <p>If you don't want to look up page IDs, figure out the correct header selector, or worry about whether your theme uses <code>.site-header</code> or <code>#masthead</code>, <a href="../../simple-review/">SimpleReview</a> does all of that from a single click:</p>
+
+    <ol>
+      <li>Install the Chrome extension and open the page where you want the header gone.</li>
+      <li>Click the SimpleReview icon, then click directly on the header element.</li>
+      <li>Type "Hide header on this page only" and click <strong>Fix it</strong>. SimpleReview inspects the DOM, picks the most specific selector, scopes it to the current <code>body.page-id-*</code> class, and opens a PR that adds the snippet to your child theme's <code>style.css</code>.</li>
+    </ol>
+
+    <p>The result is the same as Method 2 — but you don't read DevTools, and the PR is reviewable before it hits production.</p>
+
+    <div class="cta-block">
+      <h3>Hide the Elementor Header in One Click</h3>
+      <p>Click the header → SimpleReview picks the right selector, scopes it to the current page, and opens a PR against your child theme.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="../../simple-review/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I hide the header in Elementor on only one page?</div>
+      <div class="faq-a">Open the page in Elementor → gear icon (Page Settings) → toggle <strong>Hide Title</strong>. If the site header (logo + menu) is still there, add to Appearance → Customize → Additional CSS: <code>body.page-id-123 .site-header, body.page-id-123 header#masthead { display: none !important; }</code> — replace <code>123</code> with your page ID.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What's the difference between Hide Title and hiding the full header?</div>
+      <div class="faq-a"><code>Hide Title</code> only hides the page's H1. It does not touch the site header with logo, navigation, or search bar. To hide the full header use scoped CSS (Method 2) or, with Pro, Theme Builder display conditions (Method 3).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I hide the Elementor header on a landing page only?</div>
+      <div class="faq-a">Cleanest: switch Page Layout to <strong>Elementor Canvas</strong> in Page Settings — kills header, footer, and sidebar. If you want to keep the footer, use a scoped CSS snippet targeting <code>body.page-id-XXX header</code>. With Elementor Pro, Theme Builder → Header → Display Conditions → Exclude → Specific Page is the best option.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why does my <code>display:none</code> CSS not hide the Elementor header?</div>
+      <div class="faq-a">Three usual suspects. (1) Wrong selector — inspect the header in DevTools and copy the actual class or ID. (2) Theme CSS outranks yours — add <code>!important</code> and/or prefix with <code>body</code> for extra specificity. (3) The header is rendered by Elementor Pro Theme Builder; CSS hides it visually but it still loads. Use Theme Builder conditions instead.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I hide the header on a whole page group in Elementor?</div>
+      <div class="faq-a">With Pro: Theme Builder → Header → Display Conditions → Exclude → pick a page group (e.g. WooCommerce products, or all children of a parent page). Without Pro, use body classes: <code>body.woocommerce-shop header, body.parent-pageid-42 header { display: none !important; }</code>. <code>.parent-pageid-42</code> targets all children of page ID 42.</div>
+    </div>
+
+    <h2>Related WordPress Fixes</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="../remove-powered-by-astra/">Remove "Powered by Astra"</a>
+          <p>Similar hide/remove-element intent for Astra's footer credit — snippet, Pro toggle, why CSS hide isn't enough.</p>
+        </div>
+        <div class="related-card">
+          <a href="../wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
+          <p>Field guide for a broken Elementor after the 6.9 update — rollback, debug.log, one-line patches.</p>
+        </div>
+        <div class="related-card">
+          <a href="../../simple-review/">What is SimpleReview?</a>
+          <p>Human + AI code review for WordPress — click an element, get a PR.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://elementor.com/help/page-settings/">elementor.com — Page Settings (Hide Title, Canvas, Full Width)</a></li>
+      <li><a href="https://elementor.com/help/theme-builder/">elementor.com — Theme Builder + Display Conditions</a></li>
+      <li><a href="https://developer.wordpress.org/reference/functions/body_class/">developer.wordpress.org — body_class() reference (page-id, parent-pageid)</a></li>
+      <li><a href="https://developer.wordpress.org/themes/advanced-topics/child-themes/">developer.wordpress.org — Child Themes</a></li>
+      <li><a href="https://elementor.com/pro/">elementor.com — Elementor Pro pricing</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

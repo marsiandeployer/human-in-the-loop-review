@@ -1,0 +1,114 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<!-- v=1776665491436_0.8382131194916915 -->
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+.mb {
+  flex-shrink:0;align-self:center;background:#fff;border:1px solid #e4e4e4;border-radius:0.7em;
+  box-sizing:border-box;padding:0.35em 0.35em 0;position:relative;
+  box-shadow:0 0.15em 0.5em rgba(0,0,0,0.06);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  display:flex;flex-direction:column;gap:0.25em;overflow:hidden;
+}
+.mb-16 {
+  width:16px;height:16px;background:#fff;border:1px solid #e4e4e4;border-radius:2px;
+  padding:1.5px 1.5px 0;box-shadow:none;
+  display:flex;flex-direction:column;gap:1px;
+  box-sizing:border-box;position:relative;overflow:hidden;
+}
+.mb-16 > .mb-topbar, .mb-16 > .mb-fix-row { display:none; }
+.mb-16 .mb-line{height:1px;background:#d0d0d0;border-radius:0.5px;}
+.mb-16 .mb-line.b{background:#1a1a1a;width:60%;height:1.5px;}
+.mb-16 .mb-line.w85{width:85%;} .mb-16 .mb-line.w70{width:70%;} .mb-16 .mb-line.w55{width:55%;}
+.mb-16 .mb-target{height:2.5px;background:#f0f0f0;border-radius:1px;width:60%;position:relative;}
+.mb-16 .mb-loupe{
+  position:absolute;top:-7px;left:21%;width:8px;height:8px;
+  border:1.5px solid #dc2626;border-radius:49%;
+  background:rgba(255,255,255,0.6);box-shadow:none;box-sizing:border-box;
+}
+.mb-16 .mb-loupe::after{
+  content:'';position:absolute;bottom:-1px;right:-2.5px;
+  width:3px;height:1.2px;background:#dc2626;border-radius:0.5px;
+  transform:rotate(45deg);transform-origin:left center;
+}
+/* mb-60 — без Fix, как mb-16 */
+.mb-60 {
+  width:60px;height:60px;background:#fff;border:1px solid #e4e4e4;border-radius:5px;
+  padding:4px 4px 0;box-shadow:none;
+  display:flex;flex-direction:column;gap:2px;
+  box-sizing:border-box;position:relative;overflow:hidden;
+}
+.mb-60 > .mb-fix-row, .mb-60 > .mb-topbar { display:none; }
+.mb-60 .mb-line { height:2px; background:#d0d0d0; border-radius:1px; }
+.mb-60 .mb-line.b { background:#1a1a1a; width:55%; height:2.5px; }
+.mb-60 .mb-line.w85 { width:85%; }
+.mb-60 .mb-line.w70 { width:70%; }
+.mb-60 .mb-line.w55 { width:55%; }
+.mb-60 .mb-target { height:5px; background:#f0f0f0; border-radius:1.5px; width:60%; position:relative; }
+.mb-60 .mb-loupe {
+  position:absolute; top:-13px; left:30%;
+  width:17px; height:17px; border:2.3px solid #dc2626; border-radius:50%;
+  background:rgba(255,255,255,0.6); box-shadow:none; box-sizing:border-box;
+}
+.mb-60 .mb-loupe::after {
+  content:''; position:absolute; bottom:-1px; right:-5px;
+  width:7px; height:2.5px; background:#dc2626; border-radius:1px;
+  transform:rotate(45deg); transform-origin:left center;
+}
+/* mb-128 — заполненная композиция */
+.mb-128{width:128px;height:128px;font-size:11px;gap:5px;padding:7px 7px 0;border-radius:9px;}
+.mb-128 .mb-line { height:3px; }
+.mb-128 .mb-line.b { height:4px; width:50%; }
+.mb-128 .mb-target { height:11px; width:60%; }
+.mb-128 .mb-loupe {
+  width:30px;height:30px;border-width:3px;border-radius:50%;
+  top:-22px;left:25%;
+  box-shadow:0 0 0 2px rgba(220,38,38,0.13);
+}
+.mb-128 .mb-loupe::after {
+  width:11px;height:3.5px;bottom:0;right:-8px;border-radius:1.5px;
+}
+.mb-128 .mb-fix {
+  font-size:11px;padding:5px 10px;border-radius:4px;line-height:1;
+}
+.mb-128 .mb-fix-row { padding-bottom:6px; padding-right:0; justify-content:stretch; }
+.mb-128 .mb-fix { width:100%; text-align:center; }
+.mb-topbar{display:flex;gap:0.2em;margin-bottom:0.1em;}
+.mb-topbar span{width:0.3em;height:0.3em;border-radius:50%;flex-shrink:0;}
+.mb-topbar span:nth-child(1){background:#ff5f57;}
+.mb-topbar span:nth-child(2){background:#febc2e;}
+.mb-topbar span:nth-child(3){background:#28c840;}
+.mb-line{height:0.2em;background:#d8d8d8;border-radius:0.1em;}
+.mb-line.b{background:#1a1a1a;width:45%;height:0.25em;}
+.mb-line.w85{width:85%;}.mb-line.w70{width:70%;}.mb-line.w55{width:55%;}
+.mb-target{height:0.7em;background:#f0f0f0;border-radius:0.2em;width:45%;position:relative;}
+.mb-loupe{
+  position:absolute;top:-1.4em;left:18%;width:2em;height:2em;
+  border:0.25em solid #dc2626;border-radius:50%;
+  background:rgba(255,255,255,0.5);
+  box-shadow:0 0 0 0.2em rgba(220,38,38,0.18);
+  box-sizing:border-box;
+}
+.mb-loupe::after{
+  content:'';position:absolute;bottom:-0.1em;right:-0.7em;
+  width:0.9em;height:0.35em;background:#dc2626;border-radius:0.1em;
+  transform:rotate(45deg);transform-origin:left center;
+}
+.mb-fix-row{display:flex;justify-content:flex-end;margin-top:auto;padding-bottom:0.2em;}
+.mb-fix{
+  background:#dc2626;color:#fff;
+  font-size:1em;font-weight:700;line-height:1;
+  padding:0.35em 0.7em;border-radius:0.3em;
+}
+</style></head><body>
+<div style="display:inline-block;zoom:5;">
+<div class="mb mb-60" aria-hidden="true">
+  <div class="mb-topbar"><span></span><span></span><span></span></div>
+  <div class="mb-line b"></div>
+  <div class="mb-line w85"></div>
+  <div class="mb-line w70"></div>
+  <div class="mb-line w55"></div>
+  <div class="mb-target"><div class="mb-loupe"></div></div>
+  <div class="mb-fix-row"><div class="mb-fix">Fix it →</div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Duplicate a Page in WordPress — 4 Working Methods (2026)</title>
+  <meta name="description" content="Four field-tested ways to duplicate a WordPress page or post in 2026: the built-in block editor copy, Yoast Duplicate Post plugin, a functions.php snippet, and WP-CLI. Plus: add a Duplicate row action to wp-admin in one click, no plugin.">
+  <link rel="canonical" href="https://onout.org/vibers/wordpress/wordpress-duplicate-page/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Duplicate a Page in WordPress — 4 Working Methods (2026)">
+  <meta property="og:description" content="Block editor copy, Yoast Duplicate Post, functions.php snippet, WP-CLI — and how to add a Duplicate row action to wp-admin without a plugin.">
+  <meta property="og:url" content="https://onout.org/vibers/wordpress/wordpress-duplicate-page/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="wordpress duplicate page, duplicate page in wordpress, duplicate page wordpress, wordpress clone page, duplicate post wordpress, wordpress copy page, yoast duplicate post, wp-cli duplicate post">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Duplicate a Page in WordPress — 4 Working Methods (2026)",
+    "description": "Four ways to duplicate pages or posts in WordPress: block editor copy-all-blocks, Yoast Duplicate Post plugin, a functions.php snippet, and WP-CLI. Plus a one-click flow to add a Duplicate row action to wp-admin.",
+    "url": "https://onout.org/vibers/wordpress/wordpress-duplicate-page/",
+    "datePublished": "2026-04-24",
+    "dateModified": "2026-04-24",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/wordpress/wordpress-duplicate-page/" },
+    "keywords": ["wordpress duplicate page", "duplicate page in wordpress", "duplicate page wordpress", "yoast duplicate post", "wp-cli duplicate"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does WordPress have a built-in Duplicate Page button?",
+        "acceptedAnswer": {"@type": "Answer", "text": "No. As of WordPress 6.9 there is no one-click Duplicate button in the Pages or Posts list. The block editor supports 'Copy all blocks' (Options menu → Copy all blocks), which lets you paste the entire body into a new page — that's the closest native equivalent. For a full clone that also copies the title, featured image, categories, custom fields, and SEO meta, you still need a plugin (Yoast Duplicate Post is the de-facto standard) or a functions.php snippet."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is the best free plugin to duplicate a page in WordPress?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yoast Duplicate Post (4+ million active installs, maintained by the Yoast team). It adds Clone and New Draft links under every page and post row, copies custom fields and taxonomies, and lets you choose which elements to copy under Settings → Duplicate Post. Alternatives: 'Duplicate Page' by mndpsingh287 (simpler UI, 1M+ installs) and 'Post Duplicator' by Metaphor Creations (includes custom post type support)."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I duplicate a page without a plugin?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Two plugin-free options. (1) Open the page in the block editor, click the three-dot Options menu, choose 'Copy all blocks', create a new page, and paste — this duplicates the content but not the title/meta. (2) Add a 25-line snippet to functions.php that registers a 'Duplicate' row-action and calls wp_insert_post() with the source post's fields. The full snippet is in the functions.php section below."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can I duplicate a page with WP-CLI?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. Use wp post get to pull the source, then pipe the fields into wp post create. Example: wp post get 42 --field=post_content | wp post create --post_type=page --post_title='Copy of Original' --post_status=draft --post_content=- . For a full clone including meta and terms, the wp-post-duplicate community command or a short bash wrapper is faster than doing it field by field."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I remove a duplicate page from WordPress?",
+        "acceptedAnswer": {"@type": "Answer", "text": "If it's a duplicate post/page row in the database, delete it from Pages → All Pages → Trash. If it's a duplicate element injected by a theme or plugin (two footers, two menus, two 'Add to cart' buttons), the fix is in code — either unhook the duplicate action via remove_action(), or patch the template. SimpleReview can do this from a single click: point at the duplicate element, describe what to remove, and it opens a PR against your theme or plugin."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── duplicate-page Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:18px 16px}
+    /* Admin notice (TARGET) */
+    .sc-error-box{background:#fff;border:1px solid #ccd0d4;border-left:4px solid #d63638;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:560px;margin:14px auto 0;padding:14px 22px 16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:13px;color:#d63638;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:6px;animation:errHide 28s infinite;font-family:'SF Mono',Monaco,Consolas,monospace}
+    .sc-err-msg .sc-fpath{color:#b91c1c}
+    .sc-err-meta{color:#666;font-size:10px;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered admin Pages list (appears after fix) */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#1d2327;border-bottom:1px solid #14181d;padding:6px 14px;display:flex;align-items:center;justify-content:space-between}
+    .sc-rec-logo{font-size:12px;font-weight:600;color:#f0f0f1}
+    .sc-rec-nav{display:flex;gap:12px}
+    .sc-rec-nav span{font-size:9px;color:#c3c4c7}
+    .sc-rec-content{flex:1;padding:14px 18px;background:#f0f0f1}
+    .sc-rec-h{font-size:16px;font-weight:600;color:#1d2327;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+    .sc-rec-addbtn{font-size:9px;font-weight:400;color:#2271b1;border:1px solid #2271b1;padding:2px 8px;border-radius:2px;background:#fff}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-table{background:#fff;border:1px solid #c3c4c7;border-radius:2px;overflow:hidden}
+    .sc-rec-row{display:flex;align-items:center;padding:7px 12px;border-bottom:1px solid #dcdcde;font-size:10px;gap:10px}
+    .sc-rec-row:last-child{border-bottom:none}
+    .sc-rec-row.highlight{background:#fff8e5}
+    .sc-rec-row .sc-rec-title{flex:1;color:#2271b1;font-weight:600}
+    .sc-rec-row .sc-rec-draft{font-size:8px;background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:2px;font-weight:700}
+    .sc-rec-row .sc-rec-actions{font-size:8px;color:#646970}
+    .sc-rec-row .sc-rec-actions .sc-rec-dup{color:#2271b1;font-weight:600}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup — positioned right of error-box (target is centered at top) */
+    .sc-popup{position:absolute;right:410px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:136px;opacity:1}
+      22%  {left:360px;top:136px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:160px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WordPress / Editing</span>
+      <span>April 24, 2026</span>
+      <span>8 min read</span>
+    </div>
+
+    <h1>How to Duplicate a Page in WordPress — 4 Working Methods (2026)</h1>
+
+    <p class="article-lead">WordPress still doesn't ship a Duplicate button on the Pages list. Here are the 4 working methods plus one that adds a proper Duplicate action in one click.</p>
+
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: WordPress Pages list has no Duplicate row action, SimpleReview adds one via a single functions.php PR, Pricing page cloned as Draft in one click">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com/wp-admin/edit.php?post_type=page</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Admin notice (TARGET) -->
+            <div class="sc-error-box">
+              <div class="sc-err-title">⚠ No "Duplicate" action on Pages list</div>
+              <div class="sc-err-msg">Row actions on every page: <strong>Edit · Quick Edit · Trash · View</strong><br>no <span class="sc-fpath">duplicate_post_as_draft</span> hook registered</div>
+              <div class="sc-err-meta">WordPress 6.9 · Pages (4) · admin/edit.php?post_type=page</div>
+            </div>
+            <!-- Recovered Pages list (appears after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-rec-logo">mysite.com · wp-admin</div>
+                <div class="sc-rec-nav"><span>Posts</span><span>Pages</span><span>Plugins</span></div>
+              </div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Duplicate action added · Pricing — Copy saved as Draft</span>
+                <div class="sc-rec-h">Pages <span class="sc-rec-addbtn">Add New Page</span></div>
+                <div class="sc-rec-table">
+                  <div class="sc-rec-row highlight">
+                    <span class="sc-rec-title">Pricing — Copy</span>
+                    <span class="sc-rec-draft">DRAFT</span>
+                    <span class="sc-rec-actions">Edit · Quick Edit · <span class="sc-rec-dup">Duplicate</span> · Trash · View</span>
+                  </div>
+                  <div class="sc-rec-row">
+                    <span class="sc-rec-title">Home</span>
+                    <span class="sc-rec-actions">Edit · Quick Edit · <span class="sc-rec-dup">Duplicate</span> · Trash · View</span>
+                  </div>
+                  <div class="sc-rec-row">
+                    <span class="sc-rec-title">About Us</span>
+                    <span class="sc-rec-actions">Edit · Quick Edit · <span class="sc-rec-dup">Duplicate</span> · Trash · View</span>
+                  </div>
+                  <div class="sc-rec-row">
+                    <span class="sc-rec-title">Pricing</span>
+                    <span class="sc-rec-actions">Edit · Quick Edit · <span class="sc-rec-dup">Duplicate</span> · Trash · View</span>
+                  </div>
+                  <div class="sc-rec-row">
+                    <span class="sc-rec-title">Contact</span>
+                    <span class="sc-rec-actions">Edit · Quick Edit · <span class="sc-rec-dup">Duplicate</span> · Trash · View</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">Add Duplicate action</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Missing</span><span class="sc-sb-v">duplicate_post_as_draft</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Hook</span><span class="sc-sb-v">page_row_actions</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Add 28-line hook to child-theme <code style="font-size:8px">functions.php</code> (page_row_actions + admin_action_duplicate_post_as_draft)</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Duplicate action on all post types. No plugin. Child-theme safe.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">feat: add Duplicate row action<br>functions.php · +28 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → add missing row action → <strong>Fix it</strong> → one-click page clone · no plugin</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Need to clone a page for a landing-page test or a locked draft? Scroll down. Got two Add-to-cart buttons, two menus, or duplicate checkout fields you can't find in wp-admin? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> lets you click the duplicate, describe what to remove, and opens a one-line PR against the responsible theme or plugin file.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li>WordPress has <strong>no native one-click Duplicate button</strong> — only <em>Copy all blocks</em> inside the block editor, which copies the body but not the title or meta.</li>
+        <li>For a full clone (title, categories, custom fields, SEO meta, featured image) the de-facto plugin is <strong>Yoast Duplicate Post</strong> — 4M+ installs, free, actively maintained.</li>
+        <li>No-plugin full clone: a 25-line <code>functions.php</code> snippet that adds a <em>Duplicate</em> row action and calls <code>wp_insert_post()</code>.</li>
+        <li>For bulk work or headless sites, <strong>WP-CLI</strong> does it with <code>wp post get | wp post create</code>.</li>
+        <li>Opposite problem — <em>accidental</em> duplicates in a live template (two footers, two Add-to-cart buttons) — is a code fix: <code>remove_action()</code>, or just delete the stray <code>do_action()</code> call.</li>
+      </ul>
+    </div>
+
+    <h2>Method 1: Block Editor — Copy All Blocks (No Plugin)</h2>
+
+    <p>Built into WordPress since Gutenberg 5.4, works in every modern install. Copies the page body perfectly, but not the title, slug, featured image, or SEO meta.</p>
+
+    <ol class="steps">
+      <li>Open the source page in the block editor (Pages → All Pages → click the title).</li>
+      <li>Click the three-dot <strong>Options</strong> menu in the top-right toolbar.</li>
+      <li>Choose <strong>Copy all blocks</strong>. All blocks go to your clipboard as serialized block markup.</li>
+      <li>Create a new page (Pages → Add New), click in the empty content area, and paste (<code>Ctrl</code>/<code>Cmd</code> + <code>V</code>). Every block, including columns, images, and reusable blocks, appears.</li>
+      <li>Set the title, featured image, categories, and save as draft.</li>
+    </ol>
+
+    <div class="stat-box">
+      <strong>Good for:</strong> one-off clones of a long-form page where you mostly care about the content layout. <strong>Not good for:</strong> pages with complex custom fields, ACF data, or Yoast SEO settings you want to preserve.
+    </div>
+
+    <h2>Method 2: Yoast Duplicate Post (Best Plugin)</h2>
+
+    <p><a href="https://wordpress.org/plugins/duplicate-post/">Yoast Duplicate Post</a> is the standard — 4M+ active installs, maintained by the Yoast SEO team, MIT-licensed, no paid tier. It adds <strong>Clone</strong> and <strong>New Draft</strong> links under every post and page row in the admin list, and supports any custom post type.</p>
+
+    <ol class="steps">
+      <li>Go to <strong>Plugins → Add New</strong>, search for <em>Yoast Duplicate Post</em>, click <strong>Install</strong>, then <strong>Activate</strong>.</li>
+      <li>Go to <strong>Pages → All Pages</strong>. Hover over any page — you'll see two new row actions: <strong>Clone</strong> (makes the copy silently) and <strong>New Draft</strong> (makes the copy and opens it for editing).</li>
+      <li>Fine-tune what gets copied under <strong>Settings → Duplicate Post</strong>: title, date, slug, excerpt, template, taxonomies, custom fields, featured image. Default is everything except the status (which is reset to <em>draft</em>).</li>
+      <li>For bulk cloning, select multiple pages in the list, choose <em>Clone</em> from the Bulk Actions dropdown, and click Apply.</li>
+    </ol>
+
+    <h3>Alternatives if you don't want Yoast</h3>
+
+    <ul>
+      <li><a href="https://wordpress.org/plugins/duplicate-page/">Duplicate Page</a> by mndpsingh287 — 1M+ installs, simpler UI, adds only a <em>Duplicate This</em> link.</li>
+      <li><a href="https://wordpress.org/plugins/post-duplicator/">Post Duplicator</a> by Metaphor Creations — great for custom post types, lets you remap taxonomies during the copy.</li>
+    </ul>
+
+    <h2>Method 3: functions.php Snippet (No Plugin, Full Clone)</h2>
+
+    <p>Drop this into your child theme's <code>functions.php</code> (or a site-specific plugin). It adds a <em>Duplicate</em> row action to pages and posts, copies all post fields, taxonomies, and post meta, and redirects you to the new draft.</p>
+
+    <pre><code>/**
+ * Add a "Duplicate" row action to pages and posts.
+ */
+add_filter( 'post_row_actions',  'vb_duplicate_link', 10, 2 );
+add_filter( 'page_row_actions',  'vb_duplicate_link', 10, 2 );
+function vb_duplicate_link( $actions, $post ) {
+    if ( current_user_can( 'edit_posts' ) ) {
+        $url = wp_nonce_url(
+            admin_url( 'admin.php?action=vb_duplicate_post&post=' . $post->ID ),
+            'vb_duplicate_' . $post->ID
+        );
+        $actions['duplicate'] = '&lt;a href="' . esc_url( $url ) . '"&gt;Duplicate&lt;/a&gt;';
+    }
+    return $actions;
+}
+
+add_action( 'admin_action_vb_duplicate_post', 'vb_duplicate_post' );
+function vb_duplicate_post() {
+    $id = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
+    check_admin_referer( 'vb_duplicate_' . $id );
+    $post = get_post( $id );
+    if ( ! $post ) wp_die( 'Post not found' );
+
+    $new_id = wp_insert_post( [
+        'post_title'   =&gt; $post-&gt;post_title . ' (Copy)',
+        'post_content' =&gt; $post-&gt;post_content,
+        'post_excerpt' =&gt; $post-&gt;post_excerpt,
+        'post_status'  =&gt; 'draft',
+        'post_type'    =&gt; $post-&gt;post_type,
+        'post_author'  =&gt; get_current_user_id(),
+    ] );
+
+    // Copy taxonomies
+    foreach ( get_object_taxonomies( $post-&gt;post_type ) as $tax ) {
+        $terms = wp_get_object_terms( $id, $tax, [ 'fields' =&gt; 'slugs' ] );
+        wp_set_object_terms( $new_id, $terms, $tax );
+    }
+    // Copy post meta
+    foreach ( get_post_meta( $id ) as $key =&gt; $values ) {
+        foreach ( $values as $value ) {
+            add_post_meta( $new_id, $key, maybe_unserialize( $value ) );
+        }
+    }
+
+    wp_safe_redirect( admin_url( 'post.php?action=edit&amp;post=' . $new_id ) );
+    exit;
+}</code></pre>
+
+    <div class="warn-box">
+      <strong>Test on staging first.</strong> <code>wp_insert_post()</code> triggers every <code>save_post</code> hook your site has registered — SEO indexers, caches, webhooks. On a site with lots of integrations, a clone can fire a lot of downstream events.
+    </div>
+
+    <h2>Method 4: WP-CLI (Headless / Bulk)</h2>
+
+    <p>Best for scripted workflows, bulk cloning, or sites where wp-admin is locked down. Assumes <a href="https://wp-cli.org/">WP-CLI</a> is installed on your host (most managed WP hosts ship it).</p>
+
+    <p>Quick content-only clone:</p>
+
+    <pre><code># Grab the body of post 42, create a new page with the same content
+wp post get 42 --field=post_content \
+  | wp post create --post_type=page \
+      --post_title='Copy of Original' \
+      --post_status=draft \
+      --post_content=-</code></pre>
+
+    <p>Full clone (title + content + excerpt + meta) with a one-liner:</p>
+
+    <pre><code>SRC=42
+NEW=$(wp post create \
+  --post_type=$(wp post get $SRC --field=post_type) \
+  --post_title="$(wp post get $SRC --field=post_title) (Copy)" \
+  --post_content="$(wp post get $SRC --field=post_content)" \
+  --post_excerpt="$(wp post get $SRC --field=post_excerpt)" \
+  --post_status=draft \
+  --porcelain)
+
+# Copy every meta key from source to new
+wp post meta list $SRC --format=json | \
+  jq -r '.[] | [.meta_key, .meta_value] | @tsv' | \
+  while IFS=$'\t' read -r k v; do wp post meta add "$NEW" "$k" "$v"; done</code></pre>
+
+    <p>For bulk cloning (e.g. duplicate every page in a category), wrap it in a loop with <code>wp post list --category=5 --format=ids</code>.</p>
+
+    <h2>Which Method Should You Use?</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Scenario</th><th>Best method</th><th>Why</th></tr>
+        <tr><td>One-off clone, simple page</td><td>Block editor "Copy all blocks"</td><td>Zero plugins, 4 clicks</td></tr>
+        <tr><td>Everyday editorial work</td><td>Yoast Duplicate Post</td><td>Clone + New Draft row actions, configurable, stable</td></tr>
+        <tr><td>Minimalist stack (no new plugin)</td><td>functions.php snippet</td><td>25 lines, full feature set, ships in child theme</td></tr>
+        <tr><td>Bulk / scripted / headless</td><td>WP-CLI</td><td>Loops, shell pipes, no browser needed</td></tr>
+        <tr><td>Custom post type with ACF</td><td>Yoast Duplicate Post or Post Duplicator</td><td>Known-good ACF handling</td></tr>
+        <tr><td>WooCommerce product</td><td>Products → Duplicate (built-in)</td><td>WooCommerce adds its own Duplicate action</td></tr>
+      </table>
+    </div>
+
+    <h2>The Flip Side: Removing Accidental Duplicates</h2>
+
+    <p>Half the people searching for "duplicate page wordpress" actually have the opposite problem — they already have a duplicate they didn't want:</p>
+
+    <ul>
+      <li>Two <strong>Add to Cart</strong> buttons on a WooCommerce product page (child theme adds a hook the parent theme already fires).</li>
+      <li>A second <strong>footer</strong> or <strong>menu</strong> rendering below the first (plugin injects a widget area that the theme also injects).</li>
+      <li>Two <strong>H1</strong> tags (page builder + theme both output one).</li>
+      <li>Two copies of a <strong>checkout field</strong>, a CTA, or a cookie banner.</li>
+    </ul>
+
+    <p>These aren't duplicates of a <em>database row</em> — they're duplicates of a <em>rendered element</em>, caused by a theme or plugin calling the same action twice. The fix is always in code, usually one line: either call <code>remove_action( 'woocommerce_after_single_product_summary', ... )</code>, or delete the stray <code>do_action()</code> / <code>wp_nav_menu()</code> / <code>get_template_part()</code> from the template.</p>
+
+    <h3>The one-click way: SimpleReview</h3>
+
+    <p>Instead of opening your IDE, grepping for the hook, and writing the right <code>remove_action()</code> priority by hand:</p>
+
+    <ol>
+      <li>Open the page with the duplicate element.</li>
+      <li>Click the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">SimpleReview</a> extension, then click the duplicate element itself (the second Add-to-cart, the extra footer).</li>
+      <li>Type "Remove this duplicate" and click <strong>Fix it</strong>. SimpleReview walks the rendered DOM back to the PHP template or plugin that emitted it, finds the responsible hook or template include, and opens a PR that removes it — usually a one-line change in your child theme.</li>
+    </ol>
+
+    <div class="cta-block">
+      <h3>Got an Accidental Duplicate Element on Your Site?</h3>
+      <p>Click on it — SimpleReview finds the theme file or plugin hook that emitted it, and opens a PR removing it.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="https://onout.org/vibers/simple-review-wordpress/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Does WordPress have a built-in Duplicate Page button?</div>
+      <div class="faq-a">No. As of WP 6.9 the closest native option is <em>Copy all blocks</em> inside the block editor's Options menu — that copies the body markup but not the title, featured image, categories, or SEO meta. For a true clone use <a href="https://wordpress.org/plugins/duplicate-post/">Yoast Duplicate Post</a>, a <code>functions.php</code> snippet, or WP-CLI.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the best free plugin to duplicate a page in WordPress?</div>
+      <div class="faq-a">Yoast Duplicate Post — 4M+ installs, maintained by Yoast, free with no paid tier. Adds <em>Clone</em> and <em>New Draft</em> links to every page, post, and custom post type row. Supports bulk cloning from the Bulk Actions dropdown.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I duplicate a page without a plugin?</div>
+      <div class="faq-a">Either open the page in the block editor and use Options → <em>Copy all blocks</em>, paste into a new page, then re-set the title and meta. Or drop the 25-line <code>vb_duplicate_post</code> snippet from the <code>functions.php</code> section above into your child theme — it adds a proper <em>Duplicate</em> row action and copies taxonomies and post meta.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I duplicate a page with WP-CLI?</div>
+      <div class="faq-a">Yes. <code>wp post get &lt;ID&gt; --field=post_content | wp post create --post_type=page --post_title='Copy' --post_status=draft --post_content=-</code> clones the body. For a full clone including meta and taxonomies, loop <code>wp post meta list</code> into <code>wp post meta add</code> — there's a ready-to-paste script in the WP-CLI section above.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I remove a duplicate page from WordPress?</div>
+      <div class="faq-a">If it's an extra row in the database, Pages → All Pages → Trash. If it's a duplicate <em>element</em> rendered on the front-end (two footers, two Add-to-cart buttons), that's a code fix — either <code>remove_action()</code> or remove the stray <code>do_action()</code> / template include. <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> can do this from a single click on the element itself.</div>
+    </div>
+
+    <h2>Related WordPress Guides</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">"WordPress 6.9 Broke My Site"</a>
+          <p>Field guide: rollback, identify the deprecated function, patch Slider Revolution / Elementor.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/wordpress/disable-comments-wordpress/">Disable WordPress Comments</a>
+          <p>Stop comment spam — Discussion settings, Bulk Edit, functions.php filter, plugin options.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview</a>
+          <p>Click any element on your WordPress site — SimpleReview opens a PR that fixes or removes it.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://wordpress.org/plugins/duplicate-post/">wordpress.org — Yoast Duplicate Post plugin</a></li>
+      <li><a href="https://wordpress.org/plugins/duplicate-page/">wordpress.org — Duplicate Page by mndpsingh287</a></li>
+      <li><a href="https://wordpress.org/plugins/post-duplicator/">wordpress.org — Post Duplicator by Metaphor Creations</a></li>
+      <li><a href="https://wp-cli.org/commands/post/">wp-cli.org — wp post command reference</a></li>
+      <li><a href="https://developer.wordpress.org/reference/functions/wp_insert_post/">developer.wordpress.org — wp_insert_post()</a></li>
+      <li><a href="https://developer.wordpress.org/reference/hooks/post_row_actions/">developer.wordpress.org — post_row_actions filter</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+</body>
+</html>

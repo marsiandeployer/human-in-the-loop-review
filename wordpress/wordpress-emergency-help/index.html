@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WordPress Emergency Help — Triage Guide for Panicking Site Owners (2026)</title>
+  <meta name="description" content="WordPress emergency help: 30-second diagnostics and 5-minute fixes for site down, white screen, critical error, hacked site, and locked-out admin. 24/7 AI-assisted repair.">
+  <link rel="canonical" href="https://onout.org/vibers/wordpress/wordpress-emergency-help/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="WordPress Emergency Help — Triage Guide for Panicking Site Owners">
+  <meta property="og:description" content="Site down, white screen, critical error, hacked, locked out. 30-second diagnostics, 5-minute fixes, when to escalate.">
+  <meta property="og:url" content="https://onout.org/vibers/wordpress/wordpress-emergency-help/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="wordpress emergency help, emergency wordpress help, wordpress emergency support, wordpress site down, wordpress white screen of death, wordpress hacked emergency, wordpress locked out, wordpress critical error emergency">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "WordPress Emergency Help — Triage Guide for Panicking Site Owners (2026)",
+    "description": "A calm, field-tested emergency triage guide for WordPress site owners: site down, white screen of death, critical error, hacked site, or locked out of wp-admin. Each scenario includes a 30-second diagnostic, a 5-minute fix, and escalation criteria.",
+    "url": "https://onout.org/vibers/wordpress/wordpress-emergency-help/",
+    "datePublished": "2026-04-24",
+    "dateModified": "2026-04-24",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/wordpress/wordpress-emergency-help/" },
+    "keywords": ["wordpress emergency help", "emergency wordpress help", "wordpress site down", "wordpress white screen", "wordpress hacked", "wordpress locked out"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "My WordPress site is down right now — what do I do first?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Open the site in an incognito window. If you see a plain 'critical error' message, the issue is PHP — go enable WP_DEBUG_LOG in wp-config.php and read wp-content/debug.log. If you see a host error page (503, 502, 'Error establishing database connection'), the issue is server- or database-side — call your host. If the page loads but admin is broken, deactivate plugins via FTP by renaming /wp-content/plugins/ to /wp-content/plugins-off/."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is the white screen of death in WordPress?",
+        "acceptedAnswer": {"@type": "Answer", "text": "A completely blank white page, usually caused by a PHP fatal error with error display disabled, a memory-limit exhaustion, or a plugin/theme incompatibility. The fix is to enable WP_DEBUG_LOG, reload, and read the exact fatal error from wp-content/debug.log. Memory limit can be raised by adding define( 'WP_MEMORY_LIMIT', '512M' ); to wp-config.php."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I know if my WordPress site is hacked?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Signs: unfamiliar admin users in Users → All Users, unknown files in the site root (like wp-conflg.php or random .php files in /uploads/), sudden redirects to spam sites, Google Safe Browsing warning, or SEO spam pages you didn't create. Run Wordfence or Sucuri scanner immediately, change all passwords (wp-admin, FTP, database, hosting), rotate auth salts in wp-config.php, and restore from a clean pre-compromise backup if you have one."}
+      },
+      {
+        "@type": "Question",
+        "name": "I am locked out of WordPress wp-admin — how do I get back in?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Three paths. (1) Use the 'Lost your password?' link — if emails are broken, reset the password directly in the database via phpMyAdmin: UPDATE wp_users SET user_pass = MD5('newpass') WHERE user_login = 'admin'. (2) If a security plugin locked you out by IP, deactivate it via FTP by renaming its folder under /wp-content/plugins/. (3) If 2FA is broken, remove the 2FA plugin folder over FTP. Always re-enable security after recovery."}
+      },
+      {
+        "@type": "Question",
+        "name": "When should I call an emergency WordPress developer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Escalate to a professional if: (1) you don't have FTP/SFTP or hosting panel access, (2) the site was hacked and you're handling sensitive customer data (GDPR/PCI), (3) the database is corrupted and restore points are gone, (4) you've tried rollback and plugin deactivation and the site is still down after 30 minutes. Before calling, collect: hosting login, FTP creds, last known working date, recent changes, and a screenshot of the error."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is SimpleReview and how does it help in a WordPress emergency?",
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview is an AI-assisted one-click repair tool for WordPress. You click the broken element on your site (the error notice, a frozen page, a broken form) and SimpleReview reads your debug.log and source over SFTP, identifies the exact file and line that caused the fatal error, and generates a PR with the one-line fix. It works 24/7 — no ticket queue, no waiting for a developer to wake up."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+    .scenario{background:#fafaf8;border:1px solid #eee;border-radius:10px;padding:20px 24px;margin:24px 0}
+    .scenario h3{margin-top:0}
+    .scenario .label{display:inline-block;background:#fee2e2;color:#991b1b;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:4px;margin-bottom:8px}
+    .scenario .mini{font-size:13px;font-weight:700;color:#2d2080;text-transform:uppercase;letter-spacing:.4px;margin-top:14px;margin-bottom:4px}
+
+    /* ─────── Emergency Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:18px 16px}
+    /* Emergency SOS box — TARGET */
+    .sc-error-box{background:#fff;border:1px solid #ccd0d4;border-left:4px solid #d63638;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:560px;margin:14px auto 0;padding:14px 22px 16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:13px;color:#d63638;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:6px;animation:errHide 28s infinite;font-family:'SF Mono',Monaco,Consolas,monospace}
+    .sc-err-msg .sc-fpath{color:#b91c1c}
+    .sc-err-meta{color:#666;font-size:10px;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered admin (appears after fix) */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+    .sc-rec-logo{font-size:12px;font-weight:700;color:#1a1a1a}
+    .sc-rec-nav{display:flex;gap:12px}
+    .sc-rec-nav span{font-size:9px;color:#555}
+    .sc-rec-content{flex:1;padding:14px 18px;background:#fafafa}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:136px;opacity:1}
+      22%  {left:360px;top:136px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:160px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WordPress / Emergency</span>
+      <span>April 24, 2026</span>
+      <span>10 min read</span>
+    </div>
+
+    <h1>WordPress Emergency Help — Triage Guide for Panicking Site Owners</h1>
+
+    <p class="article-lead">Your site is down. Your phone is buzzing. A customer is asking why checkout shows a white page. Breathe. This guide walks you through the five most common WordPress emergencies — site down, white screen, critical error, hacked, locked out — with a 30-second diagnostic and a 5-minute fix for each. Keep this page open in a tab; read only the section that matches your symptom.</p>
+
+    <div class="sc-banner" aria-label="Animated demo: SimpleReview identifies a WordPress fatal error and opens a one-click repair PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <div class="sc-error-box">
+              <div class="sc-err-title">⚠ There has been a critical error on this website</div>
+              <div class="sc-err-msg">PHP Fatal error: Allowed memory size exhausted (tried to allocate 20480 bytes)<br>in <span class="sc-fpath">/wp-content/plugins/woocommerce/includes/class-wc-cart.php:812</span></div>
+              <div class="sc-err-meta">Last change: plugin auto-update 14 min ago · PHP 8.2 · WordPress 6.9</div>
+            </div>
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-rec-logo">My Store · wp-admin</div>
+                <div class="sc-rec-nav"><span>Orders</span><span>Products</span><span>Plugins</span></div>
+              </div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Site recovered · Memory limit raised · Cache cleared</span>
+                <div class="sc-rec-h">Store Dashboard</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Emergency fix</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">Site down — diagnose and patch</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">24/7</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Diagnosis</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Type</span><span class="sc-sb-v">memory exhaust</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Trigger</span><span class="sc-sb-v">WC cart class</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Raise <code style="font-size:8px">WP_MEMORY_LIMIT</code> to 512M, clear object cache, pin WC version</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Site online. Checkout works. No rollback needed.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">fix: raise memory limit, pin WC<br>wp-config.php · 2 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click broken element → SimpleReview reads logs → <strong>Fix it</strong> → site back online in minutes</div>
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Need help right now, at 3am, with no developer on call? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> is a 24/7 AI-assisted emergency option. Click the broken element on your site, and it generates a pull request with the fix — no waiting on a ticket queue.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Emergency Cheat Sheet</h3>
+      <ul>
+        <li><strong>Before touching anything:</strong> take a backup of <code>wp-content/</code> and the database. If your host offers one-click snapshots, use it.</li>
+        <li><strong>Site totally down?</strong> Check in incognito first. Your browser may be caching an old error.</li>
+        <li><strong>White screen?</strong> It is almost always a PHP fatal error. Enable <code>WP_DEBUG_LOG</code> and read <code>wp-content/debug.log</code>.</li>
+        <li><strong>Can't log in?</strong> Reset password in database via phpMyAdmin, or rename the security plugin folder over FTP.</li>
+        <li><strong>Hacked?</strong> Rotate every password, rotate auth salts in <code>wp-config.php</code>, scan with Wordfence, restore from clean backup if possible.</li>
+        <li><strong>No FTP, no panel access, sensitive data at risk?</strong> Escalate — call hosting support or a pro developer now.</li>
+      </ul>
+    </div>
+
+    <h2>First 60 Seconds — Stay Calm, Gather Facts</h2>
+
+    <p>Before you touch a single file, answer these four questions. They decide which section of this guide to read.</p>
+
+    <ol class="steps">
+      <li><strong>Is it just you, or is the site down for everyone?</strong> Open <a href="https://www.isitdownrightnow.com/">isitdownrightnow.com</a> or test from your phone on mobile data. If it is only you, clear browser cache or flush DNS.</li>
+      <li><strong>What exactly do you see?</strong> White page? Red "critical error"? "Error establishing database connection"? "502 Bad Gateway"? The exact wording tells you whether the problem is PHP, database, or server.</li>
+      <li><strong>What changed in the last 24 hours?</strong> Plugin update, theme update, WordPress core update, DNS change, host migration, new code deploy? 95% of emergencies trace back to a change in the last day.</li>
+      <li><strong>Do you have access?</strong> wp-admin, FTP/SFTP, hosting cPanel, database (phpMyAdmin)? Write down what you can reach. If you have none of them, skip to the escalation section below.</li>
+    </ol>
+
+    <div class="warn-box">
+      <strong>Rule: back up before you fix.</strong> Even if the site is already broken, take a copy of <code>wp-content/</code> and export the database. A bad fix can turn a recoverable problem into data loss.
+    </div>
+
+    <h2>Scenario 1: Site Is Completely Down</h2>
+
+    <div class="scenario">
+      <span class="label">Symptom</span>
+      <h3>"This site can't be reached" / timeout / 502 / 503</h3>
+
+      <div class="mini">30-second diagnostic</div>
+      <p>Visit your site in an incognito window. If you see a host-branded error page (SiteGround, Cloudflare, Kinsta), the issue is at the hosting or CDN layer — WordPress never got to run. If the browser times out entirely, DNS or the origin server is down.</p>
+
+      <div class="mini">5-minute fix</div>
+      <ol>
+        <li>Log into your hosting panel. Check if the server / container is running. Most hosts have a "Restart" or "Reboot" button.</li>
+        <li>Check your Cloudflare / CDN dashboard. If Cloudflare shows "host error," pause Cloudflare temporarily (DNS only) to see if the origin responds.</li>
+        <li>Verify DNS: <code>dig yoursite.com</code> or use <a href="https://dnschecker.org">dnschecker.org</a>. If the A record points to the wrong IP, fix it.</li>
+        <li>Check disk space on the server. A full disk is a common cause of 502s: MySQL cannot write, PHP cannot write sessions.</li>
+      </ol>
+
+      <div class="mini">When to escalate</div>
+      <p>If hosting panel is unreachable too, this is a hosting-side outage. Open a ticket with your host and ask about their status page. Nothing you can do from WordPress will help.</p>
+    </div>
+
+    <h2>Scenario 2: White Screen of Death</h2>
+
+    <div class="scenario">
+      <span class="label">Symptom</span>
+      <h3>Completely blank page, no error message</h3>
+
+      <div class="mini">30-second diagnostic</div>
+      <p>White screen = PHP fatal error with error display disabled. The error exists — it is just hidden. Enable logging and you will see it in seconds.</p>
+
+      <div class="mini">5-minute fix</div>
+      <p>Edit <code>wp-config.php</code> via FTP or your host's file manager. Add these four lines just above <code>/* That's all, stop editing! */</code>:</p>
+
+<pre><code>define( 'WP_DEBUG',         true );
+define( 'WP_DEBUG_LOG',     true );    // writes to wp-content/debug.log
+define( 'WP_DEBUG_DISPLAY', false );   // hide errors from visitors
+@ini_set( 'display_errors', 0 );</code></pre>
+
+      <p>Reload the broken page. Then read <code>wp-content/debug.log</code> — the exact file, line number, and PHP function that crashed will be in the last few lines.</p>
+
+      <p>If the log says <code>Allowed memory size exhausted</code>, add one more line:</p>
+
+<pre><code>define( 'WP_MEMORY_LIMIT', '512M' );</code></pre>
+
+      <p>If the log points at a specific plugin, deactivate that plugin by renaming its folder over FTP (e.g., <code>/wp-content/plugins/slug</code> → <code>/wp-content/plugins/slug.off</code>). Site should come back.</p>
+
+      <div class="mini">When to escalate</div>
+      <p>If <code>debug.log</code> shows errors you do not understand (class not found, abstract method, type error in core files), you are probably looking at a PHP version mismatch — your host upgraded PHP and a plugin is not compatible. Ask your host to downgrade PHP temporarily, or read our detailed guide on the <a href="../critical-error-on-this-website/">WordPress critical error screen</a>.</p>
+    </div>
+
+    <h2>Scenario 3: "Critical Error on This Website" Message</h2>
+
+    <div class="scenario">
+      <span class="label">Symptom</span>
+      <h3>Red / plain WordPress error page with the word "critical"</h3>
+
+      <div class="mini">30-second diagnostic</div>
+      <p>WordPress caught a PHP fatal error and replaced the white screen with a friendlier message. Check your email — WordPress sends a recovery-mode link to the admin address with the full error stack trace.</p>
+
+      <div class="mini">5-minute fix</div>
+      <ol>
+        <li>Open Gmail / inbox for your admin email. Search "Your Site is Experiencing a Technical Issue." The email contains a recovery-mode link.</li>
+        <li>Click the recovery link. WordPress loads wp-admin in a special mode where the offending plugin is auto-paused.</li>
+        <li>Deactivate that plugin, update it (or find a replacement), reactivate. Done.</li>
+        <li>If the email never arrived, enable <code>WP_DEBUG_LOG</code> (see Scenario 2) and read <code>debug.log</code>.</li>
+      </ol>
+
+      <div class="mini">Most common triggers</div>
+      <ul>
+        <li>Plugin auto-update installed a version incompatible with your PHP</li>
+        <li>Theme update removed a function a child theme relied on</li>
+        <li>WordPress core major update (like 6.9) deprecated a function — see our <a href="../wordpress-6-9-broke-my-site/">WP 6.9 recovery guide</a></li>
+        <li>Cache plugin serialized data that can't be unserialized after a version bump</li>
+      </ul>
+    </div>
+
+    <h2>Scenario 4: Site Is Hacked</h2>
+
+    <div class="scenario">
+      <span class="label">Symptom</span>
+      <h3>Redirects to spam, unknown admin users, strange files, Google Safe Browsing warning</h3>
+
+      <div class="mini">30-second diagnostic</div>
+      <p>Open wp-admin → Users → All Users. Any admin you do not recognize? Check <code>/wp-content/uploads/</code> for random <code>.php</code> files (uploads should only contain images and documents). Search site root for files like <code>wp-conflg.php</code>, <code>wso.php</code>, <code>radio.php</code> — classic backdoors.</p>
+
+      <div class="mini">5-minute containment</div>
+      <ol>
+        <li><strong>Take the site offline</strong> by putting it in maintenance mode or returning a 503 in <code>.htaccess</code> — stop the attack from reaching visitors.</li>
+        <li><strong>Change every password</strong> in this order: hosting account, SFTP, database, then WordPress admin. Do this from a different, clean computer if possible.</li>
+        <li><strong>Rotate auth salts</strong> in <code>wp-config.php</code>. Generate fresh ones at <a href="https://api.wordpress.org/secret-key/1.1/salt/">api.wordpress.org/secret-key/1.1/salt/</a> and paste over the existing <code>define('AUTH_KEY', ...)</code> block. This force-logs-out every attacker session instantly.</li>
+        <li><strong>Install Wordfence or Sucuri</strong> and run a full scan. Follow the remediation list.</li>
+        <li><strong>Delete unknown admin users</strong> from Users → All Users.</li>
+        <li><strong>If you have a known-clean backup from before the compromise</strong>, restore from it. That is faster and safer than manual cleanup.</li>
+      </ol>
+
+      <div class="mini">When to escalate</div>
+      <p>If you handle credit cards, GDPR-regulated personal data, or medical records, stop and call a professional incident response firm immediately. You may have legal notification obligations (72 hours for GDPR). Do not try to DIY a hack involving regulated data — document everything and bring in experts.</p>
+    </div>
+
+    <h2>Scenario 5: Locked Out of wp-admin</h2>
+
+    <div class="scenario">
+      <span class="label">Symptom</span>
+      <h3>Wrong password, IP blocked, 2FA broken, redirect loop</h3>
+
+      <div class="mini">30-second diagnostic</div>
+      <p>Which lockout is it? (a) Forgot password and email reset doesn't arrive, (b) security plugin banned your IP, (c) 2FA app got wiped, (d) you log in but immediately get redirected back to login.</p>
+
+      <div class="mini">5-minute fix — by lockout type</div>
+
+      <p><strong>Forgot password, email broken:</strong> open phpMyAdmin in your hosting panel → select the WordPress database → table <code>wp_users</code> → edit your row → set <code>user_pass</code> to MD5 of your new password:</p>
+<pre><code>UPDATE wp_users
+SET user_pass = MD5('MyNewSecurePass123!')
+WHERE user_login = 'admin';</code></pre>
+      <p>WordPress will detect the MD5 hash and upgrade it to bcrypt on your next login.</p>
+
+      <p><strong>IP banned by security plugin (Wordfence, iThemes, Limit Login Attempts):</strong> connect via FTP, rename <code>/wp-content/plugins/wordfence</code> to <code>/wp-content/plugins/wordfence.off</code>. Log in, add your IP to the whitelist, rename the folder back.</p>
+
+      <p><strong>2FA broken:</strong> same FTP trick — rename the 2FA plugin folder. Log in, reset your 2FA, re-enable the plugin.</p>
+
+      <p><strong>Redirect loop (login succeeds, kicks you back to login):</strong> caused by cookies or URL mismatch. Clear all browser cookies for your site, or force the correct URL in <code>wp-config.php</code>:</p>
+<pre><code>define('WP_HOME','https://yoursite.com');
+define('WP_SITEURL','https://yoursite.com');</code></pre>
+
+      <div class="mini">When to escalate</div>
+      <p>If you lost access to the admin email AND cannot reach phpMyAdmin, you need your host — they can reset the WordPress password through the hosting panel.</p>
+    </div>
+
+    <h2>Quick Reference — Symptom to Fix</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Symptom</th><th>Likely cause</th><th>First action</th></tr>
+        <tr><td>Blank white page</td><td>PHP fatal, errors hidden</td><td>Enable WP_DEBUG_LOG, read debug.log</td></tr>
+        <tr><td>"Critical error" screen</td><td>PHP fatal in plugin / theme</td><td>Check admin email for recovery link</td></tr>
+        <tr><td>"Error establishing database connection"</td><td>DB credentials wrong, DB server down</td><td>Check wp-config.php DB creds, call host</td></tr>
+        <tr><td>502 Bad Gateway / 503</td><td>PHP-FPM crashed, memory exhausted</td><td>Restart PHP / container from hosting panel</td></tr>
+        <tr><td>Redirect to spam site</td><td>Compromise — rogue admin, malware</td><td>Rotate salts, scan with Wordfence, restore backup</td></tr>
+        <tr><td>Stuck in maintenance mode</td><td>.maintenance file not removed</td><td>FTP — delete /.maintenance in site root</td></tr>
+        <tr><td>Can't log in — wrong pass</td><td>Lost password, email broken</td><td>Reset user_pass in phpMyAdmin via MD5</td></tr>
+        <tr><td>Login redirect loop</td><td>Cookie / URL mismatch</td><td>Set WP_HOME / WP_SITEURL in wp-config</td></tr>
+        <tr><td>Admin bar missing, site "almost works"</td><td>Theme function deprecated</td><td>Switch to Twenty Twenty-Four to isolate</td></tr>
+        <tr><td>Slow / timing out</td><td>Runaway plugin, DB query, DDoS</td><td>Check New Relic or host's slow-query log</td></tr>
+      </table>
+    </div>
+
+    <h2>One-Click Repair With SimpleReview</h2>
+
+    <p>If you do not want to spelunk through <code>debug.log</code>, edit <code>wp-config.php</code> over SFTP at 2am, or phone-support a developer, <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> is a 24/7 AI-assisted emergency option. It works like this:</p>
+
+    <ol>
+      <li>Install the Chrome extension and open your broken site (any URL that loads, even the error page).</li>
+      <li>Click the SimpleReview icon, then click the broken element — the red error box, a frozen button, the white page, a hacked banner.</li>
+      <li>Type what you want to happen ("site is down — diagnose and fix") and click <strong>Fix it</strong>.</li>
+      <li>SimpleReview pulls your <code>debug.log</code> over SFTP, reads the last fatal error, identifies the file and line, and opens a pull request with the one-line fix. You review it, merge, and the site is back.</li>
+    </ol>
+
+    <p>It is not a replacement for a backup strategy or an experienced developer retainer — but when the site is down and nobody is answering the phone, it is the fastest way to get running again. See the <a href="../../simple-review/">product page</a> for the full workflow.</p>
+
+    <div class="cta-block">
+      <h3>Get Emergency Help — 24/7, AI-Assisted</h3>
+      <p>Click the broken element. SimpleReview diagnoses the fatal error and ships a PR. No ticket queue, no waiting.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="../../simple-review-wordpress/" style="color:#5b44e8;font-weight:600">SimpleReview for WordPress →</a> — 30-second install, no Chrome required.</p>
+    </div>
+
+    <h2>When to Escalate to a Human</h2>
+
+    <p>DIY emergency triage has limits. Call a professional developer or incident-response firm if any of these apply:</p>
+
+    <ul>
+      <li>You do not have FTP, SFTP, or hosting-panel access, and email reset does not work.</li>
+      <li>The site was hacked and you process regulated data (PCI, GDPR, HIPAA). You may have a 72-hour breach-notification clock running.</li>
+      <li>Your database is corrupted and backups are missing or older than acceptable data loss.</li>
+      <li>You have tried rollback, plugin deactivation, and theme switch — and the site is still broken after 30 minutes.</li>
+      <li>The site drives meaningful revenue and every hour down costs more than a developer's hourly rate.</li>
+    </ul>
+
+    <p>Before calling, prepare: hosting login, FTP credentials, the last known working date, a list of recent changes (plugin updates, deploys, migrations), and a screenshot of the error.</p>
+
+    <h2>Prevent the Next Emergency</h2>
+
+    <ol class="steps">
+      <li><strong>Automated off-site backups</strong>, daily, retained 30 days. UpdraftPlus, BlogVault, or your host's backup plan — whichever actually runs without your attention.</li>
+      <li><strong>Staging environment</strong> for every major update. Apply WordPress core, plugin, and theme majors to staging first. Managed hosts (Kinsta, WP Engine, SiteGround) give one-click staging.</li>
+      <li><strong>Disable core auto-majors</strong>: add <code>define( 'WP_AUTO_UPDATE_CORE', 'minor' );</code> to <code>wp-config.php</code>. Security patches still auto-apply; majors wait for you.</li>
+      <li><strong>Uptime monitoring</strong> — UptimeRobot, BetterStack, Pingdom — SMS you within 60 seconds of downtime. The worst emergencies are the ones you learn about from a customer.</li>
+      <li><strong>Keep the emergency kit in a password manager:</strong> hosting login, SFTP credentials, database credentials, domain registrar, DNS host, backup restore instructions. At 3am you will not remember where anything is.</li>
+    </ol>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">My WordPress site is down right now — what do I do first?</div>
+      <div class="faq-a">Open the site in an incognito window. If you see a plain "critical error" message, the issue is PHP — enable <code>WP_DEBUG_LOG</code> in <code>wp-config.php</code> and read <code>wp-content/debug.log</code>. If you see a host error page (503, 502, "Error establishing database connection"), the issue is server- or database-side — call your host. If the page loads but admin is broken, deactivate plugins via FTP by renaming <code>/wp-content/plugins/</code> to <code>/wp-content/plugins-off/</code>.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the white screen of death in WordPress?</div>
+      <div class="faq-a">A completely blank white page, usually a PHP fatal error with error display disabled, a memory-limit exhaustion, or a plugin/theme incompatibility. Fix: enable <code>WP_DEBUG_LOG</code>, reload, read the exact fatal error from <code>wp-content/debug.log</code>. Memory limit can be raised by adding <code>define( 'WP_MEMORY_LIMIT', '512M' );</code> to <code>wp-config.php</code>.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I know if my WordPress site is hacked?</div>
+      <div class="faq-a">Signs: unfamiliar admin users in Users → All Users, unknown files in site root (like <code>wp-conflg.php</code> or random <code>.php</code> files in <code>/uploads/</code>), sudden redirects to spam, Google Safe Browsing warning, or SEO spam pages you didn't create. Run Wordfence or Sucuri scanner, change all passwords, rotate auth salts in <code>wp-config.php</code>, and restore from a clean pre-compromise backup if you have one.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">I am locked out of WordPress wp-admin — how do I get back in?</div>
+      <div class="faq-a">Three paths. (1) Use "Lost your password?" — if emails are broken, reset directly in the database via phpMyAdmin: <code>UPDATE wp_users SET user_pass = MD5('newpass') WHERE user_login = 'admin'</code>. (2) If a security plugin locked you out by IP, deactivate it via FTP by renaming its folder under <code>/wp-content/plugins/</code>. (3) If 2FA is broken, remove the 2FA plugin folder over FTP. Re-enable security after recovery.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">When should I call an emergency WordPress developer?</div>
+      <div class="faq-a">Escalate if: (1) you don't have FTP/SFTP or hosting panel access, (2) the site was hacked and you handle sensitive customer data (GDPR/PCI), (3) the database is corrupted and restore points are gone, (4) you've tried rollback and plugin deactivation and the site is still down after 30 minutes. Before calling, collect: hosting login, FTP creds, last known working date, recent changes, and a screenshot of the error.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is SimpleReview and how does it help in a WordPress emergency?</div>
+      <div class="faq-a">SimpleReview is an AI-assisted one-click repair tool for WordPress. Click the broken element on your site (error notice, frozen page, broken form) and SimpleReview reads your <code>debug.log</code> and source over SFTP, identifies the exact file and line of the fatal error, and generates a PR with the one-line fix. It works 24/7 — no ticket queue, no waiting for a developer to wake up.</div>
+    </div>
+
+    <h2>Related WordPress Emergency Guides</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/critical-error-on-this-website/">"Critical Error on This Website"</a>
+          <p>Deep dive on the generic WP fatal-error screen — 6 ways to recover, including debug.log.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
+          <p>Rollback from 6.9, identify the deprecated function, patch Slider Revolution / Elementor.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/wordpress/disable-comments-wordpress/">Disable WordPress Comments</a>
+          <p>Stop comment spam — Discussion settings, Bulk Edit, functions.php filter, plugin.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Product Page</a>
+          <p>AI-assisted one-click repair for WordPress — how it works and how to install.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">wordpress.org — Debugging in WordPress (WP_DEBUG_LOG)</a></li>
+      <li><a href="https://wordpress.org/documentation/article/common-wordpress-errors/">wordpress.org — Common WordPress Errors</a></li>
+      <li><a href="https://wordpress.org/documentation/article/faq-my-site-was-hacked/">wordpress.org — FAQ: My Site Was Hacked</a></li>
+      <li><a href="https://api.wordpress.org/secret-key/1.1/salt/">api.wordpress.org — Secret Key / Auth Salt generator</a></li>
+      <li><a href="https://wordpress.org/plugins/wordfence/">wordpress.org — Wordfence Security</a></li>
+      <li><a href="https://wordpress.org/plugins/updraftplus/">wordpress.org — UpdraftPlus Backup</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('.sc-banner');
+  if(!banner) return;
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        var s = document.createElement('style');
+        s.textContent = '.sc-banner.r, .sc-banner.r *, .sc-banner.r *::before, .sc-banner.r *::after { animation: none !important; }';
+        document.head.appendChild(s);
+        banner.classList.add('r');
+        void banner.offsetWidth;
+        banner.classList.remove('r');
+        document.head.removeChild(s);
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

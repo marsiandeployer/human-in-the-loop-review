@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magnifier banner variants — pick one</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f4f4f6; margin: 0; padding: 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 30px;
+  }
+  h1 { font-size: 22px; margin: 0 0 10px; color: #1a1a1a; }
+  .grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 40px; max-width: 760px;
+  }
+  .card {
+    background: #fff; border: 1px solid #e4e4e4; border-radius: 12px;
+    padding: 30px; display: flex; flex-direction: column; align-items: center;
+    gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .name { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+  .desc { font-size: 12px; color: #888; text-align: center; max-width: 240px; }
+  .preview-row { display: flex; gap: 30px; align-items: center; }
+  .label-1x { font-size: 10px; color: #aaa; text-align: center; margin-top: 6px; }
+  .scale-3x { transform: scale(3); transform-origin: top left; }
+  .scale-3x-wrap { width: 180px; height: 180px; overflow: hidden; }
+
+  /* ============ COMMON 60x60 ============ */
+  .banner {
+    width: 60px; height: 60px; flex-shrink: 0;
+    background: #fff; border: 1px solid #e4e4e4; border-radius: 8px;
+    box-sizing: border-box; padding: 4px; position: relative;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow: hidden;
+  }
+
+  /* Common loupe pieces */
+  .loupe {
+    border: 2.5px solid #FF6B35; border-radius: 50%;
+    background: rgba(255,255,255,0.4); position: relative;
+    box-sizing: border-box;
+  }
+  .loupe::after {
+    content: ''; position: absolute; bottom: -1px; right: -7px;
+    width: 9px; height: 3.5px; background: #FF6B35; border-radius: 1px;
+    transform: rotate(45deg); transform-origin: left center;
+  }
+
+  /* ============ M1: Magnifier hovering over element + tag below ============ */
+  .m1 { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+  .m1-element {
+    background: #f0f0f0; border-radius: 3px; padding: 5px 10px;
+    color: #1a1a1a; font-size: 8px; font-weight: 700; line-height: 1;
+    position: relative;
+  }
+  .m1-loupe {
+    position: absolute; top: -7px; right: -10px;
+    width: 22px; height: 22px;
+  }
+  .m1-fix {
+    background: #FF6B35; color: #fff; font-size: 7.5px; font-weight: 700;
+    padding: 3px 8px; border-radius: 3px; line-height: 1;
+  }
+
+  /* ============ M2: BIG loupe centered, element visible inside, Fix below ============ */
+  .m2 { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+  .m2-loupe {
+    width: 32px; height: 32px;
+    border: 3px solid #FF6B35; border-radius: 50%;
+    background: #fff; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .m2-loupe::after {
+    content: ''; position: absolute; bottom: -8px; right: -5px;
+    width: 11px; height: 4px; background: #FF6B35; border-radius: 1px;
+    transform: rotate(45deg); transform-origin: left center;
+  }
+  .m2-loupe-text {
+    font-size: 8px; font-weight: 800; color: #1a1a1a; line-height: 1;
+  }
+  .m2-fix {
+    background: #FF6B35; color: #fff; font-size: 7.5px; font-weight: 700;
+    padding: 3px 8px; border-radius: 3px; line-height: 1;
+  }
+
+  /* ============ M3: Loupe scans wireframe rows, highlights one ============ */
+  .m3 { height: 100%; display: flex; flex-direction: column; gap: 2.5px; padding: 3px 3px 0; }
+  .m3-topbar { display: flex; gap: 2px; margin-bottom: 1px; }
+  .m3-topbar span { width: 3px; height: 3px; border-radius: 50%; }
+  .m3-topbar span:nth-child(1) { background: #ff5f57; }
+  .m3-topbar span:nth-child(2) { background: #febc2e; }
+  .m3-topbar span:nth-child(3) { background: #28c840; }
+  .m3-line { height: 2px; background: #d8d8d8; border-radius: 1px; }
+  .m3-line.b { background: #1a1a1a; width: 45%; height: 2.5px; }
+  .m3-line.w70 { width: 70%; }
+  .m3-line.w85 { width: 85%; }
+  .m3-line.w55 { width: 55%; }
+  .m3-target {
+    height: 7px; background: #f0f0f0; border-radius: 2px;
+    width: 45%; position: relative;
+  }
+  .m3-loupe {
+    /* override common loupe — no handle, ring only */
+    position: absolute; top: -11px; left: 18%;
+    width: 20px; height: 20px;
+    border: 2.5px solid #FF6B35; border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    box-shadow: 0 0 0 2px rgba(255,107,53,0.18);
+  }
+  .m3-fix-row { display: flex; justify-content: flex-end; padding-right: 1px; margin-top: auto; padding-bottom: 2px; }
+  .m3-fix {
+    background: #FF6B35; color: #fff; font-size: 8.5px; font-weight: 700;
+    padding: 3px 7px; border-radius: 3px; line-height: 1;
+  }
+
+  /* ============ M4: HUGE loupe with "Fix it" inside lens, no other elements ============ */
+  .m4 { height: 100%; display: flex; align-items: center; justify-content: center; }
+  .m4-loupe {
+    width: 42px; height: 42px;
+    border: 3.5px solid #FF6B35; border-radius: 50%;
+    background: #FF6B35; position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .m4-loupe::after {
+    content: ''; position: absolute; bottom: -10px; right: -6px;
+    width: 13px; height: 4.5px; background: #FF6B35; border-radius: 1.5px;
+    transform: rotate(45deg); transform-origin: left center;
+  }
+  .m4-text {
+    font-size: 8.5px; font-weight: 800; color: #fff; line-height: 1; letter-spacing: 0.2px;
+  }
+
+  /* ============ M5: Loupe reveals BUG inside lens, Fix tag attached ============ */
+  .m5 { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+  .m5-loupe {
+    width: 30px; height: 30px;
+    border: 3px solid #FF6B35; border-radius: 50%;
+    background: rgba(255,107,53,0.1); position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .m5-loupe::after {
+    content: ''; position: absolute; bottom: -8px; right: -5px;
+    width: 11px; height: 4px; background: #FF6B35; border-radius: 1px;
+    transform: rotate(45deg); transform-origin: left center;
+  }
+  .m5-bug { font-size: 14px; line-height: 1; }
+  .m5-fix {
+    background: #FF6B35; color: #fff; font-size: 7.5px; font-weight: 700;
+    padding: 3px 8px; border-radius: 3px; line-height: 1;
+  }
+
+  /* ============ M6: Loupe with crosshair targeting + element below ============ */
+  .m6 { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+  .m6-loupe {
+    width: 26px; height: 26px;
+    border: 2.5px solid #FF6B35; border-radius: 50%;
+    background: rgba(255,255,255,0.6); position: relative;
+  }
+  .m6-loupe::after {
+    content: ''; position: absolute; bottom: -7px; right: -3px;
+    width: 9px; height: 3.5px; background: #FF6B35; border-radius: 1px;
+    transform: rotate(45deg); transform-origin: left center;
+  }
+  .m6-loupe::before {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 7px; height: 7px; border: 1px solid #FF6B35;
+    border-radius: 50%; transform: translate(-50%,-50%);
+    box-shadow: 0 0 0 2px rgba(255,107,53,0.2);
+  }
+  .m6-fix {
+    background: #FF6B35; color: #fff; font-size: 7.5px; font-weight: 700;
+    padding: 3px 8px; border-radius: 3px; line-height: 1;
+  }
+
+</style>
+</head>
+<body>
+
+<h1>Magnifier — 6 вариантов</h1>
+
+<div class="grid">
+
+  <!-- M1 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="m1">
+            <div class="m1-element">Buy now<div class="loupe m1-loupe"></div></div>
+            <div class="m1-fix">Fix it →</div>
+          </div>
+        </div>
+        <div class="label-1x">1×</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap"><div class="scale-3x">
+          <div class="banner">
+            <div class="m1">
+              <div class="m1-element">Buy now<div class="loupe m1-loupe"></div></div>
+              <div class="m1-fix">Fix it →</div>
+            </div>
+          </div>
+        </div></div>
+        <div class="label-1x">3×</div>
+      </div>
+    </div>
+    <div class="name">M1 — Loupe over element</div>
+    <div class="desc">Чёткая кнопка "Buy now" + лупа в углу + Fix it под ней.</div>
+  </div>
+
+  <!-- M2 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="m2">
+            <div class="m2-loupe"><span class="m2-loupe-text">BUG</span></div>
+            <div class="m2-fix">Fix it →</div>
+          </div>
+        </div>
+        <div class="label-1x">1×</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap"><div class="scale-3x">
+          <div class="banner">
+            <div class="m2">
+              <div class="m2-loupe"><span class="m2-loupe-text">BUG</span></div>
+              <div class="m2-fix">Fix it →</div>
+            </div>
+          </div>
+        </div></div>
+        <div class="label-1x">3×</div>
+      </div>
+    </div>
+    <div class="name">M2 — Big loupe + "BUG" inside</div>
+    <div class="desc">Большая лупа с текстом BUG в линзе + Fix it ниже.</div>
+  </div>
+
+  <!-- M3 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="m3">
+            <div class="m3-topbar"><span></span><span></span><span></span></div>
+            <div class="m3-line b"></div>
+            <div class="m3-line w85"></div>
+            <div class="m3-line w70"></div>
+            <div class="m3-line w55"></div>
+            <div class="m3-target"><div class="m3-loupe"></div></div>
+            <div class="m3-fix-row"><div class="m3-fix">Fix it →</div></div>
+          </div>
+        </div>
+        <div class="label-1x">1×</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap"><div class="scale-3x">
+          <div class="banner">
+            <div class="m3">
+              <div class="m3-line b"></div>
+              <div class="m3-line w70"></div>
+              <div class="m3-target"><div class="loupe m3-loupe"></div></div>
+              <div class="m3-fix-row"><div class="m3-fix">Fix →</div></div>
+            </div>
+          </div>
+        </div></div>
+        <div class="label-1x">3×</div>
+      </div>
+    </div>
+    <div class="name">M3 — Loupe scans page</div>
+    <div class="desc">Мини-страница с двумя строками + лупа сканирует выделенный блок + Fix.</div>
+  </div>
+
+  <!-- M4 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="m4">
+            <div class="m4-loupe"><span class="m4-text">FIX</span></div>
+          </div>
+        </div>
+        <div class="label-1x">1×</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap"><div class="scale-3x">
+          <div class="banner">
+            <div class="m4">
+              <div class="m4-loupe"><span class="m4-text">FIX</span></div>
+            </div>
+          </div>
+        </div></div>
+        <div class="label-1x">3×</div>
+      </div>
+    </div>
+    <div class="name">M4 — Big loupe = brand mark</div>
+    <div class="desc">Только большая лупа с надписью FIX в линзе. Иконка-бренд.</div>
+  </div>
+
+  <!-- M5 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="m5">
+            <div class="m5-loupe"><span class="m5-bug">🐞</span></div>
+            <div class="m5-fix">Fix it →</div>
+          </div>
+        </div>
+        <div class="label-1x">1×</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap"><div class="scale-3x">
+          <div class="banner">
+            <div class="m5">
+              <div class="m5-loupe"><span class="m5-bug">🐞</span></div>
+              <div class="m5-fix">Fix it →</div>
+            </div>
+          </div>
+        </div></div>
+        <div class="label-1x">3×</div>
+      </div>
+    </div>
+    <div class="name">M5 — Loupe reveals 🐞</div>
+    <div class="desc">Лупа с найденной багой 🐞 + Fix it ниже. Эмодзи как метафора.</div>
+  </div>
+
+  <!-- M6 -->
+  <div class="card">
+    <div class="preview-row">
+      <div>
+        <div class="banner">
+          <div class="m6">
+            <div class="m6-loupe"></div>
+            <div class="m6-fix">Fix it →</div>
+          </div>
+        </div>
+        <div class="label-1x">1×</div>
+      </div>
+      <div>
+        <div class="scale-3x-wrap"><div class="scale-3x">
+          <div class="banner">
+            <div class="m6">
+              <div class="m6-loupe"></div>
+              <div class="m6-fix">Fix it →</div>
+            </div>
+          </div>
+        </div></div>
+        <div class="label-1x">3×</div>
+      </div>
+    </div>
+    <div class="name">M6 — Loupe + crosshair target</div>
+    <div class="desc">Лупа с прицелом (target circle) внутри + Fix it. Минимализм.</div>
+  </div>
+
+</div>
+
+<p style="color:#888;font-size:13px;max-width:600px;text-align:center;margin-top:30px;">
+  Слева — реальный 60×60px. Справа — 3× zoom.
+  Скажи M1–M6 — поставлю на лендинг.
+</p>
+
+</body>
+</html>

@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SimpleReview — WordPress Plugin: Click Any Element, Get a Code Fix</title>
+  <meta name="description" content="WordPress plugin for visual feedback on your own site. Hover any element, click Fix it — the AI agent returns a ready-made patch, not just a screenshot.">
+  <link rel="canonical" href="https://onout.org/vibers/simple-review-wordpress/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SimpleReview — WordPress Plugin">
+  <meta property="og:description" content="WordPress plugin for visual feedback. Hover any element in wp-admin, click Fix it — AI returns a code patch, not a screenshot.">
+  <meta property="og:url" content="https://onout.org/vibers/simple-review-wordpress/">
+  <meta property="og:image" content="https://onout.org/vibers/banner400.png">
+  <meta property="og:image:width" content="669">
+  <meta property="og:image:height" content="462">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SimpleReview — WordPress Plugin">
+  <meta name="twitter:description" content="WordPress plugin. Click, comment, fix — get a real patch back.">
+  <meta name="twitter:image" content="https://onout.org/vibers/banner400.png">
+  <!-- Reddit Pixel -->
+  <script>!function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js";t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','t2_133sby');rdt('track','PageVisit');</script>
+  <!-- End Reddit Pixel -->
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SimpleReview",
+    "description": "WordPress plugin for visual feedback. Click any element in wp-admin, leave a note — an AI agent turns it into a code patch.",
+    "url": "https://onout.org/vibers/simple-review-wordpress/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "WordPress 5.9+",
+    "offers": [
+      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free — bring your own Claude Code or Codex. Optional built-in AI mode with no setup." }
+    ],
+    "publisher": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "How is SimpleReview different from Marker.io or other WordPress feedback plugins?", "acceptedAnswer": {"@type": "Answer", "text": "Most feedback plugins stop at screenshots and bug reports stored in the WP dashboard. SimpleReview hands the selected element straight to an AI agent and returns an actual code patch — not a ticket."}},
+      {"@type": "Question", "name": "Do I need my own AI agent?", "acceptedAnswer": {"@type": "Answer", "text": "Yes for the free mode — point the plugin at your own Claude Code or Codex webchat. A built-in AI mode is also available with no setup."}},
+      {"@type": "Question", "name": "What does the Fix It button do?", "acceptedAnswer": {"@type": "Answer", "text": "It captures the selected element, DOM context, page URL and your comment, then sends the package to your AI webchat to generate a fix or patch."}},
+      {"@type": "Question", "name": "Does this work on any WordPress theme?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It works with any self-hosted WordPress site (5.9+), any theme (Astra, GeneratePress, Divi, etc.) and any page builder (Elementor, Gutenberg, WPBakery). It does not work on WordPress.com hosted plans."}},
+      {"@type": "Question", "name": "Who can see the inspector?", "acceptedAnswer": {"@type": "Answer", "text": "Only logged-in users whose role is in the allowed-roles list (Administrators and Editors by default). Regular visitors never see the button or the panel."}},
+      {"@type": "Question", "name": "How much does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "The plugin is free on wordpress.org. Use your own Claude Code or Codex for free, or try the optional built-in AI mode."}}
+    ]
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html {
+      text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #fafaf8;
+      color: #1a1a1a;
+      line-height: 1.6;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    button, input, select, textarea, table, pre, code { font-family: inherit; }
+    pre, code, .panel-element-tag, .panel-element-path { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    h1, h2, h3 { text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page {
+      width: 100%;
+      background: #fff;
+      min-height: 100vh;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+    .content-wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    a { color: #5b44e8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .site-nav {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 40px;
+    }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .site-nav a:hover { color: #5b44e8; border-color: #5b44e8; text-decoration: none; }
+
+    .hero-wrap {
+      padding-bottom: 48px;
+    }
+    .hero {
+      border-bottom: 2px solid #1a1a1a;
+      padding: 48px 0 32px;
+      margin-bottom: 40px;
+    }
+    .hero-badge {
+      display: inline-block;
+      color: #5b44e8;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .hero-badge::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #5b44e8;
+      margin-right: 8px;
+      vertical-align: middle;
+      transform: translateY(-1px);
+    }
+    h1 {
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      line-height: 1.02;
+      margin-bottom: 16px;
+    }
+    .hero-sub {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 28px;
+      line-height: 1.45;
+      max-width: 640px;
+    }
+    .hero-sub strong { font-weight: 600; color: #1a1a1a; }
+    .cta-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 12px 26px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background .15s, transform .1s;
+    }
+    .btn-primary:hover { background: #333; text-decoration: none; }
+    .btn-primary:active { transform: translateY(1px); }
+    .btn-primary:focus-visible { outline: 2px solid #5b44e8; outline-offset: 3px; }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      color: #1a1a1a;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border-radius: 8px;
+      border: 1px solid #d8d8d8;
+      background: #fff;
+      transition: border-color .15s, background .15s;
+    }
+    .btn-secondary:hover { border-color: #1a1a1a; background: #fafafa; text-decoration: none; }
+    .btn-secondary:focus-visible { outline: 2px solid #5b44e8; outline-offset: 3px; }
+    /* M3 banner — scalable via font-size (em units) */
+    .mb {
+      flex-shrink: 0; align-self: center;
+      background: #fff; border: 1px solid #e4e4e4; border-radius: 0.7em;
+      box-sizing: border-box; padding: 0.35em 0.35em 0; position: relative;
+      box-shadow: 0 0.15em 0.5em rgba(0,0,0,0.06);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex; flex-direction: column; gap: 0.25em;
+      overflow: hidden;
+    }
+    .mb-16  {
+      width: 16px; height: 16px;
+      background: #fff; border: 1px solid #e4e4e4; border-radius: 2px;
+      padding: 1.5px 1.5px 0; box-shadow: none;
+      display: flex; flex-direction: column; gap: 1px;
+      box-sizing: border-box; position: relative; overflow: hidden;
+    }
+    .mb-16 > .mb-topbar, .mb-16 > .mb-fix-row, .mb-16 > .mb-loupe-wrap-only { display: none; }
+    .mb-16 .mb-line { height: 1px; background: #d0d0d0; border-radius: 0.5px; }
+    .mb-16 .mb-line.b   { background: #1a1a1a; width: 60%; height: 1.5px; }
+    .mb-16 .mb-line.w85 { width: 85%; }
+    .mb-16 .mb-line.w70 { width: 70%; }
+    .mb-16 .mb-line.w55 { width: 55%; }
+    .mb-16 .mb-target {
+      height: 2.5px; background: #f0f0f0; border-radius: 1px;
+      width: 60%; position: relative;
+    }
+    .mb-16 .mb-loupe {
+      position: absolute; top: -7px; left: 21%;
+      width: 8px; height: 8px;
+      border: 1.5px solid #dc2626; border-radius: 49%;
+      background: rgba(255,255,255,0.6);
+      box-shadow: none; box-sizing: border-box;
+    }
+    .mb-16 .mb-loupe::after {
+      content: ''; position: absolute; bottom: -1px; right: -2.5px;
+      width: 3px; height: 1.2px; background: #dc2626; border-radius: 0.5px;
+      transform: rotate(45deg); transform-origin: left center;
+    }
+    .mb-16 .mb-fix-bar {
+      margin-top: auto; height: 4px; background: #dc2626; border-radius: 1px;
+      margin-bottom: 1.5px;
+    }
+    .mb-60  { width: 60px;  height: 60px;  font-size: 10px; }
+    .mb-128 { width: 128px; height: 128px; font-size: 21px; }
+    .mb-180 { width: 180px; height: 180px; font-size: 30px; }
+    .mb-512 { width: 512px; height: 512px; font-size: 85px; }
+    /* mb-32 reuses simplified mb-16 layout, scaled */
+    .mb-32 {
+      width: 32px; height: 32px;
+      background: #fff; border: 1px solid #e4e4e4; border-radius: 3px;
+      padding: 3px 3px 0; box-shadow: none;
+      display: flex; flex-direction: column; gap: 2px;
+      box-sizing: border-box; position: relative; overflow: hidden;
+    }
+    .mb-32 .mb-line { height: 2px; background: #d0d0d0; border-radius: 1px; }
+    .mb-32 .mb-line.b   { background: #1a1a1a; width: 60%; height: 2.5px; }
+    .mb-32 .mb-line.w85 { width: 85%; }
+    .mb-32 .mb-line.w70 { width: 70%; }
+    .mb-32 .mb-line.w55 { width: 55%; }
+    .mb-32 .mb-target { height: 4px; background: #f0f0f0; border-radius: 1.5px; width: 60%; position: relative; }
+    .mb-32 .mb-loupe {
+      position: absolute; top: -7px; left: 12%;
+      width: 13px; height: 13px;
+      border: 2px solid #dc2626; border-radius: 50%;
+      background: rgba(255,255,255,0.6); box-shadow: none; box-sizing: border-box;
+    }
+    .mb-32 .mb-loupe::after {
+      content: ''; position: absolute; bottom: -1.5px; right: -2.5px;
+      width: 5px; height: 2px; background: #dc2626; border-radius: 1px;
+      transform: rotate(45deg); transform-origin: left center;
+    }
+    .mb-topbar { display: flex; gap: 0.2em; margin-bottom: 0.1em; }
+    .mb-topbar span { width: 0.3em; height: 0.3em; border-radius: 50%; flex-shrink: 0; }
+    .mb-topbar span:nth-child(1) { background: #ff5f57; }
+    .mb-topbar span:nth-child(2) { background: #febc2e; }
+    .mb-topbar span:nth-child(3) { background: #28c840; }
+    .mb-line { height: 0.2em; background: #d8d8d8; border-radius: 0.1em; }
+    .mb-line.b   { background: #1a1a1a; width: 45%; height: 0.25em; }
+    .mb-line.w85 { width: 85%; }
+    .mb-line.w70 { width: 70%; }
+    .mb-line.w55 { width: 55%; }
+    .mb-target {
+      height: 0.7em; background: #f0f0f0; border-radius: 0.2em;
+      width: 45%; position: relative;
+    }
+    .mb-loupe {
+      position: absolute; top: -1.4em; left: 18%;
+      width: 2em; height: 2em;
+      border: 0.25em solid #dc2626; border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      box-shadow: 0 0 0 0.2em rgba(220,38,38,0.18);
+      box-sizing: border-box;
+    }
+    .mb-loupe::after {
+      content: ''; position: absolute; bottom: -0.1em; right: -0.7em;
+      width: 0.9em; height: 0.35em; background: #dc2626; border-radius: 0.1em;
+      transform: rotate(45deg); transform-origin: left center;
+    }
+    .mb-fix-row { display: flex; justify-content: flex-end; margin-top: auto; padding-bottom: 0.2em; }
+    .mb-fix {
+      background: #dc2626; color: #fff;
+      font-size: 1em; font-weight: 700; line-height: 1;
+      padding: 0.35em 0.7em; border-radius: 0.3em;
+    }
+    .beta-note {
+      font-size: 13px;
+      color: #666;
+      margin-top: 16px;
+      line-height: 1.6;
+      max-width: 580px;
+    }
+    .beta-note a { color: #5b44e8; border-bottom: 1px solid rgba(91,68,232,0.3); }
+    .beta-note a:hover { border-bottom-color: #5b44e8; text-decoration: none; }
+
+    .how-it-works {
+      margin: 40px 0;
+    }
+    h2 {
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+    }
+    .steps {
+      display: grid;
+      gap: 16px;
+    }
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: #1a1a1a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-content h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
+    }
+    .step-content p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.55;
+    }
+    .fix-it-badge {
+      display: inline-block;
+      background: #5b44e8;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .vs-section {
+      margin: 40px 0;
+      padding: 28px;
+      background: #f8f7ff;
+      border: 1px solid #e0dcff;
+      border-radius: 8px;
+    }
+    .vs-section h2 { margin-bottom: 16px; }
+    .vs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .vs-table th {
+      text-align: left;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-bottom: 2px solid #1a1a1a;
+      background: transparent;
+    }
+    .vs-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
+    }
+    .vs-table tr:last-child td { border-bottom: none; }
+    .check { color: #16a34a; font-weight: 700; }
+    .cross { color: #dc2626; }
+    .col-vibers { background: #f0eeff; }
+
+    .use-cases {
+      margin: 40px 0;
+    }
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .case-card {
+      padding: 20px;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+    }
+    .case-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+    .case-card p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    .faq-section { margin: 40px 0; }
+    .faq-item { border-bottom: 1px solid #e8e8e8; padding: 16px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 600; font-size: 17px; margin-bottom: 8px; letter-spacing: -0.1px; }
+    .faq-a { font-size: 15px; color: #444; line-height: 1.65; }
+
+    .cta-box {
+      margin: 40px 0;
+      padding: 32px;
+      background: url('images/cta-bg.jpg') center/cover no-repeat, #1a1a1a;
+      color: #fff;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .cta-box h2 { color: #fff; margin-bottom: 12px; font-size: 32px; }
+    .cta-box p { color: #d0d0d0; margin-bottom: 24px; font-size: 15px; }
+    .btn-white {
+      display: inline-block;
+      background: #fff;
+      color: #1a1a1a;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .btn-white:hover { background: #f0eeff; text-decoration: none; }
+
+    /* ── Demo Scenario Selector ── */
+    .demo-scenario-bar {
+      max-width: 820px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .demo-scenario-label {
+      font-size: 13px;
+      color: #888;
+      margin-right: 4px;
+    }
+    .demo-tab {
+      background: #fff;
+      border: 1.5px solid #e0e0e0;
+      color: #444;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 18px;
+      min-height: 40px;
+      border-radius: 22px;
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+      font-family: inherit;
+    }
+    .demo-tab:hover { background: #f5f5f5; border-color: #bbb; color: #1a1a1a; }
+    .demo-tab.active { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
+    .demo-tab:focus-visible { outline: 2px solid #5b44e8; outline-offset: 2px; }
+    .tab-desc-wrap {
+      max-width: 820px;
+      margin: 10px auto 14px;
+    }
+    .tab-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+      padding: 0 4px;
+    }
+    .badge-bug    { background: #dc2626 !important; }
+    .badge-feature { background: #7c3aed !important; }
+    .badge-improve { background: #16a34a !important; }
+
+    /* ── HTML Demo Banner ── */
+    .demo-banner-outer {
+      max-width: 960px;
+      margin: 0 auto 48px;
+    }
+    /* Step badges — overlaid directly on the demo viewport */
+    .step-badge {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(26,26,26,0.85);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: help;
+      z-index: 15;
+      transition: background .15s, transform .15s;
+      backdrop-filter: blur(2px);
+    }
+    .step-badge:hover { background: #FF6B35; transform: scale(1.15); }
+    /* Tooltip — right side by default */
+    .step-badge::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 11px;
+      line-height: 1.4;
+      padding: 5px 9px;
+      border-radius: 5px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s;
+      z-index: 25;
+    }
+    .step-badge::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-right-color: #1a1a1a;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s;
+    }
+    /* Tooltip — left side for badges near right edge */
+    .step-badge.tip-left::after {
+      left: auto;
+      right: 30px;
+    }
+    .step-badge.tip-left::before {
+      left: auto;
+      right: 22px;
+      border-right-color: transparent;
+      border-left-color: #1a1a1a;
+    }
+    .step-badge:hover::after,
+    .step-badge:hover::before { opacity: 1; }
+    .demo-banner {
+      background: #0f0f0f;
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+    }
+    /* Wireframe skeleton blocks */
+    .wf-kpi {
+      background: #ebebeb;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .wf-kpi .wf-label { background: #d8d8d8; border-radius: 2px; height: 7px; width: 55%; margin-bottom: 8px; }
+    .wf-kpi .wf-value { background: #d0d0d0; border-radius: 3px; height: 18px; width: 65%; }
+    .wf-block { background: #e8e8e8; border-radius: 4px; }
+    .wf-line  { background: #dedede; border-radius: 3px; height: 8px; }
+    .browser-chrome {
+      background: #e8e8e8;
+      border-bottom: 1px solid #d0d0d0;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .browser-dots { display: flex; gap: 5px; }
+    .browser-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #28c840; }
+    .browser-url {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #c8c8c8;
+      border-radius: 4px;
+      padding: 4px 12px;
+      font-size: 13px;
+      color: #444;
+      margin: 0 8px;
+    }
+    .browser-ext-icon {
+      width: 18px; height: 18px;
+      background: #FF6B35;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #fff;
+      font-weight: 700;
+    }
+    .demo-viewport {
+      display: flex;
+      min-height: 480px;
+      position: relative;
+    }
+    .demo-site {
+      flex: 1;
+      background: #f8f8f8;
+      padding: 20px 24px;
+      min-width: 0;
+    }
+    .demo-site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .demo-site-logo {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .demo-site-nav {
+      display: flex;
+      gap: 12px;
+    }
+    .demo-site-nav span {
+      font-size: 13px;
+      color: #666;
+    }
+    .demo-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .demo-kpi {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .demo-kpi-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.4px; }
+    .demo-kpi-value { font-size: 22px; font-weight: 700; color: #1a1a1a; margin: 2px 0; }
+    .demo-kpi-btn {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 3px;
+      background: #2d3a8c;
+      color: #fff;
+      white-space: nowrap;
+    }
+    /* highlighted element - thin orange outline, captured-target feel */
+    .demo-kpi.highlighted {
+      border: 1px dashed #FF6B35;
+      box-shadow: 0 0 0 1px rgba(255,107,53,0.2);
+      position: relative;
+    }
+    .demo-kpi.highlighted::after {
+      content: "Captured target";
+      position: absolute;
+      top: -9px;
+      left: 8px;
+      background: #FF6B35;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 3px;
+      line-height: 1;
+    }
+    @keyframes cursor-bob {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .demo-panel {
+      width: 260px;
+      flex-shrink: 0;
+      background: #f7f7f7;
+      border-left: 1px solid #e0e0e0;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 480px;
+    }
+    /* Chat panel (new) */
+    .chat-messages {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .bubble {
+      font-size: 12px;
+      line-height: 1.45;
+      border-radius: 9px;
+      padding: 7px 10px;
+      max-width: 95%;
+      word-break: break-word;
+      animation: bubbleIn .35s ease;
+    }
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .bubble-system {
+      background: #eef1f5;
+      color: #555;
+      font-size: 11px;
+      border: 1px solid #e0e4ea;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
+    }
+    .bubble-user {
+      background: #e8f0fe;
+      color: #1a3a6b;
+      border: 1px solid #c7dbf5;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+    .bubble-agent {
+      background: #fff3ee;
+      color: #8a3a0e;
+      border: 1px solid #ffd3bd;
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+      white-space: pre-line;
+    }
+    .bubble-agent.pr    { background: #f0faf4; color: #166534; border-color: #86efac; }
+    .bubble-agent.deploy{ background: #eff6ff; color: #1e40af; border-color: #93c5fd; }
+    /* Empty chat placeholder */
+    .chat-messages:empty::before {
+      content: '💬 Chat opens after Fix it';
+      display: block;
+      margin: auto;
+      color: #b8b8b8;
+      font-size: 11px;
+      text-align: center;
+      padding: 20px 10px;
+    }
+    .chat-messages:empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Inline popup (near selected element) */
+    .inline-popup {
+      position: absolute;
+      width: 230px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.12);
+      padding: 10px;
+      z-index: 5;
+      font-size: 12px;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .inline-popup::before {
+      content: '';
+      position: absolute;
+      top: -7px;
+      left: 22px;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border-left: 1px solid #ddd;
+      border-top: 1px solid #ddd;
+      transform: rotate(45deg);
+    }
+    .inline-popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #222;
+      font-size: 12px;
+    }
+    .inline-popup-header .close-x {
+      color: #bbb;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .inline-popup-ta {
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      padding: 7px 9px;
+      font-size: 12px;
+      color: #333;
+      line-height: 1.45;
+      min-height: 48px;
+      margin-bottom: 8px;
+    }
+    .agent-select {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .agent-opt {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 5px 6px;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      background: #fafafa;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      color: #555;
+      transition: all .15s ease;
+    }
+    .agent-opt svg { flex-shrink: 0; }
+    .agent-opt:hover { border-color: #bbb; }
+    .agent-opt.active {
+      background: #fff;
+      border-color: #FF6B35;
+      color: #222;
+      box-shadow: 0 0 0 1px #FF6B35 inset;
+    }
+    .inline-popup-fix {
+      background: #FF6B35;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      animation: pulse-btn 2s ease-in-out infinite;
+    }
+    .inline-popup.static-popup::before,
+    .static-banner .inline-popup::before { display: none; }
+    .static-banner .inline-popup-fix { animation: none; }
+    .static-banner-wrap { width: 100%; }
+    .static-banner { width: 440px; max-width: 100%; height: 280px; margin: 0 auto; overflow: hidden; display: flex; flex-direction: column; box-sizing: border-box; }
+    .static-banner .browser-chrome { padding: 5px 8px; gap: 6px; flex-shrink: 0; }
+    .static-banner .browser-dots span { width: 7px; height: 7px; }
+    .static-banner .browser-url { font-size: 10px; padding: 2px 8px; margin: 0 6px; }
+    .static-banner .demo-viewport { min-height: 0; flex: 1; overflow: hidden; }
+    .static-banner .demo-site { padding: 10px 12px; width: 100%; box-sizing: border-box; }
+    .static-banner .inline-popup { padding: 7px; font-size: 11px; }
+    .static-banner .inline-popup-header { font-size: 11px; margin-bottom: 4px; }
+    .static-banner .inline-popup-ta { font-size: 11px; padding: 5px 7px; min-height: 34px; margin-bottom: 6px; }
+    .static-banner .agent-opt { padding: 3px 4px; font-size: 10px; }
+    .static-banner .inline-popup-fix { padding: 5px 8px; font-size: 11px; }
+    /* Variant A — split hero (headline integrated into banner) */
+    .variant-a-split {
+      display: flex;
+      flex-direction: row;
+      background: #0f0f0f;
+    }
+    .variant-a-split .va-left {
+      width: 170px;
+      flex-shrink: 0;
+      padding: 18px 16px;
+      background: linear-gradient(155deg, #1a1a1a 0%, #0b0b0b 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .variant-a-split .va-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 30%, rgba(255,107,53,0.18), transparent 55%);
+      pointer-events: none;
+    }
+    .variant-a-split .va-left > * { position: relative; z-index: 1; }
+    .variant-a-split .va-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      min-width: 0;
+    }
+    .variant-a-split .browser-chrome { flex-shrink: 0; }
+    /* Variant B — dark top-band headline + white demo below */
+    .variant-b-stack {
+      display: flex;
+      flex-direction: column;
+      background: #0f0f0f;
+    }
+    .variant-b-stack .vb-headline {
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #0b0b0b 100%);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .variant-b-stack .vb-headline::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(255,107,53,0.22), transparent 65%);
+      pointer-events: none;
+    }
+    .variant-b-stack .vb-headline > * { position: relative; z-index: 1; }
+    /* Variant C — light top-strip with centered headline */
+    .variant-c-stack {
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border: 1px solid #e8e8e8;
+    }
+    .variant-c-stack .vc-headline {
+      padding: 14px 18px;
+      background: #fafafa;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .inline-popup-fix.loading {
+      animation: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #cc552a;
+      cursor: default;
+    }
+    .fix-spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: fix-spin 0.8s linear infinite;
+      display: inline-block;
+    }
+    @keyframes fix-spin { to { transform: rotate(360deg); } }
+    .inline-popup.sending {
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .panel-logo {
+      font-size: 13px;
+      font-weight: 700;
+      color: #FF6B35;
+      letter-spacing: 0.3px;
+    }
+    .panel-badge {
+      font-size: 11px;
+      background: #FF6B35;
+      color: #fff;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
+    .panel-element {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px;
+      padding: 8px 10px;
+    }
+    .panel-element-label { font-size: 11px; color: #888; margin-bottom: 3px; }
+    .panel-element-tag { font-size: 12px; color: #0070f3; font-family: monospace; }
+    .panel-element-text { font-size: 12px; color: #333; margin-top: 3px; }
+    .panel-element-path { font-size: 11px; color: #888; margin-top: 4px; font-family: monospace; }
+    .panel-element-file {
+      font-size: 11px;
+      color: #0070f3;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed #eee;
+      font-family: monospace;
+      word-break: break-all;
+    }
+    .panel-element-file::before { content: "📄 "; }
+    .panel-btn-fix {
+      background: #FF6B35;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      letter-spacing: 0.2px;
+      animation: pulse-btn 2s ease-in-out infinite;
+    }
+    @keyframes pulse-btn {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(255,107,53,0); }
+    }
+    .panel-btn-comment {
+      background: transparent;
+      border: 1px solid #d0d0d0;
+      color: #666;
+      border-radius: 5px;
+      padding: 8px 14px;
+      font-size: 13px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .panel-btn-paid {
+      background: #fff;
+      border: 1px solid #1a1a1a;
+      color: #1a1a1a;
+      border-radius: 5px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 6px;
+      display: block;
+      width: 100%;
+      font-family: inherit;
+    }
+    .panel-btn-paid small {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      color: #888;
+      margin-top: 1px;
+    }
+    .panel-comment-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+    }
+    .panel-btn-wrap { position: relative; }
+    .step-badge-panel {
+      left: -34px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .panel-comment-label {
+      font-size: 11px;
+      color: #888;
+    }
+    .panel-comment-box {
+      background: #fff;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #333;
+      line-height: 1.5;
+      min-height: 58px;
+    }
+    .type-cursor {
+      display: inline-block;
+      color: #FF6B35;
+      font-weight: 100;
+      animation: blink 0.7s step-end infinite;
+      margin-left: 1px;
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ── Animated fake cursor that travels to the Fix it button ── */
+    .fake-cursor {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+      transform: translate(var(--tx,0), var(--ty,0)) scale(1);
+      transition: transform .7s cubic-bezier(.4,.0,.2,1), opacity .2s ease;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+    }
+    .fake-cursor.visible { opacity: 1; }
+    .fake-cursor.clicking {
+      transform: translate(var(--tx,0), var(--ty,0)) scale(.82);
+      transition: transform .12s ease;
+    }
+    .inline-popup-fix.being-clicked {
+      transform: scale(.96);
+      box-shadow: 0 0 0 3px rgba(255,107,53,.35);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    /* ── Fix animation states ── */
+    .panel-btn-fix.sending {
+      background: #444 !important;
+      cursor: default;
+      opacity: 0.8;
+    }
+    .panel-success {
+      display: none;
+      background: #f0faf4;
+      border: 1px solid #86efac;
+      border-radius: 5px;
+      padding: 9px 12px;
+      font-size: 12px;
+      color: #166534;
+      line-height: 1.5;
+      animation: fadeIn .4s ease;
+    }
+    .panel-deploy {
+      display: none;
+      background: #eff6ff;
+      border: 1px solid #93c5fd;
+      border-radius: 5px;
+      padding: 9px 12px;
+      font-size: 12px;
+      color: #1e40af;
+      line-height: 1.5;
+      animation: fadeIn .4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fix-applied {
+      animation: fixGlow .6s ease forwards !important;
+    }
+    @keyframes fixGlow {
+      0%   { box-shadow: 0 0 0 0 rgba(22,163,74,0); border-color: #FF6B35; }
+      40%  { box-shadow: 0 0 0 3px rgba(22,163,74,0.25); border-color: #16a34a; }
+      100% { box-shadow: 0 0 0 1px rgba(22,163,74,0.2); border-color: #16a34a; }
+    }
+    .text-fade {
+      animation: textSwap .5s ease;
+    }
+    @keyframes textSwap {
+      0%   { opacity: 1; }
+      40%  { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .demo-banner-caption {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      padding: 10px 40px;
+      background: #f5f5f5;
+      border-top: 1px solid #e0e0e0;
+    }
+
+
+    .what-fixes {
+      margin: 40px 0;
+      padding: 24px;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+    }
+    .fixes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+      margin-top: 16px;
+    }
+    .fix-item {
+      font-size: 15px;
+      color: #333;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.55;
+    }
+    .fix-item::before {
+      content: "→";
+      color: #5b44e8;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid #e8e8e8;
+      font-size: 13px;
+      color: #888;
+    }
+    footer a { color: #888; }
+    footer a:hover { color: #5b44e8; }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 38px; letter-spacing: -0.8px; }
+      h2 { font-size: 24px; }
+      .cta-box h2 { font-size: 24px; }
+      .hero-sub { font-size: 17px; }
+      .hero { padding: 32px 0 28px; }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 0 10px; }
+      .content-wrap { padding: 0 10px; }
+      h1 { font-size: 32px; }
+      .case-grid { grid-template-columns: 1fr; }
+      .vs-table { font-size: 13px; }
+      .vs-table th, .vs-table td { padding: 8px 8px; }
+      .demo-banner { border-radius: 6px; }
+      .step-badge { display: none; }
+      .demo-banner-caption { padding: 8px 16px; }
+      .fixes-grid { grid-template-columns: 1fr; }
+      .demo-panel { width: 160px; }
+      .demo-kpi-row { grid-template-columns: 1fr; }
+      .demo-kpi:not(.highlighted) { display: none; }
+      .wf-kpi { display: none; }
+      .demo-tab { min-height: 44px; padding: 11px 16px; }
+      .btn-primary, .btn-secondary { min-height: 48px; width: 100%; }
+      .cta-group { flex-direction: column; align-items: stretch; width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+    }
+    #lang-switch {
+      display: none;
+      position: fixed;
+      top: 14px; right: 14px;
+      z-index: 9999;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    #lang-switch button {
+      padding: 5px 12px;
+      border: none;
+      background: #fff;
+      color: #555;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    #lang-switch button.active { background: #1a1a1a; color: #fff; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero-wrap">
+  <div class="content-wrap">
+  <header class="hero">
+    <div class="hero-badge" data-i18n="badge">SimpleReview &middot; WordPress Plugin &mdash; Early Access</div>
+    <h1 data-i18n="hero-title">Spot an issue on your WordPress site. Get a <abbr title="The fix lands as a commit on your GitHub repo, or a deploy hook, or a patch you can paste into FTP / SSH">code fix</abbr>.</h1>
+    <p class="hero-sub" data-i18n="hero-sub">For site owners, editors and agencies who can point at a problem &mdash; but don&rsquo;t want to dig through a theme to fix it by hand.</p>
+    <div class="cta-group">
+      <a href="https://onout.org/vibers/simple-review-wordpress/simple-review.zip" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'simple-review-wp',event_label:'download_plugin_zip'});rdt('track','Lead');trackClick('download_plugin_wp_zip');" data-i18n="cta-download">Download plugin (.zip)</a>
+    </div>
+    <p class="beta-note" data-i18n="beta-note">Works on any self-hosted WordPress 5.9+. Free with your own Claude Code or Codex. Visible only to Administrators and Editors &mdash; visitors never see the button. Optional built-in AI mode, no setup.</p>
+  </header>
+  </div><!-- /content-wrap hero -->
+
+  <!-- Scenario selector — sits above the browser mockup -->
+  <div class="demo-scenario-bar">
+    <span class="demo-scenario-label" data-i18n="try-scenario">Try a scenario:</span>
+    <button class="demo-tab active" data-tab="bug" onclick="switchTab('bug')" data-i18n="tab-bug">🐛 Bug fix</button>
+    <button class="demo-tab" data-tab="feature" onclick="switchTab('feature')" data-i18n="tab-feature">✨ Feature request</button>
+    <button class="demo-tab" data-tab="improve" onclick="switchTab('improve')" data-i18n="tab-improve">💡 Copywriting / UX</button>
+    <button class="demo-tab" data-tab="wp" onclick="switchTab('wp')" data-i18n="tab-wp">🔌 WordPress</button>
+  </div>
+  <div class="tab-desc-wrap">
+    <p class="tab-desc" id="tab-desc"></p>
+  </div>
+
+  <div class="demo-banner-outer">
+  <div class="demo-banner">
+    <!-- Browser chrome -->
+    <div class="browser-chrome">
+      <div class="browser-dots">
+        <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+      </div>
+      <div class="browser-url" id="demo-url">onout.org/dashboard/</div>
+      <div style="display:flex;align-items:center;gap:5px;background:#fff3ee;border:1px solid #FF6B35;border-radius:5px;padding:3px 10px;font-size:12px;color:#c94b1a;font-weight:600;white-space:nowrap;">
+        <img src="../favicon.ico" alt="" width="16" height="16" style="display:block;">
+        SimpleReview
+      </div>
+    </div>
+
+    <!-- TAB: Bug -->
+    <div class="demo-viewport" id="tab-bug">
+      <span class="step-badge" style="top:44px;left:14px;" data-tip="Step 1: Click where the change should go">1</span>
+      <div class="demo-site">
+        <!-- wireframe header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="wf-block" style="width:16px;height:16px;border-radius:3px;"></div>
+            <div class="wf-line" style="width:100px;"></div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div class="wf-line" style="width:44px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
+          </div>
+        </div>
+        <div class="demo-kpi-row">
+          <div class="demo-kpi highlighted">
+            <div class="demo-kpi-label">Monthly Revenue</div>
+            <div class="demo-kpi-value">$48,210</div>
+            <div style="font-size:11px;color:#16a34a;margin-top:3px;font-weight:600;">↑ 12.4%</div>
+            <span class="demo-kpi-btn" id="mock-btn-bug">View all transaction details →</span>
+            <div class="inline-popup" id="ipop-bug" style="top:calc(100% + 12px);left:-4px;">
+              <div class="inline-popup-header"><span>Code review</span><span class="close-x">×</span></div>
+              <div class="inline-popup-ta"><span class="tw" id="tw-bug"></span><span class="type-cursor">|</span></div>
+              <div class="agent-select">
+              <div class="agent-opt active" data-agent="claude" title="Claude">
+                <svg viewBox="0 0 92.2 65" width="12" height="12"><path fill="#D97757" d="M66.5,0H52.4l25.7,65h14.1L66.5,0z M25.7,0L0,65h14.4l5.3-13.6h26.9L51.8,65h14.4L40.5,0H25.7z M24.3,39.3l8.8-22.8l8.8,22.8H24.3z"/></svg>
+                <span>Claude</span>
+              </div>
+              <div class="agent-opt" data-agent="codex" title="Codex (OpenAI)">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="#000"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+                <span>Codex</span>
+              </div>
+            </div>
+            <button class="inline-popup-fix">Fix it →</button>
+            </div>
+          </div>
+          <!-- wireframe KPI cards -->
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+        </div>
+        <!-- wireframe table -->
+        <div style="background:#ebebeb;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;margin-bottom:10px;">
+          <div class="wf-line" style="width:35%;margin-bottom:10px;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #ddd;">
+            <div class="wf-line" style="width:38%;"></div><div class="wf-line" style="width:20%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #ddd;">
+            <div class="wf-line" style="width:42%;"></div><div class="wf-line" style="width:18%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;">
+            <div class="wf-line" style="width:30%;"></div><div class="wf-line" style="width:20%;"></div>
+          </div>
+        </div>
+        <!-- wireframe chart block -->
+        <div style="background:#ebebeb;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <div class="wf-line" style="width:28%;"></div>
+            <div class="wf-line" style="width:18%;"></div>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:4px;height:32px;">
+            <div class="wf-block" style="flex:1;height:40%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:70%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:55%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:90%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:60%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:80%;border-radius:2px 2px 0 0;"></div>
+            <div class="wf-block" style="flex:1;height:45%;border-radius:2px 2px 0 0;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-panel">
+        <div class="panel-header">
+          <span class="panel-logo">SimpleReview</span>
+          <span class="panel-badge badge-bug">bug</span>
+        </div>
+        <div class="chat-messages" id="chat-bug"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Feature -->
+    <div class="demo-viewport" id="tab-feature" style="display:none">
+      <span class="step-badge" style="top:98px;left:14px;" data-tip="Step 1: Click where the change should go">1</span>
+      <div class="demo-site">
+        <!-- wireframe header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="wf-block" style="width:16px;height:16px;border-radius:3px;"></div>
+            <div class="wf-line" style="width:100px;"></div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div class="wf-line" style="width:44px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
+          </div>
+        </div>
+        <!-- wireframe KPI row -->
+        <div class="demo-kpi-row">
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+          <div class="wf-kpi"><div class="wf-label"></div><div class="wf-value"></div></div>
+        </div>
+        <div id="mock-txn-feature" style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:10px 12px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="font-size:12px;color:#888;font-weight:600;">Recent Transactions</div>
+            <span style="font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;position:relative;top:1px;">👆</span>
+          </div>
+          <div id="filter-bar-feature" style="display:none;margin-bottom:7px;animation:fadeIn .4s ease;">
+            <div style="display:flex;gap:5px;align-items:center;">
+              <div style="flex:1;display:flex;align-items:center;gap:4px;background:#f9f9f9;border:1px solid #d1d5db;border-radius:4px;padding:4px 9px;font-size:11px;color:#666;">🔍 <span>Search transactions…</span></div>
+              <div style="background:#f9f9f9;border:1px solid #d1d5db;border-radius:4px;padding:4px 9px;font-size:11px;color:#666;white-space:nowrap;">Date ▾</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#444;padding:5px 0;border-bottom:1px solid #f0f0f0;"><span>Alex Johnson</span><span style="color:#16a34a;font-weight:600;">$299</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#444;padding:5px 0;border-bottom:1px solid #f0f0f0;"><span>Maria García</span><span style="color:#16a34a;font-weight:600;">$49</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#444;padding:5px 0;"><span>Sam Park</span><span style="color:#16a34a;font-weight:600;">$129</span></div>
+          <div class="inline-popup" id="ipop-feature" style="top:calc(100% + 12px);left:-4px;">
+            <div class="inline-popup-header"><span>Code review</span><span class="close-x">×</span></div>
+            <div class="inline-popup-ta"><span class="tw" id="tw-feature"></span><span class="type-cursor">|</span></div>
+            <div class="agent-select">
+              <div class="agent-opt active" data-agent="claude" title="Claude">
+                <svg viewBox="0 0 92.2 65" width="12" height="12"><path fill="#D97757" d="M66.5,0H52.4l25.7,65h14.1L66.5,0z M25.7,0L0,65h14.4l5.3-13.6h26.9L51.8,65h14.4L40.5,0H25.7z M24.3,39.3l8.8-22.8l8.8,22.8H24.3z"/></svg>
+                <span>Claude</span>
+              </div>
+              <div class="agent-opt" data-agent="codex" title="Codex (OpenAI)">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="#000"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+                <span>Codex</span>
+              </div>
+            </div>
+            <button class="inline-popup-fix">Fix it →</button>
+          </div>
+        </div>
+        <!-- wireframe summary row -->
+        <div style="margin-top:10px;display:flex;gap:8px;">
+          <div style="flex:1;background:#ebebeb;border:1px solid #e0e0e0;border-radius:5px;padding:8px 10px;">
+            <div class="wf-line" style="width:50%;margin-bottom:6px;"></div>
+            <div class="wf-line" style="width:35%;height:12px;"></div>
+          </div>
+          <div style="flex:1;background:#ebebeb;border:1px solid #e0e0e0;border-radius:5px;padding:8px 10px;">
+            <div class="wf-line" style="width:55%;margin-bottom:6px;"></div>
+            <div class="wf-line" style="width:30%;height:12px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-panel">
+        <div class="panel-header">
+          <span class="panel-logo">SimpleReview</span>
+          <span class="panel-badge badge-feature">feature</span>
+        </div>
+        <div class="chat-messages" id="chat-feature"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Improve -->
+    <div class="demo-viewport" id="tab-improve" style="display:none">
+      <span class="step-badge" style="top:58px;left:14px;" data-tip="Step 1: Click where the change should go">1</span>
+      <div class="demo-site">
+        <!-- wireframe nav bar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="wf-block" style="width:16px;height:16px;border-radius:3px;"></div>
+            <div class="wf-line" style="width:90px;"></div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div class="wf-line" style="width:36px;"></div>
+            <div class="wf-line" style="width:36px;"></div>
+            <div class="wf-block" style="width:64px;height:22px;border-radius:4px;"></div>
+          </div>
+        </div>
+        <!-- highlighted hero section -->
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Landing page hero</div>
+        <div style="border:2px solid #FF6B35;border-radius:6px;padding:16px 18px;box-shadow:0 0 0 3px rgba(255,107,53,.12);position:relative;">
+          <div id="mock-hero-title" style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.2;margin-bottom:8px;letter-spacing:-0.3px;">Automate your financial reporting</div>
+          <div style="font-size:13px;color:#555;margin-bottom:12px;line-height:1.5;">Connect your accounts and get instant insights on your revenue.</div>
+          <span style="display:inline-block;background:#1a1a1a;color:#fff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:4px;">Get started</span>
+          <span style="position:absolute;bottom:-20px;right:8px;font-size:14px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
+          <div class="inline-popup" id="ipop-improve" style="top:calc(100% + 12px);left:-4px;">
+            <div class="inline-popup-header"><span>Code review</span><span class="close-x">×</span></div>
+            <div class="inline-popup-ta"><span class="tw" id="tw-improve"></span><span class="type-cursor">|</span></div>
+            <div class="agent-select">
+              <div class="agent-opt active" data-agent="claude" title="Claude">
+                <svg viewBox="0 0 92.2 65" width="12" height="12"><path fill="#D97757" d="M66.5,0H52.4l25.7,65h14.1L66.5,0z M25.7,0L0,65h14.4l5.3-13.6h26.9L51.8,65h14.4L40.5,0H25.7z M24.3,39.3l8.8-22.8l8.8,22.8H24.3z"/></svg>
+                <span>Claude</span>
+              </div>
+              <div class="agent-opt" data-agent="codex" title="Codex (OpenAI)">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="#000"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+                <span>Codex</span>
+              </div>
+            </div>
+            <button class="inline-popup-fix">Fix it →</button>
+          </div>
+        </div>
+        <!-- wireframe features block -->
+        <div style="margin-top:20px;background:#ebebeb;border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px;margin-bottom:10px;">
+          <div class="wf-line" style="width:28%;margin-bottom:8px;"></div>
+          <div style="display:flex;gap:10px;">
+            <div class="wf-line" style="width:80px;"></div>
+            <div class="wf-line" style="width:80px;"></div>
+            <div class="wf-line" style="width:70px;"></div>
+          </div>
+        </div>
+        <!-- wireframe testimonials -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:#ebebeb;border:1px solid #e0e0e0;border-radius:5px;padding:9px 10px;">
+            <div class="wf-line" style="width:80%;margin-bottom:5px;height:7px;"></div>
+            <div class="wf-line" style="width:65%;margin-bottom:8px;height:7px;"></div>
+            <div style="display:flex;align-items:center;gap:5px;"><div class="wf-block" style="width:14px;height:14px;border-radius:50%;"></div><div class="wf-line" style="width:55%;"></div></div>
+          </div>
+          <div style="background:#ebebeb;border:1px solid #e0e0e0;border-radius:5px;padding:9px 10px;">
+            <div class="wf-line" style="width:75%;margin-bottom:5px;height:7px;"></div>
+            <div class="wf-line" style="width:70%;margin-bottom:8px;height:7px;"></div>
+            <div style="display:flex;align-items:center;gap:5px;"><div class="wf-block" style="width:14px;height:14px;border-radius:50%;"></div><div class="wf-line" style="width:50%;"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-panel">
+        <div class="panel-header">
+          <span class="panel-logo">SimpleReview</span>
+          <span class="panel-badge badge-improve">improve</span>
+        </div>
+        <div class="chat-messages" id="chat-improve"></div>
+      </div>
+    </div>
+
+    <!-- TAB: WordPress -->
+    <div class="demo-viewport" id="tab-wp" style="display:none">
+      <span class="step-badge" style="top:96px;left:14px;" data-tip="Step 1: Click where the change should go">1</span>
+      <div class="demo-site">
+        <!-- wireframe header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e4e4e4;padding-bottom:10px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="wf-block" style="width:22px;height:16px;border-radius:3px;"></div>
+            <div class="wf-line" style="width:80px;"></div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div class="wf-line" style="width:32px;"></div>
+            <div class="wf-line" style="width:32px;"></div>
+            <div class="wf-line" style="width:44px;"></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <!-- wireframe product card 1 -->
+          <div class="wf-kpi" style="padding:8px;border-radius:6px;aspect-ratio:1;box-sizing:border-box;display:flex;flex-direction:column;">
+            <div class="wf-block" style="flex:1;border-radius:4px;margin-bottom:6px;"></div>
+            <div class="wf-line" style="width:80%;margin-bottom:4px;height:8px;"></div>
+            <div class="wf-line" style="width:38%;height:8px;margin-bottom:6px;"></div>
+            <div class="wf-block" style="height:18px;border-radius:3px;"></div>
+          </div>
+          <!-- highlighted product card -->
+          <div id="mock-wp-card" style="background:#fff;border:2px solid #FF6B35;border-radius:6px;padding:8px;box-shadow:0 0 0 3px rgba(255,107,53,.15);position:relative;aspect-ratio:1;box-sizing:border-box;display:flex;flex-direction:column;">
+            <div style="flex:1;border-radius:4px;margin-bottom:6px;overflow:hidden;">
+              <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300&h=200&fit=crop&q=80" alt="Camera Lens 50mm" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:4px;">
+            </div>
+            <div style="font-size:11px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">Camera Lens 50mm</div>
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;">
+              <span style="font-size:12px;color:#e44;font-weight:700;">$349.00</span>
+              <span style="font-size:10px;color:#46b450;font-weight:600;">In stock</span>
+            </div>
+            <div id="mock-wp-btn" style="background:#ccc;color:#999;font-size:10px;font-weight:700;padding:4px 8px;border-radius:3px;text-align:center;cursor:not-allowed;">Unavailable</div>
+            <span style="position:absolute;bottom:-16px;right:6px;font-size:13px;animation:cursor-bob 1.2s ease-in-out infinite;">👆</span>
+            <div class="inline-popup" id="ipop-wp" style="top:calc(100% + 22px);left:-4px;">
+              <div class="inline-popup-header"><span>Code review</span><span class="close-x">×</span></div>
+              <div class="inline-popup-ta"><span class="tw" id="tw-wp"></span><span class="type-cursor">|</span></div>
+              <div class="agent-select">
+              <div class="agent-opt active" data-agent="claude" title="Claude">
+                <svg viewBox="0 0 92.2 65" width="12" height="12"><path fill="#D97757" d="M66.5,0H52.4l25.7,65h14.1L66.5,0z M25.7,0L0,65h14.4l5.3-13.6h26.9L51.8,65h14.4L40.5,0H25.7z M24.3,39.3l8.8-22.8l8.8,22.8H24.3z"/></svg>
+                <span>Claude</span>
+              </div>
+              <div class="agent-opt" data-agent="codex" title="Codex (OpenAI)">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="#000"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+                <span>Codex</span>
+              </div>
+            </div>
+            <button class="inline-popup-fix">Fix it →</button>
+            </div>
+          </div>
+          <!-- wireframe product card 3 -->
+          <div class="wf-kpi" style="padding:8px;border-radius:6px;aspect-ratio:1;box-sizing:border-box;display:flex;flex-direction:column;">
+            <div class="wf-block" style="flex:1;border-radius:4px;margin-bottom:6px;"></div>
+            <div class="wf-line" style="width:65%;margin-bottom:4px;height:8px;"></div>
+            <div class="wf-line" style="width:38%;height:8px;margin-bottom:6px;"></div>
+            <div class="wf-block" style="height:18px;border-radius:3px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-panel">
+        <div class="panel-header">
+          <span class="panel-logo">SimpleReview</span>
+          <span class="panel-badge" style="background:#21759b;">WordPress</span>
+        </div>
+        <div class="chat-messages" id="chat-wp"></div>
+      </div>
+    </div>
+
+    <p class="demo-banner-caption" id="demo-caption" data-i18n="demo-caption">Bug spotted — Fix It hands element + codebase to your coding agent → code fix</p>
+  </div><!-- /demo-banner -->
+  </div><!-- /demo-banner-outer -->
+
+  </div><!-- /hero-wrap -->
+
+  <div class="content-wrap">
+  <section class="what-fixes">
+    <h2 data-i18n="h2-fixes">What SimpleReview can fix</h2>
+    <div class="fixes-grid">
+      <div class="fix-item" data-i18n="fix-item-1">Copy &amp; content — typos, tone, CTA wording</div>
+      <div class="fix-item" data-i18n="fix-item-2">CSS, layout &amp; responsive issues</div>
+      <div class="fix-item" data-i18n="fix-item-3">Accessibility — alt text, contrast, ARIA</div>
+      <div class="fix-item" data-i18n="fix-item-4">Broken elements &amp; visual bugs</div>
+      <div class="fix-item" data-i18n="fix-item-5">AI-generated code &amp; vibe-coded sites</div>
+      <div class="fix-item" data-i18n="fix-item-6">React, Vue, Next.js, plain HTML/CSS</div>
+      <div class="fix-item" data-i18n="fix-item-7">WordPress (FTP/SSH to wp-content)</div>
+      <div class="fix-item" data-i18n="fix-item-8">Any PHP / Node.js / Python stack</div>
+    </div>
+    <p style="font-size:13px; color:#888; margin-top:16px;" data-i18n="fixes-note">
+      Works with: self-hosted sites, GitHub Pages, Vercel, Netlify, Cloudflare Pages.<br>
+      Does not work with closed no-code platforms (Webflow, Wix, Squarespace) — no file access.
+    </p>
+  </section>
+
+  <section class="how-it-works" id="how-it-works">
+    <h2 data-i18n="h2-how">How SimpleReview works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3 data-i18n="step1-h3">Install the WordPress plugin</h3>
+          <p data-i18n="step1-p">Plugins &rarr; Add New &rarr; search &ldquo;SimpleReview&rdquo; &rarr; Install &amp; Activate. Works on any self-hosted WordPress 5.9+. Only Administrators and Editors see the inspector; visitors never see the button.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3 data-i18n="step2-h3">Click &ldquo;AI Review&rdquo; in the admin bar</h3>
+          <p data-i18n="step2-p">Open any page on your site. Hit the AI Review button in the WordPress toolbar &mdash; hover lights up buttons, blocks, images, Gutenberg patterns and Elementor widgets with an orange outline.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3 data-i18n="step3-h3">Send to your coding agent</h3>
+          <p data-i18n="step3-p">The plugin packages the selected element, DOM path, theme file hint, screenshot and your note, then hands it to your Claude Code or Codex &mdash; or the built-in AI mode &mdash; to generate a patch.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3 data-i18n="step4-h3">Apply the fix to your site</h3>
+          <p data-i18n="step4-p">You get a patch or PR-ready diff from your coding agent &mdash; not a screenshot, not a ticket. Merge it via GitHub, drop it into your theme/child-theme over SFTP, or let a deploy hook push it live.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="vs-section">
+    <h2 data-i18n="h2-vs">SimpleReview vs feedback-only tools</h2>
+    <table class="vs-table">
+      <thead>
+        <tr>
+          <th data-i18n="vs-th-feature">Feature</th>
+          <th>Marker.io / Feedbucket / Userback</th>
+          <th class="col-vibers">SimpleReview</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-i18n="vs-row1">Visual feedback on live site</td>
+          <td><span class="check" data-i18n="vs-yes">Yes</span></td>
+          <td class="col-vibers"><span class="check" data-i18n="vs-yes">Yes</span></td>
+        </tr>
+        <tr>
+          <td data-i18n="vs-row2">Screenshot + element context</td>
+          <td><span class="check" data-i18n="vs-yes">Yes</span></td>
+          <td class="col-vibers"><span class="check" data-i18n="vs-yes">Yes</span></td>
+        </tr>
+        <tr>
+          <td data-i18n="vs-row3">Creates a bug ticket</td>
+          <td><span class="check" data-i18n="vs-yes">Yes</span></td>
+          <td class="col-vibers"><span class="check" data-i18n="vs-yes">Yes</span></td>
+        </tr>
+        <tr>
+          <td data-i18n="vs-row4">Produces a code fix / PR-ready patch</td>
+          <td><span class="cross" data-i18n="vs-no">No</span></td>
+          <td class="col-vibers"><span class="check" data-i18n="vs-yes">Yes</span></td>
+        </tr>
+        <tr>
+          <td data-i18n="vs-row5">Works with your own coding agent</td>
+          <td><span class="cross" data-i18n="vs-no">No</span></td>
+          <td class="col-vibers"><span class="check" data-i18n="vs-row5-sr">Yes — Claude Code, Codex</span></td>
+        </tr>
+        <tr>
+          <td data-i18n="vs-row6">Built-in AI mode (no setup)</td>
+          <td><span class="cross" data-i18n="vs-no">No</span></td>
+          <td class="col-vibers"><span class="check" data-i18n="vs-yes">Yes</span></td>
+        </tr>
+        <tr>
+          <td data-i18n="vs-row7">Works with AI-generated codebases</td>
+          <td><span class="cross" data-i18n="vs-no">No</span></td>
+          <td class="col-vibers"><span class="check" data-i18n="vs-row7-sr">Yes — built for vibecoding</span></td>
+        </tr>
+        <tr>
+          <td data-i18n="vs-row8">Pricing</td>
+          <td data-i18n="vs-price-comp">$39–$89/mo (tool only)</td>
+          <td class="col-vibers" data-i18n="vs-price-sr">Free with your own AI</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="use-cases">
+    <h2 data-i18n="h2-who">Who uses SimpleReview</h2>
+    <div class="case-grid">
+      <div class="case-card">
+        <h3 data-i18n="case1-h3">QA testers</h3>
+        <p data-i18n="case1-p">Walk the build, mark every visual bug or broken state you find, and hand each one to the coding agent as a code fix &mdash; no ticket spreadsheets.</p>
+      </div>
+      <div class="case-card">
+        <h3 data-i18n="case2-h3">Product teams without dev time</h3>
+        <p data-i18n="case2-p">Engineering is booked on the roadmap. Small copy tweaks, layout fixes and legacy-site issues can go straight to the coding agent instead of the backlog.</p>
+      </div>
+      <div class="case-card">
+        <h3 data-i18n="case3-h3">Solo builders</h3>
+        <p data-i18n="case3-p">You shipped something fast with Cursor or Bolt. Something is misaligned on mobile, Safari breaks a form &mdash; point at it, describe it, get a patch.</p>
+      </div>
+      <div class="case-card">
+        <h3 data-i18n="case4-h3">Non-technical makers</h3>
+        <p data-i18n="case4-p">You see exactly what&rsquo;s wrong but don&rsquo;t want to open the editor. Click the element, describe it in plain English, and your coding agent writes the fix.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2 data-i18n="h2-faq">FAQ</h2>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq-q1">How is SimpleReview different from Marker.io, BugHerd or other WP feedback plugins?</div>
+      <div class="faq-a" data-i18n="faq-a1">Most feedback plugins stop at screenshots stored inside WordPress. SimpleReview ships the captured element to your AI coding agent and returns a real patch &mdash; not just a ticket in the dashboard.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq-q2">Does it work on any theme or page builder?</div>
+      <div class="faq-a" data-i18n="faq-a2">Yes. It runs on any self-hosted WordPress 5.9+, any theme (Astra, GeneratePress, Divi, Blocksy&hellip;) and any builder (Gutenberg, Elementor, Beaver Builder, Bricks, WPBakery). It does not run on WordPress.com hosted plans.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq-q3">Who can see the inspector?</div>
+      <div class="faq-a" data-i18n="faq-a3">Only logged-in users whose role is on the allow-list &mdash; Administrators and Editors by default. Regular visitors never see the button or the panel. Scripts aren&rsquo;t even enqueued for them.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq-q4">Does it slow my site down for visitors?</div>
+      <div class="faq-a" data-i18n="faq-a4">No. The plugin enqueues its JS and CSS only for logged-in users with an allowed role. Public pages stay clean &mdash; no extra requests, no added weight.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq-q5">Do I need my own AI agent?</div>
+      <div class="faq-a" data-i18n="faq-a5">Yes for the free mode &mdash; point the plugin at any webchat URL for Claude Code, Codex or an internal tool. Built-in AI mode is available with no setup.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq-q6">What do I get back?</div>
+      <div class="faq-a" data-i18n="faq-a6">A code patch from your AI: CSS, PHP, template, child-theme or Gutenberg block changes. Apply via GitHub PR, SFTP, a deploy hook, or paste into the theme editor. You stay in control &mdash; review, merge, or discard.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq-q7">How much does it cost?</div>
+      <div class="faq-a" data-i18n="faq-a7">The WordPress plugin is free on wordpress.org. Use your own Claude Code or Codex for free, or try the optional built-in AI mode.</div>
+    </div>
+  </section>
+
+  <div class="cta-box">
+    <h2 data-i18n="h2-cta">Install SimpleReview on your WordPress site</h2>
+    <p data-i18n="cta-sub">Free on wordpress.org. Works with Gutenberg, Elementor, any theme, and your choice of AI agent (Claude Code, Codex, or built-in).</p>
+    <a href="https://onout.org/vibers/simple-review-wordpress/simple-review.zip" class="btn-white" onclick="gtag('event','generate_lead',{event_category:'simple-review-wp',event_label:'download_plugin_zip_bottom'});rdt('track','Lead');trackClick('download_plugin_wp_zip_bottom');" data-i18n="cta-primary-bottom">Download plugin (.zip) &rarr;</a>
+  </div>
+
+  <p style="font-size:14px; color:#555; margin: 32px 0 16px;">
+    Read more: <a href="/vibers/blog/markerio-vs-vibers/">Marker.io vs Vibers: Report Bugs vs Fix Bugs</a> &mdash;
+    <a href="/vibers/blog/best-chrome-extensions-ai-code-review/">Best Chrome Extensions for AI Code Review</a> &mdash;
+    <a href="/vibers/blog/vibe-coded-app-production-ready/">Is your vibe-coded app production-ready?</a>
+  </p>
+
+  <footer>
+    <p>SimpleReview is a product by <a href="/vibers/">Vibers</a> &mdash; Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Blog</a> &nbsp;|&nbsp; <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a></p>
+  </footer>
+  </div><!-- /content-wrap main -->
+
+</div>
+
+<script>
+var TAB_DATA = {
+  bug: {
+    url: 'onout.org/dashboard/',
+    desc: 'Example: you ship a SaaS dashboard with revenue stats. A user emails screenshots — a button label is overflowing the KPI card. You don\'t want to open the IDE just for this. (1) Click the broken element, (2) describe it in plain English, (3) send it off.',
+    text: "the 'View all transaction details →' button overflows the KPI card width — shorten to 'View details'",
+    caption: '✓ PR #247 merged — button copy fixed in 2 hours',
+    element: 'Selected <span class="kpi-btn">\nsrc/components/dashboard/KPICard.tsx:42',
+    pr:       '📦 PR #247 opened\nfix: prevent kpi button overflow on narrow viewports\nbranch: fix/kpi-button-overflow\n1 file changed',
+    deploy:   '🚀 Deployed to production\nGitHub Pages · just now\n✓ Live on onout.org'
+  },
+  feature: {
+    url: 'onout.org/dashboard/',
+    desc: 'Example: you\'re running an analytics dashboard. Support keeps getting the same ask — "how do I filter transactions by date?" — but nobody opens a proper ticket. (1) Pick the table where the filter belongs, (2) describe it in one line, (3) a PR shows up with the working feature.',
+    text: "can we add a search bar here? users keep asking how to filter transactions by date",
+    caption: '✓ PR #248 merged — search filter added to nav',
+    element: 'Selected <section class="transactions">\nsrc/components/TransactionsTable.tsx',
+    pr:       '📦 PR #248 opened\nfeat: add transaction search + date filter\nbranch: feat/transaction-search\n1 file changed',
+    deploy:   '🚀 Deployed to production\nVercel — build passed · just now\n✓ Live on dashboard.app'
+  },
+  improve: {
+    url: 'onout.org/landing/',
+    desc: 'Example: you have a marketing landing and conversion is flat. The hero feels too generic — you\'ve been meaning to rewrite it for weeks. (1) Click the headline, (2) dictate the tone you want, (3) a PR lands with the new copy ready to A/B test.',
+    text: "headline feels too generic — 'See exactly where your money goes' might convert better",
+    caption: '✓ PR #249 merged — hero copy rewritten, CTR +18%',
+    element: 'Selected <section class="hero"> > h1\nsrc/pages/landing/Hero.tsx',
+    pr:       '📦 PR #249 opened\ncopy: rewrite hero headline for clarity + CTR\nbranch: copy/hero-headline\n1 file changed',
+    deploy:   '🚀 Deployed to production\nNetlify — build passed · just now\n✓ Live — CTR tracking started'
+  },
+  wp: {
+    url: 'mystore.com/shop/',
+    desc: 'Example: you run a WooCommerce shop. A product is in stock but the button stubbornly says "Unavailable" — classic WooCommerce status bug. You have no dev on call, no GitHub repo. (1) Click the button, (2) describe what\'s wrong, (3) we patch wp-content and deploy via FTP/SSH in minutes.',
+    text: "the Camera Lens product shows 'Unavailable' but it's in stock — looks like a WooCommerce status bug",
+    caption: '✓ Fix deployed to WordPress via FTP — product back on sale in 1 hour',
+    element: 'Selected <a class="button add_to_cart">\nwp-content/plugins/woocommerce/templates/loop/add-to-cart.php',
+    pr:       '🛠 Patch ready via FTP\nfix: enable add-to-cart for in-stock variants\nwp-content/plugins/woocommerce/loop/add-to-cart.php\n1 file changed',
+    deploy:   '🚀 Deployed via FTP\n✓ Product live on mystore.com'
+  }
+};
+
+var currentTab = 'bug';
+var currentLang = 'en';
+var TAB_DESC_RU = null;
+var animGen = 0; // incremented on each switchTab; stale callbacks check this and abort
+
+function typeText(elId, text, delay, gen, onDone) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  el.textContent = '';
+  var i = 0;
+  function go() {
+    if (animGen !== gen) return; // tab switched — abort
+    if (i >= text.length) { if (onDone) onDone(); return; }
+    el.textContent += text[i];
+    i++;
+    var d = 48 + Math.random() * 52;
+    if (text[i-1] === ' ') d += 22;
+    if ('.,—?!'.indexOf(text[i-1]) !== -1) d += 150;
+    setTimeout(go, d);
+  }
+  setTimeout(go, delay);
+}
+
+function addBubble(tab, type, text, extraCls) {
+  var chat = document.getElementById('chat-' + tab);
+  if (!chat) return null;
+  var b = document.createElement('div');
+  b.className = 'bubble bubble-' + type + (extraCls ? ' ' + extraCls : '');
+  b.textContent = text;
+  chat.appendChild(b);
+  chat.scrollTop = chat.scrollHeight;
+  return b;
+}
+
+function applyMockFix(tab, gen) {
+  if (animGen !== gen) return;
+  if (tab === 'bug') {
+    var mockBtn = document.getElementById('mock-btn-bug');
+    var kpiCard = mockBtn && mockBtn.closest('.demo-kpi');
+    if (mockBtn) {
+      mockBtn.classList.add('text-fade');
+      setTimeout(function() { if (animGen === gen) mockBtn.textContent = 'View details'; }, 200);
+    }
+    if (kpiCard) kpiCard.classList.add('fix-applied');
+  } else if (tab === 'feature') {
+    var nav = document.getElementById('mock-txn-feature');
+    if (nav) {
+      nav.classList.add('fix-applied');
+      var search = document.getElementById('filter-bar-feature');
+      if (search) search.style.display = 'block';
+    }
+  } else if (tab === 'improve') {
+    var title = document.getElementById('mock-hero-title');
+    if (title) {
+      title.classList.add('text-fade');
+      setTimeout(function() { if (animGen === gen) title.textContent = 'See exactly where your money goes'; }, 200);
+      var hw = title.closest('div[style*="border:2px"]');
+      if (hw) hw.classList.add('fix-applied');
+    }
+  } else if (tab === 'wp') {
+    var wpCard = document.getElementById('mock-wp-card');
+    var wpBtn  = document.getElementById('mock-wp-btn');
+    if (wpBtn) {
+      wpBtn.classList.add('text-fade');
+      setTimeout(function() {
+        if (animGen !== gen) return;
+        wpBtn.textContent = 'Add to cart';
+        wpBtn.style.background = '#96588a';
+        wpBtn.style.color = '#fff';
+        wpBtn.style.cursor = 'pointer';
+      }, 200);
+    }
+    if (wpCard) wpCard.classList.add('fix-applied');
+  }
+}
+
+function applyFix(tab, gen) {
+  if (animGen !== gen) return;
+  var data = TAB_DATA[tab];
+  var pop  = document.getElementById('ipop-' + tab);
+  var cap  = document.getElementById('demo-caption');
+
+  // Popup stays visible — Fix it button turns into a spinner
+  if (pop) {
+    var fixBtn = pop.querySelector('.inline-popup-fix');
+    if (fixBtn) {
+      fixBtn.classList.add('loading');
+      fixBtn.dataset.origText = fixBtn.dataset.origText || fixBtn.textContent;
+      fixBtn.innerHTML = '<span class="fix-spinner"></span>';
+      fixBtn.disabled = true;
+    }
+  }
+  if (cap) cap.textContent = '⚙ Generating code change…';
+
+  // Chat opens now — system context bubble first
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'system', data.element);
+  }, 100);
+
+  // User bubble (the typed comment)
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'user', data.text);
+  }, 400);
+
+  // Resolve selected agent from the popup
+  var agentEl = pop && pop.querySelector('.agent-opt.active');
+  var agent = (agentEl && agentEl.dataset.agent) === 'codex' ? 'Codex' : 'Claude';
+
+  // Agent "thinking"
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'agent', '⚙ Analyzing codebase…');
+  }, 700);
+
+  // Agent "coding"
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'agent', '💻 ' + agent + ' is coding…');
+  }, 1400);
+
+  // DOM mutation on mockup
+  setTimeout(function() { applyMockFix(tab, gen); }, 2100);
+
+  // PR bubble
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'agent', data.pr, 'pr');
+    if (cap) cap.textContent = '📦 Opening pull request…';
+  }, 2800);
+
+  // Final caption
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    if (cap) cap.textContent = data.caption;
+  }, 3500);
+
+  // Deploy bubble
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    addBubble(tab, 'agent', data.deploy, 'deploy');
+  }, 4300);
+}
+
+// Agent toggle click handler (event delegation)
+document.addEventListener('click', function(e) {
+  var opt = e.target.closest && e.target.closest('.agent-opt');
+  if (!opt) return;
+  var row = opt.parentElement;
+  row.querySelectorAll('.agent-opt').forEach(function(o) { o.classList.remove('active'); });
+  opt.classList.add('active');
+});
+
+function resetTab(tab) {
+  // Clear chat
+  var chat = document.getElementById('chat-' + tab);
+  if (chat) chat.innerHTML = '';
+  // Reset inline popup
+  var pop = document.getElementById('ipop-' + tab);
+  if (pop) {
+    pop.classList.remove('sending');
+    var cur = pop.querySelector('.fake-cursor');
+    if (cur) cur.classList.remove('visible', 'clicking');
+    var fb = pop.querySelector('.inline-popup-fix');
+    if (fb) {
+      fb.classList.remove('being-clicked');
+      fb.classList.remove('loading');
+      fb.disabled = false;
+      if (fb.dataset.origText) fb.textContent = fb.dataset.origText;
+    }
+  }
+  var tw = document.getElementById('tw-' + tab);
+  if (tw) tw.textContent = '';
+  // Reset mockups
+  var mockBtn = document.getElementById('mock-btn-bug');
+  if (mockBtn) { mockBtn.textContent = 'View all transaction details →'; mockBtn.classList.remove('text-fade'); }
+  var bugCard = mockBtn && mockBtn.closest('.demo-kpi');
+  if (bugCard) bugCard.classList.remove('fix-applied');
+  var nav = document.getElementById('mock-txn-feature');
+  if (nav) nav.classList.remove('fix-applied');
+  var filterBar = document.getElementById('filter-bar-feature');
+  if (filterBar) filterBar.style.display = 'none';
+  var title = document.getElementById('mock-hero-title');
+  if (title) {
+    title.textContent = 'Automate your financial reporting';
+    title.classList.remove('text-fade');
+    var heroWrap = title.closest('div[style*="border:2px"]');
+    if (heroWrap) heroWrap.classList.remove('fix-applied');
+  }
+  var wpCard = document.getElementById('mock-wp-card');
+  if (wpCard) wpCard.classList.remove('fix-applied');
+  var wpBtn = document.getElementById('mock-wp-btn');
+  if (wpBtn) {
+    wpBtn.textContent = 'Unavailable';
+    wpBtn.style.background = '#ccc';
+    wpBtn.style.color = '#999';
+    wpBtn.style.cursor = 'not-allowed';
+    wpBtn.classList.remove('text-fade');
+  }
+}
+
+var animStarted = false; // first animation waits for banner to scroll into view
+
+function switchTab(tab, skipHistory) {
+  if (!TAB_DATA[tab]) tab = 'bug';
+  animGen++; // invalidates all pending callbacks from previous tab
+  var gen = animGen;
+  ['bug','feature','improve','wp'].forEach(function(t) { resetTab(t); });
+  document.querySelectorAll('.demo-tab').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  ['bug','feature','improve','wp'].forEach(function(t) {
+    document.getElementById('tab-' + t).style.display = t === tab ? 'flex' : 'none';
+  });
+  var data = TAB_DATA[tab];
+  document.getElementById('demo-url').textContent = data.url;
+  document.getElementById('demo-caption').textContent = '👁 Click the element to leave a comment';
+  var descEl = document.getElementById('tab-desc');
+  if (descEl) descEl.textContent = (currentLang === 'ru' && TAB_DESC_RU && TAB_DESC_RU[tab])
+    ? TAB_DESC_RU[tab] : data.desc;
+
+  // Chat stays empty until "Fix it" is clicked (see applyFix).
+
+  currentTab = tab;
+  if (!skipHistory) {
+    history.replaceState(null, '', '#' + tab);
+  }
+
+  // Gate the first animation on viewport visibility; subsequent tab clicks animate immediately.
+  if (animStarted) {
+    startTabAnimation(tab, gen);
+  }
+}
+
+function animateCursorToFix(tab, gen, onDone) {
+  var pop = document.getElementById('ipop-' + tab);
+  if (!pop) { onDone(); return; }
+  var btn = pop.querySelector('.inline-popup-fix');
+  if (!btn) { onDone(); return; }
+
+  var cursor = pop.querySelector('.fake-cursor');
+  if (!cursor) {
+    cursor = document.createElement('div');
+    cursor.className = 'fake-cursor';
+    cursor.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18"><path fill="#222" stroke="#fff" stroke-width="1.2" stroke-linejoin="round" d="M4 2 L4 18 L8.5 14 L11 20 L13.5 19 L11 13 L17 13 Z"/></svg>';
+    pop.appendChild(cursor);
+  }
+
+  // Starting anchor — top-right corner of popup (near close ×)
+  var startX = pop.clientWidth - 28;
+  var startY = 4;
+  cursor.style.left = startX + 'px';
+  cursor.style.top  = startY + 'px';
+  cursor.style.setProperty('--tx', '0px');
+  cursor.style.setProperty('--ty', '0px');
+  cursor.classList.remove('clicking');
+
+  // Reveal
+  void cursor.offsetWidth;
+  cursor.classList.add('visible');
+
+  // Travel to Fix it button
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    var dx = btn.offsetLeft + btn.offsetWidth * 0.62 - startX - 4;
+    var dy = btn.offsetTop  + btn.offsetHeight / 2 - startY - 9;
+    cursor.style.setProperty('--tx', dx + 'px');
+    cursor.style.setProperty('--ty', dy + 'px');
+  }, 60);
+
+  // Click press
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    cursor.classList.add('clicking');
+    btn.classList.add('being-clicked');
+  }, 830);
+
+  // Release + fire fix
+  setTimeout(function() {
+    if (animGen !== gen) return;
+    cursor.classList.remove('clicking');
+    btn.classList.remove('being-clicked');
+    cursor.classList.remove('visible');
+    onDone();
+  }, 1000);
+}
+
+function startTabAnimation(tab, gen) {
+  var data = TAB_DATA[tab];
+  typeText('tw-' + tab, data.text, 1200, gen, function() {
+    setTimeout(function() {
+      if (animGen !== gen) return;
+      animateCursorToFix(tab, gen, function() {
+        if (animGen !== gen) return;
+        applyFix(tab, gen);
+      });
+    }, 400);
+  });
+}
+
+window.addEventListener('hashchange', function() {
+  var hash = location.hash.replace('#', '');
+  if (TAB_DATA[hash] && hash !== currentTab) {
+    switchTab(hash, true);
+  }
+});
+
+// init — set up tab state, but hold the animation until the banner scrolls into view
+var initTab = location.hash.replace('#', '');
+switchTab(TAB_DATA[initTab] ? initTab : 'bug');
+
+(function gateAnimOnScroll() {
+  var banner = document.querySelector('.demo-banner');
+  if (!banner) return;
+  function trigger() {
+    if (animStarted) return;
+    animStarted = true;
+    startTabAnimation(currentTab, animGen);
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { trigger(); io.disconnect(); }
+      });
+    }, { threshold: 0.25 });
+    io.observe(banner);
+  } else {
+    trigger(); // fallback for ancient browsers
+  }
+})();
+
+function trackClick(event) {
+  try {
+    var lang = navigator.language || '';
+    var params = new URLSearchParams(window.location.search);
+    var source = params.get('utm_source') || params.get('source') || 'direct';
+    var ref = (document.referrer || '').slice(0, 150);
+    var url = 'https://vibers.onout.org/click?event=' + encodeURIComponent(event) +
+      '&lang=' + encodeURIComponent(lang) +
+      '&source=' + encodeURIComponent(source) +
+      '&ref=' + encodeURIComponent(ref);
+    fetch(url, {mode: 'no-cors', keepalive: true});
+  } catch(e) {}
+}
+</script>
+<div id="lang-switch">
+  <button id="btn-en" onclick="setLang('en')">EN</button>
+  <button id="btn-ru" onclick="setLang('ru')">RU</button>
+</div>
+
+<script>
+var ru = {
+  'badge':               'SimpleReview · Chrome Расширение — Ранний доступ',
+  'hero-title':          'Кликни на любой баг на сайте. Получи <abbr title="Фикс может быть автоматически залит в GitHub в виде коммита, пулреквеста или напрямую на ваш сервер">код-фикс</abbr>.',
+  'hero-sub':            'Для всех, кто видит проблему, но не хочет разбираться с ней руками.',
+  'cta-download':        'Скачать расширение',
+  'cta-primary':         'Получить ранний доступ',
+  'cta-secondary':       'Как это работает →',
+  'beta-note':           'Бесплатно с твоим Claude Code или Codex. Или используй встроенный AI — без настройки. Работает на любом сайте с доступом к коду: legacy-приложения, WordPress, современные фреймворки.',
+  'try-scenario':        'Попробуй сценарий:',
+  'tab-bug':             '🐛 Баг-фикс',
+  'tab-feature':         '✨ Фича',
+  'tab-improve':         '💡 Копирайтинг / UX',
+  'tab-wp':              '🔌 WordPress',
+  'h2-fixes':            'Что исправляет SimpleReview',
+  'h2-how':              'Как работает SimpleReview',
+  'h2-vs':               'SimpleReview vs инструменты только для фидбека',
+  'h2-who':              'Кто использует SimpleReview',
+  'h2-faq':              'Частые вопросы',
+  'h2-cta':              'Получить ранний доступ к SimpleReview',
+  'cta-sub':             'Ранний доступ открыт. GitHub, WordPress (FTP/SSH) и любой сайт с доступом к коду.',
+  'cta-primary-bottom':  'Получить ранний доступ →',
+
+  'demo-caption': 'Баг найден — Fix It передаёт элемент + кодовую базу вашему агенту → код-фикс',
+
+  'fix-item-1': 'Тексты и контент — опечатки, тон, формулировки CTA',
+  'fix-item-2': 'CSS, вёрстка и адаптивность',
+  'fix-item-3': 'Доступность — alt-текст, контраст, ARIA',
+  'fix-item-4': 'Сломанные элементы и визуальные баги',
+  'fix-item-5': 'AI-сгенерированный код и вайб-кодинг',
+  'fix-item-6': 'React, Vue, Next.js, чистый HTML/CSS',
+  'fix-item-7': 'WordPress (FTP/SSH в wp-content)',
+  'fix-item-8': 'Любой стек: PHP / Node.js / Python',
+  'fixes-note': 'Работает с: self-hosted сайтами, GitHub Pages, Vercel, Netlify, Cloudflare Pages.<br>Не работает с закрытыми no-code платформами (Webflow, Wix, Squarespace) — нет доступа к файлам.',
+
+  'step1-h3': 'Установить расширение Chrome',
+  'step1-p':  'Добавьте SimpleReview в Chrome одним кликом. Работает на любом сайте с доступом к коду — staging, production, localhost, legacy. Не для закрытых no-code платформ (Webflow, Wix).',
+  'step2-h3': 'Выбрать проблему на сайте',
+  'step2-p':  'Наведите курсор на кнопку, блок, текст или изображение. SimpleReview автоматически захватывает элемент, DOM-контекст и путь к файлу.',
+  'step3-h3': 'Отправить вашему агенту',
+  'step3-p':  'Расширение захватывает элемент и DOM-контекст, затем передаёт вашему Claude Code или Codex — бесплатно — для генерации фикса. Или используйте встроенный AI без настройки.',
+  'step4-h3': 'Получить код-фикс, а не просто фидбек',
+  'step4-p':  'Вы получаете патч или готовый PR от вашего агента — не скриншот, не тикет. Просматривайте и мёрджите на GitHub, или применяйте к wp-content для WordPress.',
+
+  'vs-th-feature':  'Функция',
+  'vs-yes':         'Да',
+  'vs-no':          'Нет',
+  'vs-row1':        'Визуальный фидбек на живом сайте',
+  'vs-row2':        'Скриншот + контекст элемента',
+  'vs-row3':        'Создаёт тикет',
+  'vs-row4':        'Генерирует код-фикс / PR-ready патч',
+  'vs-row5':        'Работает с вашим агентом',
+  'vs-row5-sr':     'Да — Claude Code, Codex',
+  'vs-row6':        'Встроенный AI (без настройки)',
+  'vs-row7':        'Работает с AI-сгенерированными кодовыми базами',
+  'vs-row7-sr':     'Да — создан для вайб-кодинга',
+  'vs-row8':        'Цена',
+  'vs-price-comp':  '$39–$89/мес (только инструмент)',
+  'vs-price-sr':    'Бесплатно с вашим AI',
+
+  'case1-h3': 'QA-тестировщики',
+  'case1-p':  'Обходите билд, отмечайте каждый визуальный баг и передавайте агенту как код-фикс — без таблиц с тикетами.',
+  'case2-h3': 'Продуктовые команды без свободных девов',
+  'case2-p':  'Инженеры заняты роадмапом. Небольшие правки текста, фиксы вёрстки и проблемы legacy-сайтов можно отправлять прямо агенту — минуя беклог.',
+  'case3-h3': 'Соло-разработчики',
+  'case3-p':  'Вы быстро выпустили проект с Cursor или Bolt. Что-то съехало на мобиле, Safari ломает форму — укажите на это, опишите, получите патч.',
+  'case4-h3': 'Нетехнические создатели',
+  'case4-p':  'Вы видите что не так, но не хотите открывать редактор. Кликните на элемент, опишите проблему — ваш агент напишет фикс.',
+
+  'faq-q1': 'Чем SimpleReview отличается от Marker.io и других инструментов фидбека?',
+  'faq-a1': 'Большинство инструментов останавливаются на скриншотах и репортах. SimpleReview фиксирует проблему и превращает её в реальный код-фикс — Pull Request, а не тикет.',
+  'faq-q2': 'Нужен ли мне собственный AI-агент?',
+  'faq-a2': 'Используйте Claude Code или Codex бесплатно. Также доступен встроенный AI без настройки.',
+  'faq-q3': 'Что делает кнопка Fix It?',
+  'faq-a3': 'Она захватывает выбранный элемент, DOM-контекст и ваш комментарий, затем передаёт всё агенту для генерации фикса или патча.',
+  'faq-q4': 'На каких сайтах это работает?',
+  'faq-a4': 'SimpleReview работает на любом сайте с доступом к коду: React, Vue, Next.js, WordPress, чистый HTML/CSS и legacy. Не работает на закрытых no-code платформах без доступа к файлам.',
+  'faq-q5': 'Что я получу в итоге?',
+  'faq-a5': 'Код-фикс, а не просто скриншот — патч или готовый PR от вашего агента. Вы контролируете результат: просматриваете, мёрджите или отклоняете.',
+  'faq-q6': 'Сколько это стоит?',
+  'faq-a6': 'Расширение Chrome бесплатно. Используйте Claude Code или Codex бесплатно, или попробуйте встроенный AI.'
+};
+
+TAB_DESC_RU = {
+  bug:     'Пример: у тебя SaaS-дашборд со статистикой. Юзер присылает скрин — подпись кнопки вылезает за карточку. Открывать IDE ради этого не хочется. (1) Кликаешь по сломанному элементу, (2) объясняешь словами что не так, (3) отправляешь.',
+  feature: 'Пример: ты ведёшь аналитический дашборд. Поддержке регулярно пишут — "а можно фильтр транзакций по дате?" — но тикетов никто не заводит. (1) Выбираешь таблицу, где фильтр должен быть, (2) описываешь одной строкой, (3) приходит PR с готовой фичей.',
+  improve: 'Пример: у тебя маркетинговый лендинг, конверсия не растёт. Заголовок в hero слишком общий — давно хочется переписать, но руки не доходят. (1) Кликаешь по заголовку, (2) говоришь какой тон хочешь, (3) получаешь PR с новым текстом, готовым к A/B-тесту.',
+  wp:      'Пример: у тебя WooCommerce-магазин. Товар в наличии, но кнопка упорно пишет "Unavailable" — классический баг статуса. Разработчика под рукой нет, GitHub-репо тоже. (1) Кликаешь по кнопке, (2) описываешь проблему, (3) мы правим wp-content и деплоим по FTP/SSH за минуты.'
+};
+
+// TAB_DESC_RU and currentLang declared in main script above
+var savedEnI18n = {};
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.getElementById('btn-en').className = lang === 'en' ? 'active' : '';
+  document.getElementById('btn-ru').className = lang === 'ru' ? 'active' : '';
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (lang === 'ru') {
+      if (!savedEnI18n[key]) savedEnI18n[key] = el.innerHTML;
+      if (ru[key] !== undefined) el.innerHTML = ru[key];
+    } else {
+      if (savedEnI18n[key]) el.innerHTML = savedEnI18n[key];
+    }
+  });
+  var descEl = document.getElementById('tab-desc');
+  if (descEl && currentTab) {
+    descEl.textContent = lang === 'ru'
+      ? (TAB_DESC_RU[currentTab] || TAB_DATA[currentTab].desc)
+      : TAB_DATA[currentTab].desc;
+  }
+  try { localStorage.setItem('vibers_lang', lang); } catch(e) {}
+}
+
+(function() {
+  var isRu = /^ru\b/i.test(navigator.language || '');
+  var stored = localStorage.getItem('vibers_lang');
+  var hashLang = /[#&\/]ru\b/i.test(location.hash) ? 'ru' : null;
+  var lang = hashLang || stored || (isRu ? 'ru' : null);
+  if (lang) {
+    document.getElementById('lang-switch').style.display = 'flex';
+    setLang(lang);
+  }
+})();
+</script>
+<script src="https://op.wpmix.net/embed.js" data-app="vibers"></script>
+</body>
+</html>

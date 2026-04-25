@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WordPress 6.9 Broke Slider Revolution — Fix with 7.0.10 (Step by Step)</title>
+  <meta name="description" content="WordPress 6.9 (Gene, Dec 2025) broke Slider Revolution 7.0.8: only the background video loads, all slider layers missing. Update to 7.0.10 + clear caches to restore. Full field guide with FTP fallback for locked-out sites and theme-bundled SR.">
+  <link rel="canonical" href="https://onout.org/vibers/wordpress/wordpress-6-9-broke-slider-revolution/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="WordPress 6.9 Broke Slider Revolution — Fix with 7.0.10">
+  <meta property="og:description" content="Only the background video shows, slider layers missing after WP 6.9? SR 7.0.8 uses removed getAllSliderAliases(). Update to 7.0.10 (Apr 22, 2026) + clear caches. FTP fallback for locked-out sites and theme-bundled SR covered.">
+  <meta property="og:url" content="https://onout.org/vibers/wordpress/wordpress-6-9-broke-slider-revolution/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="wordpress 6.9 broke slider revolution, slider revolution 7.0.10, slider revolution wordpress 6.9 compatibility, getAllSliderAliases, slider revolution layers missing, revslider 7.0.8 broken, slider revolution theme bundled">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "WordPress 6.9 Broke Slider Revolution — Fix with 7.0.10 (Step by Step)",
+    "description": "WordPress 6.9 (Gene, Dec 2, 2025) broke Slider Revolution 7.0.8: only background video renders, all layers missing. Update to 7.0.10 (Apr 22, 2026) and clear caches to restore. Complete field guide with FTP fallback and theme-bundled SR workarounds.",
+    "url": "https://onout.org/vibers/wordpress/wordpress-6-9-broke-slider-revolution/",
+    "datePublished": "2026-04-24",
+    "dateModified": "2026-04-24",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/wordpress/wordpress-6-9-broke-slider-revolution/" },
+    "keywords": ["wordpress 6.9 broke slider revolution", "slider revolution 7.0.10", "getAllSliderAliases", "slider revolution layers missing", "revslider 7.0.8 broken"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why does my Slider Revolution show only the background video after WordPress 6.9?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Slider Revolution 7.0.8 and earlier call getAllSliderAliases(), an internal method that was removed during the 7.0.8 refactor for WordPress 6.9 compatibility. The background video or image renders because it is emitted by a separate pipeline, but all rows, headlines, CTAs and text layers fail to initialize. The browser console shows: Uncaught TypeError: Cannot read properties of undefined (reading 'getAllSliderAliases'). Fix: update to Slider Revolution 7.0.10 (released April 22, 2026) and clear all caches."}
+      },
+      {
+        "@type": "Question",
+        "name": "Which Slider Revolution version is WordPress 6.9 compatible?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Slider Revolution 7.0.10 (released April 22, 2026) is the first officially WordPress 6.9 compatible version — the changelog explicitly states '7.0.10 is WordPress 6.9 compatible'. 7.0.9 (April 17, 2026) was a partial backward-compatibility restore but not a full 6.9 fix. 7.0.8 and earlier break on WP 6.9 with the getAllSliderAliases error."}
+      },
+      {
+        "@type": "Question",
+        "name": "What's the fastest fix if I can't access wp-admin?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Two options when wp-admin shows 'There has been a critical error on this website': (1) FTP-replace the plugin folder — download Slider Revolution 7.0.10 standalone, connect over SFTP, and overwrite /wp-content/plugins/revslider/ with the new files; (2) rollback WordPress core to 6.8.2 using the WP Downgrade plugin installed via FTP. Option 1 is preferred because 6.9 ships security patches you want to keep."}
+      },
+      {
+        "@type": "Question",
+        "name": "My theme bundles Slider Revolution — what do I do?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Theme-bundled Slider Revolution (X Theme, Cornerstone, Avada, Salient, BeTheme, Enfold) cannot be updated from the Plugins page because the theme gates the SR version. Two workarounds: (a) wait for the theme vendor to ship an update bundling SR 7.0.10+ — historically X Theme, Avada and Salient take 1–4 weeks after an SR release; (b) FTP-replace /wp-content/plugins/revslider/ manually with standalone 7.0.10, accepting that the next theme update may overwrite it or fail the theme's version check."}
+      },
+      {
+        "@type": "Question",
+        "name": "I updated to 7.0.10 but the slider is still empty — why?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Cached data. Slider Revolution ships a persistent cache that survives plugin updates, and every layer above it also caches: plugin cache (WP Rocket, W3 Total Cache, LiteSpeed), server cache (Varnish, Redis object cache, OPcache), CDN cache (Cloudflare, BunnyCDN), and browser cache. Clear all four after the update. In SR go to Globals → Tools → Clear All Caches, purge your cache plugin, purge the CDN, then hard-reload the page."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── Slider Revolution / WP 6.9 banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:18px 16px}
+    /* Error notice (WP admin style, TARGET) */
+    .sc-error-box{background:#fff;border:1px solid #ccd0d4;border-left:4px solid #d63638;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:560px;margin:14px auto 0;padding:14px 22px 16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:13px;color:#d63638;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:6px;animation:errHide 28s infinite;font-family:'SF Mono',Monaco,Consolas,monospace}
+    .sc-err-msg .sc-fpath{color:#b91c1c}
+    .sc-err-meta{color:#666;font-size:10px;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered hero (appears after fix) */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(135deg,#4d2c8f 0%,#6c3dbf 40%,#a855f7 100%);display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.12);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(4px)}
+    .sc-rec-logo{font-size:12px;font-weight:700;color:#fff}
+    .sc-rec-nav{display:flex;gap:12px}
+    .sc-rec-nav span{font-size:9px;color:#e9d5ff}
+    .sc-rec-content{flex:1;padding:22px 24px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+    .sc-rec-success{display:inline-block;align-self:flex-start;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:4px}
+    .sc-rec-h{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px;margin-bottom:2px}
+    .sc-rec-sub{font-size:11px;color:#f3e8ff;margin-bottom:10px;line-height:1.4}
+    .sc-rec-cta{display:inline-block;align-self:flex-start;background:#FF6B35;color:#fff;padding:6px 14px;border-radius:4px;font-size:11px;font-weight:700}
+    .sc-rec-badge{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#86efac;padding:4px 10px;border-radius:12px;font-size:9px;font-weight:700;letter-spacing:.3px}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:136px;opacity:1}
+      22%  {left:360px;top:136px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:160px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WordPress / Plugin Fixes</span>
+      <span>April 24, 2026</span>
+      <span>11 min read</span>
+    </div>
+
+    <h1>WordPress 6.9 Broke Slider Revolution — Fix with 7.0.10 (Step by Step)</h1>
+
+    <p class="article-lead">You updated to WordPress 6.9 "Gene" and now every Slider Revolution module on your site is a ghost: the background video or image plays full-width, but all the rows, headlines, CTA buttons and text layers are gone. The browser console shows <code>Uncaught TypeError: Cannot read properties of undefined (reading 'getAllSliderAliases')</code>, wp-admin throws <em>"There has been a critical error on this website"</em>, and you got an email from WordPress titled <em>"Your Site is Experiencing a Technical Issue"</em>. Good news — there is exactly one fix that works, shipped April 22, 2026: Slider Revolution <strong>7.0.10</strong>. Below: why it broke, how to update, and what to do if your theme bundles SR or wp-admin is locked.</p>
+
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: WP 6.9 breaks Slider Revolution 7.0.8 (layers missing, getAllSliderAliases undefined), SimpleReview opens a PR bumping revslider to 7.0.10, slider renders again">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Fatal error notice (TARGET) -->
+            <div class="sc-error-box">
+              <div class="sc-err-title">⚠ Slider Revolution broken after WordPress 6.9</div>
+              <div class="sc-err-msg">Uncaught TypeError: Cannot read properties of undefined<br>(reading <strong>getAllSliderAliases</strong>)<br>in <span class="sc-fpath">jquery.themepunch.revolution.min.js</span></div>
+              <div class="sc-err-meta">Plugin: Slider Revolution 7.0.8 · WordPress 6.9 · Layers not initialized</div>
+            </div>
+            <!-- Recovered hero (appears after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-rec-logo">mysite.com — Home</div>
+                <div class="sc-rec-nav"><span>Home</span><span>About</span><span>Shop</span></div>
+              </div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Slider Revolution patched · layers rendered</span>
+                <div class="sc-rec-h">Design Without Limits</div>
+                <div class="sc-rec-sub">Fully animated hero — slides, layers, parallax, CTA. Back online after the 7.0.10 update.</div>
+                <div class="sc-rec-cta">Get Started →</div>
+              </div>
+              <div class="sc-rec-badge">Slider Revolution 7.0.10 · WordPress 6.9 ✓</div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">Update Slider Revolution</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Missing</span><span class="sc-sb-v">getAllSliderAliases</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Plugin</span><span class="sc-sb-v">revslider 7.0.8</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Bump <code style="font-size:8px">revslider</code> 7.0.8 → 7.0.10 (WP 6.9 compat, Apr 22, 2026) + clear object cache</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Layers render. wp-admin unlocked. WP 6.9 retained.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">chore: bump revslider 7.0.8 → 7.0.10<br>composer.json · +2 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the broken slider → <strong>Fix it</strong> → layers back without rolling back 6.9</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Slider Revolution exploded after the WP 6.9 update? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads your <code>debug.log</code>, confirms the <code>getAllSliderAliases</code> fatal, and opens a one-file PR that bumps <code>revslider</code> 7.0.8 → 7.0.10 and purges the cache. No license renewal, no core downgrade.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li>WordPress 6.9 "Gene" (December 2, 2025) changed <code>WP_Query</code> cache key generation, added the Abilities API, and modified the Interactivity API — enough to break Slider Revolution <strong>7.0.8</strong> and earlier.</li>
+        <li>The signature symptom: <strong>only the background video or image renders, all rows/headlines/CTAs/text layers are missing</strong>. Console: <code>Uncaught TypeError: Cannot read properties of undefined (reading 'getAllSliderAliases')</code>.</li>
+        <li><strong>The fix:</strong> update Slider Revolution to <strong>7.0.10</strong> (released April 22, 2026) — the first officially WP 6.9 compatible build. The official changelog states "7.0.10 is WordPress 6.9 compatible".</li>
+        <li><strong>Always clear caches</strong> after the update: plugin cache (WP Rocket / W3 Total Cache) + server (Varnish / Redis / OPcache) + CDN + browser. SR ships a persistent cache that survives upgrades.</li>
+        <li>If wp-admin is locked by <em>"There has been a critical error on this website"</em>, FTP-replace <code>/wp-content/plugins/revslider/</code> with standalone 7.0.10, or rollback WP core to 6.8.2 via WP Downgrade plugin deployed over FTP.</li>
+        <li>Theme-bundled SR (X Theme, Cornerstone, Avada, Salient, Enfold, BeTheme) cannot be updated from the Plugins page — wait for the theme vendor update or FTP-replace manually, accepting the trade-off.</li>
+      </ul>
+    </div>
+
+    <h2>Why WordPress 6.9 Broke Slider Revolution</h2>
+
+    <p>WordPress 6.9 "Gene" shipped on December 2, 2025. Three internal changes landed together that touch how Slider Revolution boots:</p>
+
+    <ul>
+      <li><strong><code>WP_Query</code> cache key generation</strong> was reworked. Anything that pre-warmed slider aliases against an old cache signature now misses on the first request.</li>
+      <li><strong>The Abilities API</strong> was introduced, modifying how plugins register internal capabilities during boot.</li>
+      <li><strong>The Interactivity API</strong> was modified, which affected how layer-level JS bindings are hydrated in the browser.</li>
+    </ul>
+
+    <p>Inside Slider Revolution, the team had started a multi-release internal refactor. In the <strong>7.0.8</strong> cycle, the private method <code>getAllSliderAliases()</code> was removed from the plugin's JS API as part of the WP 6.9 compatibility work. But any third-party theme or companion plugin (and SR's own older bootstrap path under WP 6.9's new Interactivity API) that still calls <code>getAllSliderAliases()</code> throws the fatal below — and because it throws during slider initialization, <em>every layer after the background fails to render</em>:</p>
+
+    <pre><code>Uncaught TypeError: Cannot read properties of undefined (reading 'getAllSliderAliases')
+    at RevSlider.init (revslider/public/assets/js/rbtools.min.js:14)
+    at HTMLDocument.&lt;anonymous&gt; (revslider.min.js:2)</code></pre>
+
+    <p>Slider Revolution <strong>7.0.9</strong> (April 17, 2026) was a <em>partial</em> backward-compat restore — the changelog reads "Fixed a backward compatibility issue caused by themes/plugins calling the removed <code>getAllSliderAliases()</code> function". That helped some users but did not fully resolve the 6.9 interaction. Five days later, <strong>7.0.10</strong> (April 22, 2026) shipped as the first officially WP 6.9 compatible release; the official changelog states: "7.0.10 is WordPress 6.9 compatible".</p>
+
+    <div class="definition">
+      <strong>TL;DR:</strong> WP 6.9 exposed a removed internal call (<code>getAllSliderAliases</code>) that older builds still depend on. Slider Revolution 7.0.10 restores compatibility. Anything older — 7.0.8, 7.0.7, 7.0.x and 6.x — will show the "only background visible" symptom until you update and clear caches.
+    </div>
+
+    <h2>Diagnose: Exact Error Messages You Should See</h2>
+
+    <p>Before you fix anything, confirm the symptom matches. Add these lines to <code>wp-config.php</code> (above the <em>"That's all, stop editing"</em> comment):</p>
+
+    <pre><code>define( 'WP_DEBUG',         true );
+define( 'WP_DEBUG_LOG',     true );
+define( 'WP_DEBUG_DISPLAY', false );
+@ini_set( 'display_errors', 0 );</code></pre>
+
+    <p>Reload the broken page. Then cross-reference these signatures:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Where</th><th>Exact message</th><th>Meaning</th></tr>
+        <tr><td>Browser JS console</td><td><code>Uncaught TypeError: Cannot read properties of undefined (reading 'getAllSliderAliases')</code></td><td>Signature fatal — SR 7.0.8 or older on WP 6.9</td></tr>
+        <tr><td>Frontend rendering</td><td>Only background video/image visible, all layers missing</td><td>Layers failed to initialize after the JS fatal</td></tr>
+        <tr><td>wp-admin</td><td>"There has been a critical error on this website"</td><td>Fatal PHP error bubbled to the admin side</td></tr>
+        <tr><td>Email inbox (site admin)</td><td>Subject: "Your Site is Experiencing a Technical Issue"</td><td>WordPress recovery-mode email sent by core</td></tr>
+        <tr><td><code>error_log</code> / <code>debug.log</code></td><td>Fatal on undefined <code>getAllSliderAliases</code>, followed by unbearably long backend load times</td><td>Confirms the server-side half of the crash loop</td></tr>
+        <tr><td>Symptom scope</td><td>"Slider breaks only on the front page"</td><td>Front page is typically the only page with an SR module; other pages render normally</td></tr>
+      </table>
+    </div>
+
+    <p>If at least two rows match, you have the WP 6.9 × Slider Revolution break. Move to the fix paths below — rank <strong>1 → 2 → 3</strong> exactly in this order.</p>
+
+    <h2>Fix 1: Update Slider Revolution to 7.0.10 (Primary Fix)</h2>
+
+    <p>If you can still reach wp-admin, this is the two-minute path and the fix for 95% of sites. Slider Revolution 7.0.10 (released April 22, 2026) is the first officially WordPress 6.9 compatible version.</p>
+
+    <ol class="steps">
+      <li>Log into wp-admin. Go to <strong>Plugins</strong>. If WordPress shows an "Update available" notice next to Slider Revolution, click <em>Update Now</em>.</li>
+      <li>If no update notice appears (common on licensed installs), go to <strong>Sliders → Globals → Register Plugin</strong>. Confirm the purchase code is green, then click <em>Check for Updates</em> and pull <strong>7.0.10</strong> or newer.</li>
+      <li>Confirm the new version in <strong>Plugins</strong> — the line should now read <em>Slider Revolution 7.0.10</em>.</li>
+      <li>Move immediately to Fix 2 (clear all caches). Do not skip — SR ships a persistent cache that survives the update.</li>
+    </ol>
+
+    <p><strong>No dashboard update button / license expired?</strong> Download the 7.0.10 standalone ZIP from your ThemePunch account and FTP-replace <code>/wp-content/plugins/revslider/</code> (see Fix 3). If the license is truly expired, ThemePunch sells renewals at roughly $29/year; without it you cannot receive future updates, but 7.0.10 itself can be installed from the existing download.</p>
+
+    <h2>Fix 2: Clear All Caches (Mandatory)</h2>
+
+    <p>This is the step every rushed fix guide skips and every support thread eventually reveals as the missing piece. Slider Revolution caches its rendered slider output <em>per-version</em>, and that cache survives the plugin update. Layered on top of it:</p>
+
+    <ol class="steps">
+      <li><strong>Slider Revolution cache</strong> — wp-admin → <strong>Sliders → Globals → Tools → Clear All Caches</strong> (empties SR's own rendered-output cache).</li>
+      <li><strong>WordPress plugin cache</strong> — WP Rocket, W3 Total Cache, WP Super Cache, LiteSpeed Cache: purge all. Object cache (Redis/Memcached) included.</li>
+      <li><strong>Server cache</strong> — Varnish, Nginx fastcgi_cache, OPcache. If you don't manage the server, ask the host to purge.</li>
+      <li><strong>CDN cache</strong> — Cloudflare (Caching → Purge Everything), BunnyCDN, Sucuri, StackPath.</li>
+      <li><strong>Browser cache</strong> — hard reload (Ctrl+Shift+R / Cmd+Shift+R) or open an incognito window.</li>
+    </ol>
+
+    <div class="warn-box">
+      <strong>If you skip any cache layer and the slider still shows empty after 7.0.10</strong>, you will assume the update failed. It didn't — you're looking at cached markup from the broken 7.0.8 build. Always clear all five layers.
+    </div>
+
+    <h2>Fix 3: No Dashboard Access — FTP Replace or Core Rollback</h2>
+
+    <p>Use this only when wp-admin is unreachable (stuck on "There has been a critical error on this website" and refresh doesn't help). Two options, in order of preference.</p>
+
+    <h3>Option A: FTP-replace the plugin folder (recommended)</h3>
+
+    <p>Keeps you on WP 6.9 (including its security patches). Requires a 7.0.10 ZIP in hand (download from a working environment or a teammate's ThemePunch login).</p>
+
+    <ol class="steps">
+      <li>Download the Slider Revolution <strong>7.0.10</strong> standalone ZIP. Unzip locally — you should get a <code>revslider/</code> folder.</li>
+      <li>Connect over SFTP. Navigate to <code>/wp-content/plugins/</code>.</li>
+      <li>Rename the existing folder to <code>revslider.old</code> (do not delete yet — it's your rollback).</li>
+      <li>Upload the new <code>revslider/</code> folder in full.</li>
+      <li>Reload wp-admin. The critical error should clear. Now run Fix 2 — clear all caches.</li>
+      <li>Once the site is verified working, delete <code>revslider.old</code>.</li>
+    </ol>
+
+    <h3>Option B: Rollback WordPress core to 6.8.2</h3>
+
+    <p>Last resort — buys you 30 minutes while you sort out the SR update. You lose the WP 6.9 security patches until you update again.</p>
+
+    <ol class="steps">
+      <li>Over FTP, drop the <a href="https://wordpress.org/plugins/wp-downgrade/">WP Downgrade</a> plugin into <code>/wp-content/plugins/</code>.</li>
+      <li>FTP-rename <code>revslider</code> to <code>revslider.disabled</code> so WordPress auto-deactivates it — wp-admin comes back.</li>
+      <li>wp-admin → <strong>Settings → WP Downgrade → WordPress Target Version:</strong> <code>6.8.2</code>.</li>
+      <li><strong>Dashboard → Updates → Re-install Now.</strong></li>
+      <li>Rename <code>revslider.disabled</code> back to <code>revslider</code>. The slider renders again on 6.8.2.</li>
+      <li>Get a 7.0.10 ZIP, update Slider Revolution, then move back to WP 6.9 via the same WP Downgrade flow (target version empty → latest).</li>
+    </ol>
+
+    <h2>Theme-Bundled Slider Revolution — The Hard Case</h2>
+
+    <p>A large fraction of WP 6.9 × Slider Revolution casualties can't follow Fix 1 at all, because their theme <em>bundles</em> Slider Revolution. Themes that commonly bundle SR include:</p>
+
+    <ul>
+      <li><strong>X Theme</strong> / <strong>Cornerstone</strong> (ThemeCo)</li>
+      <li><strong>Avada</strong> (ThemeFusion)</li>
+      <li><strong>Salient</strong> (ThemeNectar)</li>
+      <li><strong>BeTheme</strong> (Muffin Group)</li>
+      <li><strong>Enfold</strong> (Kriesi)</li>
+      <li><strong>Bridge</strong>, <strong>Jupiter</strong>, <strong>The7</strong>, and many other ThemeForest bestsellers</li>
+    </ul>
+
+    <p>In these themes, SR ships inside the theme's <code>plugins/</code> directory and the theme's <code>functions.php</code> registers a version guard. When you click "Update" from the Plugins page, the theme immediately overrides back to the bundled version. You have two workarounds:</p>
+
+    <h3>Option A: Wait for the theme vendor update</h3>
+
+    <p>The clean path. After an SR release, the major themes typically ship a bundling update in 1–4 weeks. Subscribe to your theme's changelog or support forum. X Theme, Avada and Salient usually move fastest.</p>
+
+    <h3>Option B: FTP-replace <code>/wp-content/plugins/revslider/</code> manually</h3>
+
+    <p>Follow Fix 3 Option A above. Caveat: when you next update the theme, its bundled SR may either (a) overwrite your manual 7.0.10 with the older bundled version, or (b) the theme's version check may fail and flag a warning. Keep the 7.0.10 ZIP handy so you can re-apply after every theme update, and budget five minutes per theme update to re-verify the SR version.</p>
+
+    <h2>Version Compatibility Matrix</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Slider Revolution</th><th>WP 6.8</th><th>WP 6.9</th><th>Notes</th></tr>
+        <tr><td>7.0.7 and earlier</td><td>✓</td><td>❌</td><td>Pre-compat — breaks on WP 6.9</td></tr>
+        <tr><td>7.0.8</td><td>✓</td><td>❌</td><td>Still references removed <code>getAllSliderAliases</code> in some paths</td></tr>
+        <tr><td>7.0.9 <span style="color:#888">(Apr 17, 2026)</span></td><td>✓</td><td>⚠ partial</td><td>Backward-compat restore but not full 6.9 fix</td></tr>
+        <tr><td>7.0.10 <span style="color:#888">(Apr 22, 2026)</span></td><td>✓</td><td>✓</td><td>First officially WP 6.9 compatible release</td></tr>
+      </table>
+    </div>
+
+    <h2>How SimpleReview Automates This</h2>
+
+    <p>Diagnosing "only background video renders" manually, matching it to the <code>getAllSliderAliases</code> fatal, and deciding between plugin update / FTP replace / theme vendor wait takes 20–30 minutes the first time. <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> collapses it into one click:</p>
+
+    <ol>
+      <li>Install the Chrome extension and open your broken page.</li>
+      <li>Click the SimpleReview icon, then click the empty hero area.</li>
+      <li>Type "Slider Revolution broken after WP 6.9 — only background video shows" and click <strong>Fix it</strong>.</li>
+      <li>SimpleReview reads <code>revslider.php</code> to confirm the installed version is 7.0.8, pulls <code>debug.log</code> over SFTP to confirm the <code>getAllSliderAliases</code> fatal, checks whether SR is standalone or theme-bundled, and opens a PR with the right action — <code>composer.json</code> version bump for standalone, or an FTP-replace plan + theme-vendor-tracking issue for bundled installs.</li>
+    </ol>
+
+    <div class="cta-block">
+      <h3>Slider Revolution broken by WP 6.9? One Click → One PR</h3>
+      <p>SimpleReview identifies your exact revslider version, confirms the <code>getAllSliderAliases</code> fatal, and opens a PR that bumps to 7.0.10 and clears caches — or flags a theme-bundled install so you know to wait for the vendor.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="../../simple-review/" style="color:#5b44e8;font-weight:600">Download SimpleReview →</a> — installs in 30 seconds, no Chrome required.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Why does my Slider Revolution show only the background video after WordPress 6.9?</div>
+      <div class="faq-a">SR 7.0.8 and earlier call <code>getAllSliderAliases()</code>, an internal method that was removed during the 7.0.8 refactor for WP 6.9 compatibility. The background video renders because a separate pipeline emits it, but all rows, headlines, CTAs and text layers fail to initialize. Console error: <code>Uncaught TypeError: Cannot read properties of undefined (reading 'getAllSliderAliases')</code>. Fix: update to <strong>7.0.10</strong> (April 22, 2026) + clear all caches.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Which Slider Revolution version is WordPress 6.9 compatible?</div>
+      <div class="faq-a"><strong>7.0.10</strong>, released April 22, 2026. The official changelog states "7.0.10 is WordPress 6.9 compatible". 7.0.9 (April 17, 2026) is only a partial backward-compat restore; 7.0.8 and earlier break on WP 6.9.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What's the fastest fix if I can't access wp-admin?</div>
+      <div class="faq-a">FTP-replace <code>/wp-content/plugins/revslider/</code> with standalone 7.0.10 (keeps WP 6.9 and its security patches), or rollback WP core to 6.8.2 via the WP Downgrade plugin installed over FTP. Option 1 is preferred.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">My theme bundles Slider Revolution — what do I do?</div>
+      <div class="faq-a">Theme-bundled SR (X Theme, Cornerstone, Avada, Salient, BeTheme, Enfold) cannot be updated from the Plugins page. Either (a) wait for the theme vendor update bundling SR 7.0.10+ — X Theme, Avada and Salient typically take 1–4 weeks after an SR release, or (b) FTP-replace manually, accepting that the next theme update may overwrite it or trip the theme's version check.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">I updated to 7.0.10 but the slider is still empty — why?</div>
+      <div class="faq-a">Cached data. SR ships a persistent cache that survives the update, and every layer above it also caches. Clear all five: SR's Globals → Tools → Clear All Caches; your plugin cache (WP Rocket / W3 Total Cache / LiteSpeed); server cache (Varnish / Redis / OPcache); CDN (Cloudflare purge); browser (hard reload).</div>
+    </div>
+
+    <h2>Related WordPress Fixes</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="../wordpress-6-9-broke-my-site/">"WordPress 6.9 Broke My Site"</a>
+          <p>The full 6.9 recovery field guide — rollback, debug.log, Elementor, WooCommerce, cache plugins.</p>
+        </div>
+        <div class="related-card">
+          <a href="../critical-error-on-this-website/">"Critical Error on This Website"</a>
+          <p>Generic WP fatal-error screen — 6 recovery paths including reading the hidden error.</p>
+        </div>
+        <div class="related-card">
+          <a href="../../simple-review/">SimpleReview</a>
+          <p>One-click review + PR for WordPress errors — reads debug.log, generates the fix, opens the PR.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://make.wordpress.org/core/">make.wordpress.org/core/ — WordPress 6.9 "Gene" field guide (Dec 2, 2025)</a></li>
+      <li><a href="https://www.sliderrevolution.com/documentation/">Slider Revolution official changelog — 7.0.8, 7.0.9, 7.0.10 release notes</a></li>
+      <li><a href="https://wordpress.org/support/plugin/revslider/">wordpress.org — Slider Revolution support forum (WP 6.9 compatibility threads)</a></li>
+      <li><a href="https://wordpress.org/plugins/wp-downgrade/">wordpress.org — WP Downgrade plugin</a></li>
+      <li><a href="https://wordpress.org/documentation/article/debugging-in-wordpress/">wordpress.org — Debugging in WordPress (WP_DEBUG_LOG)</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+</body>
+</html>
