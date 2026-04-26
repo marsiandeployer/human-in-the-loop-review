@@ -1,0 +1,487 @@
+{
+  "seeds": [
+    "GithubFeedX",
+    "dev19community",
+    "techindro",
+    "indianhtmlweb",
+    "happywebdev",
+    "html_css_js_frontend_projects",
+    "codescientist",
+    "codingstella"
+  ],
+  "total_unique": 49,
+  "channels": [
+    {
+      "count": 5,
+      "from": [
+        "techindro",
+        "indianhtmlweb",
+        "html_css_js_frontend_projects",
+        "codescientist",
+        "codingstella"
+      ],
+      "title": "Frontend & Web Dev, Marketing, SEO, GEO | HI Web",
+      "subs": 15214,
+      "username": "happywebdev"
+    },
+    {
+      "count": 5,
+      "from": [
+        "dev19community",
+        "happywebdev",
+        "html_css_js_frontend_projects",
+        "codescientist",
+        "codingstella"
+      ],
+      "title": "Frontend developer☺️ programmer",
+      "subs": 11682,
+      "username": "indianhtmlweb"
+    },
+    {
+      "count": 4,
+      "from": [
+        "dev19community",
+        "indianhtmlweb",
+        "codescientist",
+        "codingstella"
+      ],
+      "title": "Cod.ewithfun",
+      "subs": 6907,
+      "username": "codewithfun69"
+    },
+    {
+      "count": 4,
+      "from": [
+        "indianhtmlweb",
+        "happywebdev",
+        "html_css_js_frontend_projects",
+        "codescientist"
+      ],
+      "title": "IconicMagx 🔥",
+      "subs": 3970,
+      "username": "webdevgirl"
+    },
+    {
+      "count": 3,
+      "from": [
+        "indianhtmlweb",
+        "happywebdev",
+        "codescientist"
+      ],
+      "title": "Html Css js Frontend projects",
+      "subs": 9744,
+      "username": "html_css_js_frontend_projects"
+    },
+    {
+      "count": 3,
+      "from": [
+        "indianhtmlweb",
+        "html_css_js_frontend_projects",
+        "codescientist"
+      ],
+      "title": "Javascriptpro_",
+      "subs": 4263,
+      "username": "Javascriptproo"
+    },
+    {
+      "count": 3,
+      "from": [
+        "dev19community",
+        "techindro",
+        "indianhtmlweb"
+      ],
+      "title": "Krishna's Coding Corner",
+      "subs": 3243,
+      "username": "krishnacodingcorner"
+    },
+    {
+      "count": 2,
+      "from": [
+        "happywebdev",
+        "codescientist"
+      ],
+      "title": "Coding Stella",
+      "subs": 58937,
+      "username": "codingstella"
+    },
+    {
+      "count": 2,
+      "from": [
+        "indianhtmlweb",
+        "html_css_js_frontend_projects"
+      ],
+      "title": "Web Development - HTML, CSS & JavaScript",
+      "subs": 54382,
+      "username": "javascript_courses"
+    },
+    {
+      "count": 2,
+      "from": [
+        "indianhtmlweb",
+        "html_css_js_frontend_projects"
+      ],
+      "title": "JavaScript",
+      "subs": 31887,
+      "username": "id1924414526"
+    },
+    {
+      "count": 2,
+      "from": [
+        "indianhtmlweb",
+        "happywebdev"
+      ],
+      "title": "Webdevelopment657",
+      "subs": 24146,
+      "username": "webdevelopment657"
+    },
+    {
+      "count": 2,
+      "from": [
+        "techindro",
+        "codingstella"
+      ],
+      "title": "Helpme_coder",
+      "subs": 21321,
+      "username": "helpme_coder"
+    },
+    {
+      "count": 2,
+      "from": [
+        "happywebdev",
+        "codescientist"
+      ],
+      "title": "Frontend Trend",
+      "subs": 19984,
+      "username": "frontend_trend"
+    },
+    {
+      "count": 2,
+      "from": [
+        "codescientist",
+        "codingstella"
+      ],
+      "title": "Nothing4us",
+      "subs": 18086,
+      "username": "nothing4uss"
+    },
+    {
+      "count": 2,
+      "from": [
+        "happywebdev",
+        "codingstella"
+      ],
+      "title": "Code Scientists",
+      "subs": 9649,
+      "username": "codescientist"
+    },
+    {
+      "count": 2,
+      "from": [
+        "happywebdev",
+        "codescientist"
+      ],
+      "title": "Frontendchannels",
+      "subs": 9395,
+      "username": "frontendchannels"
+    },
+    {
+      "count": 2,
+      "from": [
+        "indianhtmlweb",
+        "html_css_js_frontend_projects"
+      ],
+      "title": "Ready.code - JS development. Releases and articles",
+      "subs": 8226,
+      "username": "ready_dot_code"
+    },
+    {
+      "count": 2,
+      "from": [
+        "GithubFeedX",
+        "techindro"
+      ],
+      "title": "Dev19Community",
+      "subs": 1700,
+      "username": "dev19community"
+    },
+    {
+      "count": 1,
+      "from": [
+        "codingstella"
+      ],
+      "title": "Codewithrandom",
+      "subs": 243740,
+      "username": "Codewithrandom"
+    },
+    {
+      "count": 1,
+      "from": [
+        "codingstella"
+      ],
+      "title": "TCW - AI & Coding Resources 🚀👨‍💻",
+      "subs": 191665,
+      "username": "the_coding_wizard"
+    },
+    {
+      "count": 1,
+      "from": [
+        "codingstella"
+      ],
+      "title": "Curious Coder",
+      "subs": 142513,
+      "username": "Curious_Coder"
+    },
+    {
+      "count": 1,
+      "from": [
+        "html_css_js_frontend_projects"
+      ],
+      "title": "Web Development",
+      "subs": 77415,
+      "username": "webdevcoursefree"
+    },
+    {
+      "count": 1,
+      "from": [
+        "codingstella"
+      ],
+      "title": "AI Tech Insiders",
+      "subs": 14580,
+      "username": "aitechinsiderspage"
+    },
+    {
+      "count": 1,
+      "from": [
+        "dev19community"
+      ],
+      "title": "Developergtm",
+      "subs": 13986,
+      "username": "developergtm"
+    },
+    {
+      "count": 1,
+      "from": [
+        "html_css_js_frontend_projects"
+      ],
+      "title": "HTML, CSS & JS Projects",
+      "subs": 11833,
+      "username": "fulljavascript2023"
+    },
+    {
+      "count": 1,
+      "from": [
+        "dev19community"
+      ],
+      "title": "You B Tech",
+      "subs": 10912,
+      "username": "You_B_Tech"
+    },
+    {
+      "count": 1,
+      "from": [
+        "html_css_js_frontend_projects"
+      ],
+      "title": "Web development Book & notes",
+      "subs": 9079,
+      "username": "webdev_books"
+    },
+    {
+      "count": 1,
+      "from": [
+        "happywebdev"
+      ],
+      "title": "SairProgramming",
+      "subs": 5928,
+      "username": "sairprogramming"
+    },
+    {
+      "count": 1,
+      "from": [
+        "GithubFeedX"
+      ],
+      "title": "4K WALLPAPERS for pc | Обои 4к",
+      "subs": 5548,
+      "username": "walpappersForPc"
+    },
+    {
+      "count": 1,
+      "from": [
+        "happywebdev"
+      ],
+      "title": "CODE NET",
+      "subs": 5240,
+      "username": "C0DE_NET"
+    },
+    {
+      "count": 1,
+      "from": [
+        "dev19community"
+      ],
+      "title": "Tech by WebCoder",
+      "subs": 4492,
+      "username": "Techbywebcoder"
+    },
+    {
+      "count": 1,
+      "from": [
+        "GithubFeedX"
+      ],
+      "title": "বাংলা ক্যাপশন স্ট্যাটাস | BANGLA CAPTION STATUS 🥰❤️✍️",
+      "subs": 4016,
+      "username": "Bangla_caption_status"
+    },
+    {
+      "count": 1,
+      "from": [
+        "dev19community"
+      ],
+      "title": "Computer science project",
+      "subs": 4010,
+      "username": "csproject12"
+    },
+    {
+      "count": 1,
+      "from": [
+        "techindro"
+      ],
+      "title": "CodeCrafters",
+      "subs": 3684,
+      "username": "codecrafters11"
+    },
+    {
+      "count": 1,
+      "from": [
+        "techindro"
+      ],
+      "title": "Skye Code",
+      "subs": 2881,
+      "username": "skyeCode"
+    },
+    {
+      "count": 1,
+      "from": [
+        "dev19community"
+      ],
+      "title": "Code With Patel",
+      "subs": 1416,
+      "username": "codewithpatel"
+    },
+    {
+      "count": 1,
+      "from": [
+        "GithubFeedX"
+      ],
+      "title": "Jacklyn Roper & Friends Archive",
+      "subs": 1362,
+      "username": "Jacklyn_Ropes"
+    },
+    {
+      "count": 1,
+      "from": [
+        "techindro"
+      ],
+      "title": "The Developer",
+      "subs": 1292,
+      "username": "thedeveloperyt"
+    },
+    {
+      "count": 1,
+      "from": [
+        "GithubFeedX"
+      ],
+      "title": "MATHOPHILE-MANISH",
+      "subs": 1155,
+      "username": "Mkingofmaths"
+    },
+    {
+      "count": 1,
+      "from": [
+        "GithubFeedX"
+      ],
+      "title": "قناة التحذير من خطر الشيعة وكل اهل البدع",
+      "subs": 1143,
+      "username": "antichi3a"
+    },
+    {
+      "count": 1,
+      "from": [
+        "GithubFeedX"
+      ],
+      "title": "Edu Helpline",
+      "subs": 1012,
+      "username": "EduHelplineIn"
+    },
+    {
+      "count": 1,
+      "from": [
+        "techindro"
+      ],
+      "title": "COMPETITIVE EXAM MATERIAL",
+      "subs": 1006,
+      "username": "geetcem"
+    },
+    {
+      "count": 1,
+      "from": [
+        "techindro"
+      ],
+      "title": "DIR-TECH FR",
+      "subs": 983,
+      "username": "dirtech"
+    },
+    {
+      "count": 1,
+      "from": [
+        "techindro"
+      ],
+      "title": "AmelottiDanilo",
+      "subs": 592,
+      "username": "amelottidaniloInc"
+    },
+    {
+      "count": 1,
+      "from": [
+        "GithubFeedX"
+      ],
+      "title": "VISION IAS GS 2026 KRUSHNA BHOKARE AGRICULTURE OPTIONAL SUDARSHAN GUJJAR SMRITI SHAH SOCIOLOGY mudit jain ca polity",
+      "subs": 494,
+      "username": "vision_gs_2025_2026"
+    },
+    {
+      "count": 1,
+      "from": [
+        "GithubFeedX"
+      ],
+      "title": "JALWA GAME OFFICIAL 🔥",
+      "subs": 486,
+      "username": "jalwagameofficiallink"
+    },
+    {
+      "count": 1,
+      "from": [
+        "dev19community"
+      ],
+      "title": "Tech indro_Official",
+      "subs": 459,
+      "username": "techindro"
+    },
+    {
+      "count": 1,
+      "from": [
+        "dev19community"
+      ],
+      "title": "CreativewiZ",
+      "subs": 426,
+      "username": "creativewiz_coding"
+    },
+    {
+      "count": 1,
+      "from": [
+        "GithubFeedX"
+      ],
+      "title": "AVIATOR SIGNAL SOFT / 1WIN",
+      "subs": 80,
+      "username": "aviator_signal_soft"
+    }
+  ]
+}
