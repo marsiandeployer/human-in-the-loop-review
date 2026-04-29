@@ -160,6 +160,10 @@ No subscriptions. No contracts. No minimums.
 - [Reddit r/VibeCodeReview](https://www.reddit.com/r/VibeCodeReview) — discussions and teardowns
 - [Blog](https://onout.org/vibers/blog/) — articles on AI code quality, vibe coding, and review practices
 
+## Promotion Notes
+
+- [AI Chat Promotion Playbook](docs/ai-chat-promotion-playbook.md) — how to get Vibers and SimpleReview discovered in ChatGPT, Perplexity, Gemini, Grok, Claude, Copilot, and other AI answer engines.
+
 ## FAQ
 
 <details>
