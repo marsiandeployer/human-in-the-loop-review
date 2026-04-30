@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Fix and Customize 1С-Bitrix Sites Without Touching the Core (2026 Guide)</title>
+  <meta name="description" content="Как править сайт на 1С-Битрикс без правки ядра в /bitrix/. Пошаговый гид по /local/ overrides, частым ошибкам (500, критическая ошибка), reCAPTCHA, кастомизации шаблонов. + расширение SimpleReview для AI-PR.">
+  <link rel="canonical" href="https://onout.org/bitrix/how-to-fix-and-customize-bitrix-sites/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix and Customize 1С-Bitrix Sites Without Touching the Core">
+  <meta property="og:description" content="Bitrix's #1 rule: never edit /bitrix/ core. Use /local/ overrides. SimpleReview's Bitrix-aware agent already knows the convention — click → fix → PR.">
+  <meta property="og:url" content="https://onout.org/bitrix/how-to-fix-and-customize-bitrix-sites/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Fix and Customize 1С-Bitrix Sites Without Touching the Core">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="как править сайт на битрикс, битрикс local, доработка битрикс без программиста, битрикс ошибка 500, скрыть powered by битрикс, captcha битрикс, битрикс маркетплейс модуль">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix and Customize 1С-Bitrix Sites Without Touching the Core (2026 Guide)",
+    "description": "Bitrix's #1 rule: never edit core files in /bitrix/. All customization goes through /local/. A practical guide to /local/ overrides, common 500 errors, reCAPTCHA, template customization — plus SimpleReview's Bitrix-aware AI agent.",
+    "url": "https://onout.org/bitrix/how-to-fix-and-customize-bitrix-sites/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/bitrix/how-to-fix-and-customize-bitrix-sites/" },
+    "keywords": ["как править сайт на битрикс", "битрикс local", "доработка битрикс без программиста", "битрикс ошибка 500", "скрыть powered by битрикс", "captcha битрикс", "битрикс маркетплейс модуль"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Можно ли править сайт на Битриксе без программиста?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Да — для большинства правок шаблонов, текстов кнопок, файлов компонентов в /local/. Главное правило Битрикса: никогда не трогать /bitrix/ — следующее обновление перетрёт ваши изменения. Все кастомизации делаются через /local/templates/, /local/components/ и /local/php_interface/init.php. SimpleReview Chrome-extension знает эту конвенцию и пишет правки сразу в нужный файл в /local/, открывая Pull Request."}
+      },
+      {
+        "@type": "Question",
+        "name": "Как установить SimpleReview на Битрикс-сайт?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Установите Chrome-расширение из Chrome Web Store, подключите Git-репозиторий сайта (GitHub/GitLab/самохост Bitbucket/Gitea) или дайте SFTP-доступ. Расширение определяет Битрикс по структуре файлов и наличию /bitrix/ + /local/. Дополнительно мы готовим модуль для 1С-Битрикс: Маркетплейс, который встраивает SimpleReview прямо в Контрольную панель."}
+      },
+      {
+        "@type": "Question",
+        "name": "Что если у меня сайт на 1С-Битрикс: Управление сайтом, а не Bitrix24?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Именно для Битрикс: Управление сайтом (1С-Bitrix CMS) расширение и предназначено — там есть /bitrix/, /local/, шаблоны, компоненты. Bitrix24 (облачный портал) — это другой продукт, и его UI правится через настройки портала, а не через файлы. Мы поддерживаем все коммерческие редакции CMS: Старт, Стандарт, Малый бизнес, Бизнес, Веб-кластер."}
+      },
+      {
+        "@type": "Question",
+        "name": "Это безопасно для продакшен-сайта?",
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview никогда не пушит в продакшен ветку напрямую — каждое изменение это Pull Request, который вы проверяете и мержите. В худшем случае вы отклоняете PR. Рекомендуем держать staging-копию (Битрикс-хостинги обычно её предоставляют через Резервное копирование → Восстановить на тестовом домене) и тестировать там перед мержем в продакшен."}
+      },
+      {
+        "@type": "Question",
+        "name": "Чем это отличается от заказа фрилансера за 2-3 тыс рублей за правку?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Скоростью и стоимостью повторной работы. Фрилансер тратит 1-2 часа просто чтобы развернуть окружение, найти нужный шаблон и понять структуру именно вашей редакции и темы — сама правка часто занимает 5 минут. SimpleReview уже знает структуру Битрикса (/bitrix/, /local/, .default/, шаблоны, компоненты), открывает PR за секунды, и стоит копейки API (или $0 на своём ключе Claude/Codex)."}
+      },
+      {
+        "@type": "Question",
+        "name": "Работает ли это для редакций Малый бизнес/Бизнес/Веб-кластер?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Да. Структура /bitrix/ vs /local/ одинакова во всех коммерческих редакциях 1С-Битрикс: Управление сайтом начиная с версии 14.0. Разница только в наборе модулей (интернет-магазин, документооборот, e-mail-маркетинг и т.д.), но способ кастомизации шаблонов и компонентов идентичен. Веб-кластер добавляет особенности по кэшу — мы это учитываем."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #ff7e00;padding-left:16px}
+    .key-takeaways{background:#fff5e8;border:1px solid #ffd9a8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#a04600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#0070d0}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#ff7e00;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#e06f00;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#ff7e00}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#ff7e00;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>1С-Bitrix / No-Core-Edits</span>
+      <span>April 30, 2026</span>
+      <span>9 min read</span>
+    </div>
+
+    <h1>How to Fix and Customize 1С-Bitrix Sites Without Touching the Core</h1>
+
+    <p class="article-lead">Bitrix's #1 rule: <strong>never edit core files in <code>/bitrix/</code></strong>. All customization goes through <code>/local/</code>. But finding which file in <code>/local/templates/</code>, <code>/local/components/</code>, or <code>/local/php_interface/init.php</code> to touch — and not breaking the update path — is what separates a $40/hr freelancer hour from a 3-second SimpleReview PR. Our SimpleReview Chrome extension already knows the Bitrix file layout and the "<code>/local/</code> override" rule, so it edits the right file the first time and opens a PR you review.</p>
+
+    <style>
+    /* ─────── Bitrix Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* Bitrix storefront */
+    .sc-bx-topbar{background:#1f2935;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-bx-topbar .links{display:flex;gap:10px;opacity:.85}
+    .sc-bx-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ff7e00}
+    .sc-bx-logo{font-size:14px;font-weight:800;color:#1f2935;letter-spacing:.3px}
+    .sc-bx-logo span{color:#ff7e00}
+    .sc-bx-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:3px;padding:4px 8px;font-size:10px;color:#888}
+    .sc-bx-cart{font-size:11px;font-weight:600;color:#fff;background:#ff7e00;border-radius:3px;padding:4px 9px}
+
+    /* Product grid */
+    .sc-bx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 230px 0 30px;max-width:520px;margin:0}
+    .sc-bx-card{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:8px;text-align:center}
+    .sc-bx-thumb{width:100%;height:42px;background:linear-gradient(135deg,#fde6cc,#ffd1a6);border-radius:3px;margin-bottom:5px}
+    .sc-bx-pname{font-size:9px;font-weight:600;color:#222;line-height:1.3;height:24px;overflow:hidden}
+    .sc-bx-price{font-size:10px;font-weight:700;color:#ff7e00;margin-top:3px}
+
+    /* Footer with Bitrix copyright — TARGET */
+    .sc-bx-footer{background:#1f2935;color:#aaa;padding:14px 230px 14px 30px;margin-top:14px;font-size:10px;line-height:1.5;display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+    .sc-bx-footer-left{flex:1}
+    .sc-bx-poweredby{display:inline-block;background:#fff;color:#1f2935;border:1px solid #ff7e00;border-left:4px solid #ff7e00;padding:9px 14px 9px 12px;font-size:11px;font-weight:600;border-radius:3px;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:none}}
+    .sc-bx-poweredby::after{content:'Selected';position:absolute;top:-10px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-bx-poweredby-mark{color:#ff7e00;font-weight:800}
+    .sc-bx-poweredby-fade{animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-topbar{background:#1f2935;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:2px solid #ff7e00;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#ff7e00;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-footer{background:#1f2935;color:#aaa;padding:10px 14px;font-size:10px;text-align:center}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#ff7e00;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #ff7e00;color:#a04d00;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#a04d00;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:240px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:160px;top:300px;opacity:1}
+      22%  {left:160px;top:300px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-bx-grid{grid-template-columns:repeat(3,1fr);max-width:380px}
+    }
+    </style>
+    <div id="sc-banner-fallback" class="sc-banner bitrix" aria-label="Animated demo: SimpleReview's Bitrix expert removes the Powered-by Bitrix copyright and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mystore.ru</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Bitrix storefront -->
+            <div class="sc-bx-topbar">
+              <span>+7 (495) 555-0099 · Доставка по РФ</span>
+              <span class="links">Личный кабинет · Избранное · Заказ</span>
+            </div>
+            <div class="sc-bx-header">
+              <div class="sc-bx-logo">Мой<span>Магазин</span></div>
+              <div class="sc-bx-search">Поиск товаров…</div>
+              <div class="sc-bx-cart">Корзина · 0 ₽</div>
+            </div>
+            <!-- Product grid -->
+            <div class="sc-bx-grid">
+              <div class="sc-bx-card"><div class="sc-bx-thumb"></div><div class="sc-bx-pname">Смартфон Pro 256</div><div class="sc-bx-price">79 990 ₽</div></div>
+              <div class="sc-bx-card"><div class="sc-bx-thumb"></div><div class="sc-bx-pname">Ноутбук Air 13"</div><div class="sc-bx-price">119 990 ₽</div></div>
+              <div class="sc-bx-card"><div class="sc-bx-thumb"></div><div class="sc-bx-pname">Наушники Pro 2</div><div class="sc-bx-price">24 990 ₽</div></div>
+            </div>
+            <!-- Footer with Bitrix copyright (TARGET) -->
+            <div class="sc-bx-footer">
+              <div class="sc-bx-footer-left sc-bx-poweredby-fade">© 2026 МойМагазин · Все права защищены<br>Каталог · О нас · Контакты · Доставка</div>
+              <div class="sc-bx-poweredby">Сайт работает на <span class="sc-bx-poweredby-mark">1С-Битрикс</span></div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-topbar">
+                <span>+7 (495) 555-0099 · Доставка по РФ</span>
+                <span>Личный кабинет · Избранное</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-bx-logo">Мой<span>Магазин</span></div>
+                <div class="sc-bx-search">Поиск товаров…</div>
+                <div class="sc-bx-cart">Корзина · 0 ₽</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">FREE</span>Бесплатная доставка от 3 000 ₽ — каждый день</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Копирайт Битрикса убран · footer.php пропатчен · PR #42 готов</span>
+                <div class="sc-rec-h">Популярные товары</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+              <div class="sc-rec-footer">© 2026 МойМагазин · Все права защищены</div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Комментарий</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">убрать копирайт Битрикса</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>Bitrix expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">1С-Битрикс 23</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Шаблон</span><span class="sc-sb-v">main</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">footer.php</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Удалить блок "Сайт работает на 1С-Битрикс" из <code style="font-size:8px">/local/templates/main/footer.php</code> · 1 файл</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Брендинг Битрикса убран. Лицензия не нарушена (коммерческая редакция).</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(footer): drop 1С-Битрикс copyright<br>footer.php · -4 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Кликни SimpleReview → выбери копирайт → <strong>Fix it</strong> → PR готов, без программиста</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Есть правка по сайту на Битриксе, за которую фрилансер просит 2-3 тысячи? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> найдёт нужный файл в <code>/local/</code>, откроет PR, не сломает обновление ядра.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>Never edit <code>/bitrix/</code> core</strong> — every Bitrix update will overwrite your changes. Always use <code>/local/</code>.</li>
+        <li>Most Bitrix edits are template-level (<code>/local/templates/[theme]/</code>) or component-template-level (<code>/local/templates/[theme]/components/</code>) — SimpleReview's Bitrix-aware agent knows this layout.</li>
+        <li>SimpleReview's agent knows the <code>/bitrix/</code> → <code>/local/</code> override convention and writes to the correct path — it never patches core files.</li>
+        <li>Мы готовим модуль для <strong>1С-Битрикс: Маркетплейс</strong>, который встраивает SimpleReview прямо в Контрольную панель (раздел Marketplace → Решения партнёров) — кнопка «Edit with SimpleReview» рядом с любым шаблоном или компонентом.</li>
+        <li>For payment-module / «Мой кабинет» / API integration work — use <a href="/vibers/">Vibers human-in-the-loop review</a>: a real person checks the PR before you merge it to production.</li>
+      </ul>
+    </div>
+
+    <h2>The /bitrix/ vs /local/ Rule — Why Most Freelancer Hours Are Wasted</h2>
+
+    <p>1С-Битрикс ships ~50,000 PHP files in the <code>/bitrix/</code> directory. The temptation, for a quick freelancer, is to open <code>/bitrix/templates/.default/header.php</code>, edit it, save, done. That's a $2,000 mistake — the next time the client clicks <em>SiteUpdate</em> in the admin (and clients always click it), every edited file is overwritten with the vendor version.</p>
+
+    <p>The correct convention, baked into Bitrix since version 14.0:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Path</th><th>What it is</th><th>Edit?</th></tr>
+        <tr><td><code>/bitrix/</code></td><td>Vendor core — modules, components, default templates, kernel</td><td><strong>NEVER</strong></td></tr>
+        <tr><td><code>/local/</code></td><td>Your customizations — overrides core paths transparently</td><td><strong>ALWAYS</strong></td></tr>
+        <tr><td><code>/upload/</code></td><td>User uploads (images, files, infoblock attachments)</td><td>Auto</td></tr>
+      </table>
+    </div>
+
+    <p>The override is path-mirroring. If a component lives at <code>/bitrix/components/bitrix/news.list/</code>, you copy it to <code>/local/components/bitrix/news.list/</code> and Битрикс automatically picks the <code>/local/</code> version. Same for templates: <code>/bitrix/templates/.default/</code> is overridden by <code>/local/templates/.default/</code>.</p>
+
+    <div class="warn-box">
+      <strong>Warning:</strong> Some old tutorials suggest editing <code>/bitrix/templates/[theme]/</code> directly. This was the pre-14.0 way and is now broken — the directory still exists for backward-compatibility but is the first thing wiped on update. Use <code>/local/templates/[theme]/</code>.
+    </div>
+
+    <h2>Three-Click Workflow with SimpleReview</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. Free with your own AI key (Claude Code or Codex), и есть встроенный режим, если ключа нет.</li>
+      <li><strong>Connect your Bitrix repo.</strong> Paste a GitHub / GitLab / самохост Gitea / Bitbucket URL. Если сайт ещё не на Git, выдайте SFTP-креды — SimpleReview сам сделает рабочую копию и будет коммитить в свою ветку.</li>
+      <li><strong>Open your storefront, click the SimpleReview icon, click the element you want to change.</strong> Type the change in plain Russian or English: «убери Powered by 1C-Bitrix из футера», «добавь reCAPTCHA в форму обратной связи», «переведи кнопку В корзину на Купить сейчас». Click <strong>Fix it</strong>. The agent finds the corresponding file in <code>/local/</code>, creates the override if needed, and opens a Pull Request.</li>
+    </ol>
+
+    <h2>Common Bitrix Edits — and Where They Live</h2>
+
+    <h3>Hide "Powered by 1C-Bitrix" from the footer</h3>
+
+    <p>The brand link is rendered by the footer template, usually inside a <code>$APPLICATION-&gt;ShowPanel()</code> region or a hardcoded block. The agent locates the active template (Settings → System → Site list → Template column), copies <code>/bitrix/templates/[theme]/footer.php</code> to <code>/local/templates/[theme]/footer.php</code> if it doesn't exist yet, and removes the line:</p>
+
+    <pre><code>&lt;?php
+// /local/templates/[theme]/footer.php — before
+&lt;div class="footer-credit"&gt;
+  Powered by &lt;a href="https://www.1c-bitrix.ru/"&gt;1C-Bitrix&lt;/a&gt;
+&lt;/div&gt;
+&lt;?$APPLICATION-&gt;ShowPanel(); ?&gt;
+&lt;/body&gt;&lt;/html&gt;
+
+// after — credit removed, ShowPanel() kept (it's the admin edit panel, do NOT remove)
+&lt;?$APPLICATION-&gt;ShowPanel(); ?&gt;
+&lt;/body&gt;&lt;/html&gt;</code></pre>
+
+    <p>Note: <code>$APPLICATION-&gt;ShowPanel()</code> renders the floating Битрикс admin edit panel for logged-in admins — keep it. The agent never removes that line.</p>
+
+    <h3>Add reCAPTCHA to the contact form</h3>
+
+    <p>The standard contact form is rendered by <code>bitrix:main.feedback</code>. To customize, copy its template:</p>
+
+    <pre><code># Source (do not edit):
+/bitrix/components/bitrix/main.feedback/templates/.default/template.php
+
+# Override target (where SimpleReview writes):
+/local/templates/[theme]/components/bitrix/main.feedback/.default/template.php</code></pre>
+
+    <p>The agent inserts the reCAPTCHA snippet right before the submit button, registers the secret-key check in <code>/local/php_interface/init.php</code> via an <code>OnBeforeFormAdd</code> event handler, and adds the site-key constant to <code>/local/.settings_extra.php</code>. Three files, one PR.</p>
+
+    <h3>Fix the "критическая ошибка" (500) after a module update</h3>
+
+    <p>The classic Bitrix 500: white screen with "Произошла критическая ошибка" or "Critical error" after a module update or kernel patch. 90% of cases are stale cache. Fix order:</p>
+
+    <pre><code># 1. Clear all cache layers
+rm -rf /var/www/[site]/bitrix/cache/*
+rm -rf /var/www/[site]/bitrix/managed_cache/*
+rm -rf /var/www/[site]/bitrix/stack_cache/*
+
+# 2. Verify DB credentials still match
+cat /var/www/[site]/bitrix/php_interface/dbconn.php
+# expects: $DBHost, $DBLogin, $DBPassword, $DBName
+
+# 3. Check OPcache / APCu wasn't pinned to old bytecode
+php -r "opcache_reset();"
+
+# 4. If still broken — enable error display temporarily
+# /bitrix/.settings.php → 'exception_handling' → 'debug' => true</code></pre>
+
+    <p>SimpleReview's agent reads your hosting logs (or asks for the error output), pinpoints which of the three causes hit you, and either submits a config-fix PR or — if the error is in a vendor module — flags it for a human Vibers reviewer instead of guessing.</p>
+
+    <h3>Translate "Add to Cart" / "В корзину" button text</h3>
+
+    <p>Catalog button labels live in language files, NOT templates. The agent goes to:</p>
+
+    <pre><code>/local/templates/[theme]/components/bitrix/catalog.element/.default/lang/ru/template.php
+/local/templates/[theme]/components/bitrix/catalog.element/.default/lang/en/template.php
+
+# inside, edit the constant:
+&lt;?php
+$MESS["CATALOG_ADD"] = "Купить сейчас"; // was "В корзину"
+$MESS["CATALOG_BUY"] = "Заказать в один клик";</code></pre>
+
+    <p>This is the difference that saves the hour: a freelancer often patches the <code>.tpl</code> directly with hardcoded text, breaking i18n. The agent does it the Битрикс-correct way.</p>
+
+    <h3>Speed up admin panel</h3>
+
+    <p>The admin panel slowdown is almost always 5-10 unused modules loading on every request. Не лезьте в код — это admin-задача:</p>
+
+    <ol>
+      <li>Settings (Настройки) → System Settings (Настройки продукта) → Modules (Модули)</li>
+      <li>Or: Marketplace → Установленные решения</li>
+      <li>Disable modules you don't use: <code>vote</code>, <code>blog</code>, <code>forum</code>, <code>learning</code>, <code>workflow</code>, <code>wiki</code>, <code>tasks</code>, <code>extranet</code> if it's not a corporate portal.</li>
+    </ol>
+
+    <p>The agent recognizes this as an admin-side task and won't generate code for it — it tells you to flip the switches yourself. Knowing when <em>not</em> to write code is half the value.</p>
+
+    <h2>Bitrix Marketplace — Our Module</h2>
+
+    <p>1С-Битрикс: Маркетплейс — №1 канал в РФ/СНГ для коммерческих модулей и шаблонов. Наш модуль (в работе) ставится через стандартный установщик: <strong>Marketplace → Каталог → найти "SimpleReview" → Установить</strong>. После активации в Битрикс-админке появляется кнопка "Edit with SimpleReview" рядом с любым шаблоном или компонентом — клик → правка → PR в репозиторий, который ваш разработчик ревьюит.</p>
+
+    <p>Если у вас сейчас сайт на Битрикс и есть GitHub/GitLab/самохост Bitbucket — наша Chrome-extension уже работает (без модуля): <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">установить SimpleReview из Chrome Web Store</a>.</p>
+
+    <div class="definition">
+      <strong>Что встраивает модуль:</strong> отдельную кнопку в редакторе шаблонов (Контент → Структура сайта → Шаблоны), команду в контекстное меню компонента на публичной части (только для авторизованных админов), и пункт «SimpleReview» в раздел Marketplace → Решения партнёров.
+    </div>
+
+    <h2>Comparison Table — Freelancer vs SimpleReview</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>Bitrix freelancer (₽1500-3000/час)</th><th>SimpleReview agent</th></tr>
+        <tr><td>Brief</td><td>30 min Telegram + ТЗ</td><td>Type one sentence in the popup</td></tr>
+        <tr><td>FTP / repo setup</td><td>30-60 min (every time)</td><td>Once, then cached</td></tr>
+        <tr><td>Find the right file in <code>/local/</code> vs <code>/bitrix/</code></td><td>30-90 min (depends on theme + module mix)</td><td>Instant — knows the override convention</td></tr>
+        <tr><td>Create override path if missing</td><td>Often skipped → patches <code>/bitrix/</code> by mistake</td><td>Auto-creates <code>/local/templates/...</code> mirror</td></tr>
+        <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
+        <tr><td>Open a PR</td><td>Rare — usually FTP push</td><td>Always — review before merge</td></tr>
+        <tr><td>Cost for 1-line change</td><td>₽1500-3000 (1 hour minimum)</td><td>₽0 (BYO key) or pennies of API</td></tr>
+        <tr><td>Risk of breaking next update</td><td>High if they touched <code>/bitrix/</code></td><td>Zero — only writes to <code>/local/</code></td></tr>
+      </table>
+    </div>
+
+    <h2>When You Do Want a Live Developer</h2>
+
+    <p>This guide isn't anti-freelancer — it's anti-paying-an-hour-for-five-minutes. You absolutely want a human in the loop when:</p>
+
+    <ul>
+      <li><strong>Модули с 1С-интеграцией</strong> (Управление сайтом ↔ 1С:Предприятие через CommerceML). Catalog sync, order export, balance updates — деньги и склад идут через эти данные, ошибка стоит дороже разработчика.</li>
+      <li><strong>Миграция Bitrix24 ↔ Bitrix CMS</strong>. Это два разных продукта с разной структурой (REST API vs file-based), и автоматизированной миграции нет — каждый случай уникальный.</li>
+      <li><strong>Платёжные модули</strong> (ЮKassa, Robokassa, Сбербанк-эквайринг, Т-Банк). Любая правка платёжки требует ручного теста в sandbox + продакшен-инцидента ≠ простой опечатки.</li>
+      <li><strong>Сложная бизнес-логика</strong>: workflow в документообороте, кастомные инфоблоки с десятками свойств, агенты (cron-задачи Битрикса) с зависимостями.</li>
+      <li><strong>Security audit</strong>, особенно перед открытием админки в интернет или после установки стороннего модуля из Маркетплейса с низким рейтингом.</li>
+    </ul>
+
+    <p>Это и есть та доля задач, для которой существует <a href="/vibers/">Vibers human-in-the-loop review</a>: реальный человек смотрит ваш PR, шлёт fix-up при необходимости, аппрувит до мержа. Используйте agent для 80%, человека — для 20% которые отрабатывают свою почасовую ставку.</p>
+
+    <div class="cta-block">
+      <h3>Перестаньте платить за «найти файл»</h3>
+      <p>SimpleReview's Bitrix-aware agent читает ваш репозиторий, знает <code>/bitrix/</code> → <code>/local/</code> конвенцию, и открывает PR за секунды.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Установить SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#ccc">Сложная задача — модуль оплаты, миграция, аудит? <a href="/vibers/" style="color:#ff7e00;font-weight:600">Получить human review →</a></p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Можно ли править сайт на Битриксе без программиста?</div>
+      <div class="faq-a">Да — для большинства правок шаблонов, текстов кнопок, файлов компонентов в <code>/local/</code>. Главное правило Битрикса: никогда не трогать <code>/bitrix/</code> — следующее обновление перетрёт ваши изменения. Все кастомизации делаются через <code>/local/templates/</code>, <code>/local/components/</code> и <code>/local/php_interface/init.php</code>. SimpleReview Chrome-extension знает эту конвенцию и пишет правки сразу в нужный файл в <code>/local/</code>, открывая Pull Request.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Как установить SimpleReview на Битрикс-сайт?</div>
+      <div class="faq-a">Установите Chrome-расширение из Chrome Web Store, подключите Git-репозиторий сайта (GitHub/GitLab/самохост Bitbucket/Gitea) или дайте SFTP-доступ. Расширение определяет Битрикс по структуре файлов и наличию <code>/bitrix/</code> + <code>/local/</code>. Дополнительно мы готовим модуль для 1С-Битрикс: Маркетплейс, который встраивает SimpleReview прямо в Контрольную панель.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Что если у меня сайт на 1С-Битрикс: Управление сайтом, а не Bitrix24?</div>
+      <div class="faq-a">Именно для Битрикс: Управление сайтом (1С-Bitrix CMS) расширение и предназначено — там есть <code>/bitrix/</code>, <code>/local/</code>, шаблоны, компоненты. Bitrix24 (облачный портал) — это другой продукт, и его UI правится через настройки портала, а не через файлы. Мы поддерживаем все коммерческие редакции CMS: Старт, Стандарт, Малый бизнес, Бизнес, Веб-кластер.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Это безопасно для продакшен-сайта?</div>
+      <div class="faq-a">SimpleReview никогда не пушит в продакшен ветку напрямую — каждое изменение это Pull Request, который вы проверяете и мержите. В худшем случае вы отклоняете PR. Рекомендуем держать staging-копию (Битрикс-хостинги обычно её предоставляют через Резервное копирование → Восстановить на тестовом домене) и тестировать там перед мержем в продакшен.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Чем это отличается от заказа фрилансера за 2-3 тыс рублей за правку?</div>
+      <div class="faq-a">Скоростью и стоимостью повторной работы. Фрилансер тратит 1-2 часа просто чтобы развернуть окружение, найти нужный шаблон и понять структуру именно вашей редакции и темы — сама правка часто занимает 5 минут. SimpleReview уже знает структуру Битрикса (<code>/bitrix/</code>, <code>/local/</code>, <code>.default/</code>, шаблоны, компоненты), открывает PR за секунды, и стоит копейки API (или $0 на своём ключе Claude/Codex).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Работает ли это для редакций «Малый бизнес»/«Бизнес»/«Веб-кластер»?</div>
+      <div class="faq-a">Да. Структура <code>/bitrix/</code> vs <code>/local/</code> одинакова во всех коммерческих редакциях 1С-Битрикс: Управление сайтом начиная с версии 14.0. Разница только в наборе модулей (интернет-магазин, документооборот, e-mail-маркетинг и т.д.), но способ кастомизации шаблонов и компонентов идентичен. Веб-кластер добавляет особенности по кэшу — мы это учитываем.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
+          <p>Same agent pattern, applied to WP fatal-error recovery — read debug.log, patch deprecated function, open PR.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
+          <p>Sibling CMS, same workflow — click element → describe change → get a Pull Request.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://dev.1c-bitrix.ru/">dev.1c-bitrix.ru — Официальная документация для разработчиков</a></li>
+      <li><a href="https://docs.bitrix24.com/">docs.bitrix24.com — Документация Bitrix24 (для контекста — это другой продукт, не CMS)</a></li>
+      <li><a href="https://marketplace.1c-bitrix.ru/">marketplace.1c-bitrix.ru — Маркетплейс модулей и решений (где появится наш модуль)</a></li>
+      <li><a href="https://dev.1c-bitrix.ru/learning/course/?COURSE_ID=43">Курс «Разработчик Bitrix Framework» — раздел про <code>/local/</code> и переопределение компонентов</a></li>
+      <li><a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">SimpleReview — Chrome Web Store</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

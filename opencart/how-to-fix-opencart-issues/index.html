@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Fix Common OpenCart 3.x and 4.x Errors (2026 Field Guide)</title>
+  <meta name="description" content="Field guide to fixing common OpenCart 3.x and 4.x errors — 500 internal, blank admin, stale OCMOD, broken Twig, slow admin, reCAPTCHA, hide Powered by. + SimpleReview workflow that opens a PR.">
+  <link rel="canonical" href="https://onout.org/opencart/how-to-fix-opencart-issues/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix Common OpenCart 3.x and 4.x Errors (2026 Field Guide)">
+  <meta property="og:description" content="500, blank admin, OCMOD refresh, Twig errors, slow admin, reCAPTCHA — recurring OpenCart issues and the field-tested fixes for each, plus a SimpleReview PR workflow.">
+  <meta property="og:url" content="https://onout.org/opencart/how-to-fix-opencart-issues/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="fix opencart, opencart 500 error, opencart blank admin, opencart ocmod refresh, opencart twig error, opencart slow, opencart captcha, opencart 4 migration, opencart extension store">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix Common OpenCart 3.x and 4.x Errors (2026 Field Guide)",
+    "description": "Field guide to the six recurring OpenCart errors — 500 internal, blank admin, stale OCMOD, Twig fatal, slow admin, captcha — with fix-by-fix walkthroughs and a SimpleReview PR workflow.",
+    "url": "https://onout.org/opencart/how-to-fix-opencart-issues/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/opencart/how-to-fix-opencart-issues/" },
+    "keywords": ["fix opencart", "opencart 500 error", "opencart blank admin", "opencart ocmod refresh", "opencart twig error", "opencart slow", "opencart captcha", "opencart 4 migration", "opencart extension store"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What's the most common OpenCart error?",
+        "acceptedAnswer": {"@type": "Answer", "text": "A 500 Internal Server Error after a fresh install or after upgrading PHP. The cause is almost always a low PHP memory_limit (set it to 256M or higher) or a missing/unwritable system/storage/ directory. Check system/storage/logs/error.log first — it names the file and line in 90% of cases."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I fix a blank admin after an extension install?",
+        "acceptedAnswer": {"@type": "Answer", "text": "The most common cause is an extension built for the wrong major version — 4.x event syntax on a 3.x store, or vice versa. Rename system/storage/modification/admin/ to _modification_disabled/, log back into admin, then uninstall the bad extension via Extensions → Installer → Removed."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does this work on OpenCart 4.x?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every fix in this guide is annotated for both 3.x (OCMOD-based) and 4.x (event-based). The two systems are NOT compatible — extensions built for one will not work on the other, which is itself the cause of many fatal errors."}
+      },
+      {
+        "@type": "Question",
+        "name": "What about Journal, So-Emarket, Shoppica themes?",
+        "acceptedAnswer": {"@type": "Answer", "text": "All three follow the standard OpenCart override pattern (catalog/view/template/[theme]/...) so the same fixes apply. Journal ships its own framework on top, so a Twig fatal in a Journal partial may also need a Journal-specific cache clear (Admin → Journal → Tools → Refresh Cache)."}
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need SSH access?",
+        "acceptedAnswer": {"@type": "Answer", "text": "For most fixes, SFTP is enough — you need to read system/storage/logs/error.log and clear system/storage/modification/. Shared hosts without SFTP can use the cPanel File Manager. SSH only becomes essential when you're tailing real-time logs or running OpenCart's CLI tools."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is this cheaper than a freelancer at $25-50/hr?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Most error-recovery work is 2-15 minutes once you've identified the cause. A freelancer's one-hour minimum prices an OCMOD refresh at $25-50 — and they often spend half that hour just locating the file. SimpleReview reads system/storage/logs/error.log directly, names the file, and opens the PR."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#229ac8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#229ac8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#229ac8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #229ac8;padding-left:16px}
+    .key-takeaways{background:#e8f5fa;border:1px solid #b8e0ed;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#0e6c8c;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#0e6c8c}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#229ac8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#1a7a9f;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#229ac8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#229ac8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>OpenCart / Error Recovery</span>
+      <span>April 30, 2026</span>
+      <span>11 min read</span>
+    </div>
+
+    <h1>How to Fix Common OpenCart 3.x and 4.x Errors (2026 Field Guide)</h1>
+
+    <p class="article-lead">Most OpenCart "site is broken" tickets — for both 3.x and 4.x stores — come down to six recurring issues: a 500 internal server error, a blank admin after an extension install, an OCMOD that didn't refresh, a missing storage path, broken cache, or a Twig/PHP fatal error. This is the field guide for each, plus the SimpleReview workflow that opens a PR with the fix instead of a 90-minute freelancer Zoom.</p>
+
+    <style>
+    /* ─────── OpenCart 4 Fix Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* OpenCart storefront */
+    .sc-oc-topbar{background:#229ac8;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-oc-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e0e0e0}
+    .sc-oc-logo{font-size:14px;font-weight:800;color:#229ac8;letter-spacing:.3px}
+    .sc-oc-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:3px;padding:4px 8px;font-size:10px;color:#888}
+    .sc-oc-cart{font-size:11px;font-weight:600;color:#229ac8;background:#fff;border:1px solid #229ac8;border-radius:3px;padding:4px 9px}
+    .sc-oc-breadcrumb{padding:8px 230px 0 30px;font-size:10px;color:#888}
+    .sc-oc-breadcrumb b{color:#229ac8;font-weight:600}
+
+    /* 500 error block — TARGET */
+    .sc-oc-error{background:#fff;border:1px solid #dc2626;border-left:4px solid #dc2626;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:520px;margin:14px 230px 0 30px;padding:14px 18px 16px;font-family:inherit;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-oc-error::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-oc-err-h{font-weight:800;font-size:13px;color:#dc2626;margin-bottom:5px;animation:errHide 28s infinite}
+    .sc-oc-err-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:6px;animation:errHide 28s infinite}
+    .sc-oc-err-stack{background:#fef2f2;border:1px solid #fca5a5;color:#7f1d1d;font-family:monospace;font-size:9px;padding:6px 8px;border-radius:3px;line-height:1.5;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-topbar{background:#229ac8;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#229ac8;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#229ac8;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #229ac8;color:#0e6c8c;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#0e6c8c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:200px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:340px;top:175px;opacity:1}
+      22%  {left:340px;top:175px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-oc-error{margin:14px 140px 0 14px}
+    }
+    </style>
+    <div id="sc-banner-fallback" class="sc-banner opencart-fix" aria-label="Animated demo: SimpleReview's OpenCart expert fixes a 500 error on the category page and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mystore.com/electronics</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- OpenCart storefront -->
+            <div class="sc-oc-topbar">
+              <span>+1 (415) 555-0099 · support@mystore.com</span>
+              <span>My Account · Wishlist · Checkout</span>
+            </div>
+            <div class="sc-oc-header">
+              <div class="sc-oc-logo">MyStore</div>
+              <div class="sc-oc-search">Search products…</div>
+              <div class="sc-oc-cart">🛒 0 item(s) — $0.00</div>
+            </div>
+            <div class="sc-oc-breadcrumb">Home › <b>Electronics</b></div>
+            <!-- 500 error block (TARGET) -->
+            <div class="sc-oc-error">
+              <div class="sc-oc-err-h">Something went wrong</div>
+              <div class="sc-oc-err-msg">The page you are trying to access is currently unavailable. Please try again later.</div>
+              <div class="sc-oc-err-stack">[error] PHP Fatal error: Uncaught Error: Call to undefined method Cart\Product::filterByCategory()<br>in catalog/controller/product/category.php on line 142<br>HTTP/1.1 500 Internal Server Error</div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-topbar">
+                <span>+1 (415) 555-0099 · support@mystore.com</span>
+                <span>My Account · Wishlist · Checkout</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-oc-logo">MyStore</div>
+                <div class="sc-oc-search">Search products…</div>
+                <div class="sc-oc-cart">🛒 0 item(s) — $0.00</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">FIXED</span>Electronics category loads — cache cleared, slug fix applied</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ category.php patched · system/storage/cache cleared · PR #42 ready</span>
+                <div class="sc-rec-h">Electronics</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">broken category page returning 500</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>OpenCart expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">OpenCart 4.0.2</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Theme</span><span class="sc-sb-v">default</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">category.php:142</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Clear stale <code style="font-size:8px">system/storage/cache/</code> + fix slug lookup in <code style="font-size:8px">category.php</code> · 1 file</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">/electronics returns 200 with full product list. Cache regenerates cleanly.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(catalog): clear stale cache + fix slug<br>category.php · +4 / -2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the 500 error → <strong>Fix it</strong> → PR opens, no developer involved</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Got an OpenCart error a freelancer keeps quoting at 2 hours? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads <code>system/storage/logs/error.log</code>, finds the offending file, opens a PR. Fix ships within an hour.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>Six recurring OpenCart errors</strong> cover ~85% of "broken site" tickets — each has a known fix path you can run in under 15 minutes.</li>
+        <li><strong>OpenCart 3.x uses OCMOD; OpenCart 4.x uses event modifications.</strong> They're <em>NOT</em> compatible — installing a 4.x extension on 3.x (or vice versa) is the #1 cause of a blank admin.</li>
+        <li><strong>SimpleReview reads <code>system/storage/logs/</code> and <code>system/storage/modification/</code></strong> to spot the right cache to clear and the file that's actually throwing the fatal.</li>
+        <li>The <strong>OpenCart Extension Store</strong> at opencart.com/extensions — мы публикуем <code>simplereview</code> extension. Standard OpenCart install: Extensions → Installer → upload .zip → Modifications → Refresh → Extensions → Modules → Install + Edit.</li>
+        <li>For payment-gateway / shipping-method / migration 3→4 work — pair the agent with <a href="/vibers/">Vibers human review</a>; money-flow code earns the human hour.</li>
+      </ul>
+    </div>
+
+    <h2>The Six OpenCart Errors That Cover 85% of Tickets</h2>
+
+    <p>Triage by symptom, then dive into the matching walkthrough. The pattern is almost always the same: read <code>system/storage/logs/error.log</code> first — OpenCart names the file and line in roughly 90% of fatal cases.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>#</th><th>Symptom</th><th>Most likely cause</th><th>Fix time</th></tr>
+        <tr><td>1</td><td>500 Internal Server Error</td><td>Low <code>memory_limit</code> or missing <code>system/storage/</code></td><td>2-10 min</td></tr>
+        <tr><td>2</td><td>Blank admin after extension install</td><td>3.x/4.x compatibility mismatch</td><td>5 min</td></tr>
+        <tr><td>3</td><td>Theme edits don't apply</td><td>Stale OCMOD modifications cache</td><td>1 min</td></tr>
+        <tr><td>4</td><td>"Unable to find template" / generic error page</td><td>Missing Twig partial in theme override</td><td>3-15 min</td></tr>
+        <tr><td>5</td><td>Slow admin / slow storefront</td><td>Compression off, cache on slow disk, OCMOD bloat</td><td>5-30 min</td></tr>
+        <tr><td>6</td><td>Bots flooding contact / register</td><td>Built-in CAPTCHA not enabled per-form</td><td>5 min</td></tr>
+      </table>
+    </div>
+
+    <div class="stat-box"><strong>Rule of thumb:</strong> if <code>error.log</code> is empty but the site is still broken, it's almost always cache (#3) or theme override (#4). PHP didn't fatal — OpenCart did, and it doesn't always log itself.</div>
+
+    <h2>Three-Click Workflow with SimpleReview</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. Auto-detects OpenCart via <code>&lt;meta name="generator" content="OpenCart X.X"&gt;</code> on your storefront.</li>
+      <li><strong>Connect repo or SFTP.</strong> Paste a GitHub / GitLab / Gitea URL, or hand over read-only SFTP credentials so SimpleReview can pull <code>system/storage/logs/error.log</code> and <code>system/storage/modification/</code> for diagnosis.</li>
+      <li><strong>Open the broken page, click the SimpleReview icon, describe the symptom.</strong> "500 after upgrade", "blank admin after installing X", "edit doesn't apply" — the agent reads the log, finds the file, and opens a Pull Request with the fix. You merge or decline.</li>
+    </ol>
+
+    <h2>Fix-by-Fix Walkthroughs</h2>
+
+    <h3>1. 500 Internal Server Error after a fresh install</h3>
+
+    <p><strong>First check:</strong> <code>system/storage/logs/error.log</code>. The fatal is almost always one of three things: PHP <code>memory_limit</code> too low, a missing <code>system/storage/</code> directory (especially after a host migration), or wrong path constants in <code>config.php</code>.</p>
+
+    <pre><code># Tail the OpenCart error log
+tail -n 100 system/storage/logs/error.log
+
+# Check effective PHP memory limit
+php -r "echo ini_get('memory_limit');"
+# If &lt; 256M, raise it in php.ini or .htaccess:
+php_value memory_limit 256M</code></pre>
+
+    <p><strong>For 3.x:</strong> ensure <code>config.php</code> and <code>admin/config.php</code> point at a writable <code>system/storage/</code>. The recommended pattern is to move <code>system/storage/</code> outside the public web root and update both <code>config.php</code> files:</p>
+
+    <pre><code>// config.php (3.x) — outside-webroot storage
+define('DIR_STORAGE', '/home/user/storage/');</code></pre>
+
+    <p><strong>For 4.x:</strong> storage moves into a top-level <code>storage/</code> directory; <code>config.php</code> ships with <code>DIR_STORAGE</code> already defined. After moving it, run <strong>Admin → System → Maintenance → Storage</strong> to verify OpenCart can write to it.</p>
+
+    <div class="warn-box"><strong>Don't:</strong> set <code>0777</code> on <code>system/storage/</code>. Use <code>0755</code> for directories, <code>0644</code> for files, and ensure the PHP-FPM user owns the path.</div>
+
+    <h3>2. Blank admin after installing an extension</h3>
+
+    <p>Most common cause: the extension uses 4.x event syntax on a 3.x store, or vice versa. The admin page renders blank because the modification engine throws a fatal before any output reaches the browser. The fix is to disable the modification cache <em>without</em> the admin UI:</p>
+
+    <pre><code># 1. Rename the compiled admin modifications
+mv system/storage/modification/admin system/storage/modification/_modification_disabled
+
+# 2. Log back into admin (now using core files only)
+
+# 3. Extensions → Installer → Removed → uninstall the bad extension
+
+# 4. Extensions → Modifications → Refresh
+#    (regenerates system/storage/modification/admin/ from clean state)</code></pre>
+
+    <p>If the admin is still blank, the extension also wrote to the database. Check the <code>oc_extension_install</code> table (3.x) or the <code>oc_event</code> + <code>oc_extension</code> tables (4.x) and remove the offending row by <code>extension_id</code>.</p>
+
+    <h3>3. Stale OCMOD modifications (changes don't apply)</h3>
+
+    <p>OCMOD compiles your modifications to <code>system/storage/modification/</code>. Edit a Twig file directly and the change won't appear until the cache is rebuilt — confusing, because the on-disk file <em>did</em> change.</p>
+
+    <ol>
+      <li><strong>First try:</strong> Admin → Extensions → Modifications → click <strong>Refresh</strong> (top-right blue button).</li>
+      <li><strong>If still stale:</strong> empty <code>system/storage/modification/</code> via SFTP, then refresh again.</li>
+      <li><strong>4.x equivalent:</strong> Admin → Extensions → Events → click <strong>Refresh Events</strong>; if events are wrong, clear <code>storage/cache/</code> and re-enable the extension.</li>
+    </ol>
+
+    <pre><code># SFTP / SSH — wipe stale OCMOD output
+rm -rf system/storage/modification/*
+# Then click Modifications → Refresh in admin</code></pre>
+
+    <h3>4. Twig "Unable to find template" or "An error has occurred. Please try again later"</h3>
+
+    <p>This is almost always a theme override missing a partial. Theme A inherits from <code>default</code>, but only ships some of the templates — when OpenCart tries to load a partial that exists in <code>default</code> but not in your theme, it fatals.</p>
+
+    <p><strong>Diagnosis:</strong> compare your active theme directory against <code>default</code>:</p>
+
+    <pre><code># 3.x
+diff -r catalog/view/template/default/ catalog/view/template/[your-theme]/
+
+# 4.x
+diff -r catalog/view/template/ catalog/view/template/[your-theme]/</code></pre>
+
+    <p>For each missing <code>.twig</code> file referenced by the trace, copy the default version into your theme directory. Most "An error has occurred" generic pages are just this — Twig fatal hidden behind a friendly message. Turn on debug in <code>system/config/default.php</code> (3.x) or <code>config.php</code> (4.x) temporarily to see the real trace.</p>
+
+    <h3>5. Add reCAPTCHA to checkout / contact / register</h3>
+
+    <p>OpenCart ships a built-in CAPTCHA system — you don't need a paid extension. Two-step:</p>
+
+    <ol>
+      <li><strong>Configure the provider once:</strong> Admin → Extensions → Captcha → Google reCAPTCHA → <strong>Edit</strong>. Paste your <em>site key</em> and <em>secret key</em> from <a href="https://www.google.com/recaptcha/admin">google.com/recaptcha/admin</a>. Set Status: Enabled.</li>
+      <li><strong>Turn it on per-form:</strong> Admin → System → Settings → store → Option tab → <strong>Captcha</strong> section. Choose which forms (Register, Returns, Reviews, Contact) should require it. Save.</li>
+    </ol>
+
+    <p>The <code>checkout</code> form has its own toggle: System → Settings → Option → "Display Captcha on Checkout".</p>
+
+    <h3>6. Slow admin and storefront</h3>
+
+    <p>OpenCart performance issues split cleanly between <em>configuration</em> and <em>code</em>. Configuration first — code reviews are cheap to run but expensive to act on.</p>
+
+    <ul>
+      <li><strong>3.x:</strong> Settings → Server → confirm <em>Maintenance Mode</em> = false (it logs heavily when on). OCMOD cache rebuild is expensive — refresh only after extension install/update, not as a habit.</li>
+      <li><strong>4.x:</strong> System → Settings → Server → <em>Compression</em> = 5 (gzip). Verify <code>system/storage/cache/</code> is on local disk, not an NFS mount.</li>
+      <li><strong>Both:</strong> enable storefront caching (Admin → Extensions → Caches → File or Redis). Redis is dramatically faster for sessions and product cache.</li>
+      <li><strong>MySQL:</strong> turn on the slow query log (<code>long_query_time = 1</code>). The usual culprit is the product list query in <code>catalog/model/catalog/product.php</code> with N+1 attribute joins.</li>
+    </ul>
+
+    <h3>7. Hide "Powered by OpenCart" from the footer</h3>
+
+    <p>Open <code>catalog/view/template/[your-theme]/common/footer.twig</code> and search for <code>Powered by</code>. Remove or replace with your own credit line. For SEO, replace with a branded credit (your store name + a link to your homepage) — empty credits look like an unfinished site.</p>
+
+    <pre><code>{# catalog/view/template/[theme]/common/footer.twig — before #}
+&lt;p&gt;{{ powered }}&lt;/p&gt;
+
+{# after — branded credit, no Powered by #}
+&lt;p&gt;© {{ "now"|date("Y") }} MyStore. All rights reserved.&lt;/p&gt;</code></pre>
+
+    <p>If your theme is OCMOD-managed, edit the modification file (<code>install.xml</code>) instead, then refresh modifications.</p>
+
+    <h2>OpenCart Extension Store — Our Listing</h2>
+
+    <p>The <strong>OpenCart Extension Store</strong> at <a href="https://www.opencart.com/index.php?route=marketplace/extension">opencart.com/extensions</a> has 13,000+ listings. We publish <code>simplereview</code> (in submission). Standard install for 3.x and 4.x:</p>
+
+    <ol class="steps">
+      <li><strong>Download</strong> the <code>simplereview.ocmod.zip</code> (3.x) or <code>simplereview.ocmod.zip</code> (4.x build) from your OpenCart account.</li>
+      <li><strong>Admin → Extensions → Installer → Upload</strong> the .zip. OpenCart unpacks it into <code>system/storage/upload/</code>.</li>
+      <li><strong>Extensions → Modifications → Refresh.</strong> (3.x) or <strong>Events → Refresh</strong> (4.x).</li>
+      <li><strong>Extensions → Modules → SimpleReview → Install</strong>, then <strong>Edit</strong> to paste your repo URL or SFTP credentials.</li>
+    </ol>
+
+    <p><strong>Until the listing is live —</strong> the SimpleReview Chrome Extension auto-detects OpenCart via <code>&lt;meta name="generator" content="OpenCart X.X"&gt;</code> in your storefront source and routes edits to Git or SFTP without needing a server-side install.</p>
+
+    <h2>Comparison Table — Freelancer vs SimpleReview</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>Freelancer ($25-50/hr)</th><th>SimpleReview agent</th></tr>
+        <tr><td>Pull error.log</td><td>Asks for SFTP, 10-30 min wait</td><td>Already connected, instant</td></tr>
+        <tr><td>Identify file</td><td>15-60 min, depends on theme familiarity</td><td>Reads trace, names file in seconds</td></tr>
+        <tr><td>Apply fix</td><td>5-30 min</td><td>5-30 seconds</td></tr>
+        <tr><td>Refresh OCMOD</td><td>Has to remember; sometimes forgets</td><td>Always refreshes after writing</td></tr>
+        <tr><td>Open a PR</td><td>If they use Git at all</td><td>Always — review &amp; merge</td></tr>
+        <tr><td>Cost for a 1-line OCMOD fix</td><td>$25-50 (1-hour minimum)</td><td>$0 (BYO key) or pennies of API usage</td></tr>
+        <tr><td>Lead time</td><td>2-48 hours</td><td>Within an hour</td></tr>
+      </table>
+    </div>
+
+    <h2>When You Want a Senior OpenCart Developer</h2>
+
+    <p>This guide gets you out of stuck. There's still a slice of work where you want a real human paying real attention:</p>
+
+    <ul>
+      <li><strong>Custom payment gateway</strong> — PSP integration, PCI scope, reconciliation. Don't ship money-flow code without a code review.</li>
+      <li><strong>Custom shipping method</strong> — rate calculations against carrier APIs, edge cases for international, returns logic.</li>
+      <li><strong>3.x → 4.x migration</strong> — template engine + event system breaking change, schema differences, theme rewrite. Treat as a project, not a tweak.</li>
+      <li><strong>Custom report / B2B catalog logic</strong> — anything that touches pricing tiers, customer groups, or accounting integration.</li>
+      <li><strong>Performance audit</strong> — slow MySQL log, N+1 in <code>catalog/model/catalog/product.php</code>, missing indexes. Needs someone reading <code>EXPLAIN</code> output, not pattern-matching templates.</li>
+    </ul>
+
+    <p><a href="/vibers/">Vibers</a> is the human-in-the-loop layer for exactly this. Use the agent for the 80% recurring errors above, use a human for the 20% that earns its hourly rate.</p>
+
+    <div class="cta-block">
+      <h3>Stop Paying $40/hr for OpenCart Error Recovery</h3>
+      <p>SimpleReview reads <code>system/storage/logs/error.log</code>, finds the offending file, opens a PR. Fix ships within an hour.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#ccc">Custom payment, 3→4 migration, performance audit? <a href="/vibers/" style="color:#229ac8;font-weight:600">Get a human review →</a></p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What's the most common OpenCart error?</div>
+      <div class="faq-a">A 500 Internal Server Error after a fresh install or after upgrading PHP. The cause is almost always a low PHP <code>memory_limit</code> (set it to 256M or higher) or a missing/unwritable <code>system/storage/</code> directory. Check <code>system/storage/logs/error.log</code> first — it names the file and line in 90% of cases.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I fix a blank admin after an extension install?</div>
+      <div class="faq-a">The most common cause is an extension built for the wrong major version — 4.x event syntax on a 3.x store, or vice versa. Rename <code>system/storage/modification/admin/</code> to <code>_modification_disabled/</code>, log back into admin, then uninstall the bad extension via Extensions → Installer → Removed.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does this work on OpenCart 4.x?</div>
+      <div class="faq-a">Yes. Every fix in this guide is annotated for both 3.x (OCMOD-based) and 4.x (event-based). The two systems are <strong>NOT</strong> compatible — extensions built for one will not work on the other, which is itself the cause of many fatal errors.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What about Journal, So-Emarket, Shoppica themes?</div>
+      <div class="faq-a">All three follow the standard OpenCart override pattern (<code>catalog/view/template/[theme]/...</code>) so the same fixes apply. Journal ships its own framework on top, so a Twig fatal in a Journal partial may also need a Journal-specific cache clear (Admin → Journal → Tools → Refresh Cache).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need SSH access?</div>
+      <div class="faq-a">For most fixes, SFTP is enough — you need to read <code>system/storage/logs/error.log</code> and clear <code>system/storage/modification/</code>. Shared hosts without SFTP can use the cPanel File Manager. SSH only becomes essential when you're tailing real-time logs or running OpenCart's CLI tools.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Cheaper than a freelancer (typical $25-50/hr)?</div>
+      <div class="faq-a">Most error-recovery work is 2-15 minutes once you've identified the cause. A freelancer's one-hour minimum prices an OCMOD refresh at $25-50 — and they often spend half that hour just locating the file. SimpleReview reads <code>system/storage/logs/error.log</code> directly, names the file, and opens the PR.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
+          <p>Sibling guide — the customization angle. Click an element, type the change, get a PR. No error recovery, just everyday tweaks.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">Fix WooCommerce Slow Checkout</a>
+          <p>Same diagnosis pattern, applied to WooCommerce checkout performance. Read the slow-query log, name the bottleneck, ship a PR.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key. Auto-detects OpenCart 3.x and 4.x.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://docs.opencart.com/">docs.opencart.com — Official documentation, install, configuration, and migration guides</a></li>
+      <li><a href="https://www.opencart.com/index.php?route=marketplace/extension">opencart.com/extensions — Extension Store, 13,000+ listings</a></li>
+      <li><a href="https://github.com/opencart/opencart">github.com/opencart/opencart — Reference repository for both 3.x and 4.x branches</a></li>
+      <li><a href="https://forum.opencart.com/">opencart.com/forum — Community troubleshooting threads, often the fastest source for theme-specific errors</a></li>
+      <li><a href="https://onout.org/vibers/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

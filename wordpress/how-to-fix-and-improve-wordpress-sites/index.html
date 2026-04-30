@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Fix and Improve WordPress Sites in 2026 (Complete Field Guide)</title>
+  <meta name="description" content="Master guide for fixing common WordPress problems — critical error, white screen, DB connection, 500 error, slow site, broken plugin. Plus the 3-click SimpleReview workflow that ships a PR instead of a freelancer call.">
+  <link rel="canonical" href="https://onout.org/wordpress/how-to-fix-and-improve-wordpress-sites/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix and Improve WordPress Sites in 2026 (Complete Field Guide)">
+  <meta property="og:description" content="Six WordPress failures cover 90% of broken-site tickets. Here's the master fix guide — plus a 3-click SimpleReview workflow that ships a PR instead of a Zoom call with a freelancer.">
+  <meta property="og:url" content="https://onout.org/wordpress/how-to-fix-and-improve-wordpress-sites/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="fix wordpress site, wordpress critical error, wordpress white screen of death, wordpress database connection error, wordpress 500 error, wordpress plugin not working, edit wordpress without developer, wordpress slow">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix and Improve WordPress Sites in 2026 (Complete Field Guide)",
+    "description": "Master guide for fixing common WordPress problems — critical error, white screen, DB connection, 500 error, slow site, broken plugin. Plus the 3-click SimpleReview workflow that ships a PR instead of a freelancer call.",
+    "url": "https://onout.org/wordpress/how-to-fix-and-improve-wordpress-sites/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/wordpress/how-to-fix-and-improve-wordpress-sites/" },
+    "keywords": ["fix wordpress site", "wordpress critical error", "wordpress white screen of death", "wordpress database connection error", "wordpress 500 error", "wordpress plugin not working", "edit wordpress without developer", "wordpress slow"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I fix \"There has been a critical error on this website\"?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Enable WP_DEBUG and WP_DEBUG_LOG in wp-config.php, reproduce the error, then read wp-content/debug.log — the last fatal trace names the offending plugin or theme. Disable it by renaming its folder via SFTP (wp-content/plugins/[plugin-name] → [plugin-name].off). Site recovers immediately. Then check the plugin changelog or roll back to a working version. Full step-by-step at /vibers/wordpress/critical-error-on-this-website/."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I fix the WordPress database connection error?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Check wp-config.php for correct DB_NAME, DB_USER, DB_PASSWORD, DB_HOST. Most commonly the host changed (e.g., from localhost to 127.0.0.1, or to a managed-host endpoint). If credentials are right, the database server may be down — ping it. If tables are corrupted, add define('WP_ALLOW_REPAIR', true); to wp-config.php and visit /wp-admin/maint/repair.php. Detailed guide: /vibers/wordpress/error-establishing-a-database-connection-wordpress/."}
+      },
+      {
+        "@type": "Question",
+        "name": "How fast is the SimpleReview Chrome extension on WordPress?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Auto-detection of WordPress (via the generator meta tag and wp-content/ URL pattern) is instant on page load. Once you click an element and type the change, the agent locates the right file in your theme or child theme, makes the edit, and opens a Pull Request — typically 10-30 seconds for a one-line CSS or PHP change. No repository clone, no theme onboarding, no file-tree spelunking."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work with managed hosting (WP Engine, Kinsta, Cloudways)?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. Managed WordPress hosts almost always provide either a Git repo (WP Engine GitHub integration, Kinsta DevKinsta, Cloudways Git deployment) or SFTP. SimpleReview works with either. For hosts that lock down direct file editing, the PR-based workflow is actually safer — your staging environment runs the change first, you merge, deploy follows your existing pipeline."}
+      },
+      {
+        "@type": "Question",
+        "name": "What about block themes (Twenty Twenty-Four+) and Full Site Editing?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Block themes (FSE) store templates as HTML files in theme-name/templates/ and theme-name/parts/, plus a theme.json for design tokens. SimpleReview reads both. For pure design changes, it edits theme.json (colors, typography, spacing). For structural changes, it edits the template HTML. Classic themes (PHP-based) are still the majority of WP sites and are also fully supported."}
+      },
+      {
+        "@type": "Question",
+        "name": "Cheaper than a WordPress freelancer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "WordPress freelancer rates run $30-80/hour with a 1-hour minimum. SimpleReview is free with your own AI key (Claude Code or Codex), or pennies per edit on the built-in plan. The bigger saving is the overhead — a freelancer spends 30-90 minutes on setup, repo access, and locating the right file before writing a single line. SimpleReview already knows the WordPress file layout."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#0073aa;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #23282d;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#23282d}
+    .site-nav .brand:hover{color:#0073aa;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#0073aa;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px;color:#23282d}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #0073aa;padding-left:16px}
+    .key-takeaways{background:#eef6fb;border:1px solid #c4dff0;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#005177;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee;color:#23282d}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#005177}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#23282d;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#23282d;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#0073aa;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#005177;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#23282d;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#eef6fb;border:1px solid #c4dff0;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#005177}
+    .ext-callout a{color:#0073aa;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #23282d}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px;color:#23282d}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#0073aa}
+    .related-card a{color:#23282d;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#0073aa;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>WordPress / Pillar Guide</span>
+      <span>April 30, 2026</span>
+      <span>14 min read</span>
+    </div>
+
+    <h1>How to Fix and Improve WordPress Sites in 2026 (Complete Field Guide)</h1>
+
+    <p class="article-lead">WordPress runs <strong>43% of the web</strong> — and 90% of "my site is broken" tickets fall into the same six failures: white screen of death, "There has been a critical error", database connection error, 500 internal server error, broken admin after a plugin update, or unbearably slow load times. This is the master guide that links every specific fix on Vibers, plus the 3-click SimpleReview workflow that ships a Pull Request instead of a Zoom call with a freelancer.</p>
+
+    <style>
+    /* ─────── WordPress 6.9 Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* WordPress admin chrome */
+    .sc-wp-adminbar{background:#23282d;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-wp-adminbar .left{display:flex;gap:10px}
+    .sc-wp-adminbar .left span{opacity:.85}
+    .sc-wp-adminbar .right{opacity:.85}
+
+    /* Update nag — TARGET (top) */
+    .sc-wp-nag{background:#fff;border-left:4px solid #d63638;border:1px solid #ccd0d4;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:520px;margin:14px 230px 0 30px;padding:11px 18px 13px;font-family:inherit;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-wp-nag::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-wp-nag-title{font-weight:700;font-size:12px;color:#23282d;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-wp-nag-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:5px;animation:errHide 28s infinite}
+    .sc-wp-nag-meta{color:#888;font-size:10px;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Site preview area */
+    .sc-wp-site{padding:12px 230px 0 30px;max-width:520px}
+    .sc-wp-h1{font-size:14px;font-weight:700;color:#23282d;margin-bottom:6px}
+    .sc-wp-post{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:9px 11px;margin-bottom:6px}
+    .sc-wp-post-h{font-size:12px;font-weight:700;color:#0073aa;margin-bottom:3px}
+    .sc-wp-post-meta{font-size:9px;color:#888}
+    .sc-wp-post.demo{border-left:3px solid #d63638}
+    .sc-wp-post.demo .sc-wp-post-h{color:#0073aa}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-adminbar{background:#23282d;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#0073aa;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#0073aa;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #0073aa;color:#005177;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#005177;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:200px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:340px;top:155px;opacity:1}
+      22%  {left:340px;top:155px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-wp-site{padding:12px 140px 0 14px}
+    }
+    </style>
+    <div id="sc-banner-fallback" class="sc-banner wordpress" aria-label="Animated demo: SimpleReview's WordPress expert hides the update nag and removes the demo Hello-world post, then opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com/wp-admin</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- WP admin bar -->
+            <div class="sc-wp-adminbar">
+              <span class="left"><span>≡</span><span>WP</span><span>MySite</span><span>+ New</span></span>
+              <span class="right">Howdy, admin</span>
+            </div>
+            <!-- Update nag (TARGET) -->
+            <div class="sc-wp-nag">
+              <div class="sc-wp-nag-title">⚠ WordPress 6.9.1 is available! <span style="color:#0073aa">Please update now.</span></div>
+              <div class="sc-wp-nag-msg">Please notify the site administrator. Important: please <a style="color:#0073aa">back up your database and files</a> before upgrading.</div>
+              <div class="sc-wp-nag-meta">wp-admin · update-core.php · core update notice</div>
+            </div>
+            <!-- Posts list (with demo Hello world!) -->
+            <div class="sc-wp-site">
+              <div class="sc-wp-h1">Posts</div>
+              <div class="sc-wp-post demo">
+                <div class="sc-wp-post-h">Hello world!</div>
+                <div class="sc-wp-post-meta">By admin · Published · Uncategorized · default WP demo content</div>
+              </div>
+              <div class="sc-wp-post">
+                <div class="sc-wp-post-h">Spring catalog launch</div>
+                <div class="sc-wp-post-meta">By editor · Published · April 28, 2026</div>
+              </div>
+              <div class="sc-wp-post">
+                <div class="sc-wp-post-h">Customer story: 3× faster checkout</div>
+                <div class="sc-wp-post-meta">By editor · Published · April 22, 2026</div>
+              </div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-adminbar">
+                <span>≡  WP  MySite  + New</span>
+                <span>Howdy, admin</span>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">CLEAN</span>Update nag hidden · demo "Hello world!" removed</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ mu-plugin/dismiss-nags.php created · Hello-world deleted · PR #42 ready</span>
+                <div class="sc-rec-h">Posts</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">remove the demo post and update nag</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>WordPress expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">WordPress 6.9</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Theme</span><span class="sc-sb-v">twentytwentyfive</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">mu-plugins/</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Create <code style="font-size:8px">mu-plugins/dismiss-nags.php</code> with remove_action calls + delete demo post · 1 file</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Update nag gone for editors. Demo Hello-world deleted. Core unchanged.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(nags): hide WP update nag<br>mu-plugins/dismiss-nags.php · +14</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the nag → <strong>Fix it</strong> → PR opens, no developer involved</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Got a list of WP tweaks that keeps growing? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads <code>wp-content/themes/</code>, finds the right file, opens a PR. Edits ship the same hour.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>90% of WP "broken" tickets</strong> = one of six well-known failures, each with a known fix path documented below.</li>
+        <li><strong>WordPress edits live in 4 places:</strong> admin (content), themes (<code>wp-content/themes/[theme]/</code>), plugins (<code>wp-content/plugins/[plugin]/</code>), and core (<code>wp-includes/</code>, <code>wp-admin/</code> — <em>never</em> touch).</li>
+        <li><strong>SimpleReview Chrome Extension</strong> auto-detects WordPress via <code>&lt;meta name="generator" content="WordPress X.X"&gt;</code> and routes edits to your Git repo or via SFTP.</li>
+        <li><strong>WordPress Plugin Directory</strong> at wordpress.org/plugins — we publish the <code>simplereview</code> plugin (currently in approval): Plugins → Add New → Search "SimpleReview" → Install → Activate. After activation an "Edit with SimpleReview" button appears next to every editor in the admin.</li>
+        <li><strong>For complex things</strong> (multi-site, WPML, WooCommerce custom checkout, custom Gutenberg blocks, DB optimization) — use Vibers' <a href="/vibers/">human review</a> instead of an agent.</li>
+      </ul>
+    </div>
+
+    <h2>The Six WordPress Failures (and the Fix for Each)</h2>
+
+    <p>Almost every "WordPress is down" ticket is one of these six. The article column links to the full how-to we already shipped on Vibers — bookmark them; this page is the index.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Symptom</th><th>Article</th><th>Fix in one line</th></tr>
+        <tr>
+          <td>"There has been a critical error on this website"</td>
+          <td><a href="/vibers/wordpress/critical-error-on-this-website/">Critical error guide</a></td>
+          <td>Read <code>wp-content/debug.log</code>, find offending plugin, deactivate via SFTP by renaming <code>wp-content/plugins/[plugin]</code>.</td>
+        </tr>
+        <tr>
+          <td>"Error establishing a database connection"</td>
+          <td><a href="/vibers/wordpress/error-establishing-a-database-connection-wordpress/">DB connection guide</a></td>
+          <td>Verify <code>wp-config.php</code> <code>DB_*</code> credentials; repair tables with <code>define('WP_ALLOW_REPAIR', true);</code>.</td>
+        </tr>
+        <tr>
+          <td>White Screen of Death (WSOD)</td>
+          <td><a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WP 6.9 broke my site</a></td>
+          <td>Increase memory: <code>define('WP_MEMORY_LIMIT', '256M')</code>. Then bisect plugins/theme to isolate the conflict.</td>
+        </tr>
+        <tr>
+          <td>500 Internal Server Error</td>
+          <td>This guide (see below)</td>
+          <td><code>.htaccess</code> corruption, PHP version mismatch, or OOM in <code>mod_php</code>.</td>
+        </tr>
+        <tr>
+          <td>Plugin not working after update</td>
+          <td><a href="/vibers/wordpress/wordpress-6-9-broke-slider-revolution/">WP 6.9 broke Slider Revolution</a></td>
+          <td>Check the plugin changelog for breaking changes; downgrade by replacing the plugin folder with the previous version.</td>
+        </tr>
+        <tr>
+          <td>Site is unbearably slow</td>
+          <td>This guide (see below)</td>
+          <td>Caching plugin (WP Rocket / W3 Total Cache / LiteSpeed), image optimization, MySQL slow-query log.</td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>500 Internal Server Error — the deeper dive</h3>
+
+    <p>The 500 is WordPress's "something blew up before we got to render anything" page. Three causes cover almost all real-world cases:</p>
+
+    <ol>
+      <li><strong>Corrupted <code>.htaccess</code>.</strong> Rename <code>.htaccess</code> to <code>.htaccess.bak</code>, then visit Settings → Permalinks in admin and click Save — WP regenerates a clean file.</li>
+      <li><strong>PHP version mismatch.</strong> WordPress 6.9 requires PHP 7.4+ and recommends 8.1+. If your host upgraded PHP and a plugin used a removed function (e.g., <code>each()</code>, <code>create_function()</code>), you get a 500. Check your host's PHP version selector.</li>
+      <li><strong>OOM (out of memory) in <code>mod_php</code>.</strong> A plugin or page builder allocates more memory than the PHP process is allowed. Bump <code>memory_limit</code> in <code>php.ini</code> or <code>wp-config.php</code> (<code>define('WP_MEMORY_LIMIT', '256M')</code>), then find the offender in the error log.</li>
+    </ol>
+
+    <h3>Site is slow — the 80/20</h3>
+
+    <p>Most slow WordPress sites have the same three problems:</p>
+
+    <ul>
+      <li><strong>No page caching.</strong> Install WP Rocket (paid, easiest), W3 Total Cache (free, fiddly), or LiteSpeed Cache (free, only on LiteSpeed servers). Page-cache hits should be the default for anonymous visitors.</li>
+      <li><strong>Unoptimized images.</strong> 4 MB hero JPEGs from someone's iPhone. Install ShortPixel or Imagify and let them re-encode the media library to WebP/AVIF.</li>
+      <li><strong>One bad query.</strong> Enable <code>SAVEQUERIES</code> in <code>wp-config.php</code> or use Query Monitor; one plugin's missing index on <code>wp_postmeta</code> can add 4 seconds to every page load.</li>
+    </ul>
+
+    <h2>Three-Click Workflow with SimpleReview</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. It's free with your own AI key (Claude Code or Codex), and there's a built-in mode if you don't have one.</li>
+      <li><strong>Connect your WordPress repo.</strong> Paste a GitHub / GitLab / Bitbucket URL. If your site isn't on Git yet (most aren't), give SFTP credentials — the extension creates a private working tree and commits from there. Managed hosts (WP Engine, Kinsta, Cloudways) all expose either Git or SFTP.</li>
+      <li><strong>Open your site, click the SimpleReview icon, click the element you want to change.</strong> Type the change in plain English: "hide this header on mobile", "remove 'Powered by Astra'", "disable comments site-wide", "duplicate this page". Click <strong>Fix it</strong>. The agent picks the right file in <code>wp-content/themes/[theme]/</code> or your child theme, makes the edit, and opens a Pull Request you can merge.</li>
+    </ol>
+
+    <h2>Common WordPress Edits — and Where They Live</h2>
+
+    <p>Knowing which of the four zones an edit belongs to is most of the battle. Here's the cheat sheet for the edits that show up over and over.</p>
+
+    <h3>Hide an element on the page</h3>
+
+    <p>Don't edit the parent theme — your changes vanish on the next theme update. Use a <strong>child theme</strong> and add CSS to <code>wp-content/themes/[child]/style.css</code>:</p>
+
+    <pre><code>/* hide the "Recent Comments" widget */
+#recent-comments-2 { display: none !important; }</code></pre>
+
+    <p>For Elementor-built sites, header/footer overrides work differently — see the dedicated guide: <a href="/vibers/wordpress/how-to-hide-header-in-elementor-wordpress/">How to hide the header in Elementor</a>.</p>
+
+    <h3>Remove "Powered by [Theme Name]" from the footer</h3>
+
+    <p>Most themes put this in <code>wp-content/themes/[theme]/footer.php</code> or expose it through the Customizer. For Astra specifically, there's a hook you can override from a child theme's <code>functions.php</code> — full code at <a href="/vibers/wordpress/remove-powered-by-astra/">Remove "Powered by Astra"</a>.</p>
+
+    <h3>Disable comments site-wide</h3>
+
+    <p>One filter in your child theme's <code>functions.php</code> closes comments everywhere:</p>
+
+    <pre><code>add_filter('comments_open', '__return_false');
+add_filter('pings_open', '__return_false');</code></pre>
+
+    <p>You'll also want to hide existing comment counts in the admin and remove the comment menu — full walkthrough at <a href="/vibers/wordpress/disable-comments-wordpress/">Disable comments in WordPress</a>.</p>
+
+    <h3>Add reCAPTCHA to <code>wp-login.php</code></h3>
+
+    <p>Brute-force bots hammer <code>/wp-login.php</code> all day. Two options:</p>
+
+    <ul>
+      <li><strong>Plugin route:</strong> install <code>wp-recaptcha-integration</code> from the Plugin Directory, paste your reCAPTCHA v3 site key + secret, done.</li>
+      <li><strong>Roll your own</strong> in your child theme's <code>functions.php</code>:</li>
+    </ul>
+
+    <pre><code>add_action('login_form', function () {
+  echo '&lt;div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"&gt;&lt;/div&gt;';
+  echo '&lt;script src="https://www.google.com/recaptcha/api.js" async defer&gt;&lt;/script&gt;';
+});
+
+add_filter('wp_authenticate_user', function ($user, $password) {
+  if (empty($_POST['g-recaptcha-response'])) {
+    return new WP_Error('recaptcha_missing', 'Please complete the captcha.');
+  }
+  // verify with Google's siteverify endpoint here
+  return $user;
+}, 10, 2);</code></pre>
+
+    <h3>Duplicate a page</h3>
+
+    <p>WordPress core doesn't ship a "Duplicate" button — you need a plugin or 12 lines of code. Both routes covered at <a href="/vibers/wordpress/wordpress-duplicate-page/">Duplicate a WordPress page</a>.</p>
+
+    <h3>Change theme without losing content</h3>
+
+    <p>Posts, pages, and media live in the database — they survive any theme change. What <em>doesn't</em> always survive:</p>
+
+    <ul>
+      <li><strong>Widgets</strong> tied to a theme-specific sidebar slot may need to be re-assigned.</li>
+      <li><strong>Menus</strong> assigned to theme locations need to be re-pointed in Appearance → Menus.</li>
+      <li><strong>Custom CSS in the Customizer</strong> survives — it's stored per-site, not per-theme.</li>
+      <li><strong>Page-builder content</strong> (Elementor, Beaver, Divi) is theme-agnostic but the new theme's container styles might break the layout.</li>
+    </ul>
+
+    <p>Use Appearance → Themes → "Live Preview" before activating. And clone to staging first — every managed host has a staging button.</p>
+
+    <h2>WordPress Plugin Directory — Our Plugin</h2>
+
+    <p>The <strong>WordPress.org Plugin Directory</strong> is the largest plugin marketplace in the world (60,000+ plugins, all free). We publish <code>simplereview</code> there — currently under review by the WordPress Plugin Review team (the usual cycle is 1–3 weeks).</p>
+
+    <p><strong>How to install</strong> once it's approved:</p>
+
+    <ol>
+      <li>WP-Admin → Plugins → Add New</li>
+      <li>Search "SimpleReview"</li>
+      <li>Click Install Now → Activate</li>
+    </ol>
+
+    <p>Or upload the zip directly from <a href="https://wordpress.org/plugins/simplereview/">wordpress.org/plugins/simplereview/</a> (Plugins → Add New → Upload Plugin).</p>
+
+    <p>Once active, an <strong>"Edit with SimpleReview"</strong> button appears next to every editor in the admin (post editor, theme editor, Customizer). Clicking it opens the SimpleReview side panel pre-scoped to the file you're looking at.</p>
+
+    <p><strong>Until the plugin lands:</strong> the SimpleReview Chrome Extension already works on every WordPress site — it auto-detects WP from the <code>&lt;meta name="generator" content="WordPress X.X"&gt;</code> tag and the <code>wp-content/</code> URL pattern, then commits via Git or SFTP. No plugin install needed.</p>
+
+    <h2>Comparison Table — Freelancer vs SimpleReview</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>WordPress freelancer</th><th>SimpleReview agent</th></tr>
+        <tr><td>Brief</td><td>30 min Zoom or back-and-forth in chat</td><td>Type one sentence in the popup</td></tr>
+        <tr><td>Repo / SFTP setup</td><td>15-60 min (per freelancer, every time)</td><td>Once, then cached</td></tr>
+        <tr><td>Locate the right file (theme, child theme, plugin?)</td><td>15-90 min depending on theme familiarity</td><td>Instant — already indexed</td></tr>
+        <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
+        <tr><td>Open a Pull Request</td><td>If they use Git at all</td><td>Always</td></tr>
+        <tr><td>Cost for a 1-line change</td><td>$30-80 (1-hour minimum WP rate)</td><td>$0 (BYO key) or pennies of API usage</td></tr>
+        <tr><td>Turnaround</td><td>1-7 days (timezone, queue)</td><td>Same hour</td></tr>
+      </table>
+    </div>
+
+    <h2>When You Want a Senior WordPress Developer</h2>
+
+    <p>This isn't anti-developer — it's anti-paying-an-hour-for-five-minutes. You still want a real human reviewing the code when the work touches:</p>
+
+    <ul>
+      <li><strong>WooCommerce custom checkout / payment flow.</strong> Money flows through it; PCI DSS and tax rules apply; one buggy hook can drop conversions overnight.</li>
+      <li><strong>WPML / Polylang multi-language gotchas.</strong> Translation duplication, slug collisions, hreflang misfires, and language-aware rewrite rules — these need someone who's been bitten before.</li>
+      <li><strong>Custom Gutenberg blocks (React).</strong> The block editor is a React app inside WP. Custom blocks need <code>@wordpress/scripts</code>, <code>block.json</code>, server-side render fallbacks, and editor/frontend style parity.</li>
+      <li><strong>Multisite (WordPress Network) configuration.</strong> Network-active vs site-active plugins, <code>wp_options</code> vs <code>wp_sitemeta</code>, subdomain vs subdirectory routing — easy to misconfigure once and pay for it forever.</li>
+      <li><strong>DB optimization.</strong> Slow query log, missing indexes on <code>wp_postmeta</code> (the classic), bloated <code>wp_options</code> autoload, transient cleanup. Reading <code>EXPLAIN</code> output is not pattern-matching.</li>
+      <li><strong>Security hardening.</strong> Wordfence/iThemes Security configuration, file-permission audit, two-factor auth, login throttling, hiding <code>wp-config.php</code>. After a third-party plugin install is the highest-risk moment.</li>
+    </ul>
+
+    <p>That's exactly the slice <a href="/vibers/">Vibers</a> handles — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
+
+    <div class="cta-block">
+      <h3>Stop Paying $40/hr for One-Line WordPress Tweaks</h3>
+      <p>SimpleReview's agent reads your WordPress repo, knows the theme/child-theme/plugin layout, and opens a PR for the change you described.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">WooCommerce custom checkout, multisite, security audit? <a href="/vibers/" style="color:#0073aa;font-weight:600">Get a human review →</a> Free first PR for a GitHub star.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I fix "There has been a critical error on this website"?</div>
+      <div class="faq-a">Enable <code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> in <code>wp-config.php</code>, reproduce the error, then read <code>wp-content/debug.log</code> — the last fatal trace names the offending plugin or theme. Disable it by renaming its folder via SFTP (<code>wp-content/plugins/[plugin-name]</code> → <code>[plugin-name].off</code>). Site recovers immediately. Then check the plugin changelog or roll back to a working version. Full step-by-step at <a href="/vibers/wordpress/critical-error-on-this-website/">our critical-error guide</a>.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I fix the WordPress database connection error?</div>
+      <div class="faq-a">Check <code>wp-config.php</code> for correct <code>DB_NAME</code>, <code>DB_USER</code>, <code>DB_PASSWORD</code>, <code>DB_HOST</code>. Most commonly the host changed (e.g., from <code>localhost</code> to <code>127.0.0.1</code>, or to a managed-host endpoint). If credentials are right, the database server may be down — ping it. If tables are corrupted, add <code>define('WP_ALLOW_REPAIR', true);</code> to <code>wp-config.php</code> and visit <code>/wp-admin/maint/repair.php</code>. Detailed guide: <a href="/vibers/wordpress/error-establishing-a-database-connection-wordpress/">Database connection error</a>.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How fast is the SimpleReview Chrome extension on WordPress?</div>
+      <div class="faq-a">Auto-detection of WordPress (via the generator meta tag and the <code>wp-content/</code> URL pattern) is instant on page load. Once you click an element and type the change, the agent locates the right file in your theme or child theme, makes the edit, and opens a Pull Request — typically 10-30 seconds for a one-line CSS or PHP change. No repository clone, no theme onboarding, no file-tree spelunking.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does it work with managed hosting (WP Engine, Kinsta, Cloudways)?</div>
+      <div class="faq-a">Yes. Managed WordPress hosts almost always provide either a Git repo (WP Engine GitHub integration, Kinsta DevKinsta, Cloudways Git deployment) or SFTP. SimpleReview works with either. For hosts that lock down direct file editing, the PR-based workflow is actually safer — your staging environment runs the change first, you merge, deploy follows your existing pipeline.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What about block themes (Twenty Twenty-Four+) and Full Site Editing?</div>
+      <div class="faq-a">Block themes (FSE) store templates as HTML files in <code>theme-name/templates/</code> and <code>theme-name/parts/</code>, plus a <code>theme.json</code> for design tokens. SimpleReview reads both. For pure design changes, it edits <code>theme.json</code> (colors, typography, spacing). For structural changes, it edits the template HTML. Classic themes (PHP-based) are still the majority of WP sites and are also fully supported.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Cheaper than a WordPress freelancer?</div>
+      <div class="faq-a">WordPress freelancer rates run $30-80/hour with a 1-hour minimum. SimpleReview is free with your own AI key (Claude Code or Codex), or pennies per edit on the built-in plan. The bigger saving is the overhead — a freelancer spends 30-90 minutes on setup, repo access, and locating the right file before writing a single line. SimpleReview already knows the WordPress file layout.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/critical-error-on-this-website/">"There Has Been a Critical Error"</a>
+          <p>Step-by-step recovery: enable debug, read the log, rename the offending plugin folder, ship a permanent fix.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
+          <p>Same agent pattern, applied to WP fatal-error recovery — read debug.log, patch deprecated function, open PR.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://wordpress.org/support/">wordpress.org/support — Official troubleshooting documentation</a></li>
+      <li><a href="https://wordpress.org/plugins/">wordpress.org/plugins — Official Plugin Directory (60,000+ plugins)</a></li>
+      <li><a href="https://developer.wordpress.org/">developer.wordpress.org — Code reference, theme & plugin handbooks</a></li>
+      <li><a href="https://codex.wordpress.org/">codex.wordpress.org — Legacy Codex (still authoritative for many topics)</a></li>
+      <li><a href="https://onout.org/vibers/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

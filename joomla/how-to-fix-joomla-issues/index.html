@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Fix Joomla 5 Sites Without Wasting $40/hr on a Freelancer (2026 Guide)</title>
+  <meta name="description" content="Fix Joomla 4/5 sites without paying a freelancer $40/hr. Step-by-step: white screen recovery, override directory, reCAPTCHA, hide 'Powered by Joomla', J4→J5 upgrade, slow admin. + SimpleReview Chrome extension.">
+  <link rel="canonical" href="https://onout.org/joomla/how-to-fix-joomla-issues/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix Joomla 5 Sites Without Wasting $40/hr on a Freelancer">
+  <meta property="og:description" content="White screen, J4→J5 upgrade error, reCAPTCHA, slow admin — SimpleReview's Joomla-aware agent finds the override file and opens a PR.">
+  <meta property="og:url" content="https://onout.org/joomla/how-to-fix-joomla-issues/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="fix joomla site, joomla white screen, joomla template override, joomla 4 to 5 upgrade error, joomla captcha, hide powered by joomla, joomla extensions directory, jed simplereview">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix Joomla 5 Sites Without Wasting $40/hr on a Freelancer (2026 Guide)",
+    "description": "Step-by-step guide to fixing common Joomla 4 and 5 issues — white screen, template overrides, reCAPTCHA, J4→J5 upgrade errors, slow admin — without hiring a freelancer.",
+    "url": "https://onout.org/joomla/how-to-fix-joomla-issues/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/joomla/how-to-fix-joomla-issues/" },
+    "keywords": ["fix joomla site", "joomla white screen", "joomla template override", "joomla 4 to 5 upgrade error", "joomla captcha", "hide powered by joomla", "joomla extensions directory", "jed simplereview"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I edit a Joomla site without a developer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes for most cosmetic and structural edits. Joomla's admin handles articles, modules, menu items, and template params. For deeper changes — template overrides in templates/[template]/html/com_[component]/, language strings in language/[lang]/[lang].com_[component].ini, or footer edits in templates/[template]/index.php — you used to need a developer. SimpleReview's Joomla-aware agent now does these edits and opens a Pull Request."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is this safe — Joomla has so many places that hold cache?",
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview never pushes to your live branch directly — every change is a PR you review. After merge, the agent also clears administrator/cache/, cache/, and (if Conservative Caching is enabled) tmp/ so the change actually shows up. We strongly recommend pairing it with a staging clone — the worst-case is a PR you decline."}
+      },
+      {
+        "@type": "Question",
+        "name": "Which Joomla versions does SimpleReview support?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Joomla 4.x and 5.x have full support — overrides, language strings, template index.php, plugin params. Joomla 3.10 reached end-of-life in August 2023; we provide limited read-only support and recommend planning a 5.x migration. Joomla 1.5 / 2.5 / earlier are not supported."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work with custom templates like Helix Ultimate / YOOtheme / Quix?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes for any template that respects Joomla's standard override directory (templates/[template]/html/...). Helix Ultimate, JA Templates, T3 Framework, and most Joomlart templates work out of the box. YOOtheme Pro stores layouts in JSON in the database — for layout edits the agent flags it for human review and only handles file-level customizations (custom CSS, footer.php, language). Quix is similar — block-level edits live in the DB, file-level edits go through SimpleReview."}
+      },
+      {
+        "@type": "Question",
+        "name": "What about Akeeba Backup / Admin Tools paid extensions?",
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview reads paid-extension language files and template overrides without issue — those are still on disk. License-key activation, paid update channel, and DB-level configuration of Akeeba Admin Tools (.htaccess maker, server config) we don't touch — these change every Joomla version and are best handled in the Akeeba UI. For one-line label or copy changes inside RSForm Pro, sh404SEF, or DJ-Catalog forms, SimpleReview opens a PR against the language file."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is this cheaper than a Joomla freelancer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. Typical Joomla freelancers charge $30-50/hour with a 1-hour minimum, even for a five-line override. SimpleReview is free with your own AI key (Claude Code or Codex) — pennies of API usage per fix. Only the 20% of work that actually needs a senior developer (custom component, J3→J5 migration, custom payment plugin) goes to a human review through Vibers."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #1c3d5a;padding-left:16px}
+    .key-takeaways{background:#eff4f8;border:1px solid #c8d6e2;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#1c3d5a;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#1c3d5a}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1c3d5a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#cdd9e3;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#f44321;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#d33718;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#1c3d5a}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#1c3d5a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+    .diagram{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:18px 22px;margin:18px 0;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px;line-height:1.7;overflow-x:auto}
+    .diagram .ok{color:#86efac}
+    .diagram .bad{color:#fca5a5}
+    .diagram .arrow{color:#f44321;font-weight:700}
+    .diagram .note{color:#94a3b8;font-style:italic}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Joomla / Site Recovery</span>
+      <span>April 30, 2026</span>
+      <span>10 min read</span>
+    </div>
+
+    <h1>How to Fix Joomla 5 Sites Without Wasting $40/hr on a Freelancer</h1>
+
+    <p class="article-lead">Joomla still runs ~2% of all CMS sites — and most of them are 8–12 year old installs that an old freelancer maintains for 1 hour/month. The fixes are usually the same: a stuck cache (<code>administrator/cache/</code>), a bad <code>configuration.php</code> value, an outdated extension after a 4→5 upgrade, or a template override in <code>templates/[template]/html/com_[component]/</code>. <strong>SimpleReview's Joomla-aware agent</strong> knows the override directory pattern and the J3→J4→J5 migration gotchas, so it patches the right file and opens a PR.</p>
+
+    <style>
+    /* ─────── Joomla 5 Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* Joomla site (Cassiopeia) */
+    .sc-jm-header{background:#1c3d5a;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-jm-logo{font-size:14px;font-weight:800;letter-spacing:.4px}
+    .sc-jm-logo span{color:#f44321}
+    .sc-jm-nav{font-size:10px;display:flex;gap:14px;opacity:.95}
+    .sc-jm-hero{background:linear-gradient(135deg,#274c6e,#1c3d5a);color:#fff;padding:20px 230px 18px 30px}
+    .sc-jm-h{font-size:16px;font-weight:700;margin-bottom:5px}
+    .sc-jm-sub{font-size:11px;opacity:.85;line-height:1.5}
+    .sc-jm-articles{padding:14px 230px 12px 30px}
+    .sc-jm-art{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:8px 10px;margin-bottom:6px}
+    .sc-jm-art-h{font-size:11px;font-weight:700;color:#1c3d5a;margin-bottom:3px}
+    .sc-jm-art-meta{font-size:9px;color:#888}
+
+    /* Joomla footer "Powered by" — TARGET */
+    .sc-jm-footer{background:#1c3d5a;color:#cdd5dd;padding:14px 230px 14px 30px;margin-top:14px;font-size:10px;line-height:1.5}
+    .sc-jm-footer-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+    .sc-jm-footer-left{flex:1;font-size:10px}
+    .sc-jm-poweredby{display:inline-block;background:#fff;color:#1c3d5a;border:1px solid #f44321;border-left:4px solid #f44321;padding:9px 14px 9px 12px;font-size:11px;font-weight:600;border-radius:3px;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:none}}
+    .sc-jm-poweredby::after{content:'Selected';position:absolute;top:-10px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-jm-poweredby-mark{color:#f44321;font-weight:800}
+    .sc-jm-poweredby-fade{animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#1c3d5a;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#1c3d5a;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-footer{background:#1c3d5a;color:#cdd5dd;padding:10px 14px;font-size:10px;text-align:center}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#1c3d5a;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #1c3d5a;color:#1c3d5a;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#1c3d5a;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:240px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:160px;top:300px;opacity:1}
+      22%  {left:160px;top:300px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-jm-articles{padding:14px 140px 12px 14px}
+      .sc-jm-footer{padding:14px 140px 14px 14px}
+    }
+    </style>
+    <div id="sc-banner-fallback" class="sc-banner joomla" aria-label="Animated demo: SimpleReview's Joomla expert overrides the Powered-by Joomla footer block and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Joomla site -->
+            <div class="sc-jm-header">
+              <div class="sc-jm-logo">My<span>Site</span></div>
+              <div class="sc-jm-nav">Home · Services · Blog · Contact · Login</div>
+            </div>
+            <div class="sc-jm-hero">
+              <div class="sc-jm-h">Welcome to MySite</div>
+              <div class="sc-jm-sub">Built on Joomla 5 — modern, fast, content-first.</div>
+            </div>
+            <div class="sc-jm-articles">
+              <div class="sc-jm-art">
+                <div class="sc-jm-art-h">Latest news from the team</div>
+                <div class="sc-jm-art-meta">By Admin · April 28, 2026 · 4 min read</div>
+              </div>
+              <div class="sc-jm-art">
+                <div class="sc-jm-art-h">Spring catalog updated</div>
+                <div class="sc-jm-art-meta">By Editor · April 25, 2026 · 2 min read</div>
+              </div>
+            </div>
+            <!-- Footer with Powered-by Joomla (TARGET) -->
+            <div class="sc-jm-footer">
+              <div class="sc-jm-footer-row">
+                <div class="sc-jm-footer-left sc-jm-poweredby-fade">© 2026 MySite · All rights reserved<br>Privacy · Terms · Contact</div>
+                <div class="sc-jm-poweredby">Powered by <span class="sc-jm-poweredby-mark">Joomla!</span><sup>®</sup></div>
+              </div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-jm-logo">My<span>Site</span></div>
+                <div class="sc-jm-nav">Home · Services · Blog · Contact</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">NEW</span>Spring catalog now live — explore</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Powered-by Joomla hidden via template override · index.php patched · PR #42</span>
+                <div class="sc-rec-h">Latest articles</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+              <div class="sc-rec-footer">© 2026 MySite · Privacy · Terms · Contact</div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">hide Powered by Joomla in footer</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>Joomla expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">Joomla 5.1.2</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Template</span><span class="sc-sb-v">cassiopeia</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">index.php</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Override Powered-By module in <code style="font-size:8px">templates/cassiopeia/index.php</code> · 1 file · 5 lines</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Joomla branding hidden. Footer copyright preserved.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(footer): override Powered-by block<br>cassiopeia/index.php · -3 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the Powered-by block → <strong>Fix it</strong> → PR opens, no developer involved</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Joomla site stuck on a single typo a freelancer keeps quoting at 1 hour? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads <code>templates/[template]/html/</code>, finds the override, opens a PR. No more waiting for the old maintainer to "have a free evening".
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>Joomla overrides go in</strong> <code>templates/[template]/html/com_[component]/</code> (frontend) and <code>administrator/templates/[template]/html/com_[component]/</code> (backend) — never edit <code>components/com_[name]/views/</code>. Editing the core breaks the next update.</li>
+        <li>Most "Joomla site is broken" symptoms = <strong>stuck cache or extension version mismatch</strong>. Clear <code>administrator/cache/</code> and <code>cache/</code> before assuming anything is actually broken.</li>
+        <li>SimpleReview understands <code>language/[lang]/[lang].com_[component].ini</code> for translations and <code>templates/[template]/index.php</code> for layout edits — the two files that own 80% of "edit my site" work.</li>
+        <li><strong>Joomla Extensions Directory (JED)</strong> — we publish SimpleReview Joomla connector. Standard install: System → Install → URL → enter package URL. После активации появляется кнопка <em>Edit with SimpleReview</em> в админке для каждого модуля/шаблона.</li>
+        <li>Multi-language sites with associations, paid extension upgrades, custom DB schemas — get human review. The agent handles 80%; humans handle the 20% that earns its hourly rate.</li>
+      </ul>
+    </div>
+
+    <h2>The Joomla Override System — In One Diagram</h2>
+
+    <p>Every recoverable Joomla edit lives in one of three layers. Knowing which layer your edit belongs in is the difference between a 30-second fix and a freelancer invoice.</p>
+
+    <div class="diagram">
+<span class="bad">✘ NEVER edit:</span>  components/com_content/views/article/tmpl/default.php
+                <span class="note">(core file — overwritten on every Joomla update)</span>
+
+<span class="ok">✔ Frontend override:</span>  templates/<em>[your-template]</em>/html/com_content/article/default.php
+<span class="ok">✔ Backend override:</span>   administrator/templates/<em>[admin-template]</em>/html/com_content/article/default.php
+<span class="ok">✔ Language string:</span>    language/<em>[lang]</em>/<em>[lang]</em>.com_content.ini
+<span class="ok">✔ Template layout:</span>    templates/<em>[your-template]</em>/index.php
+<span class="ok">✔ Template params:</span>    System → Site Templates → <em>[your-template]</em> Details &amp; Files
+
+<span class="arrow">→</span> SimpleReview reads the <code>&lt;meta name="generator" content="Joomla! ..."&gt;</code> tag,
+   detects your active template, and writes ONLY into the override path.
+    </div>
+
+    <p>If a freelancer ever quoted you 2 hours for a one-line article-template change, this diagram is what they were billing for — locating the right override path. The agent does it in milliseconds.</p>
+
+    <h2>Three-Click Workflow with SimpleReview</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. It's free with your own AI key (Claude Code or Codex), and there's a built-in fallback if you don't have one.</li>
+      <li><strong>Connect your Joomla repo or SFTP.</strong> Paste a GitHub / GitLab / Gitea URL, or hand over SFTP credentials — the extension pulls a working tree, parses <code>configuration.php</code> and the active template name, and caches a file index.</li>
+      <li><strong>Open your Joomla page, click the SimpleReview icon, click the element you want to change.</strong> Type in plain English: "hide Powered by Joomla", "add reCAPTCHA to contact form", "translate this label to French", "remove this stale featured-article block". Click <strong>Fix it</strong>. The agent finds the override path, makes the edit, opens a Pull Request, and clears the appropriate cache directories.</li>
+    </ol>
+
+    <h2>Common Joomla Fixes</h2>
+
+    <h3>Fix "JFolder: :files: Path is not a folder" / "Error displaying the error page" (white screen)</h3>
+
+    <p>This is the single most-googled Joomla error. It means PHP died silently because either <code>$log_path</code> or <code>$tmp_path</code> in <code>configuration.php</code> points at a directory that doesn't exist (most often after migrating hosts). The fix is three steps:</p>
+
+    <ol>
+      <li>Open <code>configuration.php</code> at the Joomla root and verify both paths actually exist on disk and are writable by the PHP user.</li>
+      <li>Clear everything in <code>administrator/cache/</code> and <code>cache/</code>. A bad cached compiled-template fragment can keep showing the error page even after you fix the path.</li>
+      <li>Set <code>$error_reporting = 'maximum'</code> and <code>$debug = '1'</code>, reload, read the actual PHP error (it will name the failing extension or DB query), then revert both flags.</li>
+    </ol>
+
+    <pre><code>// configuration.php — typical post-migration breakage
+public $log_path = '/home/old-user/public_html/administrator/logs';  // ✘ doesn't exist
+public $tmp_path = '/home/old-user/public_html/tmp';                  // ✘ doesn't exist
+
+// fix
+public $log_path = '/home/new-user/public_html/administrator/logs';   // ✔
+public $tmp_path = '/home/new-user/public_html/tmp';                  // ✔</code></pre>
+
+    <p>SimpleReview's agent reads <code>configuration.php</code>, validates both paths against the live filesystem, and opens a PR with the correction — including a follow-up commit that clears <code>administrator/cache/</code>.</p>
+
+    <h3>Add reCAPTCHA to a Contact Form</h3>
+
+    <p>For the built-in <code>com_contact</code> component this is purely admin-side and takes 90 seconds:</p>
+
+    <ol>
+      <li>System → Plugins → search <strong>CAPTCHA - reCAPTCHA</strong>. Enable it and paste your Site Key + Secret Key (from <a href="https://www.google.com/recaptcha/admin">google.com/recaptcha/admin</a>).</li>
+      <li>System → Global Configuration → Site → set <strong>Default Captcha = CAPTCHA - reCAPTCHA</strong>.</li>
+      <li>Components → Contacts → Options → Form tab → set <strong>Captcha = Use Default</strong>.</li>
+    </ol>
+
+    <p>For a custom form (RSForm Pro, Convert Forms, or a hand-rolled module) you need a captcha plugin under <code>plugins/captcha/</code> implementing the <code>JFormFieldCaptcha</code> contract — that's where SimpleReview's agent generates the boilerplate scaffold instead of asking a freelancer.</p>
+
+    <h3>Hide "Powered by Joomla!" or Change Copyright in Footer</h3>
+
+    <p>Joomla 5 ships templates with footer module slots, so the cleanest path is template params first:</p>
+
+    <ol>
+      <li>System → Site Templates → click your template → look for a <strong>Copyright</strong> or <strong>Footer text</strong> field. Most modern templates (Cassiopeia, Helix Ultimate, JA, T3) expose this without code.</li>
+      <li>If your template doesn't expose the field, the string lives in <code>templates/[template]/index.php</code> — usually a <code>&lt;?php echo Text::_('TPL_FOOTER_RIGHTS'); ?&gt;</code> call. Override the language constant in <code>language/en-GB/en-GB.tpl_[template].ini</code> rather than editing <code>index.php</code>.</li>
+      <li>Last resort — copy <code>templates/[template]/index.php</code> into your override and edit the literal string. SimpleReview prefers route #2 and only falls back to #3 when the string is hard-coded.</li>
+    </ol>
+
+    <h3>Joomla 4 → 5 Upgrade Broke My Extensions</h3>
+
+    <div class="warn-box"><strong>Most common breakage:</strong> the extension calls <code>JFactory::getApplication()</code> (deprecated since Joomla 4.0, removed in 5.0) and now throws a fatal error.</div>
+
+    <p>Two paths forward, in order of preference:</p>
+
+    <ol>
+      <li><strong>Update the extension first.</strong> Extensions → Manage → Update — many vendors shipped J5 builds in late 2023/early 2024. After updating, run Extensions → Manage → <strong>Database Fix</strong> to apply pending schema changes.</li>
+      <li><strong>If the vendor abandoned the extension</strong> (no J5 build): either downgrade Joomla via System → Update (only works if you took a backup before the upgrade — Akeeba) or wait. Forcing J5 with a J3-era extension installed is what produced the white screen in the first place.</li>
+    </ol>
+
+    <p>The agent reads <code>administrator/components/com_*/[name].xml</code> to detect declared Joomla compatibility and flags every extension whose <code>&lt;targetplatform&gt;</code> doesn't include 5.0 — before you even click Upgrade.</p>
+
+    <h3>Slow Admin / Joomla Site Is Sluggish</h3>
+
+    <p>Joomla's defaults are conservative — turning on its built-in caching layers brings most sites from "molasses" to "snappy" in five minutes:</p>
+
+    <ol>
+      <li>System → Global Configuration → System → <strong>Cache: Conservative Caching</strong>. Cache time = 15 min for content sites.</li>
+      <li>System → Plugins → enable <strong>System - Cache</strong>. This is the page-level cache; without it the Conservative setting only caches view fragments.</li>
+      <li>System → Plugins → enable <strong>System - Compress</strong> (gzip output). Free 30-50% bandwidth and TTFB win.</li>
+      <li>Extensions → Manage → unpublish components/modules/plugins you don't actually use. Every enabled plugin runs on every page load — old <code>plg_system_*</code> debris from past extensions is the silent killer.</li>
+    </ol>
+
+    <h2>Joomla Extensions Directory — Our Listing</h2>
+
+    <p>JED has 6,000+ extensions and is still the canonical place Joomla admins look first. We publish <strong>SimpleReview Joomla connector</strong> to <a href="https://extensions.joomla.org/">extensions.joomla.org</a> under <em>Authoring &amp; Content → Editors</em>. Until the listing is approved, the SimpleReview Chrome Extension auto-detects Joomla via the <code>&lt;meta name="generator" content="Joomla! - Open Source Content Management"&gt;</code> tag and routes edits to the override path automatically — no in-admin install required.</p>
+
+    <p>Joomla 4+ requires <strong>PHP 8.1</strong> and <strong>MySQL 5.7+</strong>; we test the connector on PHP 8.2 and 8.3, the two versions hosting providers ship by default in 2026.</p>
+
+    <h2>Comparison Table — Freelancer vs SimpleReview</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>Joomla Freelancer</th><th>SimpleReview agent</th></tr>
+        <tr><td>Brief</td><td>Skype/Telegram chat, 30 min back-and-forth</td><td>Type one sentence in the popup</td></tr>
+        <tr><td>SFTP / repo handover</td><td>15-60 min per project, every time</td><td>Once, then cached</td></tr>
+        <tr><td>Detect active template</td><td>Read <code>configuration.php</code>, check DB, browse <code>templates/</code></td><td>Reads <code>&lt;meta name="generator"&gt;</code> + DB params</td></tr>
+        <tr><td>Find override path</td><td>15-90 min depending on template familiarity</td><td>Instant — already indexed</td></tr>
+        <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
+        <tr><td>Clear cache</td><td>Sometimes forgotten → support ticket the next day</td><td>Automatic post-merge</td></tr>
+        <tr><td>Open a PR</td><td>If they use Git at all (most don't)</td><td>Always</td></tr>
+        <tr><td>Cost for 1-line override</td><td>$30-50 (1-hour minimum)</td><td>$0 (BYO key) or pennies of API usage</td></tr>
+      </table>
+    </div>
+
+    <h2>When You <em>Do</em> Want a Senior Joomla Developer</h2>
+
+    <p>This isn't anti-freelancer — it's anti-paying-an-hour-for-five-minutes. You still want a human in the loop when:</p>
+
+    <ul>
+      <li><strong>Custom component (<code>com_*</code>) development</strong> with its own DB schema, install/uninstall SQL, and update server. Money or business logic flows through it; humans should review.</li>
+      <li><strong>Multi-language sites</strong> with article associations (Joomla's built-in language switcher) or Falang. Wrong association keys silently send users to the wrong language version.</li>
+      <li><strong>Paid extension support contracts</strong> — RSForm Pro, Akeeba Backup, sh404SEF. Their support license usually covers exactly the work the agent should not be doing.</li>
+      <li><strong>Migration from Joomla 3 (EOL since August 2023)</strong> to Joomla 5. The 3→4 jump alone is a non-trivial DB schema change; combining 3→5 in a single migration script needs hands-on review.</li>
+      <li><strong>Custom payment plugin</strong> — anything that touches checkout, refund, or subscription logic. Get a human review (Vibers does this) before going live.</li>
+    </ul>
+
+    <p>That's exactly the slice <a href="/vibers/">Vibers</a> handles — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
+
+    <div class="cta-block">
+      <h3>Stop Paying $40/hr for One-Line Joomla Edits</h3>
+      <p>SimpleReview's Joomla-aware agent reads your override directory, knows the J4→J5 deprecation list, and opens a Pull Request you can merge in seconds.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#cdd9e3">Custom component, J3→J5 migration, custom payment? <a href="/vibers/" style="color:#fff;font-weight:600;text-decoration:underline">Get a human review →</a></p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I edit a Joomla site without a developer?</div>
+      <div class="faq-a">Yes for most cosmetic and structural edits. Joomla's admin handles articles, modules, menu items, and template params. For deeper changes — template overrides in <code>templates/[template]/html/com_[component]/</code>, language strings in <code>language/[lang]/[lang].com_[component].ini</code>, or footer edits in <code>templates/[template]/index.php</code> — you used to need a developer. SimpleReview's Joomla-aware agent now does these edits and opens a Pull Request.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is this safe — Joomla has so many places that hold cache?</div>
+      <div class="faq-a">SimpleReview never pushes to your live branch directly — every change is a PR you review. After merge, the agent also clears <code>administrator/cache/</code>, <code>cache/</code>, and (if Conservative Caching is enabled) <code>tmp/</code> so the change actually shows up. We strongly recommend pairing it with a staging clone — the worst-case is a PR you decline.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Which Joomla versions does SimpleReview support?</div>
+      <div class="faq-a">Joomla 4.x and 5.x have full support — overrides, language strings, template <code>index.php</code>, plugin params. Joomla 3.10 reached end-of-life in August 2023; we provide limited read-only support and recommend planning a 5.x migration. Joomla 1.5 / 2.5 / earlier are not supported.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does it work with custom templates like Helix Ultimate / YOOtheme / Quix?</div>
+      <div class="faq-a">Yes for any template that respects Joomla's standard override directory (<code>templates/[template]/html/...</code>). Helix Ultimate, JA Templates, T3 Framework, and most Joomlart templates work out of the box. YOOtheme Pro stores layouts in JSON in the database — for layout edits the agent flags it for human review and only handles file-level customizations (custom CSS, <code>footer.php</code>, language). Quix is similar — block-level edits live in the DB, file-level edits go through SimpleReview.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What about Akeeba Backup / Admin Tools paid extensions?</div>
+      <div class="faq-a">SimpleReview reads paid-extension language files and template overrides without issue — those are still on disk. License-key activation, paid update channel, and DB-level configuration of Akeeba Admin Tools (.htaccess maker, server config) we don't touch — these change every Joomla version and are best handled in the Akeeba UI. For one-line label or copy changes inside RSForm Pro, sh404SEF, or DJ-Catalog forms, SimpleReview opens a PR against the language file.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Cheaper than a Joomla freelancer (typical $30-50/hr)?</div>
+      <div class="faq-a">Yes. The freelancer's 1-hour minimum on a five-minute change is exactly what SimpleReview eliminates. With your own AI key (Claude Code or Codex) the per-fix cost is pennies of API usage. The 20% of work that actually needs a senior developer — custom components, J3→J5 migration, custom payment plugins — goes through Vibers' human review at sane rates.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
+          <p>Same agent pattern, applied to WP fatal-error recovery — read <code>debug.log</code>, patch deprecated function, open PR.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
+          <p>Twig template overrides, language strings, OCMOD scaffolds — same agent, OpenCart-aware.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://docs.joomla.org/">docs.joomla.org — Official template overrides &amp; J5 migration documentation</a></li>
+      <li><a href="https://extensions.joomla.org/">extensions.joomla.org (JED) — 6,000+ extensions; SimpleReview connector listing</a></li>
+      <li><a href="https://github.com/joomla/joomla-cms">github.com/joomla/joomla-cms — Reference repository the agent indexes against</a></li>
+      <li><a href="https://magazine.joomla.org/">magazine.joomla.org — Release notes &amp; deprecation guides for J4 → J5</a></li>
+      <li><a href="https://onout.org/vibers/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Fix PrestaShop 1.7 / 8 Stores Without Hiring a Developer (2026 Guide)</title>
+  <meta name="description" content="Fix PrestaShop 1.7 / 8 stores without hiring a developer. Theme override system, reCAPTCHA, hide 'Powered by PrestaShop', 500 error recovery, slow admin, hook conflicts. + SimpleReview Chrome extension.">
+  <link rel="canonical" href="https://onout.org/prestashop/how-to-fix-prestashop-issues/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix PrestaShop 1.7 / 8 Stores Without Hiring a Developer">
+  <meta property="og:description" content="SimpleReview's PrestaShop-aware agent edits the right Smarty/Twig file the first time and opens a PR — theme override, hook conflict, 500 error, captcha, slow admin.">
+  <meta property="og:url" content="https://onout.org/prestashop/how-to-fix-prestashop-issues/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="fix prestashop, prestashop 500 error, prestashop theme override, prestashop captcha, hide powered by prestashop, prestashop hook conflict, prestashop addons marketplace">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix PrestaShop 1.7 / 8 Stores Without Hiring a Developer (2026 Guide)",
+    "description": "Fix common PrestaShop 1.7 and 8.x problems without hiring a developer — theme overrides, hook conflicts, 500 errors, reCAPTCHA, slow admin, hide 'Powered by PrestaShop', and the SimpleReview agent that opens a PR.",
+    "url": "https://onout.org/prestashop/how-to-fix-prestashop-issues/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/prestashop/how-to-fix-prestashop-issues/" },
+    "keywords": ["fix prestashop", "prestashop 500 error", "prestashop theme override", "prestashop captcha", "hide powered by prestashop", "prestashop hook conflict", "prestashop addons marketplace"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I edit a PrestaShop store without a developer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic, content, and structural fixes — yes. The PrestaShop back-office handles products, categories, CMS pages, modules, and hooks via the admin UI. For Smarty .tpl theme overrides, Twig back-office templates, module hook overrides, or fixes inside override/, SimpleReview's PrestaShop-aware agent reads themes/[theme]/templates/ and the registered hook list, edits the right file, and opens a Pull Request you can merge."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is this safe for a live PrestaShop store?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes — every change is a Pull Request, never a force-push. We strongly recommend a staging clone (most managed PrestaShop hosts include one). Pair the agent's PR with var/cache/ cleared on staging, verify, then promote to production. Worst case is a PR you decline."}
+      },
+      {
+        "@type": "Question",
+        "name": "Which PrestaShop versions are supported?",
+        "acceptedAnswer": {"@type": "Answer", "text": "PrestaShop 1.7.x — full support (Smarty front-office + Twig back-office on 1.7.7+). PrestaShop 8.x — full support. PrestaShop 1.6.x — limited (legacy AdminController and old hook system; we recommend migrating before doing structural work)."}
+      },
+      {
+        "@type": "Question",
+        "name": "Theme override vs module override — does SimpleReview pick the right one?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. The agent walks the override hierarchy on first connection: theme override (themes/[theme]/templates/ and themes/[theme]/modules/[module]/) > module override (override/modules/[module]/) > class/controller override (override/classes/, override/controllers/) > core. It always picks the highest level that solves the problem and never modifies core files in classes/ or controllers/ directly."}
+      },
+      {
+        "@type": "Question",
+        "name": "What about paid PrestaShop themes (Warehouse, Alysum, Transformer)?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes — paid themes still follow the standard PrestaShop override pattern (themes/[theme]/templates/, themes/[theme]/modules/[module]/, themes/[theme]/assets/). The agent reads your theme's actual file layout on first connection. For themes that ship their own framework on top (extra abstraction layers, custom hook system), you'll get a heads-up that human review is recommended for non-trivial changes."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is it cheaper than a PrestaShop freelancer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Substantially. A PrestaShop freelancer charges €30–60/hr in the EU, with a 1-hour minimum. Most stores have a backlog of 5–15 small fixes (hide 'Powered by PrestaShop', stale banner, footer phone, missing reCAPTCHA, slow admin) — that's €150–500 of freelancer time. SimpleReview is free with your own AI key, and pennies of API usage per PR. Use the agent for the 80%, use Vibers' human review for the payment-module / multi-store / migration 20%."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#df0067;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#df0067;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#df0067;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #df0067;padding-left:16px}
+    .key-takeaways{background:#fdf0f6;border:1px solid #f7c4dc;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#9a0046;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#9a0046}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#df0067;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#b40053;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#df0067}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#df0067;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>PrestaShop / Fixes &amp; Overrides</span>
+      <span>April 30, 2026</span>
+      <span>9 min read</span>
+    </div>
+
+    <h1>How to Fix PrestaShop 1.7 / 8 Stores Without Hiring a Developer</h1>
+
+    <p class="article-lead">PrestaShop powers <strong>~250,000 stores in Europe</strong>. Most "my store is broken" tickets fall into the same five buckets: a stuck Smarty cache, a bad theme override, a hook that disappeared after a module update, or a 500 error from <code>var/cache/</code>. SimpleReview's PrestaShop-aware agent knows the <code>/themes/[theme]/templates/</code> override system, the <code>override/</code> directory, and the <code>modules/[module]/views/templates/hook/</code> structure — so it edits the right file the first time and opens a PR.</p>
+
+    <style>
+    /* ─────── PrestaShop 8 Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* PrestaShop storefront */
+    .sc-ps-topbar{background:#1d1d1b;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-ps-topbar .links{display:flex;gap:10px;opacity:.85}
+    .sc-ps-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e0e0e0}
+    .sc-ps-logo{font-size:14px;font-weight:800;color:#1d1d1b;letter-spacing:.3px}
+    .sc-ps-logo span{color:#df0067}
+    .sc-ps-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:18px;padding:4px 12px;font-size:10px;color:#888}
+    .sc-ps-cart{font-size:11px;font-weight:600;color:#fff;background:#df0067;border-radius:18px;padding:4px 11px}
+
+    /* Product grid */
+    .sc-ps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 230px 0 30px;max-width:520px;margin:0}
+    .sc-ps-card{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:8px;text-align:center}
+    .sc-ps-thumb{width:100%;height:42px;background:linear-gradient(135deg,#fcd6e7,#f8a4c9);border-radius:3px;margin-bottom:5px}
+    .sc-ps-pname{font-size:9px;font-weight:600;color:#222;line-height:1.3;height:24px;overflow:hidden}
+    .sc-ps-price{font-size:10px;font-weight:700;color:#df0067;margin-top:3px}
+
+    /* Footer with broken newsletter — TARGET */
+    .sc-ps-footer{background:#1d1d1b;color:#aaa;padding:14px 230px 14px 30px;margin-top:14px;font-size:10px;line-height:1.5}
+    .sc-ps-footer-row{display:flex;gap:14px;align-items:flex-start}
+    .sc-ps-footer-col{flex:1;font-size:10px}
+    .sc-ps-newsletter{flex:1;background:#fff;color:#222;border:1px solid #df0067;border-left:4px solid #df0067;padding:9px 12px;font-size:11px;border-radius:3px;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:none}}
+    .sc-ps-newsletter::after{content:'Selected';position:absolute;top:-10px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-ps-news-h{font-weight:700;font-size:11px;color:#df0067;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-ps-news-broken{font-size:9px;color:#888;font-family:monospace;background:#fff8e1;border:1px dashed #d97706;padding:3px 5px;border-radius:2px;margin-bottom:5px;animation:errHide 28s infinite}
+    .sc-ps-news-input{display:flex;gap:4px;animation:errHide 28s infinite}
+    .sc-ps-news-input span{flex:1;background:#fafafa;border:1px solid #ddd;border-radius:18px;padding:3px 8px;font-size:9px;color:#aaa}
+    .sc-ps-news-btn{background:#df0067;color:#fff;border-radius:18px;padding:3px 10px;font-size:9px;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-topbar{background:#1d1d1b;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#fce7f3,#fef9c3);padding:9px 14px;font-size:11px;color:#9d174d;font-weight:700;text-align:center;border-bottom:1px solid #fbcfe8}
+    .sc-rec-banner .sc-rec-pct{background:#df0067;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-footer{background:#1d1d1b;color:#aaa;padding:10px 14px;font-size:10px;text-align:center}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#df0067;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #df0067;color:#9d0048;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#9d0048;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:240px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:200px;top:300px;opacity:1}
+      22%  {left:200px;top:300px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-ps-grid{grid-template-columns:repeat(3,1fr);max-width:380px}
+    }
+    </style>
+    <div id="sc-banner-fallback" class="sc-banner prestashop" aria-label="Animated demo: SimpleReview's PrestaShop expert repairs the broken newsletter block and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mystore.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- PrestaShop storefront -->
+            <div class="sc-ps-topbar">
+              <span>Free shipping over €60 · Contact us</span>
+              <span class="links">Sign in · Wishlist · 0 €</span>
+            </div>
+            <div class="sc-ps-header">
+              <div class="sc-ps-logo">My<span>Store</span></div>
+              <div class="sc-ps-search">Search products…</div>
+              <div class="sc-ps-cart">Cart · 0,00 €</div>
+            </div>
+            <!-- Product grid -->
+            <div class="sc-ps-grid">
+              <div class="sc-ps-card"><div class="sc-ps-thumb"></div><div class="sc-ps-pname">Hummingbird Tee</div><div class="sc-ps-price">€21.90</div></div>
+              <div class="sc-ps-card"><div class="sc-ps-thumb"></div><div class="sc-ps-pname">Pastel Mug</div><div class="sc-ps-price">€9.50</div></div>
+              <div class="sc-ps-card"><div class="sc-ps-thumb"></div><div class="sc-ps-pname">Notebook A5</div><div class="sc-ps-price">€7.20</div></div>
+            </div>
+            <!-- Footer with broken newsletter (TARGET) -->
+            <div class="sc-ps-footer">
+              <div class="sc-ps-footer-row">
+                <div class="sc-ps-footer-col">© 2026 MyStore<br>About · Contact · Sitemap</div>
+                <div class="sc-ps-newsletter">
+                  <div class="sc-ps-news-h">Subscribe to newsletter</div>
+                  <div class="sc-ps-news-broken">⚠ {hook h='displayNewsletterRegistration'} undefined — empty wrapper renders</div>
+                  <div class="sc-ps-news-input"><span>your@email.com</span><span class="sc-ps-news-btn">OK</span></div>
+                </div>
+              </div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-topbar">
+                <span>Free shipping over €60 · Contact us</span>
+                <span>Sign in · Wishlist · 0 €</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-ps-logo">My<span>Store</span></div>
+                <div class="sc-ps-search">Search products…</div>
+                <div class="sc-ps-cart">Cart · 0,00 €</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">FREE</span>Shipping on orders over €60 — Spring sale now on</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Newsletter hook restored · footer.tpl patched · PR #42 ready</span>
+                <div class="sc-rec-h">Featured products</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+              <div class="sc-rec-footer">© 2026 MyStore · About · Contact · Sitemap</div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">newsletter form looks broken — fix or hide</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>PrestaShop expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">PrestaShop 8.1</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Theme</span><span class="sc-sb-v">classic</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">footer.tpl</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Repair newsletter hook in <code style="font-size:8px">themes/classic/templates/_partials/footer.tpl</code> · ps_emailsubscription</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Newsletter form renders again. Hook reattached cleanly.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(footer): repair newsletter block<br>footer.tpl · +5 / -2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the broken newsletter → <strong>Fix it</strong> → PR opens, no developer involved</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      One-line PrestaShop tweak quoted at 90 minutes? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads <code>themes/[theme]/templates/</code>, finds the hook, opens a PR. Edit ships the same hour.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>PrestaShop theme overrides</strong> go in <code>themes/[theme]/templates/</code> and <code>themes/[theme]/modules/[module]/</code>. Module overrides go in <code>override/modules/[module]/</code>. Never touch <code>classes/</code> or <code>controllers/</code> directly — use <code>override/</code> or a custom module.</li>
+        <li>Most PrestaShop site issues = <strong><code>var/cache/</code> not cleared</strong> after an admin change, or <code>defines.inc.php</code> <code>_PS_MODE_DEV_</code> set wrong.</li>
+        <li>SimpleReview reads <code>themes/[theme]/templates/</code> and the registered hooks list to find the right file fast.</li>
+        <li><strong>PrestaShop Addons Marketplace</strong> — мы публикуем модуль <code>simplereview</code> в категории Administration → Site Tools. Установка через стандартный uploader: Modules → Module Manager → Upload a module.</li>
+        <li>Custom payment modules, ERP integrations, multi-store, GDPR — Vibers <a href="/vibers/">human review</a>.</li>
+      </ul>
+    </div>
+
+    <h2>The PrestaShop Override Hierarchy in 60 Seconds</h2>
+
+    <p>PrestaShop's override system is the single most misunderstood thing about the platform — and the reason "simple" edits get quoted at hours of work. The rule is dead simple once you see the hierarchy: <strong>always edit at the highest level that solves the problem</strong>, never deeper. The agent walks this list top-down on every change.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Level</th><th>Where</th><th>What it overrides</th><th>Use for</th></tr>
+        <tr><td>1. Theme override (highest)</td><td><code>themes/[theme]/templates/</code><br><code>themes/[theme]/modules/[module]/</code></td><td>Core front-office templates, module-rendered hook templates</td><td>Visual changes, hide elements, restructure product / category / checkout layout</td></tr>
+        <tr><td>2. Module override</td><td><code>override/modules/[module]/</code></td><td>A module's classes / controllers</td><td>Patch a 3rd-party module without losing changes on update</td></tr>
+        <tr><td>3. Class / Controller override</td><td><code>override/classes/</code><br><code>override/controllers/</code></td><td>Core PrestaShop classes &amp; controllers</td><td>Tiny core behaviour tweak. Last resort.</td></tr>
+        <tr><td>4. Core (NEVER)</td><td><code>classes/</code>, <code>controllers/</code>, <code>src/</code></td><td>—</td><td>Don't. Every PrestaShop update wipes you out.</td></tr>
+      </table>
+    </div>
+
+    <div class="warn-box">
+      <strong>⚠ Common trap:</strong> editing a file inside <code>modules/[module]/views/templates/</code> directly. That works until the module updates — then your changes are gone. Always copy into <code>themes/[theme]/modules/[module]/</code> first; PrestaShop will load yours instead of the module's original.
+    </div>
+
+    <h2>Three-Click Workflow with SimpleReview</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. Free with your own AI key (Claude Code or Codex), built-in mode if you don't have one. The extension auto-detects PrestaShop from the <code>&lt;meta name='generator' content='PrestaShop'&gt;</code> tag.</li>
+      <li><strong>Connect your store's repo.</strong> Paste a GitHub / GitLab / Gitea URL. If your store isn't on Git yet, give SFTP credentials — SimpleReview creates a private working tree and commits from there. The agent reads <code>themes/[theme]/</code> and the active modules list to build its index.</li>
+      <li><strong>Open your storefront, click the SimpleReview icon, click the broken or wrong element.</strong> Type plainly: "hide 'Powered by PrestaShop'", "add reCAPTCHA to the contact form", "fix this 500 error", "the discount banner is from 2024, remove it". Click <strong>Fix it</strong>. The agent walks the override hierarchy, finds the right file, edits it, opens a PR.</li>
+    </ol>
+
+    <h2>Common PrestaShop Fixes</h2>
+
+    <h3>Fix "A configuration error has occurred. You can configure your shop using SF mode"</h3>
+
+    <p>This is the #1 PrestaShop 500 error after a hosting move, PHP upgrade, or failed module install. It comes from Symfony's container failing to boot. Three things to check, in this order:</p>
+
+    <ol>
+      <li><strong>DB credentials in <code>app/config/parameters.php</code></strong> — host, name, user, password. After a server migration the host is often <code>localhost</code> instead of the new <code>127.0.0.1</code> or socket path. The agent reads the file, diffs against the new server's <code>my.cnf</code>, suggests the patch.</li>
+      <li><strong>Clear <code>var/cache/</code></strong> — both <code>var/cache/prod/</code> and <code>var/cache/dev/</code>. PrestaShop caches the compiled Symfony container; a stale cache will keep failing even after you fix credentials. <code>rm -rf var/cache/*</code> and reload.</li>
+      <li><strong>Check <code>app/config/config.yml</code></strong> — usually fine, but a half-installed module can leave a YAML reference dangling. Look for the latest module name in the file and revert.</li>
+    </ol>
+
+    <pre><code># app/config/parameters.php — typical post-migration fix
+&lt;?php return array (
+  'parameters' =&gt; array (
+    'database_host'     =&gt; '127.0.0.1',  // was 'localhost'
+    'database_port'     =&gt; '',
+    'database_name'     =&gt; 'prestashop',
+    'database_user'     =&gt; 'ps_user',
+    'database_password' =&gt; 'NEW_PASSWORD_HERE',
+    // ...
+  ),
+);</code></pre>
+
+    <h3>Add reCAPTCHA to the Contact form</h3>
+
+    <p>Three options, easiest to hardest:</p>
+
+    <ul>
+      <li><strong>Module:</strong> install <code>pscaptcha</code> (PS 1.7+) or one of the official <code>ps_emailalerts</code> + <code>pscleaner</code> bundles. Hooks <code>displayCustomerAccountForm</code> and <code>actionContactFormSubmitCaptcha</code> are where the validation runs.</li>
+      <li><strong>Theme override:</strong> copy <code>modules/contactform/views/templates/widget/contactform.tpl</code> to <code>themes/[theme]/modules/contactform/views/templates/widget/contactform.tpl</code>, drop a Google reCAPTCHA v3 snippet inside the form, and add a <code>actionContactFormSubmitCaptcha</code> validation hook in a small custom module.</li>
+      <li><strong>Controller override:</strong> last resort. <code>override/controllers/front/ContactController.php</code> with a server-side reCAPTCHA verify before <code>parent::postProcess()</code>.</li>
+    </ul>
+
+    <p>The agent picks option 2 by default — module override, no core changes, survives module updates.</p>
+
+    <h3>Hide "Powered by PrestaShop" from the storefront</h3>
+
+    <p>Per the Creative Commons license, the link can legally be removed (PrestaShop's own FAQ confirms this). For the <strong>Classic theme</strong>, the link lives in <code>themes/classic/templates/_partials/footer.tpl</code>. For a <strong>Custom theme</strong>, the same path under your theme name. Search for <code>creative-commons</code> or <code>powered-by</code>:</p>
+
+    <pre><code>{# themes/classic/templates/_partials/footer.tpl — before #}
+&lt;div class="copyright"&gt;
+  &lt;a href="https://www.prestashop-project.org" class="creative-commons"&gt;
+    {l s='Powered by PrestaShop&amp;trade;' d='Shop.Theme.Global'}
+  &lt;/a&gt;
+&lt;/div&gt;
+
+{# after — remove the link, keep the copyright string if you want #}
+&lt;div class="copyright"&gt;
+  &amp;copy; {$smarty.now|date_format:"%Y"} MyStore
+&lt;/div&gt;</code></pre>
+
+    <p>Note: PrestaShop's storefront is still <strong>Smarty</strong> (<code>.tpl</code>), not Twig. Twig is back-office only (PS 1.7.7+). The agent writes Smarty for the front-office and Twig for the admin — and knows which to use by file path.</p>
+
+    <h3>Module conflict / hook not displaying</h3>
+
+    <p>A module installed cleanly but its block doesn't render. 90% of the time the hook isn't transplanted to the position the module expects. Admin → <strong>Modules</strong> → <strong>Positions</strong> → search the hook your module needs (e.g. <code>displayHome</code>, <code>displayProductActions</code>, <code>paymentOptions</code>); if the module isn't listed under that hook, transplant it.</p>
+
+    <p>Common offenders: payment-module hooks <code>paymentOptions</code> and <code>paymentReturn</code> getting overridden by an "all-in-one" theme that ships its own checkout. The agent reads the registered hook list (<code>SELECT * FROM ps_hook_module</code>) and tells you exactly which module is hijacking the slot.</p>
+
+    <h3>Slow admin / "Site under maintenance for too long"</h3>
+
+    <p>Admin lag in PrestaShop is almost always caching off or debug mode on. Five-minute fix:</p>
+
+    <ul>
+      <li>Admin → <strong>Advanced Parameters → Performance</strong>: Smarty Force Compile = <strong>Never</strong>, Smarty Cache = <strong>Yes</strong>.</li>
+      <li>Same page: <strong>CCC</strong> (Concatenate, Compress, Cache) — turn <em>on</em> for CSS, JS, smart cache, apache optimization.</li>
+      <li>In <code>config/defines.inc.php</code> set <code>define('_PS_MODE_DEV_', false);</code> — debug mode in production = 5–10× slower admin.</li>
+      <li>Check <code>var/logs/</code> for SQL slow queries. Common culprit: a module logging every page view to <code>ps_log</code> with no index. The agent reads the slow query log, suggests the index.</li>
+    </ul>
+
+    <div class="stat-box">
+      <strong>Real numbers:</strong> Force Compile=Never alone often cuts admin response time from 3.5s to 0.4s. CCC on a Classic-theme storefront drops the page from ~80 HTTP requests to ~12.
+    </div>
+
+    <h2>PrestaShop Addons — Our Module</h2>
+
+    <p><strong>PrestaShop Addons</strong> is the official marketplace at <a href="https://addons.prestashop.com">addons.prestashop.com</a> — 5,000+ modules + 2,000+ themes. We publish <code>simplereview</code> (in approval). Install: download the .zip from PrestaShop Addons → Module Manager → Upload a module → Install. Until then: SimpleReview Chrome Extension auto-detects PrestaShop from the <code>&lt;meta name='generator' content='PrestaShop'&gt;</code> and reads <code>themes/[theme]/</code>.</p>
+
+    <p>PrestaShop runs <strong>Smarty</strong> (<code>.tpl</code>) for the front-office and <strong>Twig</strong> (<code>.html.twig</code>) for the SF-based back-office (PS 1.7.7+). Our agent knows which template engine to write — it picks Smarty when the file lives under <code>themes/[theme]/templates/</code> or <code>modules/*/views/templates/</code>, and Twig when the file lives under <code>src/PrestaShopBundle/Resources/views/</code> or an admin-side module template.</p>
+
+    <div class="definition">
+      <strong>Module Manager</strong> (Modules → Module Manager) replaced the old "Modules and Services" page in PrestaShop 1.7. It's where you upload a .zip, enable/disable, configure, and check which modules are hooked to which positions. Anything you install from PrestaShop Addons lands here.
+    </div>
+
+    <h2>Comparison Table — Freelancer vs SimpleReview</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>PrestaShop freelancer (€30–60/hr)</th><th>SimpleReview agent</th></tr>
+        <tr><td>Brief</td><td>30–45 min email/Skype back-and-forth</td><td>Type one sentence in the popup</td></tr>
+        <tr><td>Repo / SFTP setup</td><td>30–60 min (per freelancer, every time)</td><td>Once, then cached</td></tr>
+        <tr><td>Locate the override level</td><td>30–90 min (theme? module override? class override?)</td><td>Instant — hierarchy walked automatically</td></tr>
+        <tr><td>Find the right Smarty / Twig file</td><td>15–60 min, depending on theme</td><td>Indexed at connection</td></tr>
+        <tr><td>Make the edit + clear <code>var/cache/</code></td><td>5–30 min</td><td>5–30 seconds</td></tr>
+        <tr><td>Open a PR</td><td>If they use Git at all</td><td>Always</td></tr>
+        <tr><td>Cost for a 1-line change</td><td>€30–150 (1-hour minimum)</td><td>€0 (BYO key) or pennies of API usage</td></tr>
+      </table>
+    </div>
+
+    <h2>When You <em>Do</em> Want a Senior PrestaShop Developer</h2>
+
+    <p>This isn't anti-freelancer. It's anti-paying-an-hour-for-five-minutes. You still want a human in the loop for the structural / money-touching work:</p>
+
+    <ul>
+      <li><strong>Custom payment module.</strong> Stripe, Adyen, a national PSP, or a B2B invoice flow. Money flows through it; the hook contract (<code>paymentOptions</code>, <code>paymentReturn</code>, validation order, webhook idempotency) needs human review.</li>
+      <li><strong>Multi-store with shared catalog vs separate.</strong> PrestaShop's multistore is powerful but the data model (<code>ps_product_shop</code>, <code>ps_category_shop</code>, shop-group quirks) is non-obvious. Picking shared-catalog vs separate is a one-way door.</li>
+      <li><strong>PS 1.6 → 1.7 → 8 migration.</strong> Smarty 2 → Smarty 3, the controller refactor, hook renames, theme-format breaking changes (theme.yml), Symfony framework underneath the back-office. Plan it; don't agent-it.</li>
+      <li><strong>Custom shipping carrier.</strong> Carrier classes, cost-by-weight/zone matrices, label printing, tracking webhooks. Lots of edge cases.</li>
+      <li><strong>Performance audit.</strong> Doctrine N+1 queries in 1.7.7+ admin, missing indexes on <code>ps_product_shop</code>, slow <code>SELECT</code> on cart hydration, <code>ps_cache_hook</code> bloat. Needs someone reading <code>EXPLAIN</code> output and the slow query log, not pattern-matching templates.</li>
+      <li><strong>GDPR / data export / right-to-be-forgotten.</strong> Especially for EU stores under DSA — a real audit, not a generated module.</li>
+    </ul>
+
+    <p>That's exactly the slice <a href="/vibers/">Vibers</a> handles — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80% of one-line fixes; use a human for the 20% that actually earns its hourly rate.</p>
+
+    <div class="cta-block">
+      <h3>Stop Paying €40/hr for One-Line PrestaShop Edits</h3>
+      <p>SimpleReview's PrestaShop agent reads <code>themes/[theme]/templates/</code>, walks the override hierarchy, opens a PR for the change you described.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Payment module, multi-store, PS 1.6 migration? <a href="/vibers/" style="color:#df0067;font-weight:600">Get a human review →</a></p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I edit a PrestaShop store without a developer?</div>
+      <div class="faq-a">For most cosmetic, content, and structural fixes — yes. The PrestaShop back-office handles products, categories, CMS pages, modules, and hooks via the admin UI. For Smarty <code>.tpl</code> theme overrides, Twig back-office templates, module hook overrides, or fixes inside <code>override/</code>, SimpleReview's PrestaShop-aware agent reads <code>themes/[theme]/templates/</code> and the registered hook list, edits the right file, and opens a Pull Request you can merge.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is this safe for a live PrestaShop store?</div>
+      <div class="faq-a">Yes — every change is a Pull Request, never a force-push. We strongly recommend a staging clone (most managed PrestaShop hosts include one). Pair the agent's PR with <code>var/cache/</code> cleared on staging, verify, then promote to production. Worst case is a PR you decline.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Which PrestaShop versions are supported?</div>
+      <div class="faq-a">PrestaShop 1.7.x — full support (Smarty front-office + Twig back-office on 1.7.7+). PrestaShop 8.x — full support. PrestaShop 1.6.x — limited (legacy AdminController and old hook system; we recommend migrating before doing structural work).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Theme override vs module override — does SimpleReview pick the right one?</div>
+      <div class="faq-a">Yes. The agent walks the override hierarchy on first connection: theme override (<code>themes/[theme]/templates/</code> and <code>themes/[theme]/modules/[module]/</code>) &gt; module override (<code>override/modules/[module]/</code>) &gt; class/controller override (<code>override/classes/</code>, <code>override/controllers/</code>) &gt; core. It always picks the highest level that solves the problem and never modifies core files in <code>classes/</code> or <code>controllers/</code> directly.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What about paid PrestaShop themes (Warehouse, Alysum, Transformer)?</div>
+      <div class="faq-a">Yes — paid themes still follow the standard PrestaShop override pattern (<code>themes/[theme]/templates/</code>, <code>themes/[theme]/modules/[module]/</code>, <code>themes/[theme]/assets/</code>). The agent reads your theme's actual file layout on first connection. For themes that ship their own framework on top (extra abstraction layers, custom hook system), you'll get a heads-up that human review is recommended for non-trivial changes.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is it cheaper than a PrestaShop freelancer?</div>
+      <div class="faq-a">Substantially. A PrestaShop freelancer charges €30–60/hr in the EU, with a 1-hour minimum. Most stores have a backlog of 5–15 small fixes (hide "Powered by PrestaShop", stale banner, footer phone, missing reCAPTCHA, slow admin) — that's €150–500 of freelancer time. SimpleReview is free with your own AI key, and pennies of API usage per PR. Use the agent for the 80%, use Vibers' human review for the payment-module / multi-store / migration 20%.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
+          <p>Same agent pattern for OpenCart — Twig templates, language strings, OCMOD events. Click element → PR.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">Fix WooCommerce Slow Checkout</a>
+          <p>Click the slow part of checkout, get a PR with the fix — same workflow applied to WooCommerce.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://devdocs.prestashop-project.org/">devdocs.prestashop-project.org — Official PrestaShop 1.7 / 8 developer documentation (theme overrides, hooks, modules)</a></li>
+      <li><a href="https://addons.prestashop.com/">addons.prestashop.com — Official module &amp; theme marketplace</a></li>
+      <li><a href="https://github.com/PrestaShop/PrestaShop">github.com/PrestaShop/PrestaShop — Reference repository the agent indexes against</a></li>
+      <li><a href="https://onout.org/vibers/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

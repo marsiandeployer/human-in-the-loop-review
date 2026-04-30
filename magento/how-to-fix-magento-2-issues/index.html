@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Fix Magento 2 Sites Without Hiring a $150/hr Developer (2026 Guide)</title>
+  <meta name="description" content="Fix Magento 2 / Adobe Commerce sites without a $150/hr senior dev. Step-by-step: white-screen recovery, cache + indexer fixes, reCAPTCHA, footer customization, slow admin. + SimpleReview Chrome extension.">
+  <link rel="canonical" href="https://onout.org/magento/how-to-fix-magento-2-issues/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix Magento 2 Sites Without Hiring a $150/hr Developer">
+  <meta property="og:description" content="White-screen, indexer, cache, theme override, reCAPTCHA — common Magento 2 fixes file-by-file, plus how SimpleReview's M2-aware agent opens the PR for you.">
+  <meta property="og:url" content="https://onout.org/magento/how-to-fix-magento-2-issues/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="fix magento 2, magento white screen, magento indexer error, magento setup upgrade, customize magento theme, hide powered by magento, magento captcha, adobe commerce marketplace extension">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix Magento 2 Sites Without Hiring a $150/hr Developer (2026 Guide)",
+    "description": "White-screen recovery, cache + indexer fixes, reCAPTCHA, footer customization, slow admin — the most common Magento 2 / Adobe Commerce fixes file-by-file, plus the SimpleReview M2 extension.",
+    "url": "https://onout.org/magento/how-to-fix-magento-2-issues/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/magento/how-to-fix-magento-2-issues/" },
+    "keywords": ["fix magento 2", "magento white screen", "magento indexer error", "magento setup upgrade", "customize magento theme", "hide powered by magento", "magento captcha", "adobe commerce marketplace extension"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I edit a Magento 2 store without a developer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "For most theme, copy, and configuration edits — yes. The Magento admin handles content, translations, and many storefront settings. For layout XML, di.xml dependency injection, theme template (.phtml) overrides, or i18n CSV files you used to need a senior developer at $80–200/hr. SimpleReview's Magento-aware agent now does those edits — it knows the M2 module and theme conventions, runs the right bin/magento commands in its plan, and opens a Pull Request you merge."}
+      },
+      {
+        "@type": "Question",
+        "name": "How is this safe — Magento has so many caches?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Caches are exactly the kind of thing the agent knows about. Every PR includes the post-merge command list: bin/magento cache:flush, setup:upgrade if a module changed, setup:di:compile in production mode, indexer:reindex if a schema changed. SimpleReview never deploys to production — it opens a PR you merge, then your CI/CD or your hand runs the post-deploy commands on the right environment."}
+      },
+      {
+        "@type": "Question",
+        "name": "Which Magento versions does SimpleReview support?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Magento Open Source 2.4.x and Adobe Commerce 2.4.x are first-class — these share the same module conventions and file layout the agent indexes. Magento 2.3 works for theme and i18n edits but composer/dependency-injection support is limited. Magento 1.x (Mage One / OpenMage) is not supported — different architecture, different module system."}
+      },
+      {
+        "@type": "Question",
+        "name": "What about Hyvä themes and PWA Studio?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Hyvä is supported for template edits — the agent recognizes the Hyvä module structure and Tailwind conventions, and skips the Knockout / RequireJS layer that doesn't apply. PWA Studio (a separate React storefront talking to Magento via GraphQL) is detected as a React+GraphQL app rather than M2 templates, so theme edits go to the React components. Backend module edits (admin, GraphQL resolvers) work the same as classic M2."}
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need composer access?",
+        "acceptedAnswer": {"@type": "Answer", "text": "For installing our extension via Composer — yes, that's the recommended path. For day-to-day edits the agent makes (theme overrides, translation CSVs, layout XML, custom modules under app/code/) you only need Git access. The agent commits to a branch and opens a PR; your existing deploy pipeline runs composer/bin/magento commands."}
+      },
+      {
+        "@type": "Question",
+        "name": "How is this different from a $150/hr Magento freelancer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Speed and recurring cost. A senior Magento freelancer bills $80–200/hr with a one- or two-hour minimum, and most of that hour is spent setting up access, locating the right file in app/code or vendor/magento, and running cache flushes. SimpleReview's agent already knows the M2 layout, indexes your repo once, and produces the PR in seconds. You still want a human for payment-gateway, ERP, performance tuning, or migrations — that's where Vibers' human-in-the-loop review takes over."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #ee672f;padding-left:16px}
+    .key-takeaways{background:#fff5ef;border:1px solid #fbd6c0;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#9a3412;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#1979c3}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#ee672f;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#cc5621;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#ee672f}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#ee672f;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Magento 2 / Adobe Commerce</span>
+      <span>April 30, 2026</span>
+      <span>11 min read</span>
+    </div>
+
+    <h1>How to Fix Magento 2 Sites Without Hiring a $150/hr Developer</h1>
+
+    <p class="article-lead">Magento 2 (Adobe Commerce) is the most expensive CMS to maintain. A senior Magento dev bills <strong>$80–200/hr</strong>. Yet most "broken" stores need exactly the same fix: clear <code>var/cache/</code>, run <code>bin/magento setup:upgrade</code>, fix a permission issue in <code>pub/</code>, or correct an XML override in <code>app/code/[Vendor]/[Module]/view/</code>. SimpleReview's Magento-aware agent knows the M2 module conventions, when to run <code>setup:di:compile</code>, and which file in <code>Magento_Theme</code> overrides what — so it patches the right file and opens a PR.</p>
+
+    <style>
+    /* ─────── Magento 2 Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* Magento storefront */
+    .sc-mg-topbar{background:#222;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-mg-topbar .links{display:flex;gap:10px;opacity:.85}
+    .sc-mg-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e0e0e0}
+    .sc-mg-logo{font-size:14px;font-weight:800;color:#222;letter-spacing:.3px}
+    .sc-mg-logo span{color:#ee672f}
+    .sc-mg-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:18px;padding:4px 12px;font-size:10px;color:#888}
+    .sc-mg-cart{font-size:11px;font-weight:600;color:#fff;background:#ee672f;border-radius:3px;padding:4px 9px}
+    .sc-mg-nav{background:#fff;border-bottom:1px solid #e0e0e0;padding:6px 14px;font-size:10px;color:#444;display:flex;gap:14px}
+
+    /* Newsletter popup — TARGET (broken on mobile) */
+    .sc-mg-newsletter{background:#fff;border:1px solid #ccd0d4;border-left:4px solid #ee672f;box-shadow:0 1px 4px rgba(0,0,0,.08);max-width:420px;margin:14px 230px 0 30px;padding:11px 16px 14px;font-family:inherit;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 4px rgba(0,0,0,.08)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 4px rgba(0,0,0,.08)}}
+    .sc-mg-newsletter::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-mg-news-title{font-weight:700;font-size:12px;color:#222;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-mg-news-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:5px;animation:errHide 28s infinite}
+    .sc-mg-news-row{display:flex;gap:6px;animation:errHide 28s infinite}
+    .sc-mg-news-input{flex:1;background:#f8f8f8;border:1px solid #ddd;border-radius:3px;padding:4px 8px;font-size:10px;color:#888}
+    .sc-mg-news-btn{background:#ee672f;color:#fff;border-radius:3px;padding:4px 12px;font-size:10px;font-weight:700}
+    .sc-mg-news-meta{color:#888;font-size:9px;margin-top:5px;font-style:italic;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Product grid */
+    .sc-mg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 230px 0 30px;max-width:520px;margin:0}
+    .sc-mg-card{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:8px;text-align:center}
+    .sc-mg-thumb{width:100%;height:42px;background:linear-gradient(135deg,#fbe5d6,#f9c79f);border-radius:3px;margin-bottom:5px}
+    .sc-mg-pname{font-size:9px;font-weight:600;color:#222;line-height:1.3;height:24px;overflow:hidden}
+    .sc-mg-price{font-size:10px;font-weight:700;color:#ee672f;margin-top:3px}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-topbar{background:#222;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#ee672f;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#ee672f;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #ee672f;color:#a83d12;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#a83d12;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:200px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:340px;top:155px;opacity:1}
+      22%  {left:340px;top:155px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-mg-grid{grid-template-columns:repeat(3,1fr);max-width:380px}
+    }
+    </style>
+    <div id="sc-banner-fallback" class="sc-banner magento" aria-label="Animated demo: SimpleReview's Magento expert hides a broken mobile newsletter popup and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mystore.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Magento storefront -->
+            <div class="sc-mg-topbar">
+              <span>Skip to Content · Welcome, Sign In</span>
+              <span class="links">My Account · Wishlist · Compare · Reorder</span>
+            </div>
+            <div class="sc-mg-header">
+              <div class="sc-mg-logo">My<span>Store</span></div>
+              <div class="sc-mg-search">Search entire store here…</div>
+              <div class="sc-mg-cart">Cart 0</div>
+            </div>
+            <div class="sc-mg-nav">What's New · Women · Men · Gear · Training · Sale</div>
+            <!-- Newsletter popup (TARGET) -->
+            <div class="sc-mg-newsletter">
+              <div class="sc-mg-news-title">Subscribe to our Newsletter</div>
+              <div class="sc-mg-news-msg">Get 10% off your first order — sign up for our weekly drops.</div>
+              <div class="sc-mg-news-row">
+                <span class="sc-mg-news-input">your@email.com</span>
+                <span class="sc-mg-news-btn">Subscribe</span>
+              </div>
+              <div class="sc-mg-news-meta">⚠ overflows on viewport &lt; 480px · subscribe.phtml</div>
+            </div>
+            <!-- Product grid -->
+            <div class="sc-mg-grid">
+              <div class="sc-mg-card"><div class="sc-mg-thumb"></div><div class="sc-mg-pname">Hero Hoodie</div><div class="sc-mg-price">$54.00</div></div>
+              <div class="sc-mg-card"><div class="sc-mg-thumb"></div><div class="sc-mg-pname">Fusion Backpack</div><div class="sc-mg-price">$59.00</div></div>
+              <div class="sc-mg-card"><div class="sc-mg-thumb"></div><div class="sc-mg-pname">Sprite Stasis Ball</div><div class="sc-mg-price">$23.00</div></div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-topbar">
+                <span>Skip to Content · Welcome, Sign In</span>
+                <span>My Account · Wishlist · Compare</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-mg-logo">My<span>Store</span></div>
+                <div class="sc-mg-search">Search entire store here…</div>
+                <div class="sc-mg-cart">Cart 0</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">FREE</span>Shipping on orders over $50 — every day</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Mobile newsletter popup hidden · subscribe.phtml patched · PR #42 ready</span>
+                <div class="sc-rec-h">Hot Sellers</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">remove the Newsletter popup it's broken on mobile</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>Magento expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">Magento 2.4.7</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Theme</span><span class="sc-sb-v">MyTheme</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">subscribe.phtml</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Hide newsletter on viewports &lt; 480px in <code style="font-size:8px">Magento_Newsletter/templates/subscribe.phtml</code> · 1 file · 8 lines</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Mobile checkout no longer obscured. Desktop signup unchanged.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(newsletter): hide broken mobile popup<br>subscribe.phtml · +6 / -2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the broken popup → <strong>Fix it</strong> → PR opens, no $200/hr dev needed</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      One-line Magento change a freelancer quoted at 4 hours? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads <code>app/design/frontend/</code>, knows the layout XML, opens a PR. Edit ships within the hour.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>M2 customization lives in <code>app/code/[Vendor]/[Module]/</code> and <code>app/design/frontend/[Vendor]/[Theme]/</code></strong> — never in <code>vendor/magento/</code>. Editing core is the #1 way Magento freelancers break upgrades.</li>
+        <li><strong>Most "site is broken" issues</strong> come down to caches, indexers, deploy mode, or a missing <code>setup:upgrade</code> after a code change — not actual bugs.</li>
+        <li>SimpleReview knows M2 module XML conventions (<code>di.xml</code>, layout XML, <code>view.xml</code>) and emits the right post-merge <code>bin/magento</code> commands with the PR.</li>
+        <li><strong>Adobe Commerce Marketplace</strong> — мы публикуем расширение SimpleReview Edit (в работе). Установка стандартная: <code>composer require simplereview/magento2 --dev</code> или из админки Marketplace → My Purchases.</li>
+        <li><strong>Payment-method, ERP integration, multi-store, performance tuning</strong> — get a Vibers human review before you merge.</li>
+      </ul>
+    </div>
+
+    <h2>Why Magento Edits Cost 5× More Than Other CMSs</h2>
+
+    <p>WordPress freelancers bill $25–60/hr. Shopify freelancers $40–80/hr. Magento freelancers <strong>$80–200/hr</strong>, often with a two-hour minimum. The price isn't a market mistake — it reflects three real things:</p>
+
+    <ul>
+      <li><strong>Module system depth.</strong> A typical edit touches 3–5 XML files (<code>di.xml</code>, <code>module.xml</code>, layout XML, UI component XML, <code>events.xml</code>) plus a PHP class. Knowing which file owns what is its own skill.</li>
+      <li><strong>Build pipeline.</strong> Production mode requires <code>setup:di:compile</code> + <code>setup:static-content:deploy</code> after almost any change. Skip a step and the storefront 500s.</li>
+      <li><strong>Cache layers.</strong> Magento has full_page, config, layout, block_html, collections, reflection, db_ddl, EAV cache types — six caches per request — plus optional Varnish in front. "Did you flush cache?" is half of every Magento support thread.</li>
+    </ul>
+
+    <p>The good news: 80% of paid Magento freelancer hours are spent on the same five or six recurring problems. The agent that already knows the file layout, the cache types, and the right <code>bin/magento</code> sequence can compress those hours into seconds.</p>
+
+    <h2>The M2 File-Layout Cheat Sheet</h2>
+
+    <p>If you remember one table from this article, make it this one. Knowing where edits belong is what separates "patched in 30 seconds" from "broke the upgrade path".</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Path</th><th>What lives here</th><th>Edit it?</th></tr>
+        <tr><td><code>app/code/[Vendor]/[Module]/</code></td><td>Your custom modules — controllers, models, XML, plugins, observers</td><td><strong>Yes</strong> — this is the "custom code" zone</td></tr>
+        <tr><td><code>app/design/frontend/[Vendor]/[Theme]/</code></td><td>Storefront theme — <code>.phtml</code> templates, layout XML, CSS/LESS, JS, <code>i18n/</code></td><td><strong>Yes</strong> — every theme override goes here</td></tr>
+        <tr><td><code>app/etc/</code></td><td><code>config.php</code>, <code>env.php</code> (DB creds, deploy mode), <code>di.xml</code> global wiring</td><td>Carefully — env-specific, never commit secrets</td></tr>
+        <tr><td><code>app/i18n/[Vendor]/[lang_LANG]/</code></td><td>Language packs — <code>[lang_LANG].csv</code> translation files</td><td><strong>Yes</strong> — preferred place for storefront copy</td></tr>
+        <tr><td><code>pub/</code></td><td>Web root — <code>media/</code>, <code>static/</code>, <code>index.php</code></td><td>Generated content; never edit by hand</td></tr>
+        <tr><td><code>var/</code></td><td>Caches, logs, generated code, sessions</td><td><strong>No</strong> — flush, don't edit. Logs live in <code>var/log/</code></td></tr>
+        <tr><td><code>vendor/magento/</code></td><td>Magento core via Composer</td><td><strong>NEVER</strong> — every <code>composer update</code> wipes it</td></tr>
+        <tr><td><code>bin/magento</code></td><td>The CLI: <code>setup:upgrade</code>, <code>cache:flush</code>, <code>indexer:reindex</code>, <code>deploy:mode</code></td><td>Run it; don't edit it</td></tr>
+      </table>
+    </div>
+
+    <p>This map is what SimpleReview's M2 agent encodes natively. When you ask it to "hide the Powered By footer", it goes straight to <code>app/design/frontend/[Vendor]/[Theme]/Magento_Theme/templates/html/footer.phtml</code> — not <code>vendor/magento/module-theme/view/frontend/templates/html/footer.phtml</code>, which would survive exactly one <code>composer update</code>.</p>
+
+    <h2>Three-Click Workflow with SimpleReview</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. It's free with your own AI key (Claude Code or Codex), with a built-in mode if you don't have one. The extension auto-detects M2 from the <code>Mage.Cookies</code> JS handle and the <code>&lt;meta name="generator" content="Magento 2.4..."&gt;</code> tag.</li>
+      <li><strong>Connect your store's Git repo</strong> (GitHub, GitLab, Bitbucket, self-hosted Gitea). The agent indexes <code>app/code/</code>, <code>app/design/frontend/</code>, and your active theme on first connection — no manual configuration of paths or theme names.</li>
+      <li><strong>Open the storefront, click the SimpleReview icon, click the element you want to change.</strong> Type in plain English: "hide this Powered By line", "translate Add to Cart to Buy Now in German", "add a free-shipping notice above the cart". Click <strong>Fix it</strong>. The agent picks the right file (<code>.phtml</code> override, layout XML, or i18n CSV), makes the edit, and opens a PR with the post-merge <code>bin/magento</code> command list.</li>
+    </ol>
+
+    <h2>Common Magento 2 Fixes — File-by-File</h2>
+
+    <h3>Fix "There has been an error processing your request" (white screen)</h3>
+
+    <p>The infamous M2 white-screen-of-error. Production mode hides the trace; the agent's first move is to read the right log:</p>
+
+    <pre><code>tail -n 200 var/log/exception.log
+tail -n 200 var/log/system.log
+# also check for missing DI:
+tail -n 200 var/log/debug.log</code></pre>
+
+    <p>Two causes account for ~80% of these errors:</p>
+
+    <ul>
+      <li><strong>XML syntax error in a layout file.</strong> A typo in <code>app/code/[Vendor]/[Module]/view/frontend/layout/*.xml</code> or theme layout XML — Magento parses every layout XML on cache build, and one stray <code>&lt;referenceContainer name="content"&gt;</code> without a matching close kills the page.</li>
+      <li><strong>Missing dependency in <code>di.xml</code>.</strong> A constructor expects <code>\Magento\Framework\App\Config\ScopeConfigInterface</code>, but the <code>arguments</code> block in <code>etc/di.xml</code> hasn't been wired. The compile step passes; the runtime crashes.</li>
+    </ul>
+
+    <p>The agent reads the exception log, locates the offending file, fixes the XML or adds the missing <code>type</code> argument, and emits the recovery commands:</p>
+
+    <pre><code>bin/magento cache:flush
+bin/magento setup:di:compile     # production mode only
+bin/magento setup:static-content:deploy -f
+bin/magento cache:flush</code></pre>
+
+    <h3>Add reCAPTCHA to checkout</h3>
+
+    <p>Magento ships <code>Magento_ReCaptchaCheckout</code> for the standard checkout — enable it in admin → Stores → Configuration → Security → Google reCAPTCHA Storefront. <strong>Custom forms</strong> (a contact form added by your theme, a custom registration step, a B2B quote form) need their own extension. The minimum scaffold:</p>
+
+    <pre><code>app/code/MyVendor/Captcha/
+├── etc/
+│   ├── module.xml
+│   └── frontend/
+│       └── di.xml          # wire ReCaptchaUi\Model\IsCaptchaEnabledInterface
+├── view/frontend/
+│   ├── layout/contact_index_index.xml
+│   └── web/js/
+│       └── captcha-mixin.js
+└── registration.php</code></pre>
+
+    <p>The agent generates this scaffold from your form's HTML, registers the module, and lists the post-merge commands: <code>bin/magento module:enable MyVendor_Captcha</code>, <code>bin/magento setup:upgrade</code>, <code>bin/magento cache:flush</code>.</p>
+
+    <h3>Hide "Powered by Magento" / change copyright</h3>
+
+    <p>Two correct paths, depending on whether you want a code change or an admin click:</p>
+
+    <ul>
+      <li><strong>Admin (no PR):</strong> Content → Configuration → [Your store] → Footer → Copyright. Save, flush full_page cache. Done.</li>
+      <li><strong>Theme override (versioned):</strong> Copy <code>vendor/magento/module-theme/view/frontend/templates/html/footer.phtml</code> to <code>app/design/frontend/[Vendor]/[Theme]/Magento_Theme/templates/html/footer.phtml</code> and edit it. The agent does this automatically — and never touches <code>vendor/</code>.</li>
+    </ul>
+
+    <h3>Storefront is slow — admin is slower</h3>
+
+    <p>Almost always one of three things:</p>
+
+    <pre><code>bin/magento deploy:mode:show
+# If "developer" or "default" on production → switch:
+bin/magento deploy:mode:set production
+
+# Then:
+bin/magento cache:enable full_page
+bin/magento indexer:reindex
+bin/magento cache:flush</code></pre>
+
+    <ul>
+      <li><strong>Wrong deploy mode.</strong> <code>developer</code> mode disables most caches; <code>default</code> recompiles on every request. Production must be <code>production</code>.</li>
+      <li><strong>Full-page cache off / no Varnish.</strong> Without full_page cache the storefront re-renders every block on every request. Varnish in front turns 800ms TTFB into 40ms.</li>
+      <li><strong>Stale indexers.</strong> If <code>indexer:status</code> shows "Reindex required", category, search, and price pages fall back to slow runtime queries. <code>bin/magento indexer:reindex</code> fixes it; cron-update mode keeps it fresh.</li>
+    </ul>
+
+    <p>Admin slowness is a separate beast — usually session locking on file-based sessions. Move to Redis sessions in <code>app/etc/env.php</code> and admin response times drop 5–10×.</p>
+
+    <h3>Add a custom field to the product page</h3>
+
+    <p>The "minimum complete" custom-attribute change touches three files plus a CLI step:</p>
+
+    <pre><code>app/code/MyVendor/Catalog/etc/db_schema.xml          # column definition
+app/code/MyVendor/Catalog/Setup/Patch/Data/AddAttribute.php   # data patch
+app/code/MyVendor/Catalog/view/adminhtml/ui_component/product_form.xml
+                                                     # admin field
+# then:
+bin/magento setup:upgrade
+bin/magento setup:db-declaration:generate-whitelist --module-name=MyVendor_Catalog
+bin/magento cache:flush</code></pre>
+
+    <p>This is exactly the kind of multi-file XML/PHP edit that costs 2–4 freelancer hours and 10 seconds of agent time, because the agent doesn't have to re-derive the M2 conventions every time.</p>
+
+    <h3>Translate "Add to Cart" to "Buy Now"</h3>
+
+    <p>Two correct levels — pick by scope:</p>
+
+    <ul>
+      <li><strong>Language pack (preferred, store-wide):</strong> <code>app/i18n/MyVendor/en_US/en_US.csv</code> with the line <code>"Add to Cart","Buy Now"</code>. Run <code>bin/magento setup:static-content:deploy en_US</code> + <code>cache:flush</code>.</li>
+      <li><strong>Theme i18n (theme-scoped):</strong> <code>app/design/frontend/[Vendor]/[Theme]/i18n/en_US.csv</code> with the same line — overrides only when that theme is active.</li>
+    </ul>
+
+    <p>The agent picks the level based on what you said. "Change everywhere" → language pack. "Just on this theme" → theme i18n. Both are CSV one-liners; freelancers usually charge an hour because they have to remember which level is which.</p>
+
+    <h2>Adobe Commerce Marketplace — Our Extension</h2>
+
+    <p>We're shipping <strong><code>SimpleReview_Edit</code> to Adobe Commerce Marketplace</strong>. Two install routes once it's live:</p>
+
+    <ul>
+      <li><strong>Composer (recommended for production):</strong>
+        <pre><code>composer require simplereview/magento2
+bin/magento module:enable SimpleReview_Edit
+bin/magento setup:upgrade
+bin/magento cache:flush</code></pre>
+      </li>
+      <li><strong>Admin (no SSH):</strong> System → Web Setup Wizard → Component Manager → Sync → Install. The Marketplace handles licensing keys; the wizard handles compatibility checks.</li>
+    </ul>
+
+    <p><strong>Until our extension lands:</strong> the SimpleReview Chrome Extension <em>already</em> works on Magento storefronts. It auto-detects M2 from the <code>Mage.Cookies</code> JavaScript handle and the <code>&lt;meta name="generator" content="Magento 2.4..."&gt;</code> tag, then routes edits to your Git repo. Same workflow, different distribution channel — the Marketplace listing is for store owners who prefer composer over Chrome.</p>
+
+    <h2>Comparison Table — Magento Freelancer vs SimpleReview</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>Magento freelancer ($80–200/hr)</th><th>SimpleReview agent</th></tr>
+        <tr><td>Brief</td><td>30–60 min Zoom + access setup</td><td>Type one sentence in the popup</td></tr>
+        <tr><td>Repo / SSH access</td><td>30–90 min (SSH keys, deploy keys, SFTP creds, every freelancer)</td><td>Once, then cached</td></tr>
+        <tr><td>Find the right file</td><td>30–120 min — is it <code>vendor/</code>? theme override? layout XML? i18n CSV?</td><td>Instant — already indexed</td></tr>
+        <tr><td>Make the edit</td><td>5–30 min</td><td>5–30 seconds</td></tr>
+        <tr><td>Remember the post-deploy commands</td><td>Sometimes — bugs ship without <code>cache:flush</code></td><td>Always emitted with the PR</td></tr>
+        <tr><td>Open a PR</td><td>If they use Git at all</td><td>Always</td></tr>
+        <tr><td>Cost for a 1-line change</td><td>$160–400 (2-hour minimum)</td><td>$0 (BYO key) or pennies of API usage</td></tr>
+      </table>
+    </div>
+
+    <h2>When You <em>Do</em> Want a Senior Magento Developer</h2>
+
+    <p>This isn't anti-freelancer. Senior Magento devs earn $150/hr because some problems genuinely take their experience. You still want a human in the loop for:</p>
+
+    <ul>
+      <li><strong>Multi-store / multi-website setup.</strong> Store views, websites, scope inheritance, base URL routing — easy to mis-scope a config and silently break a region.</li>
+      <li><strong>B2B Adobe Commerce features.</strong> Company accounts, requisition lists, shared catalogs, negotiable quotes — the B2B module set has its own data model.</li>
+      <li><strong>Custom payment gateway.</strong> Money flows through it, PCI scope expands, and a bug eats real revenue. Always human-reviewed.</li>
+      <li><strong>ERP / SAP / NetSuite integration.</strong> Order, inventory, and customer sync over SOAP/REST/messaging — needs someone who's debugged a rollback at 3 AM.</li>
+      <li><strong>Performance audit.</strong> Redis tuning, Varnish ESI, MySQL slow log, OPcache sizing, ElasticSearch index strategy — these need someone reading <code>EXPLAIN</code> output and <code>perf top</code>, not pattern-matching templates.</li>
+      <li><strong>Mage One / migration off Magento.</strong> Whether to Shopify Plus, Hyvä replatform, or stay on Adobe Commerce — strategy first, code second.</li>
+    </ul>
+
+    <p>That's the slice <a href="/vibers/">Vibers</a> handles — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns the hourly rate.</p>
+
+    <div class="cta-block">
+      <h3>Stop Paying $150/hr for Magento Touch-Ups</h3>
+      <p>SimpleReview's Magento agent reads your repo, knows the M2 module conventions, and opens a PR for the change you described — with the right <code>bin/magento</code> commands attached.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Migration, ERP, payment gateway? <a href="/vibers/" style="color:#ee672f;font-weight:600">Get a human review →</a> Free first PR for a GitHub star.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I edit a Magento 2 store without a developer?</div>
+      <div class="faq-a">For most theme, copy, and configuration edits — yes. The Magento admin handles content, translations, and many storefront settings. For layout XML, <code>di.xml</code> dependency injection, theme template (<code>.phtml</code>) overrides, or i18n CSV files you used to need a senior developer at $80–200/hr. SimpleReview's Magento-aware agent now does those edits — it knows the M2 module and theme conventions, runs the right <code>bin/magento</code> commands in its plan, and opens a Pull Request you merge.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How is this safe — Magento has so many caches?</div>
+      <div class="faq-a">Caches are exactly the kind of thing the agent knows about. Every PR includes the post-merge command list: <code>bin/magento cache:flush</code>, <code>setup:upgrade</code> if a module changed, <code>setup:di:compile</code> in production mode, <code>indexer:reindex</code> if a schema changed. SimpleReview never deploys to production — it opens a PR you merge, then your CI/CD or your hand runs the post-deploy commands on the right environment.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Which Magento versions does SimpleReview support?</div>
+      <div class="faq-a">Magento Open Source 2.4.x and Adobe Commerce 2.4.x are first-class — these share the same module conventions and file layout the agent indexes. Magento 2.3 works for theme and i18n edits but composer/dependency-injection support is limited. Magento 1.x (Mage One / OpenMage) is not supported — different architecture, different module system.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What about Hyvä themes / PWA Studio?</div>
+      <div class="faq-a">Hyvä is supported for template edits — the agent recognizes the Hyvä module structure and Tailwind conventions, and skips the Knockout / RequireJS layer that doesn't apply. PWA Studio (a separate React storefront talking to Magento via GraphQL) is detected as a React+GraphQL app rather than M2 templates, so theme edits go to the React components. Backend module edits (admin, GraphQL resolvers) work the same as classic M2.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need composer access?</div>
+      <div class="faq-a">For installing our extension via Composer — yes, that's the recommended path. For day-to-day edits the agent makes (theme overrides, translation CSVs, layout XML, custom modules under <code>app/code/</code>) you only need Git access. The agent commits to a branch and opens a PR; your existing deploy pipeline runs composer/<code>bin/magento</code> commands.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How is this different from a $150/hr Magento freelancer?</div>
+      <div class="faq-a">Speed and recurring cost. A senior Magento freelancer bills $80–200/hr with a one- or two-hour minimum, and most of that hour is spent setting up access, locating the right file in <code>app/code</code> or <code>vendor/magento</code>, and running cache flushes. SimpleReview's agent already knows the M2 layout, indexes your repo once, and produces the PR in seconds. You still want a human for payment-gateway, ERP, performance tuning, or migrations — that's where Vibers' human-in-the-loop review takes over.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
+          <p>Same agent pattern applied to OpenCart — click an element, type the change, get a PR. Includes the OC file-layout map.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">Fix WooCommerce Slow Checkout</a>
+          <p>Click the slow part of checkout, get a PR with the fix — applies to Magento checkout performance the same way.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://experienceleague.adobe.com/docs/commerce.html">experienceleague.adobe.com — Official Adobe Commerce / Magento docs (devdocs.magento.com redirects here)</a></li>
+      <li><a href="https://commercemarketplace.adobe.com/">commercemarketplace.adobe.com — Official extension marketplace (where SimpleReview_Edit is listed)</a></li>
+      <li><a href="https://github.com/magento/magento2">github.com/magento/magento2 — Reference repository the agent indexes against</a></li>
+      <li><a href="https://alankent.me/">alankent.me — Long-running blog by an ex-Magento architect; canonical source on M2 internals</a></li>
+      <li><a href="https://onout.org/vibers/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

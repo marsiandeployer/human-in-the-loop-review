@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Fix Drupal 10 / 11 Sites Without a $90/hr Acquia Specialist (2026 Guide)</title>
+  <meta name="description" content="Fix Drupal 10 / 11 sites without paying an Acquia specialist $90/hr. Module + theme override paths, WSOD recovery, config import, reCAPTCHA, hide Powered by, slow admin. + SimpleReview Chrome extension.">
+  <link rel="canonical" href="https://onout.org/drupal/how-to-fix-drupal-issues/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix Drupal 10 / 11 Sites Without a $90/hr Acquia Specialist">
+  <meta property="og:description" content="Module + theme override paths, WSOD recovery, config import, reCAPTCHA, hide Powered by, slow admin — without paying $80-150/hr.">
+  <meta property="og:url" content="https://onout.org/drupal/how-to-fix-drupal-issues/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="fix drupal site, drupal white screen of death, drupal wsod, drupal 10 to 11, drupal config import, drupal captcha, hide powered by drupal, drupal.org module">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix Drupal 10 / 11 Sites Without a $90/hr Acquia Specialist (2026 Guide)",
+    "description": "Fix Drupal 10 / 11 sites without paying an Acquia specialist $90/hr. WSOD recovery, config import, reCAPTCHA, hide Powered by, slow admin — and SimpleReview's Drupal-aware agent.",
+    "url": "https://onout.org/drupal/how-to-fix-drupal-issues/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/drupal/how-to-fix-drupal-issues/" },
+    "keywords": ["fix drupal site", "drupal white screen of death", "drupal wsod", "drupal 10 to 11", "drupal config import", "drupal captcha", "hide powered by drupal", "drupal.org module"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I edit a Drupal site without a developer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic edits, content tweaks, and routine fixes — yes. The Drupal admin handles content, blocks, menus, and Views. For Twig template overrides, custom module bug fixes, and config sync errors, you used to need a $90/hr Drupal specialist. SimpleReview's Drupal-aware AI agent reads web/modules/custom/ and web/themes/custom/[theme]/, edits the right file, and opens a pull request you can merge."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I fix WSOD (white screen of death) in Drupal?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Enable verbose error display first: in sites/default/settings.php set $config['system.logging']['error_level'] = 'verbose'; then reload. Drupal will show the Symfony exception trail. Most WSODs are a fatal in a custom .module/.install file calling a deprecated API (drupal_set_message() removed in D9 — use \\Drupal::messenger()->addMessage()). Tail sites/default/files/php/twig/*.log for the full stack trace."}
+      },
+      {
+        "@type": "Question",
+        "name": "Which Drupal versions does SimpleReview support?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Drupal 10.x and 11.x — full support, the agent knows the modern web/ docroot, Composer-managed structure, and config sync. Drupal 9 — limited (works for theme/module edits, but config schema diffs vary). Drupal 7 — EOL since January 2025; very limited support — best path is migration to Drupal 10/11 with a human Drupal developer."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does SimpleReview work with custom themes (Olivero, Claro, Bootstrap, Gin)?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. The agent reads your theme's info.yml and templates folder on first connection. Olivero (default frontend), Claro (admin), and contrib themes like Bootstrap, Gin, and Radix all follow the same Twig override pattern in templates/. Custom subthemes that override base themes are auto-detected — the agent edits the override file, not the base."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does SimpleReview require Composer access?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Only when adding or updating contrib modules. For Twig, CSS, JS, language string, and config edits — no Composer needed; the agent commits files directly. When a fix needs a new module (e.g., captcha + recaptcha), the PR includes the composer require command in the description so you (or your CI) can run it before merge."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is this cheaper than a Drupal specialist (typical $80-150/hr)?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes — by an order of magnitude for routine work. A Drupal specialist bills $80-150/hr with a 1-2 hour minimum. SimpleReview is free with your own AI key (Claude Code or Codex), or pennies of API usage per fix. The hours saved are the discovery hours (cloning the repo, setting up DDEV/Lando, locating the override file). You still want a human for D7→D10 migration, multi-site setups, performance audits, and custom Views handlers."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#0678be;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#0678be;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#0678be;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #0678be;padding-left:16px}
+    .key-takeaways{background:#e8f4fb;border:1px solid #b8dcef;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#003655;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#003655}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#0678be;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#003655;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#e8f4fb;border:1px solid #b8dcef;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#003655}
+    .ext-callout a{color:#0678be;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#0678be}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#0678be;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Drupal / WSOD &amp; Config Recovery</span>
+      <span>April 30, 2026</span>
+      <span>9 min read</span>
+    </div>
+
+    <h1>How to Fix Drupal 10 / 11 Sites Without a $90/hr Acquia Specialist</h1>
+
+    <p class="article-lead">Drupal is the most architecturally serious open-source CMS — it's also the most expensive to maintain. A senior Drupal dev bills <strong>$80–150/hr</strong>. Yet most "Drupal site is broken" tickets fall into a few buckets: a stuck <code>cache_*</code> table, a missing config import after deploy, a dead module after a security update, or a <strong>WSOD</strong> (white screen of death) from a contrib module. SimpleReview's Drupal-aware agent knows the module/theme override system (<code>themes/custom/[theme]/</code>, <code>modules/custom/[module]/</code>, config sync) and can edit the right file the first time and open a PR.</p>
+
+    <style>
+    /* ─────── Drupal 11 Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* Drupal admin chrome */
+    .sc-dr-adminbar{background:#003655;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-dr-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0678be}
+    .sc-dr-logo{font-size:14px;font-weight:800;color:#003655;letter-spacing:.3px}
+    .sc-dr-logo span{color:#0678be}
+    .sc-dr-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:3px;padding:4px 8px;font-size:10px;color:#888}
+    .sc-dr-cart{font-size:11px;font-weight:600;color:#fff;background:#0678be;border-radius:3px;padding:4px 9px}
+
+    /* WSOD warning bar */
+    .sc-dr-wsod{background:#fff8e1;color:#92400e;border-left:4px solid #d97706;border-bottom:1px solid #fcd34d;padding:9px 14px 9px 18px;font-size:10px;font-family:monospace;line-height:1.6;animation:errHide 28s infinite}
+    .sc-dr-wsod b{color:#7c2d12}
+
+    /* Articles */
+    .sc-dr-articles{padding:14px 230px 12px 30px}
+    .sc-dr-art{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:8px 11px;margin-bottom:6px}
+    .sc-dr-art-h{font-size:11px;font-weight:700;color:#0678be;margin-bottom:3px}
+    .sc-dr-art-meta{font-size:9px;color:#888}
+
+    /* Footer with Powered-by Drupal — TARGET */
+    .sc-dr-footer{background:#003655;color:#cdd5dd;padding:14px 230px 14px 30px;margin-top:14px;font-size:10px;line-height:1.5}
+    .sc-dr-footer-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+    .sc-dr-footer-left{flex:1}
+    .sc-dr-poweredby{display:inline-block;background:#fff;color:#003655;border:1px solid #0678be;border-left:4px solid #0678be;padding:9px 14px 9px 12px;font-size:11px;font-weight:600;border-radius:3px;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:none}}
+    .sc-dr-poweredby::after{content:'Selected';position:absolute;top:-10px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-dr-poweredby-mark{color:#0678be;font-weight:800}
+    .sc-dr-poweredby-fade{animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-adminbar{background:#003655;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:2px solid #0678be;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#0678be;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-footer{background:#003655;color:#cdd5dd;padding:10px 14px;font-size:10px;text-align:center}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#0678be;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #0678be;color:#005a87;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#005a87;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:240px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:160px;top:300px;opacity:1}
+      22%  {left:160px;top:300px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-dr-articles{padding:14px 140px 12px 14px}
+      .sc-dr-footer{padding:14px 140px 14px 14px}
+    }
+    </style>
+    <div id="sc-banner-fallback" class="sc-banner drupal" aria-label="Animated demo: SimpleReview's Drupal expert hides Powered-by Drupal and clears the WSOD warning, then opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Drupal admin bar -->
+            <div class="sc-dr-adminbar">
+              <span>≡  Manage  Shortcuts  admin</span>
+              <span>Edit · Devel · Cache</span>
+            </div>
+            <div class="sc-dr-header">
+              <div class="sc-dr-logo">My<span>Site</span></div>
+              <div class="sc-dr-search">Search…</div>
+              <div class="sc-dr-cart">Account</div>
+            </div>
+            <!-- WSOD warning -->
+            <div class="sc-dr-wsod">⚠ <b>Notice:</b> Undefined variable: messages_status in old WSOD report — module last reviewed 2024-08-13. Acquia DBLog: 14 warnings · drupal.org/SA-CONTRIB-2024-051</div>
+            <!-- Articles -->
+            <div class="sc-dr-articles">
+              <div class="sc-dr-art">
+                <div class="sc-dr-art-h">Welcome to MySite</div>
+                <div class="sc-dr-art-meta">By admin · April 28, 2026 · Article</div>
+              </div>
+              <div class="sc-dr-art">
+                <div class="sc-dr-art-h">Spring catalog now available</div>
+                <div class="sc-dr-art-meta">By editor · April 25, 2026 · Article</div>
+              </div>
+            </div>
+            <!-- Footer with Powered-by Drupal (TARGET) -->
+            <div class="sc-dr-footer">
+              <div class="sc-dr-footer-row">
+                <div class="sc-dr-footer-left sc-dr-poweredby-fade">© 2026 MySite · All rights reserved<br>Privacy · Terms · Contact</div>
+                <div class="sc-dr-poweredby">Powered by <span class="sc-dr-poweredby-mark">Drupal</span></div>
+              </div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-adminbar">
+                <span>≡  Manage  Shortcuts  admin</span>
+                <span>Edit · Devel · Cache</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-dr-logo">My<span>Site</span></div>
+                <div class="sc-dr-search">Search…</div>
+                <div class="sc-dr-cart">Account</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">CLEAN</span>Powered-by hidden via theme override · WSOD warning resolved</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ block--system-powered-by-block.html.twig added · drupal cache rebuild · PR #42</span>
+                <div class="sc-rec-h">Latest articles</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+              <div class="sc-rec-footer">© 2026 MySite · Privacy · Terms · Contact</div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">hide Powered by + remove old WSOD message</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>Drupal expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">Drupal 11.0.4</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Theme</span><span class="sc-sb-v">mytheme</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">powered-by.twig</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Theme override <code style="font-size:8px">block--system-powered-by-block.html.twig</code> + clear WSOD log via drush cr · 1 file</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Drupal branding hidden. WSOD log resolved. Cache rebuilt cleanly.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(footer): override Powered-by block<br>powered-by.twig · -2 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the Powered-by block → <strong>Fix it</strong> → PR opens, no senior Drupal dev needed</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Drupal site quoted at 4 hours for a one-line fix? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads <code>web/modules/custom/</code>, finds the file, opens a PR. Fix ships within an hour.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li>Drupal customization lives in <code>web/modules/custom/</code>, <code>web/themes/custom/</code>, plus contrib in <code>web/modules/contrib/</code>. <strong>Never edit <code>core/</code> or <code>vendor/</code></strong>.</li>
+        <li><strong>WSOD usually = a fatal in a custom module's <code>.module</code> or <code>.install</code> file.</strong> Symfony exception trail in <code>sites/default/files/php/twig/</code>.</li>
+        <li>Drupal 10 → 11 upgrade requires <strong>PHP 8.3+</strong>, removes <code>path</code> and <code>aggregator</code> from core, expects all modules updated.</li>
+        <li><strong>Drupal.org Project pages</strong> at <code>drupal.org/project/</code> — we publish <code>simplereview</code> module. Install: <code>composer require drupal/simplereview</code> or admin → Extend → Install new module → URL → enable.</li>
+        <li>For Composer dependency hell, multi-site Drupal, custom Views handlers, GraphQL/JSON:API customization → <a href="/vibers/">Vibers human review</a>.</li>
+      </ul>
+    </div>
+
+    <h2>Drupal File Layout in 60 Seconds (Drupal 10/11)</h2>
+
+    <p>Modern Drupal (10/11) ships with a Composer-managed <code>web/</code> docroot. Knowing which folder owns what is the difference between a 10-minute fix and a 4-hour quote.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Path</th><th>What lives there</th><th>Edit?</th></tr>
+        <tr><td><code>/web/modules/contrib/</code></td><td>Community modules from drupal.org (CAPTCHA, Webform, Pathauto…)</td><td>No — managed by Composer</td></tr>
+        <tr><td><code>/web/modules/custom/[name]/</code></td><td>Your custom modules — <code>.info.yml</code>, <code>.module</code>, <code>.install</code>, <code>src/</code></td><td><strong>Yes</strong> — this is your code</td></tr>
+        <tr><td><code>/web/themes/contrib/</code></td><td>Contrib themes (Bootstrap, Gin, Radix)</td><td>No — override in custom subtheme</td></tr>
+        <tr><td><code>/web/themes/custom/[theme]/</code></td><td>Your theme — <code>templates/</code>, <code>css/</code>, <code>js/</code>, <code>[theme].info.yml</code></td><td><strong>Yes</strong></td></tr>
+        <tr><td><code>/web/sites/default/settings.php</code></td><td>Site-specific settings — DB creds, hash salt, trusted hosts, error verbosity</td><td>Yes (carefully)</td></tr>
+        <tr><td><code>/config/sync/</code></td><td>Exported config (Configuration Management) — <code>*.yml</code> per entity/view/field</td><td>Yes — commit changes through <code>drush cex</code> / <code>drush cim</code></td></tr>
+        <tr><td><code>/vendor/</code></td><td>Composer dependencies (Symfony, Twig, Guzzle…)</td><td><strong>Never</strong> — regenerated on <code>composer install</code></td></tr>
+      </table>
+    </div>
+
+    <h2>Three-Click Workflow with SimpleReview</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. Free with your own AI key (Claude Code or Codex), built-in mode otherwise.</li>
+      <li><strong>Connect your Drupal repo.</strong> Paste a GitHub / GitLab / Gitea URL. If your site isn't on Git yet, give SFTP credentials and the agent will work from a private working tree. Composer-managed sites are auto-detected via <code>composer.json</code> at the project root.</li>
+      <li><strong>Open your Drupal site, click the SimpleReview icon, click the broken element or the area to change.</strong> Type plain English: "remove Powered by Drupal", "fix WSOD on /node/42", "add reCAPTCHA to the contact webform". Click <strong>Fix it</strong>. The agent reads the right override file (or opens the right config YAML) and ships a PR.</li>
+    </ol>
+
+    <h2>Common Drupal Fixes</h2>
+
+    <h3>WSOD (White Screen of Death) after a deploy</h3>
+
+    <p>First step: enable verbose errors in <code>sites/default/settings.php</code>:</p>
+
+    <pre><code>// sites/default/settings.php
+$config['system.logging']['error_level'] = 'verbose';</code></pre>
+
+    <p>Then check <strong>Recent log messages</strong> at <code>/admin/reports/dblog</code>, or tail the Twig debug log:</p>
+
+    <pre><code>tail -f sites/default/files/php/twig/*.log</code></pre>
+
+    <p>Common cause: a custom module references a removed deprecated API. The classic offender is <code>drupal_set_message()</code> — removed in Drupal 9. Replace with the modern messenger service:</p>
+
+    <pre><code>// before — fatal in Drupal 9/10/11
+drupal_set_message(t('Saved.'));
+
+// after
+\Drupal::messenger()->addMessage(t('Saved.'));</code></pre>
+
+    <p>The agent finds the call site in <code>web/modules/custom/[name]/[name].module</code>, swaps it, runs <code>drush cr</code> in the PR description, and ships the patch.</p>
+
+    <h3>Add reCAPTCHA to a webform / user register</h3>
+
+    <p>Install the <code>captcha</code> + <code>recaptcha</code> modules:</p>
+
+    <pre><code>composer require drupal/captcha drupal/recaptcha
+drush en captcha recaptcha -y
+drush cr</code></pre>
+
+    <p>Configure: admin → Configuration → People → CAPTCHA → reCAPTCHA → enter site key + secret. Then admin → Configuration → People → CAPTCHA settings, set the form ID (e.g., <code>user_register_form</code>) and challenge type to <em>reCAPTCHA</em>. The agent generates the PR with the <code>composer require</code> command and the corresponding <code>config/sync/captcha.settings.yml</code> diff.</p>
+
+    <h3>Hide "Powered by Drupal" from footer</h3>
+
+    <p>Two valid paths. The simpler one is to disable the block from the UI: admin → Structure → Block layout → disable the <em>Powered by Drupal</em> block in the footer region. Do <strong>not</strong> comment out core templates.</p>
+
+    <p>The Twig override path (works even when block placement is theme-driven):</p>
+
+    <pre><code>{# web/themes/custom/[theme]/templates/block--system-powered-by-block.html.twig #}
+{# Empty override — suppresses the block markup #}</code></pre>
+
+    <p>Then <code>drush cr</code> to clear the theme registry. The agent picks the override path automatically when the block is placed via the theme's <code>[theme].info.yml</code> regions rather than block layout.</p>
+
+    <h3>Module conflict / module disappeared after update</h3>
+
+    <p>Symptom: a module you used yesterday is gone from the Extend page, or shows "missing schema". Composer-based fix:</p>
+
+    <pre><code>composer update drupal/[module] --with-dependencies
+drush updb -y
+drush cr</code></pre>
+
+    <p>If still broken, check core compatibility in the module's <code>.info.yml</code>:</p>
+
+    <pre><code># web/modules/contrib/[module]/[module].info.yml
+core_version_requirement: ^10 || ^11</code></pre>
+
+    <p>A module pinned to <code>^9</code> won't load on Drupal 10. Either bump the constraint upstream (PR to drupal.org) or pick a maintained fork.</p>
+
+    <h3>Slow admin / storefront after Drupal 10 upgrade</h3>
+
+    <p>Enable BigPipe (<code>drupal/bigpipe</code> — already in core, just enable). Internal Page Cache + Dynamic Page Cache modules cover anonymous + authenticated traffic respectively. Then rebuild:</p>
+
+    <pre><code>drush en big_pipe page_cache dynamic_page_cache -y
+drush cr</code></pre>
+
+    <p>For massive sites (10k+ nodes, complex Views): enable Redis adapter via <code>drupal/redis</code> module — moves cache + lock + queue out of MySQL.</p>
+
+    <h3>Config import fails: 'Site UUID mismatch'</h3>
+
+    <p>Classic symptom when importing config from a different environment. Drupal refuses to import config exported from a different site UUID. Fix: align the running site UUID with the one in your exported config:</p>
+
+    <pre><code># grab the UUID from the config to be imported
+grep '^uuid:' config/sync/system.site.yml
+
+# set the running site to that UUID
+drush sset system.site.uuid 'NEW-UUID-HERE'
+
+# now config import works
+drush cim -y</code></pre>
+
+    <p>Alternative path: import config first into a fresh install, then run <code>drush cim</code>. The agent picks the right path depending on whether you're rehydrating a clone or pushing dev → prod.</p>
+
+    <h2>Drupal.org Projects — Our Module</h2>
+
+    <p><strong>drupal.org/project/[name]</strong> is THE marketplace — every Drupal module/theme is hosted there (16,000+ projects). We publish <code>simplereview</code> module (in approval — usual cycle 4–12 weeks for new modules due to security review).</p>
+
+    <p>Install once approved:</p>
+
+    <pre><code>composer require drupal/simplereview
+drush en simplereview -y
+drush cr</code></pre>
+
+    <p>Or via UI: admin → Extend → Install new module → paste <code>drupal.org/project/simplereview</code> → enable.</p>
+
+    <p>Until the module lands: <strong>SimpleReview Chrome Extension auto-detects Drupal</strong> via the <code>&lt;meta name="generator" content="Drupal X (https://www.drupal.org)"&gt;</code> tag plus the <code>drupalSettings</code> JS handle. Routes via Git or SFTP — no module install required.</p>
+
+    <h2>Comparison Table — Drupal Specialist vs SimpleReview</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>Drupal Specialist</th><th>SimpleReview agent</th></tr>
+        <tr><td>Brief / Zoom</td><td>30–60 min discovery call</td><td>One sentence in the popup</td></tr>
+        <tr><td>DDEV/Lando setup</td><td>30–60 min per environment</td><td>Once, then cached</td></tr>
+        <tr><td>Locate the override file</td><td>15–90 min depending on theme/module familiarity</td><td>Instant — already indexed</td></tr>
+        <tr><td>Make the edit</td><td>5–30 min</td><td>5–30 seconds</td></tr>
+        <tr><td>Run <code>drush cim / cr / updb</code></td><td>Manual + verify</td><td>Included in PR description</td></tr>
+        <tr><td>Open a PR</td><td>If they use Git</td><td>Always</td></tr>
+        <tr><td>Cost for a 1-line WSOD fix</td><td>$80–300 (1–2 hour minimum)</td><td>$0 (BYO key) or pennies of API usage</td></tr>
+      </table>
+    </div>
+
+    <h2>When You Want a Senior Drupal Developer</h2>
+
+    <p>This isn't anti-developer — it's anti-paying-an-hour-for-five-minutes. Pay for human expertise when:</p>
+
+    <ul>
+      <li><strong>Composer + Drush + Drupal Console dependency hell</strong> — version conflicts that won't resolve, broken patches in <code>composer.json</code>'s <code>extra.patches</code>.</li>
+      <li><strong>Multi-site Drupal</strong> — <code>sites.php</code> routing, shared modules, per-site config sync directories.</li>
+      <li><strong>Custom Views handlers / Field formatters</strong> — writing <code>HandlerBase</code> subclasses, custom <code>FieldFormatter</code> plugins, exposed filters with custom widgets.</li>
+      <li><strong>GraphQL / JSON:API customization</strong> — schema overrides, normalizers, write-mode permissions.</li>
+      <li><strong>Migration Drupal 7 → 9 → 10</strong> — huge undertaking; many sites are still stuck on D7 EOL (January 2025) and need a real migration plan, not an automated patch.</li>
+      <li><strong>Performance audit</strong> — Apache Solr / Search API tuning, Redis sharding, Varnish vs Nginx FastCGI cache, MySQL slow query log.</li>
+    </ul>
+
+    <p><a href="/vibers/">Vibers</a> handles exactly this slice — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
+
+    <div class="cta-block">
+      <h3>Stop Paying $90/hr for One-File Drupal Edits</h3>
+      <p>SimpleReview's Drupal-aware agent reads <code>web/modules/custom/</code>, finds the override file, and opens a PR for the fix you described.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#ccc">D7→D10 migration, multi-site, custom Views handlers? <a href="/vibers/" style="color:#0678be;font-weight:600">Get a human review →</a></p>
+    </div>
+
+    <h2>FAQ</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I edit a Drupal site without a developer?</div>
+      <div class="faq-a">For most cosmetic edits, content tweaks, and routine fixes — yes. Admin handles content, blocks, menus, and Views. For Twig template overrides, custom module bug fixes, and config sync errors, SimpleReview's Drupal-aware AI agent reads <code>web/modules/custom/</code> and <code>web/themes/custom/[theme]/</code>, edits the right file, and opens a pull request you can merge.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I fix WSOD?</div>
+      <div class="faq-a">Enable verbose error display in <code>sites/default/settings.php</code> with <code>$config['system.logging']['error_level'] = 'verbose';</code> then reload. Drupal will show the Symfony exception trail. Most WSODs are a fatal in a custom <code>.module</code>/<code>.install</code> file calling a deprecated API (<code>drupal_set_message()</code> removed in D9 — use <code>\Drupal::messenger()-&gt;addMessage()</code>). Tail <code>sites/default/files/php/twig/*.log</code> for the full stack trace.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Which Drupal versions are supported?</div>
+      <div class="faq-a">Drupal 10.x and 11.x — full support; the agent knows the modern <code>web/</code> docroot, Composer-managed structure, and config sync. Drupal 9 — limited (works for theme/module edits, but config schema diffs vary). Drupal 7 — EOL since January 2025; very limited support — best path is migration to Drupal 10/11 with a human Drupal developer.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does it work with custom themes (Olivero, Claro, Bootstrap, Gin)?</div>
+      <div class="faq-a">Yes. The agent reads your theme's <code>info.yml</code> and <code>templates/</code> folder on first connection. Olivero (default frontend), Claro (admin), and contrib themes like Bootstrap, Gin, and Radix all follow the same Twig override pattern. Custom subthemes that override base themes are auto-detected — the agent edits the override file, not the base.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does it require Composer access?</div>
+      <div class="faq-a">Only when adding or updating contrib modules. For Twig, CSS, JS, language string, and config edits — no Composer needed; the agent commits files directly. When a fix needs a new module (e.g., <code>captcha + recaptcha</code>), the PR includes the <code>composer require</code> command in the description so you (or your CI) can run it before merge.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Cheaper than a Drupal specialist (typical $80-150/hr)?</div>
+      <div class="faq-a">Yes — by an order of magnitude for routine work. A Drupal specialist bills $80–150/hr with a 1–2 hour minimum. SimpleReview is free with your own AI key (Claude Code or Codex), or pennies of API usage per fix. The hours saved are the discovery hours (cloning the repo, setting up DDEV/Lando, locating the override file). You still want a human for D7→D10 migration, multi-site setups, performance audits, and custom Views handlers.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
+          <p>Same agent pattern, applied to WP fatal-error recovery — read debug.log, patch deprecated function, open PR.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
+          <p>Click any element on your storefront, type the change, get a PR — for OpenCart 3.x and 4.x.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://www.drupal.org/">drupal.org — Official project home</a></li>
+      <li><a href="https://www.drupal.org/docs">drupal.org/docs — Module, theme, config management, and migration guides</a></li>
+      <li><a href="https://www.drupal.org/project/project_module">drupal.org/project/ — 16,000+ contrib modules &amp; themes</a></li>
+      <li><a href="https://api.drupal.org/">api.drupal.org — Authoritative API reference (deprecation notices, replacements)</a></li>
+      <li><a href="https://onout.org/vibers/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Fix Shopware 6 Stores Without Paying €80/hr to a Symfony Developer (2026 Guide)</title>
+  <meta name="description" content="Fix Shopware 6 stores without paying €80/hr to a Symfony developer. Plugin override system, reCAPTCHA, hide 'Powered by', theme:compile issues, slow admin. + SimpleReview Chrome extension.">
+  <link rel="canonical" href="https://onout.org/shopware/how-to-fix-shopware-6-issues/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix Shopware 6 Stores Without Paying €80/hr to a Symfony Developer">
+  <meta property="og:description" content="Most Shopware 6 fixes are a single Twig override or a forgotten cache:clear. SimpleReview's Shopware-aware agent finds the file, patches it, opens a PR.">
+  <meta property="og:url" content="https://onout.org/shopware/how-to-fix-shopware-6-issues/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="fix shopware 6, shopware twig error, shopware theme compile, shopware captcha, hide powered by shopware, shopware plugin store, shopware 5 to 6 migration, sw6 storefront override">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix Shopware 6 Stores Without Paying €80/hr to a Symfony Developer (2026 Guide)",
+    "description": "How to fix common Shopware 6 issues — Twig errors, theme:compile not updating, reCAPTCHA, hiding 'Powered by', slow admin — without hiring a Symfony developer at €60-120/hr. Uses SimpleReview's Shopware-aware agent.",
+    "url": "https://onout.org/shopware/how-to-fix-shopware-6-issues/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/shopware/how-to-fix-shopware-6-issues/" },
+    "keywords": ["fix shopware 6", "shopware twig error", "shopware theme compile", "shopware captcha", "hide powered by shopware", "shopware plugin store", "shopware 5 to 6 migration", "sw6 storefront override"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I edit a Shopware 6 store without a developer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "For most storefront edits — yes. Shopware 6 uses Twig templates and SCSS in custom/plugins/[YourPlugin]/src/Resources/views/storefront/ and Resources/app/storefront/src/scss/. SimpleReview's Shopware-aware agent reads your plugin, finds the right override file, runs the right console commands (theme:refresh → theme:compile → cache:clear), and opens a Pull Request. Custom payment apps, complex entity decorators and headless integrations still want a senior Shopware developer review."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is SimpleReview safe for a live Shopware shop?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. SimpleReview never pushes to your live branch — every change is a Pull Request you review and merge, and we never touch core/vendor/shopware/. Pair it with a staging clone (most managed Shopware hosts include one) and the worst case is a PR you decline. The agent also flags whenever a fix would touch core, payment, or sales-channel code, so you get a heads-up before merge."}
+      },
+      {
+        "@type": "Question",
+        "name": "Which Shopware versions are supported?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Shopware 6.4 has full coverage; 6.5 and 6.6 are our primary targets — that's what most active stores run today. The agent recognises the standard plugin convention (custom/plugins/[Vendor].[Plugin]/) and the storefront override system documented at developer.shopware.com. Shopware 5 has limited support — its Smarty + Enlight architecture is fundamentally different from SW6's Symfony/Twig stack, so SW5 → SW6 migrations are explicitly a human-review task."}
+      },
+      {
+        "@type": "Question",
+        "name": "Plugin or App — does SimpleReview pick the right one?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. Shopware 6 has two extension models: classic Plugins (PHP installed on the server, full DI access) and Apps (manifest-based, can run in Shopware Cloud, no server PHP). SimpleReview detects whether you're on Shopware Cloud (Apps only) or on self-hosted/SaaS (both available) and proposes the right scaffold. Most cosmetic, theme, language and Twig-override edits are Plugin work; webhooks, external integrations, Shopware Cloud customisations are App work."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work with custom themes inheriting from @Storefront?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. The Shopware 6 theme system is plain inheritance: your theme extends @Storefront and any view in custom/plugins/[YourTheme]/src/Resources/views/storefront/ overrides the matching path in vendor/shopware/storefront/Resources/views/storefront/. SimpleReview reads the theme inheritance graph (from theme.json + Resources/theme.json) and writes the override into your theme, never into core or vendor."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is it cheaper than a Shopware freelancer at €60-120/hr?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Dramatically, for the 80% of edits that are one Twig file or one SCSS variable. A Shopware freelancer typically takes 60-90 minutes just to clone the repo, set up an environment, and locate the override path — before touching the actual edit. SimpleReview already knows the plugin convention and the storefront override system, so it's seconds, not hours. It's free with your own AI key (Claude Code or Codex). Use the freelancer budget for the things that actually need senior judgement: payment apps, headless API, performance audits, SW5 → SW6 migration."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#189eff;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#189eff;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#189eff;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #189eff;padding-left:16px}
+    .key-takeaways{background:#e6f4ff;border:1px solid #b3dcff;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#0d3b66;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#0d3b66}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#0d3b66;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#189eff;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#0d7fd9;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#189eff}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#189eff;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Shopware 6 / Symfony Storefront</span>
+      <span>April 30, 2026</span>
+      <span>9 min read</span>
+    </div>
+
+    <h1>How to Fix Shopware 6 Stores Without Paying €80/hr to a Symfony Developer</h1>
+
+    <p class="article-lead">Shopware 6 is the modern Symfony/Vue.js rewrite of the old Shopware 5 — but every customization needs a Symfony-fluent developer billing €60–120/hr. Yet most fixes come down to: a stale Twig template in <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code>, a missing entity decorator, or a broken <code>theme.json</code> after <code>bin/console theme:compile</code>. <strong>SimpleReview's Shopware-aware agent</strong> knows the plugin convention and the storefront override system, so it patches the right Twig/SCSS and opens a PR.</p>
+
+    <style>
+    /* ─────── Shopware 6 Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* Shopware storefront */
+    .sc-sw-topbar{background:#1a3556;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-sw-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e0e0e0}
+    .sc-sw-logo{font-size:14px;font-weight:800;color:#1a3556;letter-spacing:.3px}
+    .sc-sw-logo span{color:#189eff}
+    .sc-sw-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:3px;padding:4px 10px;font-size:10px;color:#888}
+    .sc-sw-cart{font-size:11px;font-weight:600;color:#fff;background:#189eff;border-radius:3px;padding:4px 10px}
+
+    /* Hero / promo */
+    .sc-sw-hero{background:linear-gradient(135deg,#cfeaff,#e8f5ff);padding:14px 230px 14px 30px;font-size:11px;color:#1a3556}
+    .sc-sw-hero strong{font-size:13px;color:#189eff;display:block;margin-bottom:3px}
+
+    /* Cookie consent — TARGET (won't dismiss) */
+    .sc-sw-cookie{position:absolute;left:14px;right:230px;bottom:60px;background:#fff;border:1px solid #189eff;border-left:4px solid #189eff;box-shadow:0 4px 14px rgba(0,0,0,.12);padding:11px 14px;border-radius:3px;animation:errSel 28s infinite;outline-offset:3px;z-index:4}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 4px 14px rgba(0,0,0,.12)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18),0 4px 14px rgba(0,0,0,.12)}90%,100%{outline:none;box-shadow:0 4px 14px rgba(0,0,0,.12)}}
+    .sc-sw-cookie::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-sw-cookie-h{font-weight:700;font-size:12px;color:#1a3556;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-sw-cookie-msg{color:#444;font-size:10px;line-height:1.5;margin-bottom:6px;animation:errHide 28s infinite}
+    .sc-sw-cookie-row{display:flex;gap:6px;animation:errHide 28s infinite;align-items:center}
+    .sc-sw-cookie-btn{background:#189eff;color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:3px}
+    .sc-sw-cookie-x{margin-left:auto;font-size:11px;color:#dc2626;font-weight:700;font-family:monospace;background:#fef2f2;padding:2px 5px;border-radius:2px;border:1px dashed #fca5a5}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Product grid */
+    .sc-sw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 230px 0 30px;max-width:520px;margin:0}
+    .sc-sw-card{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:8px;text-align:center}
+    .sc-sw-thumb{width:100%;height:42px;background:linear-gradient(135deg,#cfeaff,#a5d8ff);border-radius:3px;margin-bottom:5px}
+    .sc-sw-pname{font-size:9px;font-weight:600;color:#222;line-height:1.3;height:24px;overflow:hidden}
+    .sc-sw-price{font-size:10px;font-weight:700;color:#189eff;margin-top:3px}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-topbar{background:#1a3556;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#189eff;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#189eff;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #189eff;color:#0070b8;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#0070b8;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:240px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:340px;top:280px;opacity:1}
+      22%  {left:340px;top:280px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-sw-grid{grid-template-columns:repeat(3,1fr);max-width:380px}
+    }
+    </style>
+    <div id="sc-banner-fallback" class="sc-banner shopware" aria-label="Animated demo: SimpleReview's Shopware expert repairs the broken cookie banner dismiss button and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mystore.de</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Shopware storefront -->
+            <div class="sc-sw-topbar">
+              <span>Service-Hotline · +49 30 555 0099</span>
+              <span>Mein Konto · Merkzettel · Kasse</span>
+            </div>
+            <div class="sc-sw-header">
+              <div class="sc-sw-logo">Mein<span>Store</span></div>
+              <div class="sc-sw-search">Wonach suchst du?</div>
+              <div class="sc-sw-cart">Warenkorb · 0,00 €</div>
+            </div>
+            <div class="sc-sw-hero">
+              <strong>Frühlings-Sale läuft jetzt</strong>
+              Bis zu 30% auf ausgewählte Artikel · Kostenloser Versand ab 50 €
+            </div>
+            <!-- Product grid -->
+            <div class="sc-sw-grid">
+              <div class="sc-sw-card"><div class="sc-sw-thumb"></div><div class="sc-sw-pname">Sneaker Pro 24</div><div class="sc-sw-price">89,90 €</div></div>
+              <div class="sc-sw-card"><div class="sc-sw-thumb"></div><div class="sc-sw-pname">Rucksack Stadt</div><div class="sc-sw-price">49,00 €</div></div>
+              <div class="sc-sw-card"><div class="sc-sw-thumb"></div><div class="sc-sw-pname">Kapuzenpullover</div><div class="sc-sw-price">39,90 €</div></div>
+            </div>
+            <!-- Cookie consent banner (TARGET) -->
+            <div class="sc-sw-cookie">
+              <div class="sc-sw-cookie-h">🍪 Diese Website verwendet Cookies</div>
+              <div class="sc-sw-cookie-msg">Wir nutzen Cookies um Ihr Einkaufserlebnis zu verbessern. Klicken Sie auf "Akzeptieren" um fortzufahren.</div>
+              <div class="sc-sw-cookie-row">
+                <span class="sc-sw-cookie-btn">Akzeptieren</span>
+                <span class="sc-sw-cookie-btn" style="background:#fff;color:#189eff;border:1px solid #189eff">Einstellungen</span>
+                <span class="sc-sw-cookie-x">⚠ × button broken — addEventListener missed</span>
+              </div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-topbar">
+                <span>Service-Hotline · +49 30 555 0099</span>
+                <span>Mein Konto · Merkzettel · Kasse</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-sw-logo">Mein<span>Store</span></div>
+                <div class="sc-sw-search">Wonach suchst du?</div>
+                <div class="sc-sw-cart">Warenkorb · 0,00 €</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">FREI</span>Versand ab 50 € · Frühlings-Sale läuft jetzt</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Cookie-Banner schließbar · cookie-permission.html.twig pропатчен · PR #42</span>
+                <div class="sc-rec-h">Beliebte Produkte</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">cookie banner won't close — fix</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>Shopware expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">Shopware 6.6</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Theme</span><span class="sc-sb-v">MyTheme</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">cookie-permission.twig</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Restore close handler in <code style="font-size:8px">cookie-permission.html.twig</code> + plugin JS · 2 files</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">× button works again. GDPR consent stored, banner stays closed.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(cookie): repair dismiss button<br>cookie-permission.twig · +6 / -1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the stuck cookie banner → <strong>Fix it</strong> → PR opens, no Symfony dev needed</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Shopware tweak quoted at 2 hours by your agency? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads <code>custom/plugins/</code>, finds the storefront override path, opens a PR. Most edits ship the same hour.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>Shopware 6 uses Symfony plugins.</strong> Custom code lives in <code>custom/plugins/[YourPlugin]/</code> and storefront overrides in <code>custom/plugins/[YourPlugin]/src/Resources/views/storefront/</code>.</li>
+        <li>Most "Shopware is broken" symptoms = <strong>caches</strong> (<code>var/cache/</code>) + theme not recompiled + plugin not refreshed (<code>bin/console plugin:refresh</code>).</li>
+        <li><strong>SimpleReview reads <code>custom/plugins/</code></strong> and the theme inheritance graph to find the right file fast.</li>
+        <li><strong>Shopware Store</strong> (formerly Shopware Community Store) — we publish <code>SimpleReview-Edit</code> plugin: Marketplace → Search → SimpleReview → Add to cart (0€ free tier) → Plugin Manager → Install + Activate.</li>
+        <li><strong>Custom payment app, complex inheritance / decoration patterns, multi-channel/headless API</strong> — Vibers <a href="/vibers/">human review</a>.</li>
+      </ul>
+    </div>
+
+    <h2>Shopware 6 Plugin Architecture in 60 Seconds</h2>
+
+    <p>Before fixing anything, know where things live. Shopware 6 inherits Symfony's bundle/plugin structure and adds its own conventions on top.</p>
+
+    <pre><code>custom/plugins/MyVendor.MyPlugin/
+├── composer.json                  # plugin metadata, entry-point class
+├── src/
+│   ├── MyPlugin.php               # extends Shopware\Core\Framework\Plugin
+│   ├── Resources/
+│   │   ├── config/
+│   │   │   ├── services.xml       # Symfony DI: services, decorators, subscribers
+│   │   │   └── routes.xml         # storefront/admin routes
+│   │   ├── views/
+│   │   │   └── storefront/        # Twig overrides — extend @Storefront/...
+│   │   │       └── layout/header.html.twig
+│   │   ├── app/storefront/src/    # SCSS + JS (compiled by theme:compile)
+│   │   │   ├── scss/base.scss
+│   │   │   └── main.js
+│   │   └── snippet/               # translations: storefront.en-GB.json
+│   └── Subscriber/
+│       └── ProductPageSubscriber.php
+└── theme.json                     # only for Theme plugins</code></pre>
+
+    <p>Three rules to remember:</p>
+
+    <ul>
+      <li><strong>Override path mirrors core path.</strong> To override <code>vendor/shopware/storefront/Resources/views/storefront/layout/header.html.twig</code>, you create the same path under your plugin's <code>src/Resources/views/storefront/layout/header.html.twig</code> and <code>{% sw_extends '@Storefront/storefront/layout/header.html.twig' %}</code> at the top.</li>
+      <li><strong>Never edit <code>vendor/shopware/</code> or <code>core/</code>.</strong> Composer wipes it on update. SimpleReview refuses to write there and proposes a plugin override instead.</li>
+      <li><strong>SCSS / JS edits need <code>theme:compile</code>.</strong> Twig edits need only <code>cache:clear</code> (or nothing in dev mode).</li>
+    </ul>
+
+    <h2>The Three-Click Workflow with SimpleReview</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. It's free with your own AI key (Claude Code or Codex). The extension auto-detects Shopware 6 from <code>&lt;meta name="application-name" content="Shopware"&gt;</code> + the <code>data-storefront-config</code> JS handle in the storefront source.</li>
+      <li><strong>Connect your store's Git repo</strong> (GitHub, GitLab, Gitea) or grant SFTP credentials. SimpleReview indexes <code>custom/plugins/</code>, reads <code>composer.json</code> for each plugin, and parses your theme inheritance graph from <code>theme.json</code>.</li>
+      <li><strong>Open your storefront, click the SimpleReview icon, click the element you want to change.</strong> Type the change in plain English: "remove this banner", "add reCAPTCHA to contact form", "hide Powered by Shopware in footer". Click <strong>Fix it</strong>. The agent finds the right override path, writes the Twig/SCSS, runs <code>plugin:refresh</code> + <code>theme:compile</code> + <code>cache:clear</code> on staging, and opens a Pull Request.</li>
+    </ol>
+
+    <h2>Common Shopware 6 Fixes</h2>
+
+    <h3>Fix "500 — Internal Server Error" / "Twig_Error_Loader" on storefront</h3>
+
+    <p>Almost always means a plugin's view path is wrong — Twig can't find a template the override is trying to extend. Check <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code>: the path must mirror the core path exactly. Then run:</p>
+
+    <pre><code>bin/console plugin:refresh
+bin/console cache:clear
+bin/console theme:compile
+# If still broken — full rebuild in prod:
+bin/console cache:clear --env=prod
+composer dump-autoload -o</code></pre>
+
+    <p>Also check <code>var/log/prod-*.log</code> (or <code>dev-*.log</code>) for the exact missing template path. SimpleReview reads the log, identifies the missing template, and proposes the right <code>{% sw_extends %}</code> directive in a PR.</p>
+
+    <h3>Add reCAPTCHA to a custom form</h3>
+
+    <p>Shopware 6 ships with built-in <strong>basic_captcha</strong> and <strong>honeypot</strong> implementations — try those first, they're zero-config. For Google reCAPTCHA you wire in <code>Shopware\Storefront\Framework\Captcha\GoogleReCaptchaV2</code> (or <code>V3</code>) and add the captcha to your plugin's <code>config.xml</code>:</p>
+
+    <pre><code>&lt;!-- src/Resources/config/config.xml --&gt;
+&lt;config&gt;
+  &lt;card&gt;
+    &lt;title&gt;Captcha&lt;/title&gt;
+    &lt;input-field type="single-select"&gt;
+      &lt;name&gt;activeCaptchaV2&lt;/name&gt;
+      &lt;options&gt;
+        &lt;option&gt;&lt;value&gt;googleReCaptchaV2&lt;/value&gt;&lt;/option&gt;
+      &lt;/options&gt;
+    &lt;/input-field&gt;
+    &lt;input-field type="text"&gt;&lt;name&gt;googleReCaptchaV2SiteKey&lt;/name&gt;&lt;/input-field&gt;
+    &lt;input-field type="password"&gt;&lt;name&gt;googleReCaptchaV2SecretKey&lt;/name&gt;&lt;/input-field&gt;
+  &lt;/card&gt;
+&lt;/config&gt;</code></pre>
+
+    <p>Then enable in Admin → Settings → System → Storefront → Captcha. SimpleReview generates the full scaffold — <code>config.xml</code>, the form Twig override (<code>{% sw_include '@Storefront/storefront/component/captcha/base.html.twig' %}</code>), and snippets — in one PR.</p>
+
+    <h3>Hide "Shopware" / "Powered by" from footer</h3>
+
+    <p>Override the core footer in your theme plugin:</p>
+
+    <pre><code>{# custom/plugins/MyTheme/src/Resources/views/storefront/layout/footer.html.twig #}
+{% sw_extends '@Storefront/storefront/layout/footer.html.twig' %}
+
+{# Drop the credit block, keep everything else #}
+{% block layout_footer_inner_container_bottom %}{% endblock %}</code></pre>
+
+    <p>Then <code>bin/console theme:compile</code> + <code>cache:clear</code>. <strong>Don't touch <code>vendor/shopware/</code></strong> — composer overwrites it on the next update and your edit is gone. The agent always writes the override into your plugin, never into core.</p>
+
+    <h3>Theme not updating after a Twig edit — <code>theme:compile</code> runs but storefront still old</h3>
+
+    <p>The classic Shopware 6 trap. The correct sequence is:</p>
+
+    <pre><code>bin/console plugin:refresh        # 1. re-read composer + manifest
+bin/console theme:refresh         # 2. re-read theme.json
+bin/console theme:compile         # 3. compile SCSS + JS bundle
+bin/console cache:clear           # 4. drop var/cache/ Twig cache</code></pre>
+
+    <p>If still old: check <code>var/cache/</code> permissions (must be writable by your PHP-FPM user, usually <code>www-data</code>) and run <code>composer dump-autoload -o</code>. In prod environments also flush the HTTP cache (Varnish / Cloudflare) — Shopware emits <code>Cache-Control</code> headers a CDN may have already cached.</p>
+
+    <h3>Slow admin / Vue.js admin sluggish</h3>
+
+    <p>Shopware 6 admin is a Vue.js SPA. If it's sluggish in production, you're almost certainly running with <code>APP_ENV=dev</code>. Check <code>.env</code>:</p>
+
+    <pre><code>APP_ENV=prod
+APP_DEBUG=0
+OPCACHE_VALIDATE_TIMESTAMPS=0
+SHOPWARE_HTTP_CACHE_ENABLED=1
+MAILER_DSN=smtp://...
+# Redis cache adapter (much faster than filesystem):
+REDIS_DSN=redis://127.0.0.1:6379</code></pre>
+
+    <p>Also enable Redis as the cache adapter in <code>config/packages/framework.yaml</code> and OPcache in <code>php.ini</code> with <code>opcache.memory_consumption=256</code>. Most "slow Shopware admin" tickets close after that single env switch.</p>
+
+    <h2>Shopware Store — Our Plugin</h2>
+
+    <p><strong>Shopware Store</strong> at <a href="https://store.shopware.com">store.shopware.com</a> is Shopware's official marketplace (formerly Shopware Community Store). We publish <code>SimpleReviewEdit</code> there — currently <em>in review</em>. Once it ships, the install path is:</p>
+
+    <ol>
+      <li>Admin → <strong>Account</strong> → log in to your Shopware Account</li>
+      <li><strong>Marketplace</strong> → search "SimpleReview" → 0€ free tier → Add to cart → Checkout</li>
+      <li>Admin → <strong>Extensions</strong> → My Extensions → SimpleReview → <strong>Install</strong> + <strong>Activate</strong></li>
+    </ol>
+
+    <p>Until the marketplace listing is live — the <strong>SimpleReview Chrome Extension</strong> already auto-detects Shopware from <code>&lt;meta name="application-name" content="Shopware"&gt;</code> + the JS storefront handle, and routes edits to your Git repo. No marketplace install required for the click-to-edit workflow.</p>
+
+    <div class="definition">
+      <strong>Stack requirements.</strong> Shopware 6 needs PHP 8.2+, MySQL 8.0+ / MariaDB 10.11+, Composer 2.x, and Node 20+ (for theme compilation). We test SimpleReview against Shopware 6.5 and 6.6 on Ubuntu 22.04 with PHP 8.2 and PHP 8.3.
+    </div>
+
+    <h2>Comparison Table — Symfony Freelancer vs SimpleReview</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>Symfony / Shopware freelancer</th><th>SimpleReview agent</th></tr>
+        <tr><td>Brief</td><td>30-min Zoom + back-and-forth in chat</td><td>One sentence in the popup</td></tr>
+        <tr><td>Repo / SFTP setup</td><td>30-90 min — clone, install Composer deps, run <code>plugin:refresh</code></td><td>Once, then cached</td></tr>
+        <tr><td>Find the override path</td><td>30-90 min reading <code>vendor/shopware/storefront/</code> to mirror it</td><td>Instant — plugin convention is indexed</td></tr>
+        <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
+        <tr><td>Run cache / theme commands</td><td>5-15 min (often forgets <code>theme:refresh</code>)</td><td>Automated on staging</td></tr>
+        <tr><td>Open a Pull Request</td><td>If they use Git at all</td><td>Always</td></tr>
+        <tr><td>Cost for a 1-line change</td><td>€60-150 (1-hour minimum)</td><td>€0 (BYO key) or pennies of API usage</td></tr>
+      </table>
+    </div>
+
+    <h2>When You Want a Senior Shopware Developer</h2>
+
+    <p>SimpleReview handles Twig overrides, SCSS variables, snippets, and small subscribers. It is <em>not</em> a replacement for a senior Shopware engineer when the work touches money, multi-channel, or the persistence layer. Get a human review — Vibers handles this — for:</p>
+
+    <ul>
+      <li><strong>Custom payment app</strong> (Shopware Apps, not Plugins — manifest, webhooks, async sync). Money flows through it; humans should review.</li>
+      <li><strong>Multi-channel / headless API</strong> via Sales Channel API. Type-safety and pagination edge cases need careful design.</li>
+      <li><strong>Complex entity decoration / extension</strong> — adding fields to <code>ProductEntity</code>, decorating repositories, custom <code>EntityDefinition</code> with foreign keys and translations.</li>
+      <li><strong>Performance audit</strong> — ElasticSearch tuning, Redis adapter selection, database indexing, N+1 query traces.</li>
+      <li><strong>Migration Shopware 5 → 6.</strong> SW5 (Smarty + Enlight) and SW6 (Twig + Symfony) are different architectures. The <code>SwagMigrationAssistant</code> handles data migration, not theme/plugin migration. That's senior-engineer work.</li>
+    </ul>
+
+    <p><a href="/vibers/">Vibers</a> takes those PRs — a real human reviews them, sends a fix-up if needed, and approves before merge. Use SimpleReview for the 80%, use a human for the 20% that earns the €100/hr.</p>
+
+    <div class="cta-block">
+      <h3>Stop Paying €80/hr for One-Twig-File Shopware Edits</h3>
+      <p>SimpleReview's Shopware agent reads <code>custom/plugins/</code>, knows the storefront override system, runs <code>theme:compile</code> + <code>cache:clear</code> for you, and opens a Pull Request.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Custom payment app, headless, SW5 migration? <a href="/vibers/" style="color:#189eff;font-weight:600">Get a human review →</a> Free first PR for a GitHub star.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I edit a Shopware 6 store without a developer?</div>
+      <div class="faq-a">For most storefront edits — yes. Shopware 6 uses Twig templates and SCSS in <code>custom/plugins/[YourPlugin]/src/Resources/views/storefront/</code> and <code>Resources/app/storefront/src/scss/</code>. SimpleReview's Shopware-aware agent reads your plugin, finds the right override file, runs the right console commands (<code>theme:refresh</code> → <code>theme:compile</code> → <code>cache:clear</code>), and opens a Pull Request. Custom payment apps, complex entity decorators and headless integrations still want a senior Shopware developer review.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is SimpleReview safe for a live Shopware shop?</div>
+      <div class="faq-a">Yes. SimpleReview never pushes to your live branch — every change is a Pull Request you review and merge, and we never touch <code>core/</code> or <code>vendor/shopware/</code>. Pair it with a staging clone (most managed Shopware hosts include one) and the worst case is a PR you decline. The agent also flags whenever a fix would touch core, payment, or sales-channel code, so you get a heads-up before merge.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Which Shopware versions are supported?</div>
+      <div class="faq-a">Shopware 6.4 has full coverage; 6.5 and 6.6 are our primary targets — that's what most active stores run today. The agent recognises the standard plugin convention (<code>custom/plugins/[Vendor].[Plugin]/</code>) and the storefront override system documented at developer.shopware.com. Shopware 5 has limited support — its Smarty + Enlight architecture is fundamentally different from SW6's Symfony/Twig stack, so SW5 → SW6 migrations are explicitly a human-review task.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Plugin or App — does SimpleReview pick the right one?</div>
+      <div class="faq-a">Yes. Shopware 6 has two extension models: classic <strong>Plugins</strong> (PHP installed on the server, full DI access) and <strong>Apps</strong> (manifest-based, can run in Shopware Cloud, no server PHP). SimpleReview detects whether you're on Shopware Cloud (Apps only) or on self-hosted/SaaS (both available) and proposes the right scaffold. Most cosmetic, theme, language and Twig-override edits are Plugin work; webhooks, external integrations, Shopware Cloud customisations are App work.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does it work with custom themes inheriting from <code>@Storefront</code>?</div>
+      <div class="faq-a">Yes. The Shopware 6 theme system is plain inheritance: your theme extends <code>@Storefront</code> and any view in <code>custom/plugins/[YourTheme]/src/Resources/views/storefront/</code> overrides the matching path in <code>vendor/shopware/storefront/Resources/views/storefront/</code>. SimpleReview reads the theme inheritance graph (from <code>theme.json</code> + <code>Resources/theme.json</code>) and writes the override into your theme, never into core or vendor.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is it cheaper than a Shopware freelancer at €60-120/hr?</div>
+      <div class="faq-a">Dramatically, for the 80% of edits that are one Twig file or one SCSS variable. A Shopware freelancer typically takes 60-90 minutes just to clone the repo, set up an environment, and locate the override path — before touching the actual edit. SimpleReview already knows the plugin convention and the storefront override system, so it's seconds, not hours. It's free with your own AI key (Claude Code or Codex). Use the freelancer budget for the things that actually need senior judgement: payment apps, headless API, performance audits, SW5 → SW6 migration.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
+          <p>Same agent pattern, applied to OpenCart 3.x and 4.x — click element, type change, get a PR.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">Fix WooCommerce Slow Checkout</a>
+          <p>Click the slow part of checkout, get a PR with the fix — same approach as Shopware theme/Twig edits.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://developer.shopware.com/docs/">developer.shopware.com — Official Shopware 6 plugin and storefront documentation</a></li>
+      <li><a href="https://store.shopware.com/">store.shopware.com — Shopware Store (formerly Shopware Community Store)</a></li>
+      <li><a href="https://github.com/shopware/platform">github.com/shopware/platform — Reference repository the agent indexes against</a></li>
+      <li><a href="https://onout.org/vibers/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

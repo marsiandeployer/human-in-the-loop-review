@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Fix and Customize CS-Cart and CS-Cart Multi-Vendor (2026 Guide)</title>
+  <meta name="description" content="Fix and customize CS-Cart, CS-Cart Plus, Multi-Vendor, B2B without paying a $80/hr developer. Add-on overrides, theme templates, reCAPTCHA, hide Powered by, slow admin. + SimpleReview Chrome extension.">
+  <link rel="canonical" href="https://onout.org/cs-cart/how-to-fix-and-customize-cs-cart/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix and Customize CS-Cart and CS-Cart Multi-Vendor (2026 Guide)">
+  <meta property="og:description" content="CS-Cart-aware AI agent finds the right addon/theme/template file the first time and opens a PR — no $80/hr developer needed.">
+  <meta property="og:url" content="https://onout.org/cs-cart/how-to-fix-and-customize-cs-cart/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="fix cs-cart, cs-cart white screen, cs-cart theme override, cs-cart addon develop, cs-cart captcha, hide powered by cs-cart, cs-cart marketplace addon, cs-cart multi-vendor">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Fix and Customize CS-Cart and CS-Cart Multi-Vendor (2026 Guide)",
+    "description": "Fix and customize CS-Cart, CS-Cart Plus, Multi-Vendor, B2B without paying a $80/hr developer. Add-on overrides, theme templates, reCAPTCHA, hide Powered by, slow admin.",
+    "url": "https://onout.org/cs-cart/how-to-fix-and-customize-cs-cart/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/cs-cart/how-to-fix-and-customize-cs-cart/" },
+    "keywords": ["fix cs-cart", "cs-cart white screen", "cs-cart theme override", "cs-cart addon develop", "cs-cart captcha", "hide powered by cs-cart", "cs-cart marketplace addon", "cs-cart multi-vendor"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I customize CS-Cart without a developer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic and structural edits — yes. CS-Cart admin handles content (products, categories, blocks, banners). For theme templates (.tpl), language strings, hooks, and small add-ons, you used to need a developer. SimpleReview's CS-Cart-aware agent reads design/themes/[theme]/templates/ and app/addons/ structure and opens a Pull Request from a single browser click."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does CS-Cart have a free version?",
+        "acceptedAnswer": {"@type": "Answer", "text": "CS-Cart historically offered a Free edition with reduced features; current commercial editions are Standard, Plus (B2B), and Multi-Vendor (Ultimate). All editions ship 100% open source PHP code under the commercial license — that means you can read and patch every file, but redistribution and 'powered by' removal depend on edition. Always check your specific license terms."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is it safe to remove 'Powered by CS-Cart'?",
+        "acceptedAnswer": {"@type": "Answer", "text": "License-dependent. Plus and Ultimate editions historically allow removing the powered-by notice; lower tiers may not. The footer string lives in design/themes/[theme]/templates/blocks/static_templates/copyright.tpl and is trivially editable, but removing it on the wrong edition violates the CS-Cart license agreement. Read your edition's license PDF before patching this file."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does this work with CS-Cart Multi-Vendor?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. The agent recognizes Multi-Vendor (Ultimate) by reading the schemas/permissions/ files and the storefront switching layer in app/Tygh/Storefront/. It handles vendor-specific theme overrides, vendor permissions, commission and plan adjustments, and the customer / vendor / admin area split."}
+      },
+      {
+        "@type": "Question",
+        "name": "Cheaper than a CS-Cart freelancer (typical $40-100/hr)?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Speed and cost. CS-Cart freelancers commonly charge $40-100/hour with 1-2 hour minimums. Most edits are one-file template overrides or a 5-line addon hook — the actual edit takes seconds. SimpleReview already knows the layout (app/addons/, design/themes/, schemas/, hooks), opens a PR in seconds, and is free with your own AI key."}
+      },
+      {
+        "@type": "Question",
+        "name": "What about migration to a newer CS-Cart version?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Major version migrations (4.10 → 4.16+, or pre-4 → 4.x) involve deprecated hooks, smarty engine changes, and database schema migrations. The agent surfaces deprecated calls and obvious template fixes, but a human review is strongly recommended for production migrations — that's the slice Vibers handles."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#7155bc;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a2740;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a2740}
+    .site-nav .brand:hover{color:#7155bc;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#7155bc;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px;color:#1a2740}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #7155bc;padding-left:16px}
+    .key-takeaways{background:#f4f0fb;border:1px solid #d4c5ee;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#3d2a6e;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee;color:#1a2740}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#3d2a6e}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a2740;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a2740;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#7155bc;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#5b4399;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a2740;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a2740}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#7155bc}
+    .related-card a{color:#1a2740;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#7155bc;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>CS-Cart / Multi-Vendor / B2B</span>
+      <span>April 30, 2026</span>
+      <span>9 min read</span>
+    </div>
+
+    <h1>How to Fix and Customize CS-Cart and CS-Cart Multi-Vendor</h1>
+
+    <p class="article-lead">CS-Cart powers thousands of single-vendor and marketplace stores worldwide, and unlike OpenCart or PrestaShop it ships <strong>100% open source code (under a paid commercial license)</strong>. That means your developer has access to everything — but also means the customization surface is huge. SimpleReview's CS-Cart-aware agent knows the addon/theme/template structure (<code>var/themes_repository/</code>, <code>app/addons/</code>, <code>design/themes/[theme]/templates/</code>) so it patches the right file the first time and opens a PR.</p>
+
+    <style>
+    /* ─────── CS-Cart 4 Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* CS-Cart storefront */
+    .sc-cs-topbar{background:#1a2740;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-cs-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #7155bc}
+    .sc-cs-logo{font-size:14px;font-weight:800;color:#1a2740;letter-spacing:.3px}
+    .sc-cs-logo span{color:#7155bc}
+    .sc-cs-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:3px;padding:4px 8px;font-size:10px;color:#888}
+    .sc-cs-cart{font-size:11px;font-weight:600;color:#fff;background:#7155bc;border-radius:3px;padding:4px 9px}
+
+    /* Footer with duplicate newsletter blocks — TARGET */
+    .sc-cs-footer{background:#1a2740;color:#cdd5dd;padding:14px 230px 14px 30px;margin-top:14px;font-size:10px;line-height:1.5}
+    .sc-cs-news-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+    .sc-cs-news{background:#fff;color:#1a2740;border:1px solid #e0e0e0;padding:8px 12px;font-size:10px;border-radius:3px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .sc-cs-news b{color:#7155bc}
+    .sc-cs-news .badge{background:#fef2f2;border:1px dashed #fca5a5;color:#dc2626;font-size:8px;font-family:monospace;padding:1px 4px;border-radius:2px}
+    .sc-cs-news.dup{position:relative;animation:errSel 28s infinite;outline-offset:3px;border-left:4px solid #7155bc}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:none}}
+    .sc-cs-news.dup::after{content:'Selected';position:absolute;top:-10px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-cs-news-fade{animation:errHide 28s infinite}
+    .sc-cs-poweredby{color:#9aa3af;font-size:10px;text-align:center;animation:errHide 28s infinite}
+    .sc-cs-poweredby b{color:#7155bc}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-topbar{background:#1a2740;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:2px solid #7155bc;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#ede9fe,#fef9c3);padding:9px 14px;font-size:11px;color:#5b21b6;font-weight:700;text-align:center;border-bottom:1px solid #ddd6fe}
+    .sc-rec-banner .sc-rec-pct{background:#7155bc;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-footer{background:#1a2740;color:#cdd5dd;padding:10px 14px;font-size:10px;text-align:center}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#7155bc;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #7155bc;color:#5b21b6;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#5b21b6;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:240px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:200px;top:240px;opacity:1}
+      22%  {left:200px;top:240px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+    }
+    </style>
+    <div id="sc-banner-fallback" class="sc-banner cs-cart" aria-label="Animated demo: SimpleReview's CS-Cart expert removes a duplicate newsletter signup block and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mystore.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- CS-Cart storefront -->
+            <div class="sc-cs-topbar">
+              <span>+1 (415) 555-0099 · support@mystore.com</span>
+              <span>Sign in · Wishlist · Cart</span>
+            </div>
+            <div class="sc-cs-header">
+              <div class="sc-cs-logo">My<span>Store</span></div>
+              <div class="sc-cs-search">Search products…</div>
+              <div class="sc-cs-cart">Cart · $0.00</div>
+            </div>
+            <!-- Footer with duplicate newsletter blocks (TARGET) -->
+            <div class="sc-cs-footer">
+              <div class="sc-cs-news-wrap">
+                <div class="sc-cs-news sc-cs-news-fade"><b>Sign Up</b> for our newsletter — 10% off first order <span>your@email.com → OK</span></div>
+                <div class="sc-cs-news dup"><b>Sign Up</b> for our newsletter — 10% off first order <span class="badge">duplicate of #1</span></div>
+              </div>
+              <div class="sc-cs-poweredby">© 2026 MyStore · Powered by <b>CS-Cart</b> v4.17</div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-topbar">
+                <span>+1 (415) 555-0099 · support@mystore.com</span>
+                <span>Sign in · Wishlist · Cart</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-cs-logo">My<span>Store</span></div>
+                <div class="sc-cs-search">Search products…</div>
+                <div class="sc-cs-cart">Cart · $0.00</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">CLEAN</span>One newsletter block · footer tightened up</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Duplicate newsletter removed · copyright.tpl patched · PR #42 ready</span>
+                <div class="sc-rec-h">Featured products</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+              <div class="sc-rec-footer">© 2026 MyStore · Privacy · Terms</div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">two duplicate newsletter blocks — remove one</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>CS-Cart expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">CS-Cart 4.17</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Theme</span><span class="sc-sb-v">responsive</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">copyright.tpl</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Remove duplicate <code style="font-size:8px">{include "newsletter"}</code> in <code style="font-size:8px">design/themes/responsive/templates/blocks/static_templates/copyright.tpl</code></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">One Sign-Up block remains. Layout cleans up by 80px.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(footer): drop duplicate newsletter block<br>copyright.tpl · -3 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the duplicate block → <strong>Fix it</strong> → PR opens, no developer involved</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      CS-Cart tweak quoted at 90 minutes? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a> reads <code>design/themes/[theme]/templates/</code>, finds the override, opens a PR.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>CS-Cart customization lives in three places:</strong> addons (<code>app/addons/[my_addon]/</code>), themes (<code>design/themes/[theme]/templates/</code>), and overrides (<code>design/themes/[theme]/templates/overrides/</code>).</li>
+        <li><strong>100% access to source</strong> — but never edit <code>app/functions/</code>, <code>app/Tygh/</code> core; always create an addon or theme override.</li>
+        <li><strong>SimpleReview reads the registered hooks/schemes</strong> (<code>schemas/permissions/admin.php</code>, <code>core/hooks/</code>) to find where a feature lives.</li>
+        <li><strong>CS-Cart Marketplace</strong> at marketplace.cs-cart.com — мы публикуем addon <code>simplereview</code>. Install: Add-ons → Manage add-ons → upload archive → Install → Settings → SimpleReview → connect Git/SFTP.</li>
+        <li><strong>For multi-vendor RBAC, custom payment gateway, ERP integrations, performance audit</strong> → <a href="/vibers/">Vibers human review</a>.</li>
+      </ul>
+    </div>
+
+    <h2>CS-Cart Architecture in 60 Seconds — Addons + Themes + Overrides</h2>
+
+    <p>Every CS-Cart customization fits into one of three buckets. Knowing which bucket your edit belongs in is the difference between a 5-line PR and a 4-hour debug session that breaks the next core upgrade.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Bucket</th><th>Path</th><th>Use for</th><th>Survives core upgrade?</th></tr>
+        <tr><td>1. Add-on</td><td><code>app/addons/[my_addon]/</code></td><td>New features, hooks, scheme entries, custom controllers</td><td>Yes (isolated)</td></tr>
+        <tr><td>2. Theme</td><td><code>design/themes/[theme]/templates/</code></td><td>Storefront layout, blocks, custom .tpl partials</td><td>Yes (per-theme)</td></tr>
+        <tr><td>3. Theme override</td><td><code>design/themes/[theme]/templates/overrides/</code></td><td>Replace a single template from another theme/addon non-destructively</td><td>Yes</td></tr>
+        <tr><td>❌ Core</td><td><code>app/functions/</code>, <code>app/Tygh/</code></td><td>Never edit. Always wrap in an add-on hook instead.</td><td>No — wiped on upgrade</td></tr>
+      </table>
+    </div>
+
+    <div class="definition">
+      <strong>Hook system:</strong> CS-Cart fires named hooks throughout request lifecycle (e.g. <code>dispatch_before_display</code>, <code>checkout_place_order_pre</code>). Your add-on registers under <code>app/addons/[my_addon]/func.php</code> with <code>fn_register_hooks(...)</code>. The agent reads <code>core/hooks/</code> to discover available hook names.
+    </div>
+
+    <h2>Three-Click Workflow with SimpleReview</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. Free with your own AI key (Claude Code or Codex).</li>
+      <li><strong>Connect your CS-Cart store.</strong> Either install the <code>simplereview</code> add-on from the CS-Cart Marketplace, or paste a Git/SFTP URL. The extension auto-detects CS-Cart by reading <code>&lt;meta name="generator" content="CS-Cart"&gt;</code> and recognizes Multi-Vendor / B2B / Plus editions from the storefront.</li>
+      <li><strong>Click any element on the storefront or admin, type the change in plain English</strong> ("hide Powered by", "translate Add to Cart to Купить", "fix white screen after addon install"), click <strong>Fix it</strong>. The agent locates the right addon, theme template, or hook — and opens a Pull Request.</li>
+    </ol>
+
+    <h2>Common CS-Cart Fixes &amp; Customizations</h2>
+
+    <h3>500 / "White Screen" after addon install</h3>
+
+    <p>CS-Cart writes nice exceptions to <code>var/log/</code> — first stop, always. Most "white screen" cases are a missing PHP dependency, a hook collision, or a malformed <code>addon.xml</code> scheme. Disable the offending add-on directly via the database when admin is also broken:</p>
+
+    <pre><code>-- check the log first
+$ tail -100 var/log/cscart.log.$(date +%Y-%m-%d)
+
+-- if admin is also white-screen, kill the addon via DB
+UPDATE cscart_addons SET status='D' WHERE addon='offending_addon';
+
+-- clear cache after re-enabling
+$ rm -rf var/cache/* var/compiled/*</code></pre>
+
+    <h3>Add reCAPTCHA to a custom form</h3>
+
+    <p>CS-Cart has a built-in CAPTCHA system in <code>app/Tygh/Captcha/</code>. For Google reCAPTCHA the cleanest path is the official add-on: <strong>Add-ons → Marketplace → reCAPTCHA → Install</strong>. If you need it on a non-standard form, register your own via the <code>dispatch_before_*</code> hook and reuse <code>fn_image_verification('recaptcha', ...)</code> instead of rolling Google's JS by hand.</p>
+
+    <h3>Hide "Powered by CS-Cart" / change copyright</h3>
+
+    <p>Footer string lives at <code>design/themes/[theme]/templates/blocks/static_templates/copyright.tpl</code>. Edit it via theme override, not core file.</p>
+
+    <div class="warn-box">
+      <strong>License warning:</strong> Removing the "Powered by" notice may violate the CS-Cart commercial license. Plus and Ultimate editions historically include a "powered-by removal" clause; lower tiers do not. Check your edition's license PDF before patching this file.
+    </div>
+
+    <h3>Translate "Add to Cart" / "Buy Now" / button text</h3>
+
+    <p>Two routes, depending on whether you want runtime or code-level changes:</p>
+
+    <ul>
+      <li><strong>Admin:</strong> Languages → Translations → search "Add to Cart" → edit. Survives core upgrades, no file change.</li>
+      <li><strong>Code:</strong> <code>var/langs/[lang_code]/[area]/...po</code>. Useful for version-controlled multi-store deployments.</li>
+    </ul>
+
+    <p>The agent picks the right route based on whether your repo tracks <code>var/langs/</code> or not.</p>
+
+    <h3>Slow admin / storefront</h3>
+
+    <p>Three knobs solve 90% of CS-Cart slowness:</p>
+
+    <ol>
+      <li><strong>Smarty cache:</strong> Storefront → Themes → Settings → "Cache compiled" = on, "Block cache" = on.</li>
+      <li><strong>Backend cache to Redis</strong> in <code>config.local.php</code>:
+        <pre><code>$config['cache_backend'] = 'redis';
+$config['cache_redis_server'] = '127.0.0.1:6379';</code></pre>
+      </li>
+      <li><strong>Reindex &amp; clean:</strong> <code>php var/run/cache_clean.php</code> after each deploy.</li>
+    </ol>
+
+    <p>If admin is still slow after this, run a slow-query log on MySQL — <code>cscart_products</code> and <code>cscart_orders</code> are the usual suspects on stores with 50k+ rows.</p>
+
+    <h3>Multi-Vendor: vendor sees admin or wrong storefront</h3>
+
+    <p>Symptom: vendor logs in and lands on the global admin, or sees a different storefront than their assigned one. Check <strong>User Groups</strong> permissions (Admin → Customers → User groups) — vendor accounts must have <em>customer-only</em> privileges plus the auto-created vendor group. Storefront switching itself lives in <code>app/Tygh/Storefront/</code>; the agent reads the <code>Storefront</code> class to confirm the right URL conditions are wired up.</p>
+
+    <h2>CS-Cart Marketplace — Our Add-on</h2>
+
+    <p><strong>CS-Cart Marketplace</strong> at <a href="https://marketplace.cs-cart.com">marketplace.cs-cart.com</a> lists 1,500+ add-ons and themes (most paid). We publish <code>simplereview</code> add-on (in approval).</p>
+
+    <p><strong>Standard install (any add-on):</strong></p>
+    <ol>
+      <li>Download the <code>.zip</code> from the marketplace.</li>
+      <li>Add-ons → Manage add-ons → "<strong>+</strong>" icon → Local file → upload.</li>
+      <li>Click <strong>Install</strong>, then <strong>Activate</strong>.</li>
+      <li>Open Settings → SimpleReview → connect your Git or SFTP.</li>
+    </ol>
+
+    <p>Compatible with CS-Cart 4.x (single-vendor + Multi-Vendor + B2B). <strong>Until the add-on lands</strong> — SimpleReview Chrome Extension auto-detects via <code>&lt;meta name="generator" content="CS-Cart"&gt;</code> and routes via Git/SFTP, no marketplace install required.</p>
+
+    <h2>CS-Cart Freelancer vs SimpleReview</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>CS-Cart freelancer</th><th>SimpleReview agent</th></tr>
+        <tr><td>Brief</td><td>30 min Skype + screenshots</td><td>One sentence in the popup</td></tr>
+        <tr><td>Repo / SFTP setup</td><td>30-60 min, every time</td><td>Once, then cached</td></tr>
+        <tr><td>Find the right file</td><td>30-90 min — addons + theme + overrides + hooks</td><td>Instant — file layout indexed</td></tr>
+        <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
+        <tr><td>Open a PR</td><td>If they use Git at all</td><td>Always</td></tr>
+        <tr><td>Cost for a 1-line change</td><td>$40-100 × 1-2 hr minimum = $80-200</td><td>$0 (BYO key) or pennies of API usage</td></tr>
+      </table>
+    </div>
+
+    <h2>When You Want a Senior CS-Cart Developer</h2>
+
+    <p>Some work earns its hourly rate. Get a human in the loop for:</p>
+
+    <ul>
+      <li><strong>Multi-vendor RBAC + commission rules</strong> — vendor plans, commission tiers, payout cycles. Wrong logic = wrong payouts to real people.</li>
+      <li><strong>Custom payment gateway</strong> — PSP integration, PCI compliance, refund flow, webhook idempotency. Money moves; humans review.</li>
+      <li><strong>ERP integration</strong> — 1C, SAP, NetSuite. Bidirectional sync, conflict resolution, retry policy.</li>
+      <li><strong>Custom shipping method</strong> — DHL, UPS, EasyPost. Live rate calculation, label generation, return labels.</li>
+      <li><strong>Performance audit</strong> — Redis cache tuning, slow-MySQL <code>EXPLAIN</code> review, missing indexes on <code>cscart_products</code> / <code>cscart_orders</code> / <code>cscart_product_options</code>.</li>
+    </ul>
+
+    <p>That's the slice <a href="/vibers/">Vibers</a> handles — a real human reviews the PR you flag, sends a fix-up if needed, approves before merge.</p>
+
+    <div class="cta-block">
+      <h3>Stop Paying $80/hr for One-File CS-Cart Edits</h3>
+      <p>SimpleReview's CS-Cart agent reads your addons, themes, and hooks — and opens a PR for the change you described.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#ccc">Multi-vendor RBAC, payment gateway, ERP integration? <a href="/vibers/" style="color:#7155bc;font-weight:600">Get a human review →</a></p>
+    </div>
+
+    <h2>FAQ</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I customize CS-Cart without a developer?</div>
+      <div class="faq-a">For most cosmetic and structural edits — yes. CS-Cart admin handles content (products, categories, blocks, banners). For theme templates (<code>.tpl</code>), language strings, hooks, and small add-ons, SimpleReview's CS-Cart-aware agent reads <code>design/themes/[theme]/templates/</code> and <code>app/addons/</code> structure and opens a Pull Request from a single browser click.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does CS-Cart have a free version?</div>
+      <div class="faq-a">CS-Cart historically offered a Free edition with reduced features; current commercial editions are <strong>Standard, Plus (B2B), and Multi-Vendor (Ultimate)</strong>. All editions ship 100% open source PHP code under the commercial license — that means you can read and patch every file, but redistribution and "Powered by" removal depend on edition. Always check your specific license terms.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is it safe to remove "Powered by CS-Cart"?</div>
+      <div class="faq-a">License-dependent. Plus and Ultimate editions historically allow removing the powered-by notice; lower tiers may not. The footer string lives in <code>design/themes/[theme]/templates/blocks/static_templates/copyright.tpl</code> and is trivially editable, but removing it on the wrong edition violates the CS-Cart license agreement. Read your edition's license PDF before patching this file.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does this work with CS-Cart Multi-Vendor?</div>
+      <div class="faq-a">Yes. The agent recognizes Multi-Vendor (Ultimate) by reading <code>schemas/permissions/</code> files and the storefront switching layer in <code>app/Tygh/Storefront/</code>. It handles vendor-specific theme overrides, vendor permissions, commission and plan adjustments, and the customer / vendor / admin area split.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Cheaper than a CS-Cart freelancer (typical $40-100/hr)?</div>
+      <div class="faq-a">Yes — by an order of magnitude on the routine edits. CS-Cart freelancers commonly charge $40-100/hour with 1-2 hour minimums. Most edits are one-file template overrides or a 5-line addon hook — the actual edit takes seconds. SimpleReview already knows the layout (<code>app/addons/</code>, <code>design/themes/</code>, <code>schemas/</code>, hooks), opens a PR in seconds, and is free with your own AI key.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What about migration to a newer CS-Cart version?</div>
+      <div class="faq-a">Major version migrations (4.10 → 4.16+, or pre-4 → 4.x) involve deprecated hooks, Smarty engine changes, and database schema migrations. The agent surfaces deprecated calls and obvious template fixes, but a human review is strongly recommended for production migrations — that's the slice <a href="/vibers/">Vibers</a> handles.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
+          <p>Same agent pattern, applied to OpenCart 3.x / 4.x — click element, get a PR for header.twig, language strings, OCMOD.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">Fix WooCommerce Slow Checkout</a>
+          <p>Click the slow part of checkout, get a PR with the fix — same diagnosis loop applies to CS-Cart cart performance.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://docs.cs-cart.com/">docs.cs-cart.com — Official add-on, theme, and hook documentation</a></li>
+      <li><a href="https://marketplace.cs-cart.com/">marketplace.cs-cart.com — 1,500+ add-ons and themes (incl. SimpleReview, in approval)</a></li>
+      <li><a href="https://github.com/cscart/">github.com/cscart/ — Reference repository the agent indexes against</a></li>
+      <li><a href="https://forum.cs-cart.com/">forum.cs-cart.com — Community-sourced fixes for white-screen, hook collisions, Multi-Vendor edge cases</a></li>
+      <li><a href="https://onout.org/vibers/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>
