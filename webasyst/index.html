@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Доработка Shop-Script (Webasyst) без российского фрилансера — SimpleReview</title>
+  <meta name="description" content="Кликни элемент на сайте на Shop-Script. SimpleReview знает структуру `wa-apps/shop/themes/`, плагины, хуки — и присылает Pull Request.">
+  <meta name="keywords" content="доработка shop-script, webasyst плагин simplereview, shop-script тема правка, без программиста webasyst, webasyst маркетплейс плагин">
+  <link rel="canonical" href="https://onout.org/webasyst/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Доработка Shop-Script (Webasyst) без российского фрилансера — SimpleReview">
+  <meta property="og:description" content="Кликни элемент на сайте на Shop-Script. SimpleReview знает wa-apps/shop/themes/, плагины и хуки — и присылает Pull Request.">
+  <meta property="og:url" content="https://onout.org/webasyst/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Доработка Shop-Script (Webasyst) без российского фрилансера — SimpleReview">
+  <meta name="twitter:description" content="Кликни элемент на сайте на Shop-Script. Получи Pull Request, а не тикет.">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Доработка Shop-Script (Webasyst) без российского фрилансера — SimpleReview",
+    "description": "Кликни элемент на сайте на Shop-Script. SimpleReview знает структуру wa-apps/shop/themes/, плагины, хуки — и присылает Pull Request.",
+    "url": "https://onout.org/webasyst/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/webasyst/" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "Можно ли дорабатывать Shop-Script без программиста?", "acceptedAnswer": {"@type": "Answer", "text": "Для большинства правок темы и контента — да. Smarty-шаблоны в wa-apps/shop/themes/[theme]/, CSS, языковые файлы, хуки. SimpleReview за секунды откроет PR. Для интеграций с 1С, эквайрингом, миграции между версиями — лучше связка с человеческим ревью Vibers."}},
+      {"@type": "Question", "name": "Как установить SimpleReview на Shop-Script (Webasyst)?", "acceptedAnswer": {"@type": "Answer", "text": "Сейчас: ставите Chrome Extension и подключаете Git-репо или SFTP. В планах: нативный плагин в Webasyst Store (на ревью у Webasyst, обычный цикл 2-6 недель). После публикации — установка через Установщик: php wa.php install simplereview."}},
+      {"@type": "Question", "name": "Какие версии Webasyst поддерживаются?", "acceptedAnswer": {"@type": "Answer", "text": "Webasyst Framework 2.x + Shop-Script 9 и Shop-Script 10 — полная поддержка. Также применим к другим приложениям Webasyst (CRM, Site, Mailer, Blog) — структура wa-apps/[app]/ единая, агент знает конвенции платформы."}},
+      {"@type": "Question", "name": "Работает ли с другими приложениями Webasyst — CRM, Site, Mailer, Blog?", "acceptedAnswer": {"@type": "Answer", "text": "Да. Webasyst — это framework, на котором работают Shop-Script, Webasyst CRM, Site, Mailer, Blog, Helpdesk и другие. Все используют единую структуру wa-apps/[app]/, поэтому SimpleReview одинаково работает с темами, плагинами и хуками любого из этих приложений."}},
+      {"@type": "Question", "name": "Безопасно ли использовать на проде Shop-Script?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview никогда не пушит в живую ветку напрямую. Каждое изменение — Pull Request, который вы ревьюите и мержите. Worst case — вы отклонили PR, прод не пострадал. Для критичных правок рекомендуем staging-копию (всё ещё проще, чем платить 3000 ₽/час)."}},
+      {"@type": "Question", "name": "Чем это дешевле фрилансера за 2000 ₽/час?", "acceptedAnswer": {"@type": "Answer", "text": "Фрилансер на webasyst.com обычно берёт 1500-3000 ₽/час и тратит 1-2 часа только на онбординг — клонировать репо, развернуть локально, найти нужный файл в wa-apps/shop/themes/. Сама правка — одна строка. SimpleReview знает раскладку файлов Webasyst и открывает PR за секунды. Для сложных задач (1С-интеграция, эквайринг, миграция) — связка с Vibers."}}
+    ]
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-text-size-adjust: 100%; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafaf8; color: #1a1a1a; line-height: 1.6; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    button, input, select, textarea, table, pre, code { font-family: inherit; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f1f1; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; }
+    h1, h2, h3 { text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { width: 100%; background: #fff; min-height: 100vh; padding: 0 20px; box-sizing: border-box; }
+    .content-wrap { max-width: 880px; margin: 0 auto; padding: 0 40px; }
+    a { color: #0089ce; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 32px; padding-top: 24px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .site-nav a:hover { color: #0089ce; border-color: #0089ce; text-decoration: none; }
+
+    .hero { border-bottom: 2px solid #1a1a1a; padding: 32px 0 32px; margin-bottom: 32px; }
+    .hero-badge { display: inline-block; color: #0089ce; font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 14px; }
+    .hero-badge::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #fcb53b; margin-right: 8px; vertical-align: middle; transform: translateY(-1px); }
+    h1 { font-size: 50px; font-weight: 800; letter-spacing: -1.2px; line-height: 1.04; margin-bottom: 16px; }
+    .hero h1 abbr { text-decoration: underline dotted; cursor: help; }
+    .hero-sub { font-size: 19px; color: #333; margin-bottom: 24px; line-height: 1.45; max-width: 680px; }
+    .cta-group { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; background: #0089ce; color: #fff; font-size: 15px; font-weight: 600; padding: 12px 26px; border-radius: 8px; text-decoration: none; transition: background .15s; }
+    .btn-primary:hover { background: #006fa6; text-decoration: none; }
+    .btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; color: #1a1a1a; font-size: 15px; font-weight: 600; padding: 12px 22px; border-radius: 8px; border: 1px solid #d8d8d8; background: #fff; transition: border-color .15s, background .15s; }
+    .btn-secondary:hover { border-color: #0089ce; color: #0089ce; background: #fafafa; text-decoration: none; }
+
+    h2 { font-size: 30px; font-weight: 700; margin-bottom: 18px; letter-spacing: -0.5px; line-height: 1.15; }
+
+    .what-fixes { margin: 40px 0; padding: 24px; border: 1px solid #e8e8e8; border-radius: 8px; }
+    .fixes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin-top: 16px; }
+    .fix-item { font-size: 15px; color: #333; display: flex; align-items: baseline; gap: 8px; line-height: 1.55; }
+    .fix-item::before { content: "→"; color: #fcb53b; font-weight: 700; flex-shrink: 0; }
+
+    .how-it-works { margin: 40px 0; }
+    .steps { display: grid; gap: 16px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; padding: 20px; border: 1px solid #e8e8e8; border-radius: 8px; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: #0089ce; color: #fff; font-weight: 700; font-size: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .step-content h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.2px; }
+    .step-content p { font-size: 15px; color: #555; line-height: 1.55; }
+
+    .vs-section { margin: 40px 0; padding: 28px; background: #eef7fc; border: 1px solid #b8def0; border-radius: 8px; }
+    .vs-section h2 { margin-bottom: 16px; }
+    .vs-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .vs-table th { text-align: left; font-weight: 600; padding: 8px 12px; border-bottom: 2px solid #1a1a1a; background: transparent; }
+    .vs-table td { padding: 10px 12px; border-bottom: 1px solid #c8e2ee; vertical-align: top; }
+    .vs-table tr:last-child td { border-bottom: none; }
+    .col-vibers { background: #fff8e6; }
+    .check { color: #16a34a; font-weight: 700; }
+    .cross { color: #dc2626; }
+
+    .use-cases { margin: 40px 0; }
+    .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .case-card { padding: 20px; border: 1px solid #e8e8e8; border-radius: 8px; }
+    .case-card h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.2px; }
+    .case-card p { font-size: 14px; color: #555; line-height: 1.55; }
+
+    .faq-section { margin: 40px 0; }
+    .faq-item { border-bottom: 1px solid #e8e8e8; padding: 16px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 600; font-size: 17px; margin-bottom: 8px; letter-spacing: -0.1px; }
+    .faq-a { font-size: 15px; color: #444; line-height: 1.65; }
+    .faq-a a { color: #0089ce; }
+
+    .cta-box { margin: 40px 0; padding: 32px; background: linear-gradient(135deg, #0089ce 0%, #fcb53b 100%); color: #fff; border-radius: 8px; text-align: center; }
+    .cta-box h2 { color: #fff; margin-bottom: 12px; font-size: 30px; }
+    .cta-box p { color: #fff7e0; margin-bottom: 24px; font-size: 15px; }
+    .btn-white { display: inline-block; background: #fff; color: #0089ce; font-size: 15px; font-weight: 700; padding: 12px 28px; border-radius: 6px; text-decoration: none; }
+    .btn-white:hover { background: #eef7fc; text-decoration: none; }
+
+    .note-box { margin: 24px 0; padding: 16px 20px; background: #fff8e6; border: 1px solid #fcb53b; border-left: 4px solid #fcb53b; border-radius: 6px; font-size: 14px; color: #333; line-height: 1.6; }
+
+    footer { margin-top: 48px; padding-top: 24px; padding-bottom: 32px; border-top: 1px solid #e8e8e8; font-size: 13px; color: #888; }
+    footer a { color: #888; }
+    footer a:hover { color: #0089ce; }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 36px; letter-spacing: -0.8px; }
+      h2 { font-size: 24px; }
+      .cta-box h2 { font-size: 24px; }
+      .hero-sub { font-size: 17px; }
+      .content-wrap { padding: 0 20px; }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 0 10px; }
+      .content-wrap { padding: 0 10px; }
+      h1 { font-size: 30px; }
+      .case-grid { grid-template-columns: 1fr; }
+      .fixes-grid { grid-template-columns: 1fr; }
+      .vs-table { font-size: 13px; }
+      .vs-table th, .vs-table td { padding: 8px 8px; }
+      .btn-primary, .btn-secondary { width: 100%; }
+      .cta-group { flex-direction: column; align-items: stretch; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+    }
+
+    /* ─────── Webasyst Shop-Script Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* Webasyst storefront */
+    .sc-wa-topbar{background:#0089ce;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-wa-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #fcb53b}
+    .sc-wa-logo{font-size:14px;font-weight:800;color:#0089ce;letter-spacing:.3px}
+    .sc-wa-logo span{color:#fcb53b}
+    .sc-wa-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:3px;padding:4px 8px;font-size:10px;color:#888}
+    .sc-wa-cart{font-size:11px;font-weight:600;color:#fff;background:#0089ce;border-radius:3px;padding:4px 9px}
+    .sc-wa-breadcrumb{padding:8px 230px 0 30px;font-size:10px;color:#888}
+    .sc-wa-breadcrumb b{color:#0089ce;font-weight:600}
+
+    /* 500 error block — TARGET */
+    .sc-wa-error{background:#fff;border:1px solid #dc2626;border-left:4px solid #dc2626;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:520px;margin:14px 230px 0 30px;padding:14px 18px 16px;font-family:inherit;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-wa-error::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-wa-err-h{font-weight:800;font-size:13px;color:#dc2626;margin-bottom:5px;animation:errHide 28s infinite}
+    .sc-wa-err-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:6px;animation:errHide 28s infinite}
+    .sc-wa-err-stack{background:#fef2f2;border:1px solid #fca5a5;color:#7f1d1d;font-family:monospace;font-size:9px;padding:6px 8px;border-radius:3px;line-height:1.5;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-topbar{background:#0089ce;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:2px solid #fcb53b;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#0089ce;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#0089ce;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #0089ce;color:#005a87;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#005a87;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:200px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#0089ce;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:340px;top:175px;opacity:1}
+      22%  {left:340px;top:175px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-wa-error{margin:14px 140px 0 14px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+
+    <nav class="site-nav">
+      <a href="/vibers/">Vibers</a> &nbsp;·&nbsp;
+      <a href="/simple-review/">SimpleReview</a> &nbsp;·&nbsp;
+      <a href="/webasyst/how-to-fix-and-customize-shop-script/">Гид по Shop-Script</a> &nbsp;·&nbsp;
+      <a href="/vibers/blog/">Blog</a>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-badge">SimpleReview · для Shop-Script (Webasyst) · Chrome Extension</div>
+      <h1>Кликни элемент на сайте на Shop-Script. Получи <abbr title="Правка автоматически уходит в GitHub как commit или Pull Request — или прямо на сервер по SFTP">code fix</abbr>.</h1>
+      <p class="hero-sub">Фрилансер на webasyst.com обычно берёт <strong>1500–3000 ₽/час</strong> и тратит первый час на онбординг. SimpleReview уже знает структуру <code>wa-apps/shop/themes/[theme]/</code>, плагины и хуки — и присылает Pull Request за секунды.</p>
+      <div class="cta-group">
+        <a class="btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_webasyst_hub&utm_medium=hero">Скачать расширение</a>
+        <a class="btn-secondary" href="/webasyst/how-to-fix-and-customize-shop-script/">Прочитать гид →</a>
+      </div>
+    </header>
+
+    <div id="sc-banner-fallback" class="sc-banner webasyst" aria-label="Animated demo: SimpleReview's Webasyst expert fixes a 500 error on the category page and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mystore.ru/catalog</div>
+        <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Webasyst storefront -->
+            <div class="sc-wa-topbar">
+              <span>+7 (495) 555-0099 · Доставка по России</span>
+              <span>Кабинет · Избранное · Заказ</span>
+            </div>
+            <div class="sc-wa-header">
+              <div class="sc-wa-logo">Мой<span>Магазин</span></div>
+              <div class="sc-wa-search">Поиск товаров…</div>
+              <div class="sc-wa-cart">Корзина · 0 ₽</div>
+            </div>
+            <div class="sc-wa-breadcrumb">Главная › <b>Каталог · Электроника</b></div>
+            <!-- 500 error block (TARGET) -->
+            <div class="sc-wa-error">
+              <div class="sc-wa-err-h">Произошла ошибка</div>
+              <div class="sc-wa-err-msg">Что-то пошло не так. Страница временно недоступна. Попробуйте обновить или вернуться позже.</div>
+              <div class="sc-wa-err-stack">[error] PHP Notice: Undefined index: filter_id<br>in wa-apps/shop/themes/default/category.html line 47<br>HTTP/1.1 500 Internal Server Error</div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-topbar">
+                <span>+7 (495) 555-0099 · Доставка по России</span>
+                <span>Кабинет · Избранное · Заказ</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-wa-logo">Мой<span>Магазин</span></div>
+                <div class="sc-wa-search">Поиск товаров…</div>
+                <div class="sc-wa-cart">Корзина · 0 ₽</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">FIXED</span>Категория Электроника снова открывается — ошибка устранена</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ category.html пропатчен · кеш Smarty очищен · PR #42 готов</span>
+                <div class="sc-rec-h">Электроника</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Комментарий</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">поправить ошибку 500 на категории</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>Webasyst expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">Shop-Script 10</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Тема</span><span class="sc-sb-v">default</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">category.html:47</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Безопасный доступ к <code style="font-size:8px">{$filter_id|default:''}</code> в <code style="font-size:8px">wa-apps/shop/themes/default/category.html</code></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Категория отдаёт 200. Кеш Smarty чистится автоматически.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(category): handle missing field<br>category.html · +2 / -1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Кликни SimpleReview → выбери блок ошибки → <strong>Fix it</strong> → PR готов, без программиста</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <section class="what-fixes">
+      <h2>Что SimpleReview правит на Shop-Script</h2>
+      <div class="fixes-grid">
+        <div class="fix-item">Smarty-шаблоны в <code>wa-apps/shop/themes/[theme]/</code></div>
+        <div class="fix-item">Backend плагины в <code>wa-apps/shop/plugins/[plugin]/</code></div>
+        <div class="fix-item">Хуки (<code>actionExample</code>, <code>frontend_*</code>, <code>backend_*</code>)</div>
+        <div class="fix-item">Языковые файлы в <code>wa-apps/shop/themes/[theme]/locale/[locale]/</code></div>
+        <div class="fix-item">CSS/JS в <code>wa-apps/shop/themes/[theme]/css/</code>, <code>js/</code></div>
+        <div class="fix-item">Конфиги в <code>wa-config/db.php</code>, <code>wa-config/SystemConfig.class.php</code></div>
+        <div class="fix-item">Удаление «Сайт работает на Webasyst» из подвала (с учётом лицензии Free)</div>
+        <div class="fix-item">Captcha форм через <code>waCaptcha</code></div>
+      </div>
+      <div class="note-box">
+        <strong>Совместимость:</strong> работает с Webasyst 2.x + Shop-Script 9 и 10. Также применим к другим приложениям Webasyst (CRM, Site, Mailer, Blog) — структура <code>wa-apps/[app]/</code> единая.
+      </div>
+    </section>
+
+    <section class="how-it-works">
+      <h2>Как SimpleReview работает на Shop-Script</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Установить расширение</h3>
+            <p>Поставьте SimpleReview из Chrome Web Store. Кликните по иконке расширения, когда открыт ваш магазин на Shop-Script.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Auto-detect Webasyst</h3>
+            <p>Платформа определяется автоматически по <code>&lt;meta name="generator" content="Webasyst"&gt;</code> и характерным сигнатурам HTML. SimpleReview сразу подгружает Webasyst-режим.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Подключить Git или SFTP</h3>
+            <p>GitHub, GitLab, Gitea, Bitbucket — или прямой SFTP. SimpleReview индексирует <code>wa-apps/</code>, <code>wa-config/</code>, темы и плагины при первом подключении.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Кликнуть → получить PR</h3>
+            <p>Кликаете по нужному блоку, описываете правку. Агент находит файл в <code>wa-apps/shop/themes/[theme]/</code> или плагине, открывает Pull Request с заметкой про <code>php wa.php install [plugin_id]</code>, если плагину нужна реинсталляция.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section">
+      <h2>SimpleReview vs фрилансер с webasyst.com</h2>
+      <table class="vs-table">
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th>Фрилансер (1500–3000 ₽/час)</th>
+            <th class="col-vibers">SimpleReview</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Время старта (на одну задачу)</td>
+            <td>1–2 часа (созвон + доступы + развёртывание)</td>
+            <td class="col-vibers">30 секунд (один раз настроил — дальше из кеша)</td>
+          </tr>
+          <tr>
+            <td>Поиск файла, в котором баг</td>
+            <td>15–60 минут — зависит от знания темы</td>
+            <td class="col-vibers">Мгновенно — индекс <code>wa-apps/</code> уже построен</td>
+          </tr>
+          <tr>
+            <td>Знание хуков Webasyst (<code>frontend_*</code>, <code>backend_*</code>)</td>
+            <td>Если нашли сеньора по Shop-Script</td>
+            <td class="col-vibers">Встроено в агента</td>
+          </tr>
+          <tr>
+            <td>Понимание структуры плагинов <code>wa-apps/shop/plugins/</code></td>
+            <td>Вручную — гуглят dev.webasyst.com</td>
+            <td class="col-vibers">Знает конвенцию <code>lib/</code>, <code>locale/</code>, манифест</td>
+          </tr>
+          <tr>
+            <td>Тема как override над core</td>
+            <td>Вручную</td>
+            <td class="col-vibers">Тема приоритетнее core, fallback по умолчанию</td>
+          </tr>
+          <tr>
+            <td>Открывает PR на ревью</td>
+            <td>Иногда (если использует Git)</td>
+            <td class="col-vibers">Всегда</td>
+          </tr>
+          <tr>
+            <td>Стоимость одной правки в одну строку</td>
+            <td>3000–6000 ₽ (минималка 1–2 часа)</td>
+            <td class="col-vibers">Бесплатно со своим AI-ключом — иначе копейки за API</td>
+          </tr>
+          <tr>
+            <td>Эквайринг / 1С / миграция / multi-store</td>
+            <td>Да — связка с <a href="/vibers/">человеческим ревью Vibers</a></td>
+            <td class="col-vibers">Эскалация в Vibers — на те 20% задач, где нужен человек</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="use-cases">
+      <h2>Кто использует SimpleReview на Shop-Script</h2>
+      <div class="case-grid">
+        <div class="case-card">
+          <h3>Владельцы магазинов на Shop-Script</h3>
+          <p>Правки текстов и темы уходят в тот же час, не дожидаясь окошка у студии-подрядчика.</p>
+        </div>
+        <div class="case-card">
+          <h3>Webasyst-агентства</h3>
+          <p>Закрывают рутинные 80% тикетов автоматически — сеньоры фокусируются на 1С, эквайринге и миграциях.</p>
+        </div>
+        <div class="case-card">
+          <h3>Фрилансеры с несколькими сайтами на SS</h3>
+          <p>Одно расширение на все клиентские проекты — у каждого свой Git-репо или SFTP.</p>
+        </div>
+        <div class="case-card">
+          <h3>Мерчанты без программиста</h3>
+          <p>Видишь сломанный блок на витрине — кликнул, описал словами по-русски. Хостинг-партнёр мержит готовый PR.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <div class="faq-q">Можно ли дорабатывать Shop-Script без программиста?</div>
+        <div class="faq-a">Для большинства правок темы и контента — да. Smarty-шаблоны в <code>wa-apps/shop/themes/[theme]/</code>, CSS, языковые файлы, хуки. SimpleReview за секунды откроет PR. Для интеграций с 1С, эквайрингом, миграции между версиями — лучше связка с человеческим ревью <a href="/vibers/">Vibers</a>.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Как установить SimpleReview на Shop-Script (Webasyst)?</div>
+        <div class="faq-a">Сейчас: ставите Chrome Extension и подключаете Git-репо или SFTP. В планах: нативный плагин в <strong>Webasyst Store</strong> (на ревью у Webasyst, обычный цикл 2-6 недель). После публикации — установка через Установщик: <code>php wa.php install simplereview</code>.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Какие версии Webasyst поддерживаются?</div>
+        <div class="faq-a">Webasyst Framework <strong>2.x</strong> + Shop-Script <strong>9</strong> и <strong>10</strong> — полная поддержка. Поддерживаемые темы: default, Hypermarket, Dummy, кастомные темы, следующие конвенции override.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Работает ли с другими приложениями Webasyst — CRM, Site, Mailer, Blog?</div>
+        <div class="faq-a">Да. Webasyst — это framework, на котором работают Shop-Script, <strong>Webasyst CRM</strong>, <strong>Site</strong>, <strong>Mailer</strong>, <strong>Blog</strong>, <strong>Helpdesk</strong>. Все используют единую структуру <code>wa-apps/[app]/</code>, поэтому SimpleReview одинаково работает с темами, плагинами и хуками любого из этих приложений.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Безопасно ли использовать на проде Shop-Script?</div>
+        <div class="faq-a">SimpleReview никогда не пушит в живую ветку напрямую. Каждое изменение — Pull Request, который вы ревьюите и мержите. Worst case — вы отклонили PR, прод не пострадал. Для критичных правок рекомендуем staging-копию (всё ещё проще, чем платить 3000 ₽/час).</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Чем это дешевле фрилансера за 2000 ₽/час?</div>
+        <div class="faq-a">Фрилансер на webasyst.com обычно берёт 1500–3000 ₽/час и тратит 1–2 часа только на онбординг — клонировать репо, развернуть локально, найти нужный файл в <code>wa-apps/shop/themes/</code>. Сама правка — одна строка. SimpleReview знает раскладку файлов Webasyst и открывает PR за секунды. Для сложных задач (1С-интеграция, эквайринг, миграция) — связка с <a href="/vibers/">Vibers</a>.</div>
+      </div>
+    </section>
+
+    <div class="cta-box">
+      <h2>Перестаньте платить 2000 ₽/час за правку 1 файла на Shop-Script</h2>
+      <p>SimpleReview уже знает <code>wa-apps/shop/themes/</code>, плагины и хуки. Кликаете блок, описываете правку — получаете Pull Request.</p>
+      <a class="btn-white" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_webasyst_hub&utm_medium=cta">Скачать SimpleReview для Chrome →</a>
+      <p style="margin-top:14px;font-size:14px;opacity:0.9">Сложная задача — оплата, 1С-интеграция, миграция? → <a href="/vibers/" style="color:inherit;text-decoration:underline">Получить human review →</a></p>
+    </div>
+
+    <p style="font-size:14px;color:#555;margin:32px 0 16px;">
+      Read more:
+      <a href="/webasyst/how-to-fix-and-customize-shop-script/">Как править и кастомизировать Shop-Script</a> ·
+      <a href="/simple-review/">SimpleReview — продуктовая страница</a> ·
+      <a href="/vibers/">Vibers — human-in-the-loop review</a>
+    </p>
+
+    <footer>
+      <p>SimpleReview для Shop-Script (Webasyst) — продукт <a href="/vibers/">Vibers</a>. Human-in-the-loop code review для vibecoded-проектов. <a href="https://onout.org" target="_blank" rel="noopener">onout.org</a> | <a href="/vibers/blog/">Blog</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener">Telegram</a> | <a href="mailto:support@onout.org">Email</a> | <a href="/vibers/privacy.html">Privacy</a></p>
+    </footer>
+
+  </div><!-- /content-wrap -->
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

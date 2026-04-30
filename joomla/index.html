@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fix Joomla 5 Sites Without a Freelancer — SimpleReview for Joomla</title>
+  <meta name="description" content="Click any element on your Joomla 4/5 site. SimpleReview knows the override system in `templates/[template]/html/com_[component]/` — and opens a Pull Request, not a ticket.">
+  <meta name="keywords" content="fix joomla 5, joomla template override, joomla extension simplereview, edit joomla without developer, joomla extensions directory jed">
+  <link rel="canonical" href="https://onout.org/joomla/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Fix Joomla 5 Sites Without a Freelancer — SimpleReview for Joomla">
+  <meta property="og:description" content="Click any element on your Joomla 4/5 site. SimpleReview knows the template override system — and opens a Pull Request, not a ticket.">
+  <meta property="og:url" content="https://onout.org/joomla/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fix Joomla 5 Sites Without a Freelancer — SimpleReview for Joomla">
+  <meta name="twitter:description" content="Click any element on your Joomla 4/5 site. Get a Pull Request, not a ticket.">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Fix Joomla 5 Sites Without a Freelancer — SimpleReview for Joomla",
+    "description": "Click any element on your Joomla 4/5 site. SimpleReview knows the override system in templates/[template]/html/com_[component]/ — and opens a Pull Request, not a ticket.",
+    "url": "https://onout.org/joomla/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/joomla/" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "Can I edit my Joomla site without a developer?", "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic and structural edits — yes. Template overrides in templates/[template]/html/com_[component]/, language strings, module overrides, custom CSS/JS. SimpleReview opens a PR for those in seconds. For Joomla extension development, multilingual config, and major migrations — pair with Vibers human review."}},
+      {"@type": "Question", "name": "How does SimpleReview install on Joomla?", "acceptedAnswer": {"@type": "Answer", "text": "Today: install the Chrome Extension and connect your Git repo or give SFTP credentials. Tomorrow: native Joomla module shipping to the Joomla Extensions Directory (JED) — currently in approval. Once approved, install via Extensions → Manage → Install → Upload Package File."}},
+      {"@type": "Question", "name": "Which Joomla versions are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Joomla 4.x and 5.x — full support (modern template structure with templates/[template]/html/ overrides). Joomla 3.10 — limited (EOL in August 2023, legacy MVC). Custom templates like Helix Ultimate, YOOtheme, Quix, JS_Unlimited, and core Cassiopeia all work as long as they follow the standard override pattern."}},
+      {"@type": "Question", "name": "Does it work with Helix Ultimate, YOOtheme, Quix templates?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — any custom Joomla template that follows the standard override path templates/[template]/html/com_[component]/ works. Helix Ultimate, YOOtheme Pro, Quix, JS_Unlimited, Astroid, and the default Cassiopeia template are all supported. SimpleReview detects the active template and writes the override into the correct theme folder, never touching components/com_[name]/."}},
+      {"@type": "Question", "name": "Is it safe for a live Joomla site?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview never pushes to your live branch directly. Every change is a Pull Request you review and merge. After deploy, run Joomla Cache → Clear All from System → Maintenance → Clear Cache (and Tools if needed) to flush stuck visual states. Worst case is a PR you reject."}},
+      {"@type": "Question", "name": "How is this cheaper than hiring a freelancer for $30-50/hr?", "acceptedAnswer": {"@type": "Answer", "text": "Speed and recurring cost. A Joomla freelancer takes 1-3 hours just to clone the repo, set up an environment, and locate the override file — the actual edit is often one line. SimpleReview already knows the Joomla override system (templates/[template]/html/com_[component]/, language/[lang]/, module overrides) and opens the PR in seconds. For complex work — custom extensions, J3→J5 migration, multilingual setup — pair with Vibers human review."}}
+    ]
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-text-size-adjust: 100%; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafaf8; color: #1a1a1a; line-height: 1.6; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    button, input, select, textarea, table, pre, code { font-family: inherit; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f1f1; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; }
+    h1, h2, h3 { text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { width: 100%; background: #fff; min-height: 100vh; padding: 0 20px; box-sizing: border-box; }
+    .content-wrap { max-width: 880px; margin: 0 auto; padding: 0 40px; }
+    a { color: #f44321; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 32px; padding-top: 24px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .site-nav a:hover { color: #f44321; border-color: #f44321; text-decoration: none; }
+
+    .hero { border-bottom: 2px solid #1c3d5a; padding: 32px 0 32px; margin-bottom: 32px; }
+    .hero-badge { display: inline-block; color: #f44321; font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 14px; }
+    .hero-badge::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #f44321; margin-right: 8px; vertical-align: middle; transform: translateY(-1px); }
+    h1 { font-size: 50px; font-weight: 800; letter-spacing: -1.2px; line-height: 1.04; margin-bottom: 16px; color: #1c3d5a; }
+    .hero h1 abbr { text-decoration: underline dotted; cursor: help; }
+    .hero-sub { font-size: 19px; color: #333; margin-bottom: 24px; line-height: 1.45; max-width: 680px; }
+    .cta-group { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; background: #f44321; color: #fff; font-size: 15px; font-weight: 600; padding: 12px 26px; border-radius: 8px; text-decoration: none; transition: background .15s; }
+    .btn-primary:hover { background: #c8341a; text-decoration: none; }
+    .btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; color: #1c3d5a; font-size: 15px; font-weight: 600; padding: 12px 22px; border-radius: 8px; border: 1px solid #d8d8d8; background: #fff; transition: border-color .15s, background .15s; }
+    .btn-secondary:hover { border-color: #f44321; color: #f44321; background: #fafafa; text-decoration: none; }
+
+    h2 { font-size: 30px; font-weight: 700; margin-bottom: 18px; letter-spacing: -0.5px; line-height: 1.15; color: #1c3d5a; }
+
+    .what-fixes { margin: 40px 0; padding: 24px; border: 1px solid #e8e8e8; border-radius: 8px; }
+    .fixes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin-top: 16px; }
+    .fix-item { font-size: 15px; color: #333; display: flex; align-items: baseline; gap: 8px; line-height: 1.55; }
+    .fix-item::before { content: "→"; color: #f44321; font-weight: 700; flex-shrink: 0; }
+
+    .how-it-works { margin: 40px 0; }
+    .steps { display: grid; gap: 16px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; padding: 20px; border: 1px solid #e8e8e8; border-radius: 8px; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: #1c3d5a; color: #fff; font-weight: 700; font-size: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .step-content h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.2px; color: #1c3d5a; }
+    .step-content p { font-size: 15px; color: #555; line-height: 1.55; }
+
+    .vs-section { margin: 40px 0; padding: 28px; background: #eef3f8; border: 1px solid #c8d6e3; border-radius: 8px; }
+    .vs-section h2 { margin-bottom: 16px; }
+    .vs-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .vs-table th { text-align: left; font-weight: 600; padding: 8px 12px; border-bottom: 2px solid #1c3d5a; background: transparent; color: #1c3d5a; }
+    .vs-table td { padding: 10px 12px; border-bottom: 1px solid #c8d6e3; vertical-align: top; }
+    .vs-table tr:last-child td { border-bottom: none; }
+    .col-vibers { background: #f5faff; }
+    .check { color: #16a34a; font-weight: 700; }
+    .cross { color: #dc2626; }
+
+    .use-cases { margin: 40px 0; }
+    .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .case-card { padding: 20px; border: 1px solid #e8e8e8; border-radius: 8px; }
+    .case-card h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.2px; color: #1c3d5a; }
+    .case-card p { font-size: 14px; color: #555; line-height: 1.55; }
+
+    .faq-section { margin: 40px 0; }
+    .faq-item { border-bottom: 1px solid #e8e8e8; padding: 16px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 600; font-size: 17px; margin-bottom: 8px; letter-spacing: -0.1px; color: #1c3d5a; }
+    .faq-a { font-size: 15px; color: #444; line-height: 1.65; }
+    .faq-a a { color: #f44321; }
+
+    .cta-box { margin: 40px 0; padding: 32px; background: linear-gradient(135deg, #1c3d5a 0%, #f44321 100%); color: #fff; border-radius: 8px; text-align: center; }
+    .cta-box h2 { color: #fff; margin-bottom: 12px; font-size: 30px; }
+    .cta-box p { color: #ffe4dd; margin-bottom: 24px; font-size: 15px; }
+    .btn-white { display: inline-block; background: #fff; color: #f44321; font-size: 15px; font-weight: 700; padding: 12px 28px; border-radius: 6px; text-decoration: none; }
+    .btn-white:hover { background: #fff5f0; text-decoration: none; }
+
+    footer { margin-top: 48px; padding-top: 24px; padding-bottom: 32px; border-top: 1px solid #e8e8e8; font-size: 13px; color: #888; }
+    footer a { color: #888; }
+    footer a:hover { color: #f44321; }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 36px; letter-spacing: -0.8px; }
+      h2 { font-size: 24px; }
+      .cta-box h2 { font-size: 24px; }
+      .hero-sub { font-size: 17px; }
+      .content-wrap { padding: 0 20px; }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 0 10px; }
+      .content-wrap { padding: 0 10px; }
+      h1 { font-size: 30px; }
+      .case-grid { grid-template-columns: 1fr; }
+      .fixes-grid { grid-template-columns: 1fr; }
+      .vs-table { font-size: 13px; }
+      .vs-table th, .vs-table td { padding: 8px 8px; }
+      .btn-primary, .btn-secondary { width: 100%; }
+      .cta-group { flex-direction: column; align-items: stretch; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+    }
+
+    /* ─────── Joomla 5 Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* Joomla site (Cassiopeia) */
+    .sc-jm-header{background:#1c3d5a;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-jm-logo{font-size:14px;font-weight:800;letter-spacing:.4px}
+    .sc-jm-logo span{color:#f44321}
+    .sc-jm-nav{font-size:10px;display:flex;gap:14px;opacity:.95}
+    .sc-jm-hero{background:linear-gradient(135deg,#274c6e,#1c3d5a);color:#fff;padding:20px 230px 18px 30px}
+    .sc-jm-h{font-size:16px;font-weight:700;margin-bottom:5px}
+    .sc-jm-sub{font-size:11px;opacity:.85;line-height:1.5}
+    .sc-jm-articles{padding:14px 230px 12px 30px}
+    .sc-jm-art{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:8px 10px;margin-bottom:6px}
+    .sc-jm-art-h{font-size:11px;font-weight:700;color:#1c3d5a;margin-bottom:3px}
+    .sc-jm-art-meta{font-size:9px;color:#888}
+
+    /* Joomla footer "Powered by" — TARGET */
+    .sc-jm-footer{background:#1c3d5a;color:#cdd5dd;padding:14px 230px 14px 30px;margin-top:14px;font-size:10px;line-height:1.5}
+    .sc-jm-footer-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+    .sc-jm-footer-left{flex:1;font-size:10px}
+    .sc-jm-poweredby{display:inline-block;background:#fff;color:#1c3d5a;border:1px solid #f44321;border-left:4px solid #f44321;padding:9px 14px 9px 12px;font-size:11px;font-weight:600;border-radius:3px;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:none}}
+    .sc-jm-poweredby::after{content:'Selected';position:absolute;top:-10px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-jm-poweredby-mark{color:#f44321;font-weight:800}
+    .sc-jm-poweredby-fade{animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#1c3d5a;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#1c3d5a;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-footer{background:#1c3d5a;color:#cdd5dd;padding:10px 14px;font-size:10px;text-align:center}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#1c3d5a;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #1c3d5a;color:#1c3d5a;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#1c3d5a;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:240px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1c3d5a;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:160px;top:300px;opacity:1}
+      22%  {left:160px;top:300px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-jm-articles{padding:14px 140px 12px 14px}
+      .sc-jm-footer{padding:14px 140px 14px 14px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+
+    <nav class="site-nav">
+      <a href="/vibers/">Vibers</a> &nbsp;·&nbsp;
+      <a href="/simple-review/">SimpleReview</a> &nbsp;·&nbsp;
+      <a href="/joomla/how-to-fix-joomla-issues/">Joomla fix guide</a> &nbsp;·&nbsp;
+      <a href="/vibers/blog/">Blog</a>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-badge">SimpleReview · for Joomla · Chrome Extension</div>
+      <h1>Click any element on your Joomla site. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, pull request, or deployed directly to your server">code fix</abbr>.</h1>
+      <p class="hero-sub">Stop paying $40/hour for a one-line tweak. SimpleReview reads your <code>templates/[template]/html/</code> override system, language strings, and module overrides — and opens a Pull Request you can review and merge. Native Joomla module currently in approval at the <strong>Joomla Extensions Directory (JED)</strong>.</p>
+      <div class="cta-group">
+        <a class="btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_joomla_hub&utm_medium=hero">Download Extension</a>
+        <a class="btn-secondary" href="/joomla/how-to-fix-joomla-issues/">Read the Joomla fix guide →</a>
+      </div>
+    </header>
+
+    <div id="sc-banner-fallback" class="sc-banner joomla" aria-label="Animated demo: SimpleReview's Joomla expert overrides the Powered-by Joomla footer block and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mysite.com</div>
+        <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Joomla site -->
+            <div class="sc-jm-header">
+              <div class="sc-jm-logo">My<span>Site</span></div>
+              <div class="sc-jm-nav">Home · Services · Blog · Contact · Login</div>
+            </div>
+            <div class="sc-jm-hero">
+              <div class="sc-jm-h">Welcome to MySite</div>
+              <div class="sc-jm-sub">Built on Joomla 5 — modern, fast, content-first.</div>
+            </div>
+            <div class="sc-jm-articles">
+              <div class="sc-jm-art">
+                <div class="sc-jm-art-h">Latest news from the team</div>
+                <div class="sc-jm-art-meta">By Admin · April 28, 2026 · 4 min read</div>
+              </div>
+              <div class="sc-jm-art">
+                <div class="sc-jm-art-h">Spring catalog updated</div>
+                <div class="sc-jm-art-meta">By Editor · April 25, 2026 · 2 min read</div>
+              </div>
+            </div>
+            <!-- Footer with Powered-by Joomla (TARGET) -->
+            <div class="sc-jm-footer">
+              <div class="sc-jm-footer-row">
+                <div class="sc-jm-footer-left sc-jm-poweredby-fade">© 2026 MySite · All rights reserved<br>Privacy · Terms · Contact</div>
+                <div class="sc-jm-poweredby">Powered by <span class="sc-jm-poweredby-mark">Joomla!</span><sup>®</sup></div>
+              </div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-jm-logo">My<span>Site</span></div>
+                <div class="sc-jm-nav">Home · Services · Blog · Contact</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">NEW</span>Spring catalog now live — explore</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Powered-by Joomla hidden via template override · index.php patched · PR #42</span>
+                <div class="sc-rec-h">Latest articles</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+              <div class="sc-rec-footer">© 2026 MySite · Privacy · Terms · Contact</div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">hide Powered by Joomla in footer</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>Joomla expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">Joomla 5.1.2</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Template</span><span class="sc-sb-v">cassiopeia</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">index.php</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Override Powered-By module in <code style="font-size:8px">templates/cassiopeia/index.php</code> · 1 file · 5 lines</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Joomla branding hidden. Footer copyright preserved.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(footer): override Powered-by block<br>cassiopeia/index.php · -3 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the Powered-by block → <strong>Fix it</strong> → PR opens, no developer involved</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <section class="what-fixes">
+      <h2>What SimpleReview can fix on Joomla</h2>
+      <div class="fixes-grid">
+        <div class="fix-item">Template overrides in <code>templates/[template]/html/com_[component]/</code></div>
+        <div class="fix-item">Backend overrides in <code>administrator/templates/[template]/html/</code></div>
+        <div class="fix-item">Language strings in <code>language/[lang]/[lang].com_[component].ini</code></div>
+        <div class="fix-item">Module override files (<code>mod_*</code>)</div>
+        <div class="fix-item">Custom CSS/JS in <code>templates/[template]/css/</code>, <code>js/</code></div>
+        <div class="fix-item">User template params and <code>index.php</code> layout</div>
+        <div class="fix-item">Hide "Powered by Joomla!" / footer credit</div>
+        <div class="fix-item">Cache clear (<code>administrator/cache/</code>) for stuck visual states</div>
+      </div>
+      <p style="font-size:13px; color:#888; margin-top:16px;">
+        Works with Joomla 4.x, 5.x. Joomla 3.10 EOL — limited. Custom templates (Helix Ultimate, YOOtheme, Quix, JS_Unlimited, Cassiopeia) — yes if standard override pattern.
+      </p>
+    </section>
+
+    <section class="how-it-works">
+      <h2>How SimpleReview works on Joomla</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Install the Chrome Extension</h3>
+            <p>Add SimpleReview to Chrome. The native Joomla module is currently in approval at the Joomla Extensions Directory (JED) — once published, install via Extensions → Manage → Install.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Auto-detects Joomla via generator meta</h3>
+            <p>SimpleReview reads <code>&lt;meta name="generator" content="Joomla! - Open Source Content Management"&gt;</code> and the front-end signatures, then identifies the active template (Cassiopeia, Helix Ultimate, YOOtheme, Quix, etc.).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Connect your site's Git or SFTP</h3>
+            <p>GitHub, GitLab, Gitea, Bitbucket, or direct SFTP. SimpleReview indexes <code>templates/</code>, <code>language/</code>, and <code>modules/</code> on first connection.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Click element → get a Pull Request</h3>
+            <p>Hover any block, button, "Powered by" credit, broken module output. Type the change in plain language. The agent edits the right <code>templates/[template]/html/com_[component]/</code> override and opens a PR. After merge, run Joomla <strong>System → Maintenance → Clear Cache → Clear All</strong> (and Tools if needed) to flush stuck visual states.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section">
+      <h2>SimpleReview vs Hiring a Joomla Freelancer</h2>
+      <table class="vs-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Freelancer ($30-50/hr)</th>
+            <th class="col-vibers">SimpleReview</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Time to start (per task)</td>
+            <td>1–3 hours (Zoom + repo setup + onboarding)</td>
+            <td class="col-vibers">30 seconds (one-time setup, then cached)</td>
+          </tr>
+          <tr>
+            <td>Discovers which override file owns the bug</td>
+            <td>15–90 min depending on template familiarity</td>
+            <td class="col-vibers">Instant — already indexed</td>
+          </tr>
+          <tr>
+            <td>Knows Joomla override path (<code>templates/[template]/html/com_[component]/</code>)</td>
+            <td>If you hire a senior</td>
+            <td class="col-vibers">Built-in</td>
+          </tr>
+          <tr>
+            <td>Front-end + admin (<code>administrator/templates/</code>) overrides</td>
+            <td>Manual</td>
+            <td class="col-vibers">Both auto-detected</td>
+          </tr>
+          <tr>
+            <td>Custom-template-aware (Helix Ultimate, YOOtheme, Quix, JS_Unlimited)</td>
+            <td>Manual</td>
+            <td class="col-vibers">Yes — active template detected, override written there</td>
+          </tr>
+          <tr>
+            <td>Opens a PR you can review</td>
+            <td>Sometimes (if they use Git)</td>
+            <td class="col-vibers">Always</td>
+          </tr>
+          <tr>
+            <td>Cost for a one-line change</td>
+            <td>$30–150 (1-hour minimum)</td>
+            <td class="col-vibers">Free with your own AI key — pennies of API usage otherwise</td>
+          </tr>
+          <tr>
+            <td>Recommended for custom extensions / J3→J5 migration / multilingual</td>
+            <td>Yes — pair with <a href="/vibers/">Vibers human review</a></td>
+            <td class="col-vibers">No — escalate to Vibers for the 20% of work that needs a human</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="use-cases">
+      <h2>Who uses SimpleReview on Joomla</h2>
+      <div class="case-grid">
+        <div class="case-card">
+          <h3>Joomla site owners</h3>
+          <p>One-line copy + template tweaks ship the same hour, instead of waiting for the agency to "have a free evening".</p>
+        </div>
+        <div class="case-card">
+          <h3>Joomla agencies</h3>
+          <p>Drafts the boring 80% of tickets so seniors focus on custom-component and migration work.</p>
+        </div>
+        <div class="case-card">
+          <h3>Freelancers managing multiple J5 sites</h3>
+          <p>One Chrome Extension across all clients; each Joomla install has its own connected repo and active-template context.</p>
+        </div>
+        <div class="case-card">
+          <h3>Non-tech editors</h3>
+          <p>See the broken thing on the front end, click it, describe in plain language. Get a PR your hosting partner or developer can merge.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <div class="faq-q">Can I edit my Joomla site without a developer?</div>
+        <div class="faq-a">For most cosmetic and structural edits — yes. Template overrides in <code>templates/[template]/html/com_[component]/</code>, language strings, module overrides, custom CSS/JS. SimpleReview opens a PR for those in seconds. For Joomla extension development, multilingual config, and major migrations — pair with <a href="/vibers/">Vibers human review</a>.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How does SimpleReview install on Joomla?</div>
+        <div class="faq-a">Today: install the Chrome Extension and connect your Git repo or give SFTP credentials. Tomorrow: native Joomla module shipping to the <strong>Joomla Extensions Directory (JED)</strong> — currently in approval. Once approved, install via Extensions → Manage → Install → Upload Package File.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Which Joomla versions are supported?</div>
+        <div class="faq-a">Joomla 4.x and 5.x — full support (modern template structure with <code>templates/[template]/html/</code> overrides). Joomla 3.10 — limited (EOL in August 2023, legacy MVC). Tested on Cassiopeia and major custom templates.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Does it work with Helix Ultimate, YOOtheme, Quix templates?</div>
+        <div class="faq-a">Yes — any custom Joomla template that follows the standard override path <code>templates/[template]/html/com_[component]/</code> works. Helix Ultimate, YOOtheme Pro, Quix, JS_Unlimited, Astroid, and the default Cassiopeia template are all supported. SimpleReview detects the active template and writes the override into the correct theme folder, never touching <code>components/com_[name]/</code>.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is it safe for a live Joomla site?</div>
+        <div class="faq-a">SimpleReview never pushes to your live branch directly. Every change is a Pull Request you review and merge. After deploy, run Joomla <strong>System → Maintenance → Clear Cache → Clear All</strong> (and Tools if needed) to flush stuck visual states. Worst case is a PR you reject.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How is this cheaper than hiring a freelancer for $30-50/hr?</div>
+        <div class="faq-a">Speed and recurring cost. A Joomla freelancer takes 1-3 hours just to clone the repo, set up an environment, and locate the override file — the actual edit is often one line. SimpleReview already knows the Joomla override system (<code>templates/[template]/html/com_[component]/</code>, <code>language/[lang]/</code>, module overrides) and opens the PR in seconds. For complex work — custom extensions, J3→J5 migration, multilingual setup — pair with <a href="/vibers/">Vibers human review</a>.</div>
+      </div>
+    </section>
+
+    <div class="cta-box">
+      <h2>Stop paying $40/hr for one-line Joomla tweaks</h2>
+      <p>SimpleReview's Joomla-aware AI agent already knows the override system. Click the element, type the change, get a Pull Request. Native module currently shipping to the Joomla Extensions Directory (JED).</p>
+      <a class="btn-white" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_joomla_hub&utm_medium=cta">Get SimpleReview for Chrome →</a>
+      <p style="margin-top:14px;font-size:14px;opacity:0.85">Custom extensions, J3→J5 migration, multilingual? → <a href="/vibers/" style="color:inherit;text-decoration:underline">Get a human review</a></p>
+    </div>
+
+    <p style="font-size:14px;color:#555;margin:32px 0 16px;">
+      Read more:
+      <a href="/joomla/how-to-fix-joomla-issues/">How to fix Joomla 4/5 issues</a> ·
+      <a href="/simple-review/">SimpleReview product page</a> ·
+      <a href="/vibers/">Vibers human-in-the-loop review</a>
+    </p>
+
+    <footer>
+      <p>SimpleReview for Joomla is a product by <a href="/vibers/">Vibers</a> — Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener">onout.org</a> | <a href="/vibers/blog/">Blog</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener">Telegram</a> | <a href="mailto:support@onout.org">Email</a> | <a href="/vibers/privacy.html">Privacy</a></p>
+    </footer>
+
+  </div><!-- /content-wrap -->
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

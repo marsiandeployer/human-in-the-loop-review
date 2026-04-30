@@ -127,6 +127,46 @@ Brand assets now use `assets/vibers-logo-source.jpg` as the source file for READ
 
 For quick synthetic inspector screenshots, `demo/visual-bug.html` contains a deliberately exaggerated action-button bug where the label spills outside a fixed-width button body, and `demo/visual-fix.html` shows the corrected state. Run `scripts/build-demo-store-assets.sh` to regenerate the full captures plus the single side-by-side before/after banner assets `demo/chrome-store-before-after-640x400.png` and `demo/chrome-store-before-after-1280x800.png` for Chrome Web Store uploads.
 
+## CMS Marketplace Hubs
+
+We ship a SimpleReview module/extension to every major CMS marketplace. Each CMS gets a dedicated landing hub at `https://onout.org/[cms]/` with an animated 28s SimpleReview demo banner targeted at that platform's storefront/admin, plus deeper fix-and-customize articles.
+
+| CMS | Hub | Deep article(s) | Marketplace target |
+|-----|-----|-----------------|---------------------|
+| WordPress | [/wordpress/](https://onout.org/wordpress/) | [How to fix and improve WordPress sites](https://onout.org/wordpress/how-to-fix-and-improve-wordpress-sites/) + 9 specific bug articles | WordPress Plugin Directory |
+| 1С-Битрикс | [/bitrix/](https://onout.org/bitrix/) | [How to fix and customize Bitrix sites (RU)](https://onout.org/bitrix/how-to-fix-and-customize-bitrix-sites/) | 1С-Битрикс: Маркетплейс |
+| Magento 2 | [/magento/](https://onout.org/magento/) | [How to fix Magento 2 issues](https://onout.org/magento/how-to-fix-magento-2-issues/) | Adobe Commerce Marketplace |
+| Joomla 5 | [/joomla/](https://onout.org/joomla/) | [How to fix Joomla issues](https://onout.org/joomla/how-to-fix-joomla-issues/) | Joomla Extensions Directory (JED) |
+| PrestaShop | [/prestashop/](https://onout.org/prestashop/) | [How to fix PrestaShop issues](https://onout.org/prestashop/how-to-fix-prestashop-issues/) | PrestaShop Addons |
+| CS-Cart | [/cs-cart/](https://onout.org/cs-cart/) | [How to fix and customize CS-Cart](https://onout.org/cs-cart/how-to-fix-and-customize-cs-cart/) | CS-Cart Marketplace |
+| Webasyst (Shop-Script) | [/webasyst/](https://onout.org/webasyst/) | [Доработка Shop-Script (RU)](https://onout.org/webasyst/how-to-fix-and-customize-shop-script/) | Webasyst Store |
+| OpenCart | [/opencart/](https://onout.org/opencart/) | [How to fix OpenCart issues](https://onout.org/opencart/how-to-fix-opencart-issues/) + [Edit OpenCart without a developer](https://onout.org/opencart/edit-opencart-without-developer/) | OpenCart Extension Store |
+| Shopware 6 | [/shopware/](https://onout.org/shopware/) | [How to fix Shopware 6 issues](https://onout.org/shopware/how-to-fix-shopware-6-issues/) | Shopware Store |
+| Drupal 10/11 | [/drupal/](https://onout.org/drupal/) | [How to fix Drupal issues](https://onout.org/drupal/how-to-fix-drupal-issues/) + [Hire Drupal developer or use SimpleReview](https://onout.org/drupal/hire-drupal-developer-or-use-simplereview/) | drupal.org/project/ |
+
+### Shared structure of each hub
+
+Every `/[cms]/index.html` follows the same composition:
+
+1. **Hero** — H1 with platform-specific value prop + Chrome Web Store CTA
+2. **Animated banner** (28s cycle, `.sc-*` CSS classes) — cursor → extension icon → target element → SimpleReview popup → "Fix it" → recovered state + PR sidebar; auto-restart on scroll-in via IntersectionObserver
+3. **What SimpleReview can fix** — 8 grid items, platform-specific (theme paths, hooks, language strings, etc.)
+4. **How it works** — 4 steps adapted per platform (auto-detect mechanism, repo connection, click → PR)
+5. **Comparison table** — freelancer/specialist hourly rate vs SimpleReview, 8 rows
+6. **Use cases** — 4 personas (store owners, agencies, freelancers, non-tech)
+7. **FAQ** — 6 Q&A mirrored in `FAQPage` JSON-LD (BlogPosting JSON-LD also present)
+8. **CTA** — primary download + secondary [Vibers human review](https://onout.org/vibers/) for the 20% of work needing real human signoff
+9. **Footer** — read-more links + brand attribution
+
+Brand color is platform-specific (PrestaShop pink `#df0067`, Magento orange `#ee672f`, Drupal blue `#0678be`, etc.) but structural CSS is shared via the `/simple-review/` template.
+
+### Source data + planning
+
+- Keyword research per CMS: [`docs/keywords/*_broad-match_*_2026-04-30.csv`](docs/keywords/) (Semrush exports, 9 CMSs, ~250K total keywords)
+- Article backlog: [`docs/keywords/cms-content-backlog-2026-04-30.md`](docs/keywords/cms-content-backlog-2026-04-30.md) (62 articles, Tier 1-3 by KD)
+- Master tracker: [Issue #66](https://github.com/marsiandeployer/human-in-the-loop-review/issues/66)
+- Forum press releases for each CMS marketplace launch: [Issue #67](https://github.com/marsiandeployer/human-in-the-loop-review/issues/67)
+
 ## Vibers vs Alternatives
 
 | Feature | Vibers | CodeRabbit | SonarQube | PullRequest.com |
@@ -163,6 +203,7 @@ No subscriptions. No contracts. No minimums.
 ## Promotion Notes
 
 - [AI Chat Promotion Playbook](docs/ai-chat-promotion-playbook.md) — how to get Vibers and SimpleReview discovered in ChatGPT, Perplexity, Gemini, Grok, Claude, Copilot, and other AI answer engines.
+- [Platform-specific forums](docs/WIKI.md#platform-specific-forums-for-community-placement-2026-04-30) — where to answer Shopify, Webflow, Bubble, WordPress, WooCommerce, Magento, OpenCart, PrestaShop, and similar platform threads without spam.
 
 ## FAQ
 

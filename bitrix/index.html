@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Доработка сайта на 1С-Битрикс без программиста — SimpleReview for Bitrix</title>
+  <meta name="description" content="Кликни любой элемент на сайте на Битрикс. SimpleReview знает /local/ override-систему, шаблоны, компоненты — и присылает Pull Request, не правя ядро в /bitrix/.">
+  <meta name="keywords" content="доработка битрикс без программиста, битрикс модуль simplereview, кликнуть и поправить битрикс, битрикс /local/, edit bitrix without developer, битрикс маркетплейс модуль">
+  <link rel="canonical" href="https://onout.org/bitrix/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Доработка сайта на 1С-Битрикс без программиста — SimpleReview for Bitrix">
+  <meta property="og:description" content="Кликни любой элемент на сайте на Битрикс. SimpleReview знает /local/ override-систему — и присылает Pull Request, не трогая ядро.">
+  <meta property="og:url" content="https://onout.org/bitrix/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Доработка сайта на 1С-Битрикс без программиста — SimpleReview for Bitrix">
+  <meta name="twitter:description" content="Кликни элемент на сайте на 1С-Битрикс. Получи Pull Request, не тикет.">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Доработка сайта на 1С-Битрикс без программиста — SimpleReview for Bitrix",
+    "description": "Кликни любой элемент на сайте на Битрикс. SimpleReview знает /local/ override-систему, шаблоны, компоненты — и присылает Pull Request, не правя ядро в /bitrix/.",
+    "url": "https://onout.org/bitrix/",
+    "datePublished": "2026-04-30",
+    "dateModified": "2026-04-30",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/bitrix/" }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "Можно ли править сайт на Битриксе без программиста?", "acceptedAnswer": {"@type": "Answer", "text": "Для 80% задач — да. Шаблоны, языковые файлы, captcha, копирайт. Для интеграции 1С, кастомной оплаты, миграции — нужен живой человек, Vibers human-in-the-loop review."}},
+      {"@type": "Question", "name": "Как установить SimpleReview на Битрикс-сайт?", "acceptedAnswer": {"@type": "Answer", "text": "Сейчас: Chrome Extension + подключить Git/SFTP. Скоро: нативный модуль на 1С-Битрикс: Маркетплейс (на ревью). Установка через Marketplace → Каталог → SimpleReview → Установить."}},
+      {"@type": "Question", "name": "Какие редакции Битрикса поддерживаются?", "acceptedAnswer": {"@type": "Answer", "text": "Управление сайтом (Старт / Малый бизнес / Бизнес / Веб-кластер). Все версии 16.0+. Bitrix24 SaaS не поддерживается (нет файлового доступа). Bitrix24 Enterprise on-premise — поддерживается."}},
+      {"@type": "Question", "name": "Безопасно ли это для прода?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview не пушит в основную ветку напрямую. Каждое изменение — PR, который вы ревьюите и мержите. Используйте staging-клон + git workflow."}},
+      {"@type": "Question", "name": "Чем это лучше фрилансера за 2000 ₽/час?", "acceptedAnswer": {"@type": "Answer", "text": "Скорость и стоимость стартовой задачи. Фрилансеру нужен 1-3 часа просто чтобы клонировать репо и найти файл. SimpleReview уже знает структуру /local/ и открывает PR за секунды."}},
+      {"@type": "Question", "name": "Что про сложные модули — оплата, 1С-интеграция, миграция Bitrix24 ↔ on-premise?", "acceptedAnswer": {"@type": "Answer", "text": "Это работа для живого специалиста. SimpleReview может подготовить PR-черновик, но финальный merge должен ревьюить человек. Vibers делает именно это — ревью PR-ов перед merge."}}
+    ]
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-text-size-adjust: 100%; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafaf8; color: #1a1a1a; line-height: 1.6; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    button, input, select, textarea, table, pre, code { font-family: inherit; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f1f1; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; }
+    h1, h2, h3 { text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { width: 100%; background: #fff; min-height: 100vh; padding: 0 20px; box-sizing: border-box; }
+    .content-wrap { max-width: 880px; margin: 0 auto; padding: 0 40px; }
+    a { color: #ff7e00; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 32px; padding-top: 24px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .site-nav a:hover { color: #ff7e00; border-color: #ff7e00; text-decoration: none; }
+
+    .hero { border-bottom: 2px solid #1a1a1a; padding: 32px 0 32px; margin-bottom: 32px; }
+    .hero-badge { display: inline-block; color: #ff7e00; font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 14px; }
+    .hero-badge::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ff7e00; margin-right: 8px; vertical-align: middle; transform: translateY(-1px); }
+    h1 { font-size: 50px; font-weight: 800; letter-spacing: -1.2px; line-height: 1.04; margin-bottom: 16px; }
+    .hero h1 abbr { text-decoration: underline dotted; cursor: help; }
+    .hero-sub { font-size: 19px; color: #333; margin-bottom: 24px; line-height: 1.45; max-width: 680px; }
+    .cta-group { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; background: #ff7e00; color: #fff; font-size: 15px; font-weight: 600; padding: 12px 26px; border-radius: 8px; text-decoration: none; transition: background .15s; }
+    .btn-primary:hover { background: #cc6500; text-decoration: none; }
+    .btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; color: #1a1a1a; font-size: 15px; font-weight: 600; padding: 12px 22px; border-radius: 8px; border: 1px solid #d8d8d8; background: #fff; transition: border-color .15s, background .15s; }
+    .btn-secondary:hover { border-color: #ff7e00; color: #ff7e00; background: #fafafa; text-decoration: none; }
+
+    h2 { font-size: 30px; font-weight: 700; margin-bottom: 18px; letter-spacing: -0.5px; line-height: 1.15; }
+
+    .what-fixes { margin: 40px 0; padding: 24px; border: 1px solid #e8e8e8; border-radius: 8px; }
+    .fixes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin-top: 16px; }
+    .fix-item { font-size: 15px; color: #333; display: flex; align-items: baseline; gap: 8px; line-height: 1.55; }
+    .fix-item::before { content: "→"; color: #ff7e00; font-weight: 700; flex-shrink: 0; }
+
+    .how-it-works { margin: 40px 0; }
+    .steps { display: grid; gap: 16px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; padding: 20px; border: 1px solid #e8e8e8; border-radius: 8px; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; background: #ff7e00; color: #fff; font-weight: 700; font-size: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .step-content h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.2px; }
+    .step-content p { font-size: 15px; color: #555; line-height: 1.55; }
+
+    .vs-section { margin: 40px 0; padding: 28px; background: #fff5e8; border: 1px solid #ffd5a8; border-radius: 8px; }
+    .vs-section h2 { margin-bottom: 16px; }
+    .vs-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .vs-table th { text-align: left; font-weight: 600; padding: 8px 12px; border-bottom: 2px solid #1a1a1a; background: transparent; }
+    .vs-table td { padding: 10px 12px; border-bottom: 1px solid #f0d5b3; vertical-align: top; }
+    .vs-table tr:last-child td { border-bottom: none; }
+    .col-vibers { background: #fff0db; }
+    .check { color: #16a34a; font-weight: 700; }
+    .cross { color: #dc2626; }
+
+    .use-cases { margin: 40px 0; }
+    .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .case-card { padding: 20px; border: 1px solid #e8e8e8; border-radius: 8px; }
+    .case-card h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.2px; }
+    .case-card p { font-size: 14px; color: #555; line-height: 1.55; }
+
+    .faq-section { margin: 40px 0; }
+    .faq-item { border-bottom: 1px solid #e8e8e8; padding: 16px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 600; font-size: 17px; margin-bottom: 8px; letter-spacing: -0.1px; }
+    .faq-a { font-size: 15px; color: #444; line-height: 1.65; }
+    .faq-a a { color: #ff7e00; }
+
+    .cta-box { margin: 40px 0; padding: 32px; background: linear-gradient(135deg, #1a1a1a 0%, #b85a00 100%); color: #fff; border-radius: 8px; text-align: center; }
+    .cta-box h2 { color: #fff; margin-bottom: 12px; font-size: 30px; }
+    .cta-box p { color: #ffe2c0; margin-bottom: 24px; font-size: 15px; }
+    .btn-white { display: inline-block; background: #fff; color: #ff7e00; font-size: 15px; font-weight: 700; padding: 12px 28px; border-radius: 6px; text-decoration: none; }
+    .btn-white:hover { background: #fff5e8; text-decoration: none; }
+
+    footer { margin-top: 48px; padding-top: 24px; padding-bottom: 32px; border-top: 1px solid #e8e8e8; font-size: 13px; color: #888; }
+    footer a { color: #888; }
+    footer a:hover { color: #ff7e00; }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 36px; letter-spacing: -0.8px; }
+      h2 { font-size: 24px; }
+      .cta-box h2 { font-size: 24px; }
+      .hero-sub { font-size: 17px; }
+      .content-wrap { padding: 0 20px; }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 0 10px; }
+      .content-wrap { padding: 0 10px; }
+      h1 { font-size: 30px; }
+      .case-grid { grid-template-columns: 1fr; }
+      .fixes-grid { grid-template-columns: 1fr; }
+      .vs-table { font-size: 13px; }
+      .vs-table th, .vs-table td { padding: 8px 8px; }
+      .btn-primary, .btn-secondary { width: 100%; }
+      .cta-group { flex-direction: column; align-items: stretch; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+    }
+
+    /* ─────── Bitrix Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* Bitrix storefront */
+    .sc-bx-topbar{background:#1f2935;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-bx-topbar .links{display:flex;gap:10px;opacity:.85}
+    .sc-bx-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ff7e00}
+    .sc-bx-logo{font-size:14px;font-weight:800;color:#1f2935;letter-spacing:.3px}
+    .sc-bx-logo span{color:#ff7e00}
+    .sc-bx-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:3px;padding:4px 8px;font-size:10px;color:#888}
+    .sc-bx-cart{font-size:11px;font-weight:600;color:#fff;background:#ff7e00;border-radius:3px;padding:4px 9px}
+
+    /* Product grid */
+    .sc-bx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 230px 0 30px;max-width:520px;margin:0}
+    .sc-bx-card{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:8px;text-align:center}
+    .sc-bx-thumb{width:100%;height:42px;background:linear-gradient(135deg,#fde6cc,#ffd1a6);border-radius:3px;margin-bottom:5px}
+    .sc-bx-pname{font-size:9px;font-weight:600;color:#222;line-height:1.3;height:24px;overflow:hidden}
+    .sc-bx-price{font-size:10px;font-weight:700;color:#ff7e00;margin-top:3px}
+
+    /* Footer with Bitrix copyright — TARGET */
+    .sc-bx-footer{background:#1f2935;color:#aaa;padding:14px 230px 14px 30px;margin-top:14px;font-size:10px;line-height:1.5;display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+    .sc-bx-footer-left{flex:1}
+    .sc-bx-poweredby{display:inline-block;background:#fff;color:#1f2935;border:1px solid #ff7e00;border-left:4px solid #ff7e00;padding:9px 14px 9px 12px;font-size:11px;font-weight:600;border-radius:3px;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:none}}
+    .sc-bx-poweredby::after{content:'Selected';position:absolute;top:-10px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-bx-poweredby-mark{color:#ff7e00;font-weight:800}
+    .sc-bx-poweredby-fade{animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Recovered storefront */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-topbar{background:#1f2935;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:2px solid #ff7e00;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#ff7e00;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-footer{background:#1f2935;color:#aaa;padding:10px 14px;font-size:10px;text-align:center}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#ff7e00;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #ff7e00;color:#a04d00;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#a04d00;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:240px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#ff7e00;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:160px;top:300px;opacity:1}
+      22%  {left:160px;top:300px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-bx-grid{grid-template-columns:repeat(3,1fr);max-width:380px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+
+    <nav class="site-nav">
+      <a href="/vibers/">Vibers</a> &nbsp;·&nbsp;
+      <a href="/simple-review/">SimpleReview</a> &nbsp;·&nbsp;
+      <a href="/bitrix/how-to-fix-and-customize-bitrix-sites/">Гид по правке Битрикса</a> &nbsp;·&nbsp;
+      <a href="/vibers/blog/">Блог</a>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-badge">SimpleReview · для 1С-Битрикс · Chrome Extension</div>
+      <h1>Кликни элемент на сайте на 1С-Битрикс. Получи <abbr title="Правка автоматически уходит в GitHub как commit, pull request или прямо на ваш сервер">code fix</abbr>.</h1>
+      <p class="hero-sub">Хватит платить 2-3 тыс ₽ за правку одного файла в <code>/local/templates/</code>. SimpleReview знает <code>/bitrix/</code> → <code>/local/</code> override-правило, открывает PR — ядро остаётся нетронутым, апдейты не ломаются.</p>
+      <div class="cta-group">
+        <a class="btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_bitrix_hub&utm_medium=hero">Download Extension</a>
+        <a class="btn-secondary" href="/bitrix/how-to-fix-and-customize-bitrix-sites/">Прочитать гид по правке Битрикса →</a>
+      </div>
+    </header>
+
+    <div id="sc-banner-fallback" class="sc-banner bitrix" aria-label="Animated demo: SimpleReview's Bitrix expert removes the Powered-by Bitrix copyright and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mystore.ru</div>
+        <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- Bitrix storefront -->
+            <div class="sc-bx-topbar">
+              <span>+7 (495) 555-0099 · Доставка по РФ</span>
+              <span class="links">Личный кабинет · Избранное · Заказ</span>
+            </div>
+            <div class="sc-bx-header">
+              <div class="sc-bx-logo">Мой<span>Магазин</span></div>
+              <div class="sc-bx-search">Поиск товаров…</div>
+              <div class="sc-bx-cart">Корзина · 0 ₽</div>
+            </div>
+            <!-- Product grid -->
+            <div class="sc-bx-grid">
+              <div class="sc-bx-card"><div class="sc-bx-thumb"></div><div class="sc-bx-pname">Смартфон Pro 256</div><div class="sc-bx-price">79 990 ₽</div></div>
+              <div class="sc-bx-card"><div class="sc-bx-thumb"></div><div class="sc-bx-pname">Ноутбук Air 13"</div><div class="sc-bx-price">119 990 ₽</div></div>
+              <div class="sc-bx-card"><div class="sc-bx-thumb"></div><div class="sc-bx-pname">Наушники Pro 2</div><div class="sc-bx-price">24 990 ₽</div></div>
+            </div>
+            <!-- Footer with Bitrix copyright (TARGET) -->
+            <div class="sc-bx-footer">
+              <div class="sc-bx-footer-left sc-bx-poweredby-fade">© 2026 МойМагазин · Все права защищены<br>Каталог · О нас · Контакты · Доставка</div>
+              <div class="sc-bx-poweredby">Сайт работает на <span class="sc-bx-poweredby-mark">1С-Битрикс</span></div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-topbar">
+                <span>+7 (495) 555-0099 · Доставка по РФ</span>
+                <span>Личный кабинет · Избранное</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-bx-logo">Мой<span>Магазин</span></div>
+                <div class="sc-bx-search">Поиск товаров…</div>
+                <div class="sc-bx-cart">Корзина · 0 ₽</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">FREE</span>Бесплатная доставка от 3 000 ₽ — каждый день</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Копирайт Битрикса убран · footer.php пропатчен · PR #42 готов</span>
+                <div class="sc-rec-h">Популярные товары</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+              <div class="sc-rec-footer">© 2026 МойМагазин · Все права защищены</div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Комментарий</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">убрать копирайт Битрикса</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>Bitrix expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">1С-Битрикс 23</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Шаблон</span><span class="sc-sb-v">main</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">footer.php</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Удалить блок "Сайт работает на 1С-Битрикс" из <code style="font-size:8px">/local/templates/main/footer.php</code> · 1 файл</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Брендинг Битрикса убран. Лицензия не нарушена (коммерческая редакция).</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(footer): drop 1С-Битрикс copyright<br>footer.php · -4 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Кликни SimpleReview → выбери копирайт → <strong>Fix it</strong> → PR готов, без программиста</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <section class="what-fixes">
+      <h2>Что SimpleReview правит на Битриксе</h2>
+      <div class="fixes-grid">
+        <div class="fix-item">Шаблоны компонентов в <code>/local/templates/[theme]/components/bitrix/</code></div>
+        <div class="fix-item">Шаблон сайта в <code>/local/templates/[theme]/header.php</code>, <code>footer.php</code></div>
+        <div class="fix-item">Языковые файлы в <code>/local/templates/[theme]/lang/ru/</code></div>
+        <div class="fix-item">Init-скрипты в <code>/local/php_interface/init.php</code></div>
+        <div class="fix-item">CSS/JS в <code>/local/templates/[theme]/styles.css</code>, <code>script.js</code></div>
+        <div class="fix-item">Удаление "Powered by 1С-Битрикс" / редактирование копирайта</div>
+        <div class="fix-item">Сброс кеша при ошибке "критическая ошибка" (<code>/bitrix/cache/</code>, <code>/bitrix/managed_cache/</code>)</div>
+        <div class="fix-item">Настройки публичных форм (captcha, valid)</div>
+      </div>
+      <p style="font-size:13px; color:#888; margin-top:16px;">
+        Работает с редакциями "Старт" / "Малый бизнес" / "Бизнес" / "Веб-кластер". Никогда не правит файлы в <code>/bitrix/</code> (ядро) — только <code>/local/</code> overrides, чтобы апдейты не сносили правки.
+      </p>
+    </section>
+
+    <section class="how-it-works">
+      <h2>Как работает SimpleReview на сайтах Битрикс</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Установить расширение Chrome</h3>
+            <p>Auto-detect Битрикса по <code>&lt;meta name="generator" content="Bitrix Site Manager"&gt;</code> + JS-сигнатурам.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Подключить Git/SFTP вашего сайта</h3>
+            <p>GitHub/GitLab/Bitbucket/самохост Gitea или прямой SFTP. SimpleReview индексирует <code>/local/</code> на первом подключении.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Кликнуть элемент на витрине</h3>
+            <p>Любой блок, кнопку, копирайт в подвале, элемент компонента. Захватывается DOM + Smarty/PHP source path.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Получить Pull Request</h3>
+            <p>Напишите "убрать копирайт Битрикс" или "поправить captcha на форме". Агент правит правильный файл в <code>/local/templates/.../footer.php</code> и открывает PR. Вы мержите или отклоняете.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vs-section">
+      <h2>SimpleReview vs Битрикс-фрилансер</h2>
+      <table class="vs-table">
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th>Фрилансер (1500-3000 ₽/час)</th>
+            <th class="col-vibers">SimpleReview</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Время на старт задачи</td>
+            <td>1-3 часа (Zoom + клон репо + onboarding)</td>
+            <td class="col-vibers">30 секунд (one-time, потом cached)</td>
+          </tr>
+          <tr>
+            <td>Найти нужный файл</td>
+            <td>15-90 мин в зависимости от знания темы</td>
+            <td class="col-vibers">Мгновенно — уже проиндексировано</td>
+          </tr>
+          <tr>
+            <td>Знание правила <code>/bitrix/</code> vs <code>/local/</code></td>
+            <td>Если хороший разработчик</td>
+            <td class="col-vibers">Built-in</td>
+          </tr>
+          <tr>
+            <td>Работа с шаблонами компонентов</td>
+            <td>Вручную</td>
+            <td class="col-vibers">Автодетект пути override</td>
+          </tr>
+          <tr>
+            <td>Не ломает апдейт ядра</td>
+            <td>Если осторожен</td>
+            <td class="col-vibers">Гарантировано — не пишет в <code>/bitrix/</code></td>
+          </tr>
+          <tr>
+            <td>Открывает PR</td>
+            <td>Иногда</td>
+            <td class="col-vibers">Всегда</td>
+          </tr>
+          <tr>
+            <td>Стоимость 1-line правки</td>
+            <td>1500-3000 ₽ (минимум 1 час)</td>
+            <td class="col-vibers">Бесплатно с вашим AI key — копейки API usage иначе</td>
+          </tr>
+          <tr>
+            <td>Подходит для оплаты / 1С-интеграции / миграции</td>
+            <td>Да — пара с <a href="/vibers/">Vibers human review</a></td>
+            <td class="col-vibers">Нет — эскалировать на Vibers для 20% работы</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="use-cases">
+      <h2>Кто использует SimpleReview на Битриксе</h2>
+      <div class="case-grid">
+        <div class="case-card">
+          <h3>Владельцы магазинов на Битрикс</h3>
+          <p>Правка копирайта, текстов, формы заявок шлётся в тот же час.</p>
+        </div>
+        <div class="case-card">
+          <h3>Битрикс-агентства</h3>
+          <p>Драфтит скучные 80% тикетов, чтобы сеньоры фокусировались на интеграции с 1С и оплате.</p>
+        </div>
+        <div class="case-card">
+          <h3>Фрилансеры с несколькими сайтами на Битрикс</h3>
+          <p>Одно расширение Chrome для всех клиентов; у каждого сайта свой Git.</p>
+        </div>
+        <div class="case-card">
+          <h3>Маркетологи без разработчика</h3>
+          <p>Вижу что ломается, кликаю, описываю, получаю PR.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <div class="faq-q">Можно ли править сайт на Битриксе без программиста?</div>
+        <div class="faq-a">Для 80% задач — да. Шаблоны, языковые файлы, captcha, копирайт. Для интеграции 1С, кастомной оплаты, миграции — нужен живой человек, <a href="/vibers/">Vibers</a>.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Как установить SimpleReview на Битрикс-сайт?</div>
+        <div class="faq-a">Сейчас: Chrome Extension + подключить Git/SFTP. Скоро: нативный модуль на <strong>1С-Битрикс: Маркетплейс</strong> (на ревью). Установка через Marketplace → Каталог → SimpleReview → Установить.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Какие редакции Битрикса поддерживаются?</div>
+        <div class="faq-a">Управление сайтом (Старт / Малый бизнес / Бизнес / Веб-кластер). Все версии 16.0+. Bitrix24 SaaS не поддерживается (нет файлового доступа). Bitrix24 Enterprise on-premise — поддерживается.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Безопасно ли это для прода?</div>
+        <div class="faq-a">SimpleReview не пушит в основную ветку напрямую. Каждое изменение — PR, который вы ревьюите и мержите. Используйте staging-клон + git workflow.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Чем это лучше фрилансера за 2000 ₽/час?</div>
+        <div class="faq-a">Скорость и стоимость стартовой задачи. Фрилансеру нужен 1-3 часа просто чтобы клонировать репо и найти файл. SimpleReview уже знает структуру <code>/local/</code> и открывает PR за секунды.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Что про сложные модули — оплата, 1С-интеграция, миграция Bitrix24 ↔ on-premise?</div>
+        <div class="faq-a">Это работа для живого специалиста. SimpleReview может подготовить PR-черновик, но финальный merge должен ревьюить человек. <a href="/vibers/">Vibers</a> делает именно это — ревью PR-ов перед merge.</div>
+      </div>
+    </section>
+
+    <div class="cta-box">
+      <h2>Перестаньте платить 2000 ₽/час за правку 1 файла на Битриксе</h2>
+      <p>SimpleReview-агент уже знает <code>/local/</code> override-систему. Кликни элемент, опиши правку, получи Pull Request.</p>
+      <a class="btn-white" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_bitrix_hub&utm_medium=cta">Установить SimpleReview →</a>
+      <p style="margin-top:14px;font-size:14px;opacity:0.85">Сложная задача — оплата, 1С, миграция? → <a href="/vibers/" style="color:inherit;text-decoration:underline">Получить human review →</a></p>
+    </div>
+
+    <p style="font-size:14px;color:#555;margin:32px 0 16px;">
+      Read more:
+      <a href="/bitrix/how-to-fix-and-customize-bitrix-sites/">Как править сайты на 1С-Битрикс</a> ·
+      <a href="/simple-review/">SimpleReview</a> ·
+      <a href="/vibers/">Vibers human-in-the-loop review</a>
+    </p>
+
+    <footer>
+      <p>SimpleReview для 1С-Битрикс — продукт от <a href="/vibers/">Vibers</a> — Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener">onout.org</a> | <a href="/vibers/blog/">Blog</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener">Telegram</a> | <a href="mailto:support@onout.org">Email</a> | <a href="/vibers/privacy.html">Privacy</a></p>
+    </footer>
+
+  </div><!-- /content-wrap -->
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>
