@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit Anything in OpenCart Without Hiring a Developer (2026 Guide)</title>
+  <meta name="description" content="Stop paying $40/hr for one-line OpenCart tweaks. SimpleReview ships an OpenCart-aware AI agent — click any element on your store, type what to change, get a pull request. No developer required.">
+  <link rel="canonical" href="https://onout.org/vibers/opencart/edit-opencart-without-developer/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Edit Anything in OpenCart Without Hiring a Developer">
+  <meta property="og:description" content="SimpleReview's OpenCart-aware agent edits your store from a single click. Header, footer, product page, checkout — get a PR, not a quote.">
+  <meta property="og:url" content="https://onout.org/vibers/opencart/edit-opencart-without-developer/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="edit opencart without developer, opencart customization without coding, opencart developer alternative, modify opencart theme, opencart no code edit, opencart change header, opencart edit footer, opencart hide element, opencart product page customization, opencart ai assistant">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Edit Anything in OpenCart Without Hiring a Developer (2026 Guide)",
+    "description": "How to make storefront, theme, header, footer, product-page, and checkout edits in OpenCart 4.x and 3.x without paying a developer — using SimpleReview's OpenCart-aware agent.",
+    "url": "https://onout.org/vibers/opencart/edit-opencart-without-developer/",
+    "datePublished": "2026-04-29",
+    "dateModified": "2026-04-29",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/vibers/opencart/edit-opencart-without-developer/" },
+    "keywords": ["edit opencart without developer", "opencart customization without coding", "opencart developer alternative", "opencart ai assistant", "opencart no code edit"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I edit my OpenCart store without a developer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic and structural edits — yes. The OpenCart admin handles content (products, categories, banners, info pages). For theme files (header.twig, footer.twig, product.twig), language strings, or controller logic, you used to need a developer. SimpleReview's OpenCart-aware AI agent now does those edits from a single browser click and opens a pull request you can merge."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I install SimpleReview on my OpenCart store?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Install the SimpleReview Chrome extension, connect your store's Git repository (GitHub, GitLab, Bitbucket, or self-hosted Gitea), and grant SFTP credentials if your store isn't on Git yet. The extension auto-detects OpenCart 3.x and 4.x by reading the storefront source — no manual configuration."}
+      },
+      {
+        "@type": "Question",
+        "name": "What kinds of OpenCart edits work this way?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Theme edits in *.twig templates (header, footer, product, category, checkout layout), CSS in stylesheet.css, language strings in catalog/language/*/*.php, and OCMOD/event modifications. Backend extension development still benefits from a human developer review — that's where Vibers' human-in-the-loop step kicks in."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is this safe for a live OpenCart store?",
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview never pushes to your live branch directly — every change is a pull request you review and merge. Pair it with a staging clone (most managed OpenCart hosts include one), and the worst-case is a PR you decline. No file is modified without your explicit merge."}
+      },
+      {
+        "@type": "Question",
+        "name": "How is this different from hiring a freelancer for $30-50/hr?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Speed and cost. A freelancer takes hours just to clone your repo, set up an environment, and locate the file — the actual edit is often one line. SimpleReview already knows the OpenCart file layout (catalog/view/template/, system/library/, admin/controller/), opens the PR in seconds, and is free with your own AI key."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── OpenCart Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f6f6f6}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0}
+
+    /* OpenCart storefront header */
+    .sc-oc-topbar{background:#229ac8;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-oc-topbar .links{display:flex;gap:10px;opacity:.9}
+    .sc-oc-header{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e0e0e0}
+    .sc-oc-logo{font-size:14px;font-weight:800;color:#229ac8;letter-spacing:.3px}
+    .sc-oc-search{flex:1;max-width:240px;margin:0 14px;background:#f3f3f3;border:1px solid #ddd;border-radius:3px;padding:4px 8px;font-size:10px;color:#888}
+    .sc-oc-cart{font-size:11px;font-weight:600;color:#229ac8;background:#fff;border:1px solid #229ac8;border-radius:3px;padding:4px 9px}
+
+    /* Discount bar — TARGET */
+    .sc-oc-discount{background:#fff;border:1px solid #ccd0d4;border-left:4px solid #229ac8;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:460px;margin:14px 230px 0 30px;padding:11px 18px 13px;font-family:inherit;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-oc-discount::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-disc-title{font-weight:700;font-size:12px;color:#229ac8;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-disc-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:5px;animation:errHide 28s infinite}
+    .sc-disc-meta{color:#888;font-size:10px;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+
+    /* Product grid (always visible behind) */
+    .sc-oc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 230px 0 30px;max-width:520px;margin:0}
+    .sc-oc-card{background:#fff;border:1px solid #e0e0e0;border-radius:3px;padding:8px;text-align:center}
+    .sc-oc-thumb{width:100%;height:42px;background:linear-gradient(135deg,#e8eef3,#cdd5dd);border-radius:3px;margin-bottom:5px}
+    .sc-oc-pname{font-size:9px;font-weight:600;color:#222;line-height:1.3;height:24px;overflow:hidden}
+    .sc-oc-price{font-size:10px;font-weight:700;color:#229ac8;margin-top:3px}
+    .sc-oc-price del{color:#aaa;font-weight:400;font-size:9px;margin-right:3px}
+
+    /* Recovered storefront — appears after fix */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-topbar{background:#229ac8;color:#fff;font-size:10px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+    .sc-rec-banner{background:linear-gradient(90deg,#dcfce7,#fef9c3);padding:9px 14px;font-size:11px;color:#166534;font-weight:700;text-align:center;border-bottom:1px solid #bbf7d0}
+    .sc-rec-banner .sc-rec-pct{background:#229ac8;color:#fff;padding:2px 7px;border-radius:3px;margin-right:6px;font-size:10px}
+    .sc-rec-content{flex:1;padding:14px;background:#fafafa}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#229ac8;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-expert-chip{background:#fff;border:1px solid #229ac8;color:#0e6c8c;font-size:9px;padding:4px 6px;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:700}
+    .sc-expert-chip .sc-dot{width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block;animation:scDot 1.6s infinite}
+    @keyframes scDot{0%,100%{opacity:1}50%{opacity:.3}}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#0e6c8c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:200px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:340px;top:230px;opacity:0}
+      2%   {left:340px;top:230px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:340px;top:155px;opacity:1}
+      22%  {left:340px;top:155px;opacity:1}
+      26%  {left:200px;top:262px;opacity:1}
+      47%  {left:200px;top:262px;opacity:1}
+      49%  {left:200px;top:296px;opacity:1}
+      58%  {left:200px;top:296px;opacity:1}
+      74%  {left:618px;top:140px;opacity:1}
+      93%  {left:618px;top:140px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{left:calc(50% - 80px);right:auto;width:160px}
+      .sc-oc-grid{grid-template-columns:repeat(3,1fr);max-width:380px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>OpenCart / No-Code Edits</span>
+      <span>April 29, 2026</span>
+      <span>8 min read</span>
+    </div>
+
+    <h1>Edit Anything in OpenCart Without Hiring a Developer</h1>
+
+    <p class="article-lead">A one-line tweak in <code>header.twig</code>, a phone-number swap, hiding a "10% OFF" banner that's been dead for a year — every store owner has a list. Hiring a freelancer for it costs $30–50/hour. <strong>You probably don't need a developer at all.</strong> SimpleReview ships an OpenCart-aware AI agent that already knows the file layout — click the element on your store, type what to change, get a Pull Request you can merge.</p>
+
+    <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin-bottom:0">
+      <iframe src="https://www.youtube.com/embed/wMaWMNcY9do?rel=0" title="Edit OpenCart Without a Developer — SimpleReview Demo"
+        style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div id="sc-banner-fallback" style="margin-top:16px" class="sc-banner" aria-label="Animated demo: SimpleReview's OpenCart expert hides an outdated discount banner and opens a PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">mystore.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <!-- OpenCart storefront -->
+            <div class="sc-oc-topbar">
+              <span>+1 (415) 555-0099 · support@mystore.com</span>
+              <span class="links">My Account · Wishlist · Checkout</span>
+            </div>
+            <div class="sc-oc-header">
+              <div class="sc-oc-logo">MyStore</div>
+              <div class="sc-oc-search">Search products…</div>
+              <div class="sc-oc-cart">🛒 0 item(s) — $0.00</div>
+            </div>
+            <!-- Discount banner (TARGET) -->
+            <div class="sc-oc-discount">
+              <div class="sc-disc-title">⚠ 10% OFF — EXPIRED CAMPAIGN 2024</div>
+              <div class="sc-disc-msg">Use code SUMMER10 at checkout. Offer ends Aug 31, 2024.</div>
+              <div class="sc-disc-meta">catalog/view/template/common/header.twig · OpenCart 4.0.2.4 · Default theme</div>
+            </div>
+            <!-- Product grid (visible behind) -->
+            <div class="sc-oc-grid">
+              <div class="sc-oc-card"><div class="sc-oc-thumb"></div><div class="sc-oc-pname">iPhone 15 Pro</div><div class="sc-oc-price"><del>$999</del>$899</div></div>
+              <div class="sc-oc-card"><div class="sc-oc-thumb"></div><div class="sc-oc-pname">MacBook Air M3</div><div class="sc-oc-price">$1,199</div></div>
+              <div class="sc-oc-card"><div class="sc-oc-thumb"></div><div class="sc-oc-pname">AirPods Pro 2</div><div class="sc-oc-price">$249</div></div>
+            </div>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-topbar">
+                <span>+1 (415) 555-0099 · support@mystore.com</span>
+                <span>My Account · Wishlist · Checkout</span>
+              </div>
+              <div class="sc-rec-header">
+                <div class="sc-oc-logo">MyStore</div>
+                <div class="sc-oc-search">Search products…</div>
+                <div class="sc-oc-cart">🛒 0 item(s) — $0.00</div>
+              </div>
+              <div class="sc-rec-banner"><span class="sc-rec-pct">FREE</span>Shipping on orders over $50 — every day</div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Stale banner removed · header.twig patched · PR #42 ready</span>
+                <div class="sc-rec-h">Featured products</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <!-- Popup -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">Remove this expired discount banner</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-expert-chip"><span class="sc-dot"></span>OpenCart expert · ready</div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">OpenCart 4.0.2.4</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Theme</span><span class="sc-sb-v">default</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">header.twig</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Remove expired <code style="font-size:8px">{% if discount %}</code> block from <code style="font-size:8px">header.twig</code> · 1 file · 6 lines</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Banner gone. Free-shipping notice kept. No theme override needed.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-meta">fix(header): drop expired SUMMER10 banner<br>header.twig · -6 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the stale banner → <strong>Fix it</strong> → PR opens, no developer involved</div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Have a one-line OpenCart change a freelancer keeps quoting at 2 hours? → <a href="https://onout.org/vibers/simple-review/">SimpleReview</a>'s OpenCart agent reads <code>catalog/view/template/</code>, finds the right file, opens a PR. Edit ships the same hour.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>Most OpenCart edits are one-file, one-section changes</strong> — header phone, footer text, hidden category, expired banner. The expensive part isn't the edit, it's hiring + onboarding a developer.</li>
+        <li><strong>SimpleReview's OpenCart agent</strong> already knows the file layout (<code>catalog/view/template/</code>, <code>system/library/</code>, <code>admin/controller/</code>) and which file owns what — so it skips the discovery hours.</li>
+        <li>You stay in control: every change is a <strong>Pull Request</strong>, not a force-push. Decline what you don't like.</li>
+        <li><strong>What still needs a human:</strong> custom extensions, payment-gateway integrations, security audits — that's where Vibers' <a href="/vibers/">human-in-the-loop review</a> takes over.</li>
+        <li>Works on OpenCart 3.x and 4.x, default theme and most popular journal/so-emarket themes.</li>
+      </ul>
+    </div>
+
+    <h2>What "Edit Anything" Actually Means in OpenCart</h2>
+
+    <p>OpenCart's customization surface splits into four zones. Knowing which zone your edit lives in tells you whether you ever needed a developer in the first place.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Zone</th><th>Edited via</th><th>Examples</th><th>Developer required?</th></tr>
+        <tr><td>1. Content</td><td>Admin → Catalog / Design</td><td>Products, categories, info pages, banners, menus</td><td>No (admin UI)</td></tr>
+        <tr><td>2. Theme files</td><td><code>catalog/view/template/*.twig</code></td><td>Header phone, footer text, product-page layout, hide-element</td><td>Used to. Not anymore.</td></tr>
+        <tr><td>3. Language strings</td><td><code>catalog/language/*/*.php</code></td><td>"Add to Cart" → "Buy Now", checkout button copy, error text</td><td>Used to.</td></tr>
+        <tr><td>4. Extensions</td><td><code>catalog/controller/</code> + DB</td><td>New payment gateway, custom API, complex business logic</td><td><strong>Yes</strong> — and you want a human review.</td></tr>
+      </table>
+    </div>
+
+    <p>Zones 2 and 3 — where 80% of paid freelancer work happens — are exactly what SimpleReview's OpenCart agent is tuned for.</p>
+
+    <h2>The Three-Click Workflow</h2>
+
+    <ol class="steps">
+      <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. It's free with your own AI key (Claude Code or Codex), and there's a built-in mode if you don't have one.</li>
+      <li><strong>Connect your store's repo.</strong> Paste a GitHub / GitLab / Gitea URL. If your store isn't on Git yet, give SFTP credentials — SimpleReview will create a private working tree and commit from there.</li>
+      <li><strong>Open your storefront, click the SimpleReview icon, click the element you want to change.</strong> Type the change in plain English: "remove this banner", "change the phone to +44 20 7946 0958", "hide the category sidebar on mobile", "shorten the product description to 2 lines". Click <strong>Fix it</strong>. The agent reads the right file, makes the edit, and opens a Pull Request.</li>
+    </ol>
+
+    <h2>Common OpenCart Edits — and What the Agent Does</h2>
+
+    <h3>Hide an expired discount banner in the header</h3>
+
+    <p>The banner is usually a Twig block in <code>catalog/view/template/common/header.twig</code> guarded by an admin-controlled flag — but the flag was never turned off. The agent finds the block, removes it, and keeps the rest of the header intact:</p>
+
+    <pre><code>{# catalog/view/template/common/header.twig — before #}
+{% if discount %}
+  &lt;div class="alert alert-warning"&gt;
+    &lt;strong&gt;{{ discount_title }}&lt;/strong&gt;
+    {{ discount_message }}
+  &lt;/div&gt;
+{% endif %}
+
+{# after — block removed, free-shipping notice kept #}</code></pre>
+
+    <h3>Change the storefront phone number</h3>
+
+    <p>Phone lives in two places: the top bar (<code>header.twig</code>) and the contact page (<code>information_contact.twig</code>). A freelancer would grep the codebase. The agent already knows both files and updates them in one PR.</p>
+
+    <h3>Rename "Add to Cart" to "Buy Now"</h3>
+
+    <p>This is a language-string edit, not a template edit. The agent goes to <code>catalog/language/en-gb/product/product.php</code> (or your active language) and changes the <code>$_['button_cart']</code> entry — not the Twig file. Knowing the difference is what saves the hour.</p>
+
+    <h3>Hide a category from the menu without deleting it</h3>
+
+    <p>Pure admin edit — Catalog → Categories → uncheck "Top". The agent recognizes this and tells you so, instead of generating unnecessary code. Knowing when <em>not</em> to write code is the other half of the job.</p>
+
+    <h3>Add a free-shipping notice above the cart</h3>
+
+    <p>One <code>{% include %}</code> in <code>catalog/view/template/common/header.twig</code> + a new partial. Five-line PR.</p>
+
+    <h2>What About Extensions and OCMOD?</h2>
+
+    <p>OpenCart's extension system (OCMOD in 3.x, event-based in 4.x) is where the agent's work and your judgement should overlap. The agent will happily generate an extension scaffold (<code>install.json</code>, controller, view, language file). But before merging the PR, ask:</p>
+
+    <ul>
+      <li>Is this touching <strong>checkout, cart, or payment</strong> code? → Get a human review (Vibers does this) before going live.</li>
+      <li>Does it call an external API? → Verify rate limits and error handling.</li>
+      <li>Does it write to the database? → Check the schema migration and rollback plan.</li>
+    </ul>
+
+    <p>For everything else — pure UI, language, theme — agent → PR → merge.</p>
+
+    <h2>How This Beats Hiring a Freelancer</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Step</th><th>Freelancer</th><th>SimpleReview agent</th></tr>
+        <tr><td>Brief</td><td>30 min Zoom or back-and-forth in chat</td><td>Type one sentence in the popup</td></tr>
+        <tr><td>Repo / SFTP setup</td><td>15-60 min (per freelancer, every time)</td><td>Once, then cached</td></tr>
+        <tr><td>Find the right file</td><td>15-90 min depending on theme familiarity</td><td>Instant — already indexed</td></tr>
+        <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
+        <tr><td>Open a PR</td><td>If they use Git at all</td><td>Always</td></tr>
+        <tr><td>Cost for a 1-line change</td><td>$30-150 (1-hour minimum)</td><td>$0 (BYO key) or pennies of API usage</td></tr>
+      </table>
+    </div>
+
+    <h2>When You <em>Do</em> Want a Developer</h2>
+
+    <p>This isn't anti-freelancer. It's anti-paying-an-hour-for-five-minutes. You still want a human in the loop when:</p>
+
+    <ul>
+      <li><strong>Building a new payment gateway</strong> or a new shipping method extension. Money flows through it; humans should review.</li>
+      <li><strong>Migrating from OpenCart 3 to 4.</strong> The Twig change, controller event-system rewrite, and database schema differences are non-trivial.</li>
+      <li><strong>Performance issues.</strong> Slow queries, N+1 SELECTs, missing indexes — these need someone reading <code>EXPLAIN</code> output, not pattern-matching templates.</li>
+      <li><strong>Security audits.</strong> Especially before opening admin to the internet, or after a third-party extension install.</li>
+    </ul>
+
+    <p>That's exactly the slice <a href="/vibers/">Vibers</a> handles — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
+
+    <div class="cta-block">
+      <h3>Stop Paying $40/hr for One-Line OpenCart Tweaks</h3>
+      <p>SimpleReview's OpenCart agent reads your repo, knows the file layout, and opens a PR for the change you described.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Got a tricky one — payment gateway, migration, performance? <a href="/vibers/" style="color:#5b44e8;font-weight:600">Get a human review →</a> Free first PR for a GitHub star.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I edit my OpenCart store without a developer?</div>
+      <div class="faq-a">For most cosmetic and structural edits — yes. Admin handles content. For theme files, language strings, and small controller tweaks, SimpleReview's OpenCart-aware agent does the edit and opens a Pull Request. The freelancer hour saved is real, repeatable, and most stores have dozens of these waiting.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I install SimpleReview on my OpenCart store?</div>
+      <div class="faq-a">Install the Chrome extension, connect your Git repo (or SFTP), and open your storefront. The extension auto-detects OpenCart 3.x or 4.x by reading the source — no manual configuration of file paths or theme.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What kinds of OpenCart edits work this way?</div>
+      <div class="faq-a">Theme edits in <code>*.twig</code> templates, CSS, language strings in <code>catalog/language/*/*.php</code>, and small OCMOD / event modifications. Custom extensions and payment gateways are best paired with a human review before merging.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is this safe for a live OpenCart store?</div>
+      <div class="faq-a">SimpleReview never pushes to your live branch. Every edit is a PR — you review and merge, or decline. Worst case is a PR you reject. We strongly recommend pairing it with a staging clone (most managed OpenCart hosts include one).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How is this different from hiring a $30/hr freelancer?</div>
+      <div class="faq-a">Speed and recurring cost. A freelancer takes hours just to set up — clone, locate the file, understand the theme. SimpleReview's agent already knows the OpenCart layout. The actual edit is the same; the overhead is what disappears.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does it work on themes other than the default (e.g., Journal, So-Emarket)?</div>
+      <div class="faq-a">Yes for any theme that follows the standard OpenCart override pattern (<code>catalog/view/template/[theme]/...</code>). The agent reads your theme's file layout on first connection. For very custom themes that ship their own framework, you'll get a heads-up that human review is recommended.</div>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
+          <p>Same agent pattern, applied to WP fatal-error recovery — read debug.log, patch deprecated function, open PR.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">Fix WooCommerce Slow Checkout</a>
+          <p>Click the slow part of checkout, get a PR with the fix — applies to OpenCart cart performance the same way.</p>
+        </div>
+        <div class="related-card">
+          <a href="/vibers/simple-review/">SimpleReview — Chrome Extension</a>
+          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://docs.opencart.com/">docs.opencart.com — Official Twig template & event documentation</a></li>
+      <li><a href="https://www.opencart.com/index.php?route=cms/blog">opencart.com/blog — 4.0 release notes and event-system migration</a></li>
+      <li><a href="https://github.com/opencart/opencart">github.com/opencart/opencart — Reference repository the agent indexes against</a></li>
+      <li><a href="https://onout.org/vibers/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

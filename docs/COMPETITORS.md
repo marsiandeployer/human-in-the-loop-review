@@ -210,6 +210,42 @@
 - **Не делает:** нет console/network logs, нет session replay, нет связи с кодом, нет PR/code fixes
 - **vs SimpleReview:** Huddlekit — review дизайна и вёрстки (студия ↔ клиент). SimpleReview — баг → PR. Huddlekit лучше для дизайн-аппрувала на разных breakpoints, SimpleReview — когда нужен код-фикс. Обе бесплатны на старте, но Huddlekit ограничивает 1 проектом, SimpleReview — без лимита (BYOK). Прямой пересечение в нише «website feedback tool», но разные deliverable: Huddlekit → ticket с пометкой на макете, SimpleReview → pull request
 
+### Jam.dev (jam.dev) — самый прямой конкурент по форм-фактору
+
+- **Что:** Chrome extension, который превращает баг в готовый репорт за один клик. Автоматически прикладывает console logs, network requests, browser/OS, repro steps, video. «Instant Replay» — последние 30s до клика.
+- **Цены:** Free (unlimited personal jams) → Standard $20/seat/mo → Business custom. Crowd-favorite dev tool (Y Combinator W21).
+- **ЦА:** Frontend/full-stack devs, QA, indie hackers, маленькие команды
+- **Фишки:** Один клик → Loom-style видео + полный devtools snapshot, AI-summary бага, MCP для Claude/Cursor (агент сам читает Jam-репорт), интеграции с Linear, GitHub, Jira, ChatGPT, Cursor
+- **Не делает:** PR не открывает. Делает идеальный bug-репорт, разработчик сам пишет фикс (или скармливает в Cursor)
+- **vs SimpleReview:** Самый близкий по форм-фактору (Chrome extension, free тир). Главное отличие: Jam → bug-report для разработчика, SimpleReview → PR без разработчика. Jam сильнее для команд, у которых уже есть QA→Dev пайплайн. SimpleReview сильнее, когда «разработчика нет», но репозиторий есть. Jam прямо рекомендует Cursor/Claude как «как починить» — SimpleReview встраивает этот шаг внутрь.
+
+### Bird Eats Bug (birdeatsbug.com)
+
+- **Что:** Browser extension со screen-recording + auto-attached console/network/environment logs. Технически очень похож на Jam.dev
+- **Цены:** Free → Pro $20/user/mo → Business $40/user/mo
+- **ЦА:** SaaS-команды, QA, support
+- **Фишки:** Авто-генерация Jira/Linear-тикета, шаринг через ссылку, AI Bug Assistant суммирует репорт
+- **Не делает:** code fixes, PR
+- **vs SimpleReview:** То же что Jam — отличный bug-report → ticket, но не делает шага в код. SimpleReview закрывает шаг «починить»
+
+### Дополнительные visual feedback конкуренты — компактные профили
+
+| Tool | Pricing | ЦА | Key feature | Что НЕ делает | vs SimpleReview |
+|------|---------|-----|-------------|---------------|-----------------|
+| **Userback** (userback.io) | Free → $39-249/mo | Product/SaaS, 20K+ команд | Surveys, NPS, session replay, customer feedback portal | Code fixes, PR | Userback — voice-of-customer платформа. SimpleReview — dev-tool для конкретного бага |
+| **Ruttl** (ruttl.com) | Free → $8-19/mo | Дизайнеры, агентства, freelancers | Live website + Figma/PDF/image collaboration, mobile review, video records | Code fixes, PR | Ruttl — design review/approval. SimpleReview — code fix |
+| **Pastel** (usepastel.com) | $24-99/mo | Marketing agencies, web designers | Аннотации на live URL без extension (canvas mode), version comparison, Figma-like UX | Code fixes, PR | Pastel — клиент-аппрувал маркетинговых страниц. SimpleReview — dev-fix |
+| **MarkUp.io** (markup.io) | Free → $14/mo | Designers, video/PDF reviewers | Multi-format proofing (web, image, video, PDF), Adobe-style annotations | Code fixes, PR | MarkUp — design/asset proofing. Adjacent, не прямой конкурент |
+| **Feedbucket** (feedbucket.com) | 14-day trial → from ~$30/mo | Agencies + clients | Widget на сайте (без extension), screenshots с annotations | Code fixes, PR | Feedbucket — агентский UAT-виджет. SimpleReview — extension + PR |
+| **Webvizio** (webvizio.com) | $19-79/mo | Web agencies, freelancers | Visual collaboration tool, прямые комменты на live site, kanban для тасков, GitHub integration | Code fixes, PR | Webvizio — task-board из веб-комментариев. SimpleReview — генерирует фикс |
+| **PageProofer** (pageproofer.com) | $20-100/mo | Small studios, freelancers | Sticky-note feedback на любой странице, viewport-aware screenshots | Code fixes, PR | PageProofer — лёгкий BugHerd-аналог для маленьких команд. SimpleReview — другой deliverable |
+
+**Сводка по нише (12 прямых конкурентов SimpleReview):**
+
+> Marker.io, Userback, BugHerd, Usersnap, Ruttl, Pastel, MarkUp.io, Feedbucket, Webvizio, PageProofer, Jam.dev, Bird Eats Bug.
+
+Все 12 решают одно: «собрать фидбек/баг с веб-страницы и отдать в трекер». Никто не делает шага «открыть PR с фиксом». Это и есть единственное value-prop SimpleReview, на котором держится весь маркетинг и SEO.
+
 ---
 
 ## SimpleReview как альтернатива конкурентам

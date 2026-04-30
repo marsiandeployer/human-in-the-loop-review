@@ -27,6 +27,15 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | **Feedbucket** | 14-day trial, paid | Agencies + clients | Reports only, no dev fixes. Widget (no extension). |
 | **Userback** | Freemium + paid | Product teams, SaaS | NPS, surveys, session replay, roadmap. No code fixes. 20K+ teams. |
 | **Huddlekit** | Free / $190-390 yr | Design studios, agencies | Multi-breakpoint preview, element inspector, share-by-link, task mgmt. Дёшево vs Marker/BugHerd. No code fixes, no PR. |
+| **Jam.dev** | Free → $20/seat/mo | Frontend devs, QA, indies | Chrome ext: 1-click bug report + console/network/repro + Instant Replay. MCP for Cursor/Claude. No PR. |
+| **Bird Eats Bug** | Free → $20-40/user/mo | SaaS QA + support | Screen recording + auto console/network/env logs. AI Bug Assistant. No PR. |
+| **Ruttl** | Free → $8-19/mo | Designers, freelancers | Live website + Figma/PDF/image collaboration, mobile review. No code fixes. |
+| **Pastel** | $24-99/mo | Marketing agencies | Annotations on live URL без extension (canvas mode), version comparison. No code fixes. |
+| **MarkUp.io** | Free → $14/mo | Designers, video reviewers | Multi-format proofing (web/image/video/PDF). Adjacent (design, not dev). |
+| **Webvizio** | $19-79/mo | Web agencies | Visual collab + kanban из веб-комментариев, GitHub integration. No code fixes. |
+| **PageProofer** | $20-100/mo | Small studios | Sticky-note feedback, viewport screenshots. Lightweight BugHerd-аналог. |
+
+**Полный список (12):** Marker.io, Userback, BugHerd, Usersnap, Ruttl, Pastel, MarkUp.io, Feedbucket, Webvizio, PageProofer, Jam.dev, Bird Eats Bug. → подробные профили в [COMPETITORS.md](COMPETITORS.md).
 
 **Key message:** All of them → ticket. SimpleReview → PR. All paid, SimpleReview free (BYOK).
 

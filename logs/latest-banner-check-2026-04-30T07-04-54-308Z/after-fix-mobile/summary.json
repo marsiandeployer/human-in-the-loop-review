@@ -1,0 +1,56 @@
+[
+  {
+    "slug": "opencart-edit-without-developer",
+    "info": {
+      "rect": {
+        "w": 350,
+        "h": 671
+      },
+      "popup": {
+        "left": 95,
+        "right": 255,
+        "w": 160
+      },
+      "bodyScrollWidth": 390,
+      "viewport": 390
+    },
+    "errors": [],
+    "sheet": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/after-fix-mobile/opencart-edit-without-developer-mobile-contact.png"
+  },
+  {
+    "slug": "wp-duplicate-page",
+    "info": {
+      "rect": {
+        "w": 350,
+        "h": 485
+      },
+      "popup": {
+        "left": 95,
+        "right": 255,
+        "w": 160
+      },
+      "bodyScrollWidth": 390,
+      "viewport": 390
+    },
+    "errors": [],
+    "sheet": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/after-fix-mobile/wp-duplicate-page-mobile-contact.png"
+  },
+  {
+    "slug": "wp-slider-revolution",
+    "info": {
+      "rect": {
+        "w": 350,
+        "h": 465
+      },
+      "popup": {
+        "left": 95,
+        "right": 255,
+        "w": 160
+      },
+      "bodyScrollWidth": 390,
+      "viewport": 390
+    },
+    "errors": [],
+    "sheet": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/after-fix-mobile/wp-slider-revolution-mobile-contact.png"
+  }
+]

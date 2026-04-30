@@ -1,0 +1,251 @@
+{
+  "outDir": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z",
+  "results": [
+    {
+      "slug": "opencart-edit-without-developer",
+      "url": "http://127.0.0.1:4317/opencart/edit-opencart-without-developer/",
+      "selector": "#sc-banner-fallback",
+      "expected": "OpenCart discount banner selected, sidebar opens, PR/result state appears",
+      "info": {
+        "exists": true,
+        "title": "Edit Anything in OpenCart Without Hiring a Developer",
+        "rect": {
+          "x": 280,
+          "y": 919,
+          "width": 720,
+          "height": 466
+        },
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "animationCount": 24,
+        "runningAnimations": 24,
+        "video": null,
+        "iframe": {
+          "src": "https://www.youtube.com/embed/wMaWMNcY9do?rel=0",
+          "width": 720,
+          "height": 446
+        }
+      },
+      "framePaths": [
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer/frame_01_0s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer/frame_02_3p5s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer/frame_03_7s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer/frame_04_11s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer/frame_05_14s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer/frame_06_18s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer/frame_07_22s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer/frame_08_26s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer/frame_09_27p6s.png"
+      ],
+      "contactSheet": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer-contact.png",
+      "pageScreenshot": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/opencart-edit-without-developer-page.png",
+      "diffs": [
+        11663,
+        113887,
+        34460,
+        1218,
+        14543,
+        23168,
+        164575,
+        72835
+      ],
+      "consoleErrors": [],
+      "failedRequests": [
+        "net::ERR_ABORTED https://region1.google-analytics.com/g/collect?v=2&tid=G-LQLZ1SZS26&gtm=45je64s1v9248168660za200zd9248168660&_p=1777532695049&gcd=13l3l3l2l1l1&npa=1&dma_cps=a&dma=1&are=1&cid=1390972168.1777532695&frm=0&pscdl=noapi&rcb=19&sr=800x600&uaa=x86&uab=64&uafvl=Not-A.Brand%3B24.0.0.0%7CChromium%3B146.0.7680.31&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=en-us&_s=1&tag_exp=0~115938465~115938468~117266401~117512543~118463261&sid=1777532695&sct=1&seg=0&dl=http%3A%2F%2F127.0.0.1%2Fopencart%2Fedit-opencart-without-developer%2F&dt=Edit%20Anything%20in%20OpenCart%20Without%20Hiring%20a%20Developer%20(2026%20Guide)&en=page_view&_fv=1&_nsi=1&_ss=1&_ee=1&tfd=376"
+      ]
+    },
+    {
+      "slug": "wp-duplicate-page",
+      "url": "http://127.0.0.1:4317/wordpress/wordpress-duplicate-page/",
+      "selector": "#sc-banner-fallback",
+      "expected": "Missing Duplicate action selected, fix popup/sidebar, copied draft result",
+      "info": {
+        "exists": true,
+        "title": "How to Duplicate a Page in WordPress — 4 Working Methods (2026)",
+        "rect": {
+          "x": 280,
+          "y": 341,
+          "width": 720,
+          "height": 446
+        },
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "animationCount": 22,
+        "runningAnimations": 22,
+        "video": null,
+        "iframe": null
+      },
+      "framePaths": [
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page/frame_01_0s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page/frame_02_3p5s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page/frame_03_7s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page/frame_04_11s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page/frame_05_14s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page/frame_06_18s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page/frame_07_22s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page/frame_08_26s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page/frame_09_27p6s.png"
+      ],
+      "contactSheet": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page-contact.png",
+      "pageScreenshot": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-duplicate-page-page.png",
+      "diffs": [
+        58397,
+        113027,
+        36422,
+        1183,
+        11894,
+        22954,
+        187480,
+        60076
+      ],
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "slug": "wp-slider-revolution",
+      "url": "http://127.0.0.1:4317/wordpress/wordpress-6-9-broke-slider-revolution/",
+      "selector": "#sc-banner-fallback",
+      "expected": "Slider issue selected, fix popup/sidebar, recovered slider/result",
+      "info": {
+        "exists": true,
+        "title": "WordPress 6.9 Broke Slider Revolution — Fix with 7.0.10 (Step by Step)",
+        "rect": {
+          "x": 280,
+          "y": 543,
+          "width": 720,
+          "height": 446
+        },
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "animationCount": 22,
+        "runningAnimations": 22,
+        "video": null,
+        "iframe": null
+      },
+      "framePaths": [
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution/frame_01_0s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution/frame_02_3p5s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution/frame_03_7s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution/frame_04_11s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution/frame_05_14s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution/frame_06_18s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution/frame_07_22s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution/frame_08_26s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution/frame_09_27p6s.png"
+      ],
+      "contactSheet": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution-contact.png",
+      "pageScreenshot": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-slider-revolution-page.png",
+      "diffs": [
+        58397,
+        111989,
+        36426,
+        1183,
+        11711,
+        23129,
+        197091,
+        72123
+      ],
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "slug": "wp-hide-header-elementor",
+      "url": "http://127.0.0.1:4317/wordpress/how-to-hide-header-in-elementor-wordpress/",
+      "selector": "#sc-banner-fallback",
+      "expected": "Elementor header selected, fix popup/sidebar, header hidden result",
+      "info": {
+        "exists": true,
+        "title": "How to Hide Header in Elementor WordPress (2026) — 3 Methods + One-Click Fix",
+        "rect": {
+          "x": 280,
+          "y": 456,
+          "width": 720,
+          "height": 466
+        },
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "animationCount": 18,
+        "runningAnimations": 18,
+        "video": null,
+        "iframe": null
+      },
+      "framePaths": [
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor/frame_01_0s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor/frame_02_3p5s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor/frame_03_7s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor/frame_04_11s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor/frame_05_14s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor/frame_06_18s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor/frame_07_22s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor/frame_08_26s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor/frame_09_27p6s.png"
+      ],
+      "contactSheet": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor-contact.png",
+      "pageScreenshot": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/wp-hide-header-elementor-page.png",
+      "diffs": [
+        4716,
+        62600,
+        52354,
+        1753,
+        26912,
+        132360,
+        88191,
+        123
+      ],
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "slug": "blog-add-captcha",
+      "url": "http://127.0.0.1:4317/blog/add-captcha-to-website/",
+      "selector": ".cap-banner",
+      "expected": "Contact form problem highlighted, CAPTCHA slot added, sidebar PR/result state",
+      "info": {
+        "exists": true,
+        "title": "How to Add a CAPTCHA to Your Website (2026): Every Platform + a Zero-Code Method",
+        "rect": {
+          "x": 280,
+          "y": 407,
+          "width": 720,
+          "height": 416
+        },
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "animationCount": 20,
+        "runningAnimations": 20,
+        "video": null,
+        "iframe": null
+      },
+      "framePaths": [
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha/frame_01_0s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha/frame_02_2s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha/frame_03_4s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha/frame_04_6s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha/frame_05_8s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha/frame_06_10s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha/frame_07_12s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha/frame_08_14s.png",
+        "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha/frame_09_15p7s.png"
+      ],
+      "contactSheet": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha-contact.png",
+      "pageScreenshot": "/root/vibers/logs/latest-banner-check-2026-04-30T07-04-54-308Z/blog-add-captcha-page.png",
+      "diffs": [
+        2470,
+        4820,
+        39339,
+        17512,
+        15428,
+        6711,
+        290,
+        47346
+      ],
+      "consoleErrors": [],
+      "failedRequests": []
+    }
+  ]
+}

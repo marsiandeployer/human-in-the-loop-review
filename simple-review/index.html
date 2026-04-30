@@ -185,6 +185,8 @@
     }
     .btn-secondary:hover { border-color: #1a1a1a; background: #fafafa; text-decoration: none; }
     .btn-secondary:focus-visible { outline: 2px solid #5b44e8; outline-offset: 3px; }
+    .ru-only { display: none; }
+    html[lang="ru"] .ru-only { display: inline-flex; }
     /* M3 banner — scalable via font-size (em units) */
     .mb {
       flex-shrink: 0; align-self: center;
@@ -1218,6 +1220,7 @@
       .page { padding: 0 10px; }
       .content-wrap { padding: 0 10px; }
       h1 { font-size: 32px; }
+      .hero { padding-top: 56px; }
       .case-grid { grid-template-columns: 1fr; }
       .vs-table { font-size: 13px; }
       .vs-table th, .vs-table td { padding: 8px 8px; }
@@ -1272,6 +1275,7 @@
     <p class="hero-sub" data-i18n="hero-sub">Built for anyone who can spot an issue, but doesn&rsquo;t want to debug it by hand.</p>
     <div class="cta-group">
       <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_vibers_simplereview" target="_blank" rel="noopener noreferrer" class="btn-primary" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'download_extension'});rdt('track','Lead');trackClick('download_extension');" data-i18n="cta-download">Download Extension</a>
+      <a href="https://t.me/noxonbot/?start=t_simplereview" target="_blank" rel="noopener noreferrer" class="btn-secondary ru-only" onclick="gtag('event','generate_lead',{event_category:'simple-review',event_label:'telegram_bot_hero'});rdt('track','Lead');trackClick('telegram_bot_hero');" data-i18n="cta-telegram-bot">Использовать бота в Telegram</a>
     </div>
     <p class="beta-note" data-i18n="beta-note">Free with your own Claude Code or Codex. Or use built-in AI &mdash; no setup required. Works on any code-accessible site, including legacy apps, WordPress, and modern frameworks.</p>
   </header>
@@ -2180,6 +2184,7 @@ var ru = {
   'hero-title':          'Кликни на любой баг на сайте. Получи <abbr title="Фикс может быть автоматически залит в GitHub в виде коммита, пулреквеста или напрямую на ваш сервер">код-фикс</abbr>.',
   'hero-sub':            'Для всех, кто видит проблему, но не хочет разбираться с ней руками.',
   'cta-download':        'Скачать расширение',
+  'cta-telegram-bot':    'Использовать бота в Telegram',
   'cta-primary':         'Получить ранний доступ',
   'cta-secondary':       'Как это работает →',
   'beta-note':           'Бесплатно с твоим Claude Code или Codex. Или используй встроенный AI — без настройки. Работает на любом сайте с доступом к коду: legacy-приложения, WordPress, современные фреймворки.',
