@@ -1,6 +1,6 @@
 # SimpleReview — Russian Promo Channels
 
-**Продукт:** https://onout.org/vibers/simple-review
+**Продукт:** https://onout.org/simple-review
 **ICP:** практикующие QA / вайб-кодеры которые сами шипят / verstak'и работающие с AI в разработке.
 **НЕ ICP:** студенты bootcamp'ов, подписчики AI-новостей, читатели промпт-агрегаторов, job-фиды.
 

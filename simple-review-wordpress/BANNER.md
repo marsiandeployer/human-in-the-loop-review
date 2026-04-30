@@ -1,6 +1,6 @@
 # SimpleReview Banner — Structure & Algorithm
 
-Файл: `simple-review/index.html`. Баннер — это главный hero-мокап на `/vibers/simple-review/`, имитирующий работу Chrome-расширения SimpleReview.
+Файл: `simple-review/index.html`. Баннер — это главный hero-мокап на `/simple-review/`, имитирующий работу Chrome-расширения SimpleReview.
 
 ## DOM-структура
 

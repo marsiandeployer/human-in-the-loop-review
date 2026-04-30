@@ -27,7 +27,7 @@
 
 | Поле | URL |
 |------|-----|
-| Landing | https://onout.org/vibers/simple-review |
+| Landing | https://onout.org/simple-review |
 | Demo / interactive | https://onout.org/vibers/vibecheck |
 | Chrome Web Store | (будет после публикации — placeholder) |
 | GitHub | https://github.com/marsiandeployer/human-in-the-loop-review |
@@ -127,7 +127,7 @@ alternative-to-userback, wordpress, woocommerce, indie-hackers
 - Free — Bring your own Claude Code or Codex; unlimited use
 - Hosted AI — optional one-click mode, no local agent required (paid)
 
-Точные цифры — см. https://onout.org/vibers/simple-review#pricing (обновляется).
+Точные цифры — см. https://onout.org/simple-review#pricing (обновляется).
 
 ---
 
@@ -192,7 +192,7 @@ Yes. Use Comment-only mode — it captures the selector + screenshot + comment a
 - [ ] Demo-ссылка работает: https://onout.org/vibers/vibecheck
 - [ ] UTM-источник в URL: `?utm_source=<directory>&utm_medium=listing`
 
-UTM пример для Futurepedia: `https://onout.org/vibers/simple-review?utm_source=futurepedia&utm_medium=listing`
+UTM пример для Futurepedia: `https://onout.org/simple-review?utm_source=futurepedia&utm_medium=listing`
 
 ---
 

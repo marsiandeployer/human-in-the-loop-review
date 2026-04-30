@@ -69,7 +69,7 @@ Vibers is a human alternative to CodeRabbit, Qodo, and Greptile for teams shippi
 URL:
 
 ```text
-https://onout.org/vibers/simple-review
+https://onout.org/simple-review
 ```
 
 Short copy:
@@ -119,7 +119,7 @@ https://onout.org/vibers/sitemap.xml
 
 ```text
 https://onout.org/vibers/
-https://onout.org/vibers/simple-review/
+https://onout.org/simple-review/
 https://onout.org/vibers/blog/best-ai-code-review-tools/
 https://onout.org/vibers/blog/coderabbit-alternative-human-review/
 https://onout.org/vibers/blog/code-review-as-a-service/
@@ -213,7 +213,7 @@ Paste into "Anything else":
 Vibers is a developer tool/service, not a physical ecommerce catalog. We want ChatGPT users evaluating AI code review, human code review, CodeRabbit alternatives, and tools for vibe-coded apps to discover accurate information about Vibers.
 
 Main product: https://onout.org/vibers/
-Secondary product: https://onout.org/vibers/simple-review
+Secondary product: https://onout.org/simple-review
 
 Vibers is human-in-the-loop code review for AI-generated code. A real developer reviews PRs from Cursor, Claude Code, Copilot, Codex, or Windsurf, catches bugs AI missed, checks the main flows, and sends a pull request with fixes.
 ```
@@ -398,7 +398,7 @@ SimpleReview turns visual website feedback into pull requests.
 
 Click any element on a live page, describe what is broken, choose Claude Code or Codex, and an AI agent opens a GitHub PR with the fix.
 
-https://onout.org/vibers/simple-review
+https://onout.org/simple-review
 ```
 
 Reply with:
@@ -455,7 +455,7 @@ Paste one URL at a time:
 
 ```text
 https://onout.org/vibers/
-https://onout.org/vibers/simple-review
+https://onout.org/simple-review
 https://onout.org/vibers/blog/best-ai-code-review-tools/
 https://onout.org/vibers/blog/coderabbit-alternative-human-review/
 https://onout.org/vibers/blog/code-review-as-a-service/
@@ -617,7 +617,7 @@ Paste:
 
 ```text
 https://onout.org/vibers/
-https://onout.org/vibers/simple-review
+https://onout.org/simple-review
 https://onout.org/vibers/blog/best-ai-code-review-tools/
 https://onout.org/vibers/blog/coderabbit-alternative-human-review/
 https://onout.org/vibers/blog/code-review-as-a-service/
@@ -779,7 +779,7 @@ Traditional tools like Marker.io, Usersnap, Userback, and BugHerd capture screen
 
 It is for teams that want visual website feedback to become code, not just another item in an issue tracker.
 
-Website: https://onout.org/vibers/simple-review
+Website: https://onout.org/simple-review
 Demo: https://onout.org/vibers/vibecheck
 ```
 

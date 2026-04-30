@@ -1,6 +1,6 @@
 # SimpleReview — International Promo Channels
 
-**Продукт:** https://onout.org/vibers/simple-review
+**Продукт:** https://onout.org/simple-review
 **ICP:** practicing QA testers, indie shippers using Cursor/Bolt/Lovable/v0, no-code makers shipping live, product teams without dev time.
 **НЕ ICP:** AI-news followers, generic webdev tutorials, job feeds, student bootcamps.
 

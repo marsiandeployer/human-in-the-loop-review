@@ -11,7 +11,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [../SKILL.md](../SKILL.md) | AI Agent skill — client-facing quickstart (English) |
 | [../REVIEW-RUNBOOK.md](../REVIEW-RUNBOOK.md) | Step-by-step review workflow for reviewers |
 | [../CLAUDE.md](../CLAUDE.md) | Claude Code project instructions |
-| [../simple-review/index.html](../simple-review/index.html) | **SimpleReview** — Chrome Extension "Website Feedback & Fix Tool". Click element → Fix It → real PR. Beta, free first fix. Landing at `/vibers/simple-review/` |
+| [../simple-review/index.html](../simple-review/index.html) | **SimpleReview** — Chrome Extension "Website Feedback & Fix Tool". Click element → Fix It → real PR. Beta, free first fix. Landing at `/simple-review/` |
 
 ### SimpleReview — Visual Feedback & Fix Chrome Extension
 
@@ -331,6 +331,53 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | GitHub Marketplace | https://github.com/marketplace | HIGH | Уже есть GitHub App — надо оформить листинг |
 | Indie Hackers | https://www.indiehackers.com/ | MEDIUM | Пост о запуске + ссылка |
 | Hacker News (Show HN) | https://news.ycombinator.com/ | HIGH | Разовый Show HN пост — аудитория именно dev-инструментов |
+
+### Platform-specific forums for community placement (2026-04-30)
+
+Задача: искать обсуждения конкретных платформ, где владельцы сайтов жалуются на баги, сломанные шаблоны, checkout, mobile layout, forms, custom code и AI/no-code сборки. Это не места для прямого спама "купите Vibers"; рабочий формат — полезный ответ, мини-разбор проблемы, раскрытие affiliation и ссылка только когда она реально помогает.
+
+Источник из чата: приватная ChatGPT-ссылка `/c/69f30833-8508-8389-a94b-5ab7e00d468c` недоступна без аккаунта/публичного share URL (403). Ниже — сохранённая рабочая версия из открытых источников.
+
+| Платформа | Куда идти | Приоритет | Что можно делать | Ограничения / риск |
+|-----------|-----------|------------|------------------|--------------------|
+| Shopify | https://community.shopify.com/ + гайд Shopify для app marketing: https://shopify.dev/docs/apps/launch/marketing | HIGH | Отвечать на темы про theme bugs, checkout UX, app conflicts, slow pages. Shopify прямо рекомендует создавать ценность в Community forums и предлагать app только если он решает проблему. | Не поднимать старые темы ради промо, не писать "contact me here" без полезного ответа. |
+| Webflow | https://forum.webflow.com/ + guidelines: https://discourse.webflow.com/guidelines | HIGH для SimpleReview | Искать layout/design/CMS/mobile issues, давать конкретный CSS/структурный совет, затем мягко показывать SimpleReview как способ превратить visual bug в fix/PR. Можно отдельный Show & tell, если есть хороший кейс. | Guidelines прямо просят избегать advertising/spam и irrelevant comments. |
+| Bubble | https://forum.bubble.io/ + guidelines: https://forum.bubble.io/guidelines | HIGH для no-code/AI-shippers | Отвечать на темы "my app broke", responsive issue, workflows/API bugs. Хороший угол: "no-code/AI app before launch sanity check". | Нужны полезные технические ответы, не чистый launch-пост. |
+| Squarespace | https://forum.squarespace.com/ + guidelines: https://forum.squarespace.com/guidelines/ | MEDIUM | Отвечать на advanced customization, CSS, template, responsive bugs. Допустимо упоминать paid/service resource после бесплатной помощи и disclosure. | Forum просит lead with free help first, paid resources second; affiliation нужно указывать каждый раз. |
+| Wix Studio | https://forum.wixstudio.com/ + code of conduct: https://www.wix.com/studio/community/code-of-conduct | MEDIUM/LOW | Только полезные ответы по site/editor issues, без прямой продажи. Лучше использовать как мониторинг болей и source для контента. | Code of Conduct говорит, что community не место для solicitation или commercial self-promotion. |
+| WordPress.org | https://wordpress.org/support/forums/ + guidelines: https://wordpress.org/support/guidelines/ | MEDIUM для research, LOW для ссылок | Искать частые WP/WooCommerce баги для статей и кейсов; отвечать только полезно и без коммерческого pitch. | WordPress.org прямо запрещает advertising, paid help requests и promotion of services/plugins. |
+| WooCommerce | https://woocommerce.com/community/ + https://wordpress.org/support/plugin/woocommerce/ | MEDIUM | Брать темы про checkout, cart, template overrides, plugin conflicts как идеи для статей и SimpleReview demos. | На официальных support-форумах действуют анти-рекламные правила WordPress; ссылки на сервис лучше не ставить. |
+| Magento / Adobe Commerce | Magento forum sunset notice: https://community.magento.com/t5/News-Announcements/Magento-Community-Forum-Sunsetting-on-December-31-2025/m-p/572112 + community: https://developer.adobe.com/commerce/contributor/community/ + Magento StackExchange: https://magento.stackexchange.com/ | MEDIUM | Старый Magento forum закрыт 2025-12-31, идти в Slack/GitHub/StackExchange. Подход: технические ответы, кейсы по checkout/theme/module bugs. | StackExchange не любит overt self-promotion; если упоминаем Vibers/SimpleReview, раскрывать affiliation и делать это редко. |
+| OpenCart | https://opencart.zendesk.com/hc/en-us/community/topics + OpenCart forum/marketplace rules example: https://opencartforum.com/en/faq/developers/rules/ | MEDIUM | Темы про extensions/theme checkout/layout bugs; лучше делать полезные ответы и отдельные статьи под OpenCart issues. | Для прямой рекламы нужны профильные разделы/marketplace; не дублировать рекламные сообщения. |
+| PrestaShop | https://www.prestashop.com/forums/ | MEDIUM | Темы про theme/module/checkout bugs; готовить полезные ответы и затем отдельные SEO-страницы "fix PrestaShop issue". | Перед постингом проверять правила конкретного language-форума; Reddit r/prestashop имеет karma/account-age ограничения. |
+| Drupal | https://www.drupal.org/forum + advertising policy: https://www.drupal.org/advertising | LOW/MEDIUM | Больше подходит для Vibers как review/debug service для custom Drupal work; можно отвечать на dev issues. | Рекламные возможности лучше через официальную Drupal advertising/sponsorship policy, не через support-spam. |
+| Joomla | https://forum.joomla.org/ + forum rule note: https://community.joomla.org/blogs/community/small-modication-to-the-joomla-forum-rules.html | LOW/MEDIUM | Технические ответы по extensions/templates; контент-идеи для "Joomla site broken" pages. | Self-promotion и внешние ссылки на extensions ограничены; по extensions лучше ссылаться на JED, не на свой сайт. |
+| Shopware | https://forum.shopware.com/ + community: https://developers.shopware.com/community/ | MEDIUM для EU ecommerce | Темы Shopware 6 layout/plugin/checkout issues, особенно English/German sections. | Перед постингом проверять актуальные forum guidelines; не использовать как рекламную доску. |
+| CS-Cart | https://forum.cs-cart.com/ + guidelines: https://forum.cs-cart.com/guidelines | MEDIUM | Можно обсуждать CS-Cart/Multi-Vendor services/add-ons, dev issues, bug tracker. Хороший fit для ecommerce checkout/theme bug cases. | Guidelines запрещают нерелевантный spam; продукты для CS-Cart должны вести на marketplace.cs-cart.com, если это add-on/theme. |
+| 1C-Bitrix | https://dev.1c-bitrix.ru/community/forums/index.php + rules: https://dev.1c-bitrix.ru/community/forums/rules/index.php | MEDIUM для RU | Темы про компоненты, шаблоны, интеграции, checkout/order flow; лучше как экспертные ответы и source для RU-статей. | Не делать массовую рекламу; соблюдать правила конкретного форума и не писать капсом/в стиле объявления. |
+
+#### Как писать ответ в forum thread
+
+1. Найти свежую тему с конкретной болью: broken checkout, mobile layout, form not submitting, plugin conflict, AI/no-code app regression.
+2. Дать бесплатный diagnostic answer: 2-4 шага проверки, возможная причина, короткий код/настройка если очевидно.
+3. Если ссылка уместна, раскрыть связь: "Disclosure: I work on Vibers/SimpleReview." Затем одна ссылка с UTM.
+4. Не писать одинаковые сообщения в разные темы. Для каждого форума вести 5-10 полезных ответов на 1 ссылку.
+
+#### Шаблон мягкого упоминания
+
+```
+This looks like a frontend/regression issue rather than a platform-wide outage.
+I would first check: [1] ..., [2] ..., [3] ...
+
+Disclosure: I work on SimpleReview/Vibers. If you want a second pair of eyes on this before launch, this is the kind of issue we review and turn into a concrete fix/PR:
+https://onout.org/simple-review/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=platform_forums
+```
+
+Для Vibers вместо SimpleReview:
+
+```
+https://onout.org/vibers/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=platform_forums
+```
 
 ### Статус размещений
 
