@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fix Any 1С-Bitrix Site Without Touching the Core — SimpleReview for Bitrix</title>
-  <meta name="description" content="Click any element on your 1С-Bitrix site. SimpleReview knows the /bitrix/ → /local/ override rule, edits the right template, hooks, or component — and opens a Pull Request. Core stays untouched, updates don't break.">
-  <meta name="keywords" content="fix bitrix site, customize bitrix without developer, bitrix /local/ override, edit 1c-bitrix, bitrix marketplace module simplereview, bitrix template customization">
-  <link rel="canonical" href="https://onout.org/bitrix/">
+  <title>Доработка сайта на 1С-Битрикс без программиста — SimpleReview for Bitrix</title>
+  <meta name="description" content="Кликни любой элемент на сайте на Битрикс. SimpleReview знает /local/ override-систему, шаблоны, компоненты — и присылает Pull Request, не правя ядро в /bitrix/.">
+  <meta name="keywords" content="доработка битрикс без программиста, битрикс модуль simplereview, кликнуть и поправить битрикс, битрикс /local/, edit bitrix without developer, битрикс маркетплейс модуль">
+  <link rel="canonical" href="https://onout.org/bitrix/index.ru.html">
   <link rel="alternate" hreflang="en" href="https://onout.org/bitrix/">
   <link rel="alternate" hreflang="ru" href="https://onout.org/bitrix/index.ru.html">
   <link rel="alternate" hreflang="x-default" href="https://onout.org/bitrix/">
@@ -14,13 +14,13 @@
   <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Fix Any 1С-Bitrix Site Without Touching the Core — SimpleReview for Bitrix">
-  <meta property="og:description" content="Click any element on your 1С-Bitrix site. SimpleReview knows the /bitrix/ → /local/ override rule and opens a Pull Request — without touching the core.">
-  <meta property="og:url" content="https://onout.org/bitrix/">
+  <meta property="og:title" content="Доработка сайта на 1С-Битрикс без программиста — SimpleReview for Bitrix">
+  <meta property="og:description" content="Кликни любой элемент на сайте на Битрикс. SimpleReview знает /local/ override-систему — и присылает Pull Request, не трогая ядро.">
+  <meta property="og:url" content="https://onout.org/bitrix/index.ru.html">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Fix Any 1С-Bitrix Site Without Touching the Core — SimpleReview for Bitrix">
-  <meta name="twitter:description" content="Click an element on a 1С-Bitrix site. Get a Pull Request, not a ticket.">
+  <meta name="twitter:title" content="Доработка сайта на 1С-Битрикс без программиста — SimpleReview for Bitrix">
+  <meta name="twitter:description" content="Кликни элемент на сайте на 1С-Битрикс. Получи Pull Request, не тикет.">
   <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
@@ -31,8 +31,8 @@
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "Fix Any 1С-Bitrix Site Without Touching the Core — SimpleReview for Bitrix",
-    "description": "Click any element on your 1С-Bitrix site. SimpleReview knows the /bitrix/ → /local/ override rule, edits the right template, hooks, or component — and opens a Pull Request. Core stays untouched, updates don't break.",
+    "headline": "Доработка сайта на 1С-Битрикс без программиста — SimpleReview for Bitrix",
+    "description": "Кликни любой элемент на сайте на Битрикс. SimpleReview знает /local/ override-систему, шаблоны, компоненты — и присылает Pull Request, не правя ядро в /bitrix/.",
     "url": "https://onout.org/bitrix/",
     "datePublished": "2026-04-30",
     "dateModified": "2026-04-30",
@@ -52,12 +52,12 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {"@type": "Question", "name": "Can I customize a Bitrix site without a developer?", "acceptedAnswer": {"@type": "Answer", "text": "For 80% of tasks — yes. Templates, language strings, captcha, copyright. For 1С integration, custom payment, migration — pair with a Vibers human-in-the-loop review."}},
-      {"@type": "Question", "name": "How do I install SimpleReview on a Bitrix site?", "acceptedAnswer": {"@type": "Answer", "text": "Today: Chrome Extension + connect Git/SFTP. Soon: a native module on 1С-Bitrix: Marketplace (in approval). Standard installer: Marketplace → Catalog → Search 'SimpleReview' → Install."}},
-      {"@type": "Question", "name": "Which Bitrix editions are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Site Management (Start / Small Business / Business / Web-Cluster). All versions 16.0+. Bitrix24 SaaS is not supported (no file access). Bitrix24 Enterprise on-premise — supported."}},
-      {"@type": "Question", "name": "Is this safe for production?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview never pushes directly to the main branch. Every change is a PR you review and merge. Use a staging clone + git workflow."}},
-      {"@type": "Question", "name": "How is this better than a $30-50/hour Bitrix freelancer?", "acceptedAnswer": {"@type": "Answer", "text": "Speed and starting cost. A freelancer needs 1-3 hours just to clone the repo and locate the file. SimpleReview already knows the /local/ structure and opens a PR in seconds."}},
-      {"@type": "Question", "name": "What about complex modules — payment, 1С integration, Bitrix24 ↔ on-premise migration?", "acceptedAnswer": {"@type": "Answer", "text": "That's work for a real engineer. SimpleReview can prep a draft PR, but the final merge needs a human reviewer. Vibers does exactly that — reviews PRs before merge."}}
+      {"@type": "Question", "name": "Можно ли править сайт на Битриксе без программиста?", "acceptedAnswer": {"@type": "Answer", "text": "Для 80% задач — да. Шаблоны, языковые файлы, captcha, копирайт. Для интеграции 1С, кастомной оплаты, миграции — нужен живой человек, Vibers human-in-the-loop review."}},
+      {"@type": "Question", "name": "Как установить SimpleReview на Битрикс-сайт?", "acceptedAnswer": {"@type": "Answer", "text": "Сейчас: Chrome Extension + подключить Git/SFTP. Скоро: нативный модуль на 1С-Битрикс: Маркетплейс (на ревью). Установка через Marketplace → Каталог → SimpleReview → Установить."}},
+      {"@type": "Question", "name": "Какие редакции Битрикса поддерживаются?", "acceptedAnswer": {"@type": "Answer", "text": "Управление сайтом (Старт / Малый бизнес / Бизнес / Веб-кластер). Все версии 16.0+. Bitrix24 SaaS не поддерживается (нет файлового доступа). Bitrix24 Enterprise on-premise — поддерживается."}},
+      {"@type": "Question", "name": "Безопасно ли это для прода?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview не пушит в основную ветку напрямую. Каждое изменение — PR, который вы ревьюите и мержите. Используйте staging-клон + git workflow."}},
+      {"@type": "Question", "name": "Чем это лучше фрилансера за 2000 ₽/час?", "acceptedAnswer": {"@type": "Answer", "text": "Скорость и стоимость стартовой задачи. Фрилансеру нужен 1-3 часа просто чтобы клонировать репо и найти файл. SimpleReview уже знает структуру /local/ и открывает PR за секунды."}},
+      {"@type": "Question", "name": "Что про сложные модули — оплата, 1С-интеграция, миграция Bitrix24 ↔ on-premise?", "acceptedAnswer": {"@type": "Answer", "text": "Это работа для живого специалиста. SimpleReview может подготовить PR-черновик, но финальный merge должен ревьюить человек. Vibers делает именно это — ревью PR-ов перед merge."}}
     ]
   }
   </script>
@@ -306,20 +306,18 @@
     <nav class="site-nav">
       <a href="/vibers/">Vibers</a> &nbsp;·&nbsp;
       <a href="/simple-review/">SimpleReview</a> &nbsp;·&nbsp;
-      <a href="/bitrix/how-to-fix-and-customize-bitrix-sites/">Bitrix Customization Guide</a> &nbsp;·&nbsp;
-      <a href="/vibers/blog/">Blog</a>
+      <a href="/bitrix/how-to-fix-and-customize-bitrix-sites/">Гид по правке Битрикса</a> &nbsp;·&nbsp;
+      <a href="/vibers/blog/">Блог</a>
     </nav>
 
     <header class="hero">
-      <p style="text-align:center;margin-top:0;margin-bottom:14px;font-size:13px;color:#888">
-        Русская версия: <a href="/bitrix/index.ru.html" style="color:#ff7e00">onout.org/bitrix/index.ru.html</a>
-      </p>
-      <div class="hero-badge">SimpleReview · for 1С-Bitrix · Chrome Extension</div>
-      <h1>Click any element on your 1С-Bitrix site. Get a <abbr title="The fix is automatically delivered to GitHub as a commit, pull request, or straight to your server">code fix</abbr>.</h1>
-      <p class="hero-sub">Stop paying $30-50/hour for a one-file tweak inside <code>/local/templates/</code>. SimpleReview knows the <code>/bitrix/</code> → <code>/local/</code> override rule, opens a Pull Request — core stays untouched, future Bitrix updates don't break your fixes.</p>
+      <p style="text-align:center;margin-bottom:18px;font-size:13px;color:#888">English: <a href="/bitrix/" style="color:#ff7e00">onout.org/bitrix/</a></p>
+    <div class="hero-badge">SimpleReview · для 1С-Битрикс · Chrome Extension</div>
+      <h1>Кликни элемент на сайте на 1С-Битрикс. Получи <abbr title="Правка автоматически уходит в GitHub как commit, pull request или прямо на ваш сервер">code fix</abbr>.</h1>
+      <p class="hero-sub">Хватит платить 2-3 тыс ₽ за правку одного файла в <code>/local/templates/</code>. SimpleReview знает <code>/bitrix/</code> → <code>/local/</code> override-правило, открывает PR — ядро остаётся нетронутым, апдейты не ломаются.</p>
       <div class="cta-group">
         <a class="btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_bitrix_hub&utm_medium=hero">Download Extension</a>
-        <a class="btn-secondary" href="/bitrix/how-to-fix-and-customize-bitrix-sites/">Read the Bitrix customization guide →</a>
+        <a class="btn-secondary" href="/bitrix/how-to-fix-and-customize-bitrix-sites/">Прочитать гид по правке Битрикса →</a>
       </div>
     </header>
 
@@ -414,7 +412,7 @@
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click SimpleReview → pick the copyright → <strong>Fix it</strong> → PR is ready, no developer needed</div>
+      <div class="sc-caption">Кликни SimpleReview → выбери копирайт → <strong>Fix it</strong> → PR готов, без программиста</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -423,129 +421,129 @@
     </div>
 
     <section class="what-fixes">
-      <h2>What SimpleReview can fix on Bitrix</h2>
+      <h2>Что SimpleReview правит на Битриксе</h2>
       <div class="fixes-grid">
-        <div class="fix-item">Component templates in <code>/local/templates/[theme]/components/bitrix/</code></div>
-        <div class="fix-item">Site template files in <code>/local/templates/[theme]/header.php</code>, <code>footer.php</code></div>
-        <div class="fix-item">Language strings in <code>/local/templates/[theme]/lang/ru/</code></div>
-        <div class="fix-item">Init hooks in <code>/local/php_interface/init.php</code></div>
-        <div class="fix-item">CSS/JS in <code>/local/templates/[theme]/styles.css</code>, <code>script.js</code></div>
-        <div class="fix-item">Removing the "Powered by 1С-Bitrix" line / editing the copyright</div>
-        <div class="fix-item">Cache reset on "critical error" (<code>/bitrix/cache/</code>, <code>/bitrix/managed_cache/</code>)</div>
-        <div class="fix-item">Public form settings (captcha, validation)</div>
+        <div class="fix-item">Шаблоны компонентов в <code>/local/templates/[theme]/components/bitrix/</code></div>
+        <div class="fix-item">Шаблон сайта в <code>/local/templates/[theme]/header.php</code>, <code>footer.php</code></div>
+        <div class="fix-item">Языковые файлы в <code>/local/templates/[theme]/lang/ru/</code></div>
+        <div class="fix-item">Init-скрипты в <code>/local/php_interface/init.php</code></div>
+        <div class="fix-item">CSS/JS в <code>/local/templates/[theme]/styles.css</code>, <code>script.js</code></div>
+        <div class="fix-item">Удаление "Powered by 1С-Битрикс" / редактирование копирайта</div>
+        <div class="fix-item">Сброс кеша при ошибке "критическая ошибка" (<code>/bitrix/cache/</code>, <code>/bitrix/managed_cache/</code>)</div>
+        <div class="fix-item">Настройки публичных форм (captcha, valid)</div>
       </div>
       <p style="font-size:13px; color:#888; margin-top:16px;">
-        Works with the "Start" / "Small Business" / "Business" / "Web-Cluster" editions. Never edits files inside <code>/bitrix/</code> (the core) — only <code>/local/</code> overrides, so updates won't wipe your changes. We're shipping a <code>simplereview</code> module to <strong>1С-Bitrix: Marketplace</strong> (in approval). Standard installer: Marketplace → Catalog → Search "SimpleReview" → Install. Adds an "Edit with SimpleReview" button next to every template/component in the admin.
+        Работает с редакциями "Старт" / "Малый бизнес" / "Бизнес" / "Веб-кластер". Никогда не правит файлы в <code>/bitrix/</code> (ядро) — только <code>/local/</code> overrides, чтобы апдейты не сносили правки.
       </p>
     </section>
 
     <section class="how-it-works">
-      <h2>How SimpleReview works on Bitrix sites</h2>
+      <h2>Как работает SimpleReview на сайтах Битрикс</h2>
       <div class="steps">
         <div class="step">
           <div class="step-num">1</div>
           <div class="step-content">
-            <h3>Install the Chrome extension</h3>
-            <p>Auto-detects Bitrix via <code>&lt;meta name="generator" content="Bitrix Site Manager"&gt;</code> + JS signatures.</p>
+            <h3>Установить расширение Chrome</h3>
+            <p>Auto-detect Битрикса по <code>&lt;meta name="generator" content="Bitrix Site Manager"&gt;</code> + JS-сигнатурам.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
           <div class="step-content">
-            <h3>Connect your site's Git/SFTP</h3>
-            <p>GitHub/GitLab/Bitbucket/self-hosted Gitea or direct SFTP. SimpleReview indexes <code>/local/</code> on first connection.</p>
+            <h3>Подключить Git/SFTP вашего сайта</h3>
+            <p>GitHub/GitLab/Bitbucket/самохост Gitea или прямой SFTP. SimpleReview индексирует <code>/local/</code> на первом подключении.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <div class="step-content">
-            <h3>Click an element on the storefront</h3>
-            <p>Any block, button, footer copyright, component element. Captures DOM + Smarty/PHP source path.</p>
+            <h3>Кликнуть элемент на витрине</h3>
+            <p>Любой блок, кнопку, копирайт в подвале, элемент компонента. Захватывается DOM + Smarty/PHP source path.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">4</div>
           <div class="step-content">
-            <h3>Get a Pull Request</h3>
-            <p>Type "remove the Bitrix copyright" or "fix the captcha on the form". The agent edits the right file in <code>/local/templates/.../footer.php</code> and opens a PR. You merge it or reject it.</p>
+            <h3>Получить Pull Request</h3>
+            <p>Напишите "убрать копирайт Битрикс" или "поправить captcha на форме". Агент правит правильный файл в <code>/local/templates/.../footer.php</code> и открывает PR. Вы мержите или отклоняете.</p>
           </div>
         </div>
       </div>
     </section>
 
     <section class="vs-section">
-      <h2>SimpleReview vs a Bitrix freelancer</h2>
+      <h2>SimpleReview vs Битрикс-фрилансер</h2>
       <table class="vs-table">
         <thead>
           <tr>
-            <th>Criterion</th>
-            <th>Bitrix freelancer ($30-50/hr)</th>
+            <th>Параметр</th>
+            <th>Фрилансер (1500-3000 ₽/час)</th>
             <th class="col-vibers">SimpleReview</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Time to start a task</td>
-            <td>1-3 hours (Zoom + repo clone + onboarding)</td>
-            <td class="col-vibers">30 seconds (one-time, then cached)</td>
+            <td>Время на старт задачи</td>
+            <td>1-3 часа (Zoom + клон репо + onboarding)</td>
+            <td class="col-vibers">30 секунд (one-time, потом cached)</td>
           </tr>
           <tr>
-            <td>Finding the right file</td>
-            <td>15-90 min depending on familiarity</td>
-            <td class="col-vibers">Instant — already indexed</td>
+            <td>Найти нужный файл</td>
+            <td>15-90 мин в зависимости от знания темы</td>
+            <td class="col-vibers">Мгновенно — уже проиндексировано</td>
           </tr>
           <tr>
-            <td>Knows the <code>/bitrix/</code> vs <code>/local/</code> rule</td>
-            <td>Only if a senior dev</td>
+            <td>Знание правила <code>/bitrix/</code> vs <code>/local/</code></td>
+            <td>Если хороший разработчик</td>
             <td class="col-vibers">Built-in</td>
           </tr>
           <tr>
-            <td>Component template overrides</td>
-            <td>Manual</td>
-            <td class="col-vibers">Auto-detects override path</td>
+            <td>Работа с шаблонами компонентов</td>
+            <td>Вручную</td>
+            <td class="col-vibers">Автодетект пути override</td>
           </tr>
           <tr>
-            <td>Doesn't break the core update</td>
-            <td>If careful</td>
-            <td class="col-vibers">Guaranteed — never writes to <code>/bitrix/</code></td>
+            <td>Не ломает апдейт ядра</td>
+            <td>Если осторожен</td>
+            <td class="col-vibers">Гарантировано — не пишет в <code>/bitrix/</code></td>
           </tr>
           <tr>
-            <td>Opens a PR</td>
-            <td>Sometimes</td>
-            <td class="col-vibers">Always</td>
+            <td>Открывает PR</td>
+            <td>Иногда</td>
+            <td class="col-vibers">Всегда</td>
           </tr>
           <tr>
-            <td>Cost of a 1-line fix</td>
-            <td>$30-50 (1 hour minimum)</td>
-            <td class="col-vibers">Free with your own AI key — pennies of API usage otherwise</td>
+            <td>Стоимость 1-line правки</td>
+            <td>1500-3000 ₽ (минимум 1 час)</td>
+            <td class="col-vibers">Бесплатно с вашим AI key — копейки API usage иначе</td>
           </tr>
           <tr>
-            <td>Suitable for payment / 1С integration / migration</td>
-            <td>Yes — pair with <a href="/vibers/">Vibers human review</a></td>
-            <td class="col-vibers">No — escalate to Vibers for the remaining 20%</td>
+            <td>Подходит для оплаты / 1С-интеграции / миграции</td>
+            <td>Да — пара с <a href="/vibers/">Vibers human review</a></td>
+            <td class="col-vibers">Нет — эскалировать на Vibers для 20% работы</td>
           </tr>
         </tbody>
       </table>
     </section>
 
     <section class="use-cases">
-      <h2>Who uses SimpleReview on Bitrix</h2>
+      <h2>Кто использует SimpleReview на Битриксе</h2>
       <div class="case-grid">
         <div class="case-card">
-          <h3>Bitrix store owners</h3>
-          <p>Copy edits, text tweaks, lead form fixes ship the same hour.</p>
+          <h3>Владельцы магазинов на Битрикс</h3>
+          <p>Правка копирайта, текстов, формы заявок шлётся в тот же час.</p>
         </div>
         <div class="case-card">
-          <h3>Bitrix agencies</h3>
-          <p>Drafts the boring 80% of tickets so seniors can focus on 1С integration and payment.</p>
+          <h3>Битрикс-агентства</h3>
+          <p>Драфтит скучные 80% тикетов, чтобы сеньоры фокусировались на интеграции с 1С и оплате.</p>
         </div>
         <div class="case-card">
-          <h3>Freelancers with multiple Bitrix sites</h3>
-          <p>One Chrome extension for every client; each site keeps its own Git.</p>
+          <h3>Фрилансеры с несколькими сайтами на Битрикс</h3>
+          <p>Одно расширение Chrome для всех клиентов; у каждого сайта свой Git.</p>
         </div>
         <div class="case-card">
-          <h3>Marketers with no developer</h3>
-          <p>See what's broken, click it, describe it, get a PR.</p>
+          <h3>Маркетологи без разработчика</h3>
+          <p>Вижу что ломается, кликаю, описываю, получаю PR.</p>
         </div>
       </div>
     </section>
@@ -553,47 +551,47 @@
     <section class="faq-section">
       <h2>FAQ</h2>
       <div class="faq-item">
-        <div class="faq-q">Can I customize a Bitrix site without a developer?</div>
-        <div class="faq-a">For 80% of tasks — yes. Templates, language strings, captcha, copyright. For 1С integration, custom payment, migration — pair with a <a href="/vibers/">Vibers human review</a>.</div>
+        <div class="faq-q">Можно ли править сайт на Битриксе без программиста?</div>
+        <div class="faq-a">Для 80% задач — да. Шаблоны, языковые файлы, captcha, копирайт. Для интеграции 1С, кастомной оплаты, миграции — нужен живой человек, <a href="/vibers/">Vibers</a>.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">How do I install SimpleReview on a Bitrix site?</div>
-        <div class="faq-a">Today: Chrome Extension + connect Git/SFTP. Soon: a native module on <strong>1С-Bitrix: Marketplace</strong> (in approval). Standard installer: Marketplace → Catalog → Search "SimpleReview" → Install.</div>
+        <div class="faq-q">Как установить SimpleReview на Битрикс-сайт?</div>
+        <div class="faq-a">Сейчас: Chrome Extension + подключить Git/SFTP. Скоро: нативный модуль на <strong>1С-Битрикс: Маркетплейс</strong> (на ревью). Установка через Marketplace → Каталог → SimpleReview → Установить.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Which Bitrix editions are supported?</div>
-        <div class="faq-a">Site Management (Start / Small Business / Business / Web-Cluster). All versions 16.0+. Bitrix24 SaaS is not supported (no file access). Bitrix24 Enterprise on-premise — supported.</div>
+        <div class="faq-q">Какие редакции Битрикса поддерживаются?</div>
+        <div class="faq-a">Управление сайтом (Старт / Малый бизнес / Бизнес / Веб-кластер). Все версии 16.0+. Bitrix24 SaaS не поддерживается (нет файлового доступа). Bitrix24 Enterprise on-premise — поддерживается.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Is this safe for production?</div>
-        <div class="faq-a">SimpleReview never pushes directly to the main branch. Every change is a PR you review and merge. Use a staging clone + git workflow.</div>
+        <div class="faq-q">Безопасно ли это для прода?</div>
+        <div class="faq-a">SimpleReview не пушит в основную ветку напрямую. Каждое изменение — PR, который вы ревьюите и мержите. Используйте staging-клон + git workflow.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">How is this better than a $30-50/hour Bitrix freelancer?</div>
-        <div class="faq-a">Speed and starting cost. A freelancer needs 1-3 hours just to clone the repo and locate the file. SimpleReview already knows the <code>/local/</code> structure and opens a PR in seconds.</div>
+        <div class="faq-q">Чем это лучше фрилансера за 2000 ₽/час?</div>
+        <div class="faq-a">Скорость и стоимость стартовой задачи. Фрилансеру нужен 1-3 часа просто чтобы клонировать репо и найти файл. SimpleReview уже знает структуру <code>/local/</code> и открывает PR за секунды.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">What about complex modules — payment, 1С integration, Bitrix24 ↔ on-premise migration?</div>
-        <div class="faq-a">That's work for a real engineer. SimpleReview can prep a draft PR, but the final merge needs a human reviewer. <a href="/vibers/">Vibers</a> does exactly that — reviews PRs before merge.</div>
+        <div class="faq-q">Что про сложные модули — оплата, 1С-интеграция, миграция Bitrix24 ↔ on-premise?</div>
+        <div class="faq-a">Это работа для живого специалиста. SimpleReview может подготовить PR-черновик, но финальный merge должен ревьюить человек. <a href="/vibers/">Vibers</a> делает именно это — ревью PR-ов перед merge.</div>
       </div>
     </section>
 
     <div class="cta-box">
-      <h2>Stop paying $50/hour for one-line Bitrix tweaks</h2>
-      <p>The SimpleReview agent already knows the <code>/local/</code> override system. Click an element, describe the fix, get a Pull Request.</p>
-      <a class="btn-white" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_bitrix_hub&utm_medium=cta">Install SimpleReview →</a>
-      <p style="margin-top:14px;font-size:14px;opacity:0.85">Got something complex — payment, 1С, migration? → <a href="/vibers/" style="color:inherit;text-decoration:underline">Get human review →</a></p>
+      <h2>Перестаньте платить 2000 ₽/час за правку 1 файла на Битриксе</h2>
+      <p>SimpleReview-агент уже знает <code>/local/</code> override-систему. Кликни элемент, опиши правку, получи Pull Request.</p>
+      <a class="btn-white" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_bitrix_hub&utm_medium=cta">Установить SimpleReview →</a>
+      <p style="margin-top:14px;font-size:14px;opacity:0.85">Сложная задача — оплата, 1С, миграция? → <a href="/vibers/" style="color:inherit;text-decoration:underline">Получить human review →</a></p>
     </div>
 
     <p style="font-size:14px;color:#555;margin:32px 0 16px;">
       Read more:
-      <a href="/bitrix/how-to-fix-and-customize-bitrix-sites/">How to fix and customize 1С-Bitrix sites</a> ·
+      <a href="/bitrix/how-to-fix-and-customize-bitrix-sites/">Как править сайты на 1С-Битрикс</a> ·
       <a href="/simple-review/">SimpleReview</a> ·
       <a href="/vibers/">Vibers human-in-the-loop review</a>
     </p>
 
     <footer>
-      <p>SimpleReview for 1С-Bitrix — a product by <a href="/vibers/">Vibers</a> — Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener">onout.org</a> | <a href="/vibers/blog/">Blog</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener">Telegram</a> | <a href="mailto:support@onout.org">Email</a> | <a href="/vibers/privacy.html">Privacy</a></p>
+      <p>SimpleReview для 1С-Битрикс — продукт от <a href="/vibers/">Vibers</a> — Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener">onout.org</a> | <a href="/vibers/blog/">Blog</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener">Telegram</a> | <a href="mailto:support@onout.org">Email</a> | <a href="/vibers/privacy.html">Privacy</a></p>
     </footer>
 
   </div><!-- /content-wrap -->
