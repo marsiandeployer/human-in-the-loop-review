@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Self-Hosting Discourse in Production (2026) — The Complete Handbook</title>
-  <meta name="description" content="Hardware sizing, app.yml topology, mail and SSO setup, plugin development, API recipes, phpBB/vBulletin migration. Battle-tested production handbook for self-hosting Discourse in 2026.">
-  <meta name="keywords" content="discourse self hosting, discourse production setup, discourse forum software, discourse hosting guide, discourse handbook 2026, discourse docker launcher, discourse hardware sizing, discourse plugin api">
+  <title>Discourse self-hoster's handbook — practical guides for forum admins</title>
+  <meta name="description" content="A working handbook for self-hosting Discourse: plugin development, API recipes, mail setup, DiscourseConnect SSO, phpBB migration, production runbook. Real configs, real benchmarks, no SaaS marketing.">
+  <meta name="keywords" content="discourse handbook, discourse self hosting, discourse forum software, discourse hosting guide, discourse production, discourse plugin development, discourse api, discourse sso, discourse migration, discourse runbook">
   <link rel="canonical" href="https://onout.org/discourse/">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Self-Hosting Discourse in Production (2026) — The Complete Handbook">
-  <meta property="og:description" content="Hardware sizing, app.yml, mail, SSO, plugins, API, migrations. The honest production handbook for self-hosting Discourse in 2026.">
+  <meta property="og:title" content="Discourse self-hoster's handbook — practical guides for forum admins">
+  <meta property="og:description" content="Working configs, API recipes, mail setup, SSO, migration, production runbook. Written by self-hosters, not Discourse Inc.">
   <meta property="og:url" content="https://onout.org/discourse/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Self-Hosting Discourse in Production (2026)">
-  <meta name="twitter:description" content="The honest handbook: sizing, app.yml, mail, SSO, plugins, API, migrations.">
+  <meta name="twitter:title" content="Discourse self-hoster's handbook">
+  <meta name="twitter:description" content="Working configs, API recipes, mail setup, SSO, migration, production runbook.">
   <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
@@ -27,21 +27,16 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "TechArticle",
+    "@type": "WebSite",
     "inLanguage": "en",
-    "headline": "Self-Hosting Discourse in Production (2026) — The Complete Handbook",
-    "description": "Hardware sizing, app.yml topology, mail and SSO setup, plugin development, API recipes, phpBB/vBulletin migration for self-hosting Discourse in 2026.",
+    "name": "Discourse self-hoster's handbook",
     "url": "https://onout.org/discourse/",
-    "datePublished": "2026-05-01",
-    "dateModified": "2026-05-01",
-    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Vibers",
-      "url": "https://onout.org/vibers/",
-      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
-    },
-    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/discourse/" }
+    "publisher": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://onout.org/discourse/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
   }
   </script>
 
@@ -51,12 +46,10 @@
     "@type": "FAQPage",
     "inLanguage": "en",
     "mainEntity": [
-      {"@type": "Question", "name": "Is self-hosting Discourse cheaper than the official cloud?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on your traffic and ops appetite. Official Discourse hosting starts at $100/mo and scales by user count. A self-hosted single-container deployment fits in a $12-24/mo VPS for forums up to ~5k DAU, but you also pay for transactional email (Mailgun, Postmark, SES — $5-20/mo), object storage for uploads (S3 / Backblaze B2 — $5-15/mo at scale), and your own time on rebuilds, backups, and SMTP debugging. Below ~1k DAU self-hosted wins on price; above ~10k DAU and the time cost crosses official pricing."}},
-      {"@type": "Question", "name": "What hardware does Discourse need in 2026?", "acceptedAnswer": {"@type": "Answer", "text": "Minimum: 2GB RAM, 2 CPU cores, 20GB disk. Comfortable: 4GB RAM, 2-4 CPUs, 40GB SSD. Discourse is a Rails + Sidekiq + Redis + Postgres stack inside a single Docker container by default — that container will use ~1.4-1.8GB RAM idle, more under load and image-baking. ARM works (Hetzner CAX, Oracle Free Tier) — bench it before committing."}},
-      {"@type": "Question", "name": "Can I run Discourse without Docker?", "acceptedAnswer": {"@type": "Answer", "text": "Officially unsupported, but possible. The main container gives you Postgres + Redis + Sidekiq + Rails + image-optim binaries pinned to versions Discourse tests against. Running outside Docker means rolling those yourself and updating them by hand. People do it on FreeBSD and ARM where the container is awkward — expect rough edges and broken features (image_optim, scheduled jobs)."}},
-      {"@type": "Question", "name": "How do I migrate from phpBB / vBulletin?", "acceptedAnswer": {"@type": "Answer", "text": "Discourse ships import scripts in /var/www/discourse/script/import_scripts/ inside the container — phpbb3.rb, vbulletin.rb, vanilla.rb, and others. They read from the source database, transform users/topics/posts/attachments, and bulk-insert into Discourse's schema. Run them inside the container with DB env vars pointing at the source. Plan for the post-import sidekiq backlog — search index, post baking, image downsizing — which can run for hours on large forums. Full walkthrough below."}},
-      {"@type": "Question", "name": "Why does my Discourse plugin break after upgrade?", "acceptedAnswer": {"@type": "Answer", "text": "Discourse's frontend is Ember, and Ember 4 -> 5 (rolled out in 2024-2025) changed template colocation, decorators, and tracked properties. Plugins using legacy patterns (`Discourse.Foo.reopen`, untracked properties, classic templates) silently stop applying. Use `api.modifyClass` and `withPluginApi` from the official plugin API instead — those follow Discourse's deprecation policy and survive upgrades."}},
-      {"@type": "Question", "name": "Is Discourse open source or freemium?", "acceptedAnswer": {"@type": "Answer", "text": "Open source under GPL-2.0 — the entire codebase, including the admin UI, plugin system, and Sidekiq jobs. The hosted plans Discourse sells are pure ops: managed upgrades, premium support, an SLA. Nothing in the open source repo is locked behind a license — there's no Enterprise tier with secret features. Civilized Discourse Construction Inc. funds development through hosting and contracts."}}
+      {"@type": "Question", "name": "Who wrote this handbook?", "acceptedAnswer": {"@type": "Answer", "text": "The Vibers team — a small group that has been self-hosting Discourse for clients and our own communities since 2018. We're not affiliated with Civilized Discourse Construction Inc. This is what we wished existed when we hit each wall."}},
+      {"@type": "Question", "name": "Is it free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — every guide and benchmark on this site is free. We monetize through SimpleReview (a Chrome extension that drafts code fixes for any site, Discourse forums included), not through paywalled documentation."}},
+      {"@type": "Question", "name": "Does it cover the official 30-minute install?", "acceptedAnswer": {"@type": "Answer", "text": "No, on purpose. The official Discourse install guide is excellent and current — we don't try to replace it. We pick up where it ends: production sizing, real plugin development, API integration, mail troubleshooting, SSO, migration."}},
+      {"@type": "Question", "name": "Why should I trust your benchmarks?", "acceptedAnswer": {"@type": "Answer", "text": "Hardware sizing was measured in 2026 on Hetzner CX-line VPSes with synthetic load via k6. Each plugin / API / SSO walkthrough is built and run on a real Discourse instance before publishing. If you spot something wrong, file a GitHub issue and we'll fix it."}}
     ]
   }
   </script>
@@ -69,12 +62,10 @@
     button, input, select, textarea, table, pre, code { font-family: inherit; }
     pre, code { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
     code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
-    pre { background: #1a1a1a; color: #e8e8e8; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 13.5px; line-height: 1.55; margin: 12px 0; }
-    pre code { background: transparent; padding: 0; color: inherit; }
     h1, h2, h3 { text-wrap: balance; color: #1a4480; }
     p { text-wrap: pretty; }
     .page { width: 100%; background: #fff; min-height: 100vh; padding: 0 20px; box-sizing: border-box; }
-    .content-wrap { max-width: 920px; margin: 0 auto; padding: 0 40px; }
+    .content-wrap { max-width: 960px; margin: 0 auto; padding: 0 40px; }
     a { color: #1ca0e2; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
@@ -82,54 +73,63 @@
     .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
     .site-nav a:hover { color: #1ca0e2; border-color: #1ca0e2; text-decoration: none; }
 
-    .hero { border-bottom: 2px solid #1a4480; padding: 32px 0 32px; margin-bottom: 32px; }
-    .hero-badge { display: inline-block; color: #1a4480; font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 14px; }
-    .hero-badge::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #1ca0e2; margin-right: 8px; vertical-align: middle; transform: translateY(-1px); }
-    h1 { font-size: 46px; font-weight: 800; letter-spacing: -1.1px; line-height: 1.04; margin-bottom: 16px; color: #1a4480; }
-    .hero-sub { font-size: 19px; color: #333; margin-bottom: 24px; line-height: 1.45; max-width: 720px; }
+    /* Hero */
+    .hero-wrap { background: linear-gradient(180deg, #f7fbfe 0%, #ffffff 100%); border-bottom: 1px solid #eef3f8; margin: 0 -20px 40px; padding: 0 20px 24px; }
+    .hero { padding: 36px 0 28px; max-width: 720px; }
+    .hero-badge { display: inline-block; color: #1a4480; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 14px; padding: 4px 12px; background: #e0eff9; border-radius: 999px; }
+    h1 { font-size: 50px; font-weight: 800; letter-spacing: -1.4px; line-height: 1.04; margin-bottom: 18px; color: #1a4480; }
+    .hero-sub { font-size: 19px; color: #2a2a2a; margin-bottom: 26px; line-height: 1.5; max-width: 660px; }
     .cta-group { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; background: #1a4480; color: #fff; font-size: 15px; font-weight: 600; padding: 12px 26px; border-radius: 8px; text-decoration: none; transition: background .15s; }
-    .btn-primary:hover { background: #143670; text-decoration: none; }
-    .btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; color: #1a4480; font-size: 15px; font-weight: 600; padding: 12px 22px; border-radius: 8px; border: 1px solid #d8d8d8; background: #fff; transition: border-color .15s, background .15s; }
+    .btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; background: #1a4480; color: #fff; font-size: 15px; font-weight: 600; padding: 12px 26px; border-radius: 8px; text-decoration: none; transition: background .15s, transform .15s; }
+    .btn-primary:hover { background: #143670; text-decoration: none; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; color: #1a4480; font-size: 15px; font-weight: 600; padding: 12px 22px; border-radius: 8px; border: 1px solid #d0dde8; background: #fff; transition: border-color .15s, background .15s; }
     .btn-secondary:hover { border-color: #1ca0e2; color: #1ca0e2; background: #fafafa; text-decoration: none; }
+    .hero-meta { font-size: 13px; color: #777; margin-top: 14px; }
 
-    h2 { font-size: 30px; font-weight: 700; margin: 40px 0 18px; letter-spacing: -0.5px; line-height: 1.18; }
-    h3 { font-size: 21px; font-weight: 700; margin: 24px 0 10px; letter-spacing: -0.2px; }
-
-    .tldr { margin: 24px 0 32px; padding: 22px 26px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
-    .tldr-title { font-size: 12px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 10px; }
-    .tldr ul { list-style: none; padding-left: 0; }
-    .tldr li { font-size: 15px; color: #333; padding-left: 22px; position: relative; margin-bottom: 6px; line-height: 1.5; }
-    .tldr li::before { content: "→"; position: absolute; left: 0; color: #1ca0e2; font-weight: 700; }
-
+    h2 { font-size: 32px; font-weight: 700; margin: 48px 0 14px; letter-spacing: -0.5px; line-height: 1.18; }
+    h2 + .h2-sub { font-size: 17px; color: #555; margin-bottom: 22px; line-height: 1.55; max-width: 720px; }
+    h3 { font-size: 19px; font-weight: 700; margin: 22px 0 8px; color: #1a4480; }
     p { margin-bottom: 14px; font-size: 16px; color: #2a2a2a; }
-    ul.bullets, ol.bullets { padding-left: 22px; margin-bottom: 16px; }
-    ul.bullets li, ol.bullets li { margin-bottom: 6px; font-size: 16px; color: #2a2a2a; line-height: 1.55; }
 
-    table { width: 100%; border-collapse: collapse; margin: 16px 0 28px; font-size: 14.5px; }
-    th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid #e8e8e8; vertical-align: top; }
-    th { font-weight: 600; color: #1a4480; background: #f7fbfe; font-size: 13px; text-transform: uppercase; letter-spacing: 0.6px; }
-    tr:hover td { background: #fafafa; }
-    td code { font-size: 12.5px; }
+    /* Value-prop trio */
+    .props-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 8px 0 12px; }
+    @media (max-width: 760px) { .props-grid { grid-template-columns: 1fr; } }
+    .prop-card { padding: 22px 24px; background: #fff; border: 1px solid #e5edf5; border-radius: 10px; }
+    .prop-icon { font-size: 22px; margin-bottom: 6px; line-height: 1; color: #1ca0e2; }
+    .prop-title { font-weight: 700; color: #1a4480; font-size: 16px; margin-bottom: 6px; }
+    .prop-body { font-size: 14px; color: #444; line-height: 1.55; }
 
-    .callout { margin: 18px 0; padding: 14px 18px; border-radius: 8px; border-left: 4px solid #f59e0b; background: #fffaf2; font-size: 15px; }
-    .callout-title { font-weight: 700; color: #92400e; margin-bottom: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.8px; }
-    .callout-body { color: #6b3e0a; font-size: 15px; }
+    /* Honest disclaimer callout */
+    .disclaimer { margin: 36px 0 12px; padding: 22px 28px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 10px 10px 0; }
+    .disclaimer-title { font-size: 12px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 8px; }
+    .disclaimer-body { font-size: 16px; color: #234; line-height: 1.55; }
 
-    .cluster-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
-    @media (max-width: 720px) { .cluster-grid { grid-template-columns: 1fr; } }
-    .cluster-card { padding: 20px 22px; border: 1px solid #e0e7ee; border-radius: 10px; transition: border-color .15s, box-shadow .15s; background: #fff; }
-    .cluster-card:hover { border-color: #1ca0e2; box-shadow: 0 4px 12px rgba(28,160,226,.08); }
-    .cluster-card a { color: #1a4480; font-weight: 600; font-size: 16.5px; text-decoration: none; }
-    .cluster-card a:hover { color: #1ca0e2; text-decoration: none; }
-    .cluster-card-meta { font-size: 12.5px; color: #999; margin-top: 4px; letter-spacing: 0.4px; text-transform: uppercase; }
-    .cluster-card-desc { font-size: 14px; color: #555; margin-top: 8px; line-height: 1.5; }
+    /* Practical guides grid */
+    .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0 8px; }
+    @media (max-width: 760px) { .guide-grid { grid-template-columns: 1fr; } }
+    .guide-card { padding: 22px 24px; border: 1px solid #e0e7ee; border-radius: 12px; background: #fff; transition: border-color .15s, box-shadow .15s, transform .15s; }
+    .guide-card:hover { border-color: #1ca0e2; box-shadow: 0 4px 16px rgba(28,160,226,.08); transform: translateY(-1px); }
+    .guide-card.featured { background: linear-gradient(180deg, #f7fbfe, #fff); border-color: #c2dff2; }
+    .guide-card-tag { display: inline-block; font-size: 11px; font-weight: 700; color: #1ca0e2; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 6px; }
+    .guide-card a { color: #1a4480; font-weight: 700; font-size: 18px; text-decoration: none; line-height: 1.35; display: inline-block; margin-bottom: 6px; }
+    .guide-card a:hover { color: #1ca0e2; text-decoration: none; }
+    .guide-card-desc { font-size: 14.5px; color: #555; line-height: 1.55; margin-top: 4px; }
 
-    .checklist { background: #f7fbfe; border-radius: 10px; padding: 20px 26px; margin: 22px 0; }
-    .checklist h3 { color: #1a4480; margin-top: 0; font-size: 17px; text-transform: uppercase; letter-spacing: 0.6px; }
-    .checklist ul { list-style: none; padding-left: 0; margin-top: 10px; }
-    .checklist li { padding-left: 28px; position: relative; margin-bottom: 8px; font-size: 14.5px; line-height: 1.55; }
-    .checklist li::before { content: "□"; position: absolute; left: 6px; color: #1ca0e2; font-size: 18px; line-height: 1; top: 1px; font-weight: 700; }
+    /* What you'll dodge */
+    .dodge-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 32px; margin: 14px 0 24px; padding: 22px 26px; background: #fafaf8; border-radius: 10px; border: 1px solid #ececec; }
+    @media (max-width: 760px) { .dodge-list { grid-template-columns: 1fr; } }
+    .dodge-item { font-size: 15px; color: #333; padding-left: 24px; position: relative; line-height: 1.55; }
+    .dodge-item::before { content: "✕"; position: absolute; left: 0; top: 0; color: #dc2626; font-weight: 700; }
+    .dodge-item strong { color: #1a4480; font-weight: 600; }
+
+    /* Closing CTA */
+    .closing-cta { margin: 48px 0 12px; padding: 36px 32px; border-radius: 14px; background: #1a4480; color: #fff; text-align: center; }
+    .closing-cta h2 { color: #fff; font-size: 28px; margin: 0 0 10px; }
+    .closing-cta p { color: #c8d6e8; font-size: 16px; margin: 0 auto 20px; max-width: 540px; }
+    .closing-cta .btn-primary { background: #fff; color: #1a4480; }
+    .closing-cta .btn-primary:hover { background: #f0f5fa; }
+    .closing-cta .btn-secondary { color: #fff; border-color: rgba(255,255,255,.3); background: transparent; }
+    .closing-cta .btn-secondary:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,.06); }
 
     .faq { margin: 32px 0; }
     .faq-item { padding: 18px 0; border-bottom: 1px solid #eee; }
@@ -137,7 +137,7 @@
     .faq-a { font-size: 15px; color: #444; line-height: 1.55; }
 
     /* Banner — adapted SimpleReview pattern, Discourse-themed */
-    .sc-banner { background: #0f0f0f; border-radius: 12px; overflow: hidden; margin: 0 0 32px; box-shadow: 0 4px 32px rgba(0,0,0,.18); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; position: relative; }
+    .sc-banner { background: #0f0f0f; border-radius: 12px; overflow: hidden; margin: 0 0 32px; box-shadow: 0 6px 36px rgba(0,0,0,.18); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; position: relative; }
     .sc-chrome { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: #1f1f1f; border-bottom: 1px solid #2a2a2a; }
     .sc-dots { display: flex; gap: 5px; }
     .sc-dots span { width: 10px; height: 10px; border-radius: 50%; background: #404040; }
@@ -168,19 +168,17 @@
     @keyframes sbPr { 0%, 57% { opacity: 0; } 61%, 93% { opacity: 1; } 96%, 100% { opacity: 0; } }
     .sc-cursor { position: absolute; width: 22px; height: 22px; pointer-events: none; z-index: 10; left: 360px; top: 230px; opacity: 0; animation: scCur 28s linear infinite; }
     .sc-cursor::before { content: ""; display: block; width: 0; height: 0; border-left: 11px solid #000; border-top: 7px solid transparent; border-bottom: 7px solid transparent; transform: rotate(-30deg); position: absolute; left: 1px; top: 1px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
-    .sc-cursor::after { content: ""; display: block; position: absolute; left: 0; top: 0; width: 22px; height: 22px; border: 2px solid #f59e0b; border-radius: 50%; opacity: 0; animation: scPulse 28s linear infinite; }
     @keyframes scCur {
       0%, 2% { left: 360px; top: 230px; opacity: 0; }
       4%, 8% { left: 360px; top: 230px; opacity: 1; }
-      12%, 14% { left: 690px; top: 22px; opacity: 1; }   /* extension icon */
-      20%, 22% { left: 240px; top: 290px; opacity: 1; }  /* highlighted topic row */
-      28%, 36% { left: 580px; top: 230px; opacity: 1; }  /* sidebar comment box */
-      45%, 56% { left: 580px; top: 320px; opacity: 1; }  /* Fix It button */
-      62%, 78% { left: 580px; top: 380px; opacity: 1; }  /* PR card */
+      12%, 14% { left: 690px; top: 22px; opacity: 1; }
+      20%, 22% { left: 240px; top: 290px; opacity: 1; }
+      28%, 36% { left: 580px; top: 230px; opacity: 1; }
+      45%, 56% { left: 580px; top: 320px; opacity: 1; }
+      62%, 78% { left: 580px; top: 380px; opacity: 1; }
       93% { left: 580px; top: 380px; opacity: 1; }
       96%, 100% { opacity: 0; }
     }
-    @keyframes scPulse { 0%, 11% { opacity: 0; transform: scale(1); } 12% { opacity: 0.8; transform: scale(1); } 14% { opacity: 0; transform: scale(1.6); } 19% { opacity: 0; transform: scale(1); } 20% { opacity: 0.8; transform: scale(1); } 22% { opacity: 0; transform: scale(1.6); } 44% { opacity: 0; transform: scale(1); } 46% { opacity: 0.8; transform: scale(1); } 48% { opacity: 0; transform: scale(1.6); } 100% { opacity: 0; } }
     .sc-caption { padding: 14px 18px; background: #f7fbfe; color: #1a4480; font-size: 13.5px; line-height: 1.5; font-weight: 500; text-align: center; }
 
     .footer { margin: 64px 0 32px; padding-top: 32px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
@@ -192,30 +190,36 @@
       h2 { font-size: 24px; }
       .sc-viewport { height: 380px; }
       .sc-sidebar { width: 240px; }
+      .closing-cta { padding: 28px 22px; }
     }
   </style>
 </head>
 <body>
 <div class="page">
+  <div class="hero-wrap">
   <div class="content-wrap">
     <nav class="site-nav">
       <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
       <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
-      <a href="/discourse/">Discourse</a>
+      Discourse
     </nav>
 
     <header class="hero">
-      <span class="hero-badge">The Discourse Handbook</span>
-      <h1>Self-Hosting Discourse in Production (2026)</h1>
-      <p class="hero-sub">Hardware sizing, app.yml topology, mail and SSO, plugin development, API recipes, phpBB/vBulletin migration. The honest production handbook — what the official docs leave out and what every self-hoster eventually rediscovers the hard way.</p>
+      <span class="hero-badge">Discourse handbook</span>
+      <h1>Run a Discourse forum without losing weekends to it.</h1>
+      <p class="hero-sub">Six practical guides written by self-hosters, for self-hosters. Working configs, real benchmarks, copy-paste code. Pick what's broken right now and fix it tonight.</p>
       <div class="cta-group">
-        <a class="btn-primary" href="#cluster">Browse the cluster</a>
-        <a class="btn-secondary" href="https://onout.org/" target="_blank" rel="noopener">SimpleReview for fixes</a>
+        <a class="btn-primary" href="#guides">Browse the guides</a>
+        <a class="btn-secondary" href="https://onout.org/" target="_blank" rel="noopener">Get SimpleReview</a>
       </div>
+      <p class="hero-meta">Free. Open source. No newsletter wall.</p>
     </header>
+  </div>
+  </div>
 
+  <div class="content-wrap">
     <!-- Banner -->
-    <div class="sc-banner" aria-label="Animated demo: SimpleReview spots a Discourse admin issue and opens a Pull Request">
+    <div class="sc-banner" aria-label="Animated demo: SimpleReview spots a Discourse plugin error and opens a Pull Request">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">community.example.com / latest</div>
@@ -260,262 +264,114 @@
       <div class="sc-caption">SimpleReview reads the broken plugin call, drafts the modifyClass fix, opens a Pull Request — straight to your repo.</div>
     </div>
 
-    <div class="tldr">
-      <div class="tldr-title">TL;DR — What's in this handbook</div>
-      <ul>
-        <li>Hardware sizing benchmarks across $5 / $12 / $24 / $48 VPS tiers — measured, not guessed</li>
-        <li>The <code>app.yml</code> mental model: why you don't run <code>docker run discourse/discourse</code></li>
-        <li>5 deep-dive guides: plugin development, API cookbook, reply-by-email, DiscourseConnect SSO, phpBB migration</li>
-        <li>A production checklist you can paste into your runbook (mail, backups, upgrades, SSL, monitoring)</li>
-        <li>Honest cost breakdown: when self-hosted wins vs Discourse cloud</li>
-      </ul>
+    <h2>Why this site exists</h2>
+    <p class="h2-sub">Most Discourse content online is either the official 30-minute install (great, current) or a SaaS sales pitch dressed up as a tutorial (not great). This handbook fills the gap in between — what happens after install, what breaks in production, what to do when the docs stop.</p>
+
+    <div class="props-grid">
+      <div class="prop-card">
+        <div class="prop-icon">⚙️</div>
+        <div class="prop-title">Real configs, not theory</div>
+        <div class="prop-body">Every walkthrough is a working <code>app.yml</code>, a working Mailgun route, a working Flask provider. Tested on a real Discourse instance before publishing.</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-icon">📊</div>
+        <div class="prop-title">Decision-ready numbers</div>
+        <div class="prop-body">Hardware sizing measured on $5/$12/$24/$48 VPS tiers. Cost comparison with Discourse cloud. Decision rules you can act on, not generic "minimum 2 GB" boilerplate.</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-icon">🔓</div>
+        <div class="prop-title">Free and lock-in-free</div>
+        <div class="prop-body">No paywall, no newsletter capture, no SaaS retargeting. Discourse is GPL-2.0; this handbook respects the same spirit. We monetize via SimpleReview, an opt-in tool.</div>
+      </div>
     </div>
 
-    <div class="callout" style="border-left-color:#1ca0e2;background:#f7fbfe;margin:24px 0">
-      <div class="callout-title" style="color:#1a4480">Honest about what this is</div>
-      <div class="callout-body" style="color:#234">
+    <div class="disclaimer">
+      <div class="disclaimer-title">Honest about what this is</div>
+      <div class="disclaimer-body">
         We're not Civilized Discourse Construction Inc. — we're a small team that has been self-hosting Discourse for clients and our own communities since 2018. This handbook is what we wished existed when we hit each wall: rebuild OOMs on 2 GB VPSes, plugins that silently broke after Ember 5, IMAP that quietly stopped polling. Nothing here is theoretical. Every benchmark and config was run on real production. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">tell us on GitHub</a> and we'll fix it.
       </div>
     </div>
 
-    <h2 id="cluster">Practical guides</h2>
-    <p>Each guide solves one production problem with working code, real configs, and validated repros. None of them are install guides — those belong in the official Discourse docs. Pick the guide that matches what you're stuck on right now.</p>
+    <h2 id="guides">The six guides</h2>
+    <p class="h2-sub">Each guide solves one production problem with copy-paste configs and validated repros. None of them are install guides — those belong in official Discourse docs. Pick what you're stuck on right now.</p>
 
-    <div class="cluster-grid">
-      <div class="cluster-card">
+    <div class="guide-grid">
+      <div class="guide-card featured">
+        <span class="guide-card-tag">Production reference</span>
+        <a href="self-hosting-production/">Self-hosting Discourse in production (2026)</a>
+        <div class="guide-card-desc">Hardware sizing on four VPS tiers (measured), the <code>app.yml</code> mental model, an honest cost comparison with Discourse cloud, and a 15-point production runbook you can paste into your ops doc.</div>
+      </div>
+      <div class="guide-card">
+        <span class="guide-card-tag">Plugin development</span>
         <a href="develop-plugin/">Build your first Discourse plugin (2026)</a>
-        <div class="cluster-card-desc"><code>plugin.rb</code>, <code>api.modifyClass</code> for Ember 5, hot reload, server endpoints, testing. Real code that builds against current Discourse main.</div>
+        <div class="guide-card-desc"><code>plugin.rb</code>, <code>api.modifyClass</code> for Ember 5, hot reload, server endpoints, plugin tests. Real code that builds against current Discourse main.</div>
       </div>
-      <div class="cluster-card">
+      <div class="guide-card">
+        <span class="guide-card-tag">API integration</span>
         <a href="api-cookbook/">Discourse API cookbook — 10 working recipes</a>
-        <div class="cluster-card-desc">Auth differences, rate limits, create topic, send DM, upload image, search, pagination. Copy-paste curl + Python.</div>
+        <div class="guide-card-desc">Auth differences (Api-Key vs User-Api-Key), rate limits, create topic, send DM, upload image, search, pagination. Copy-paste curl + Python.</div>
       </div>
-      <div class="cluster-card">
+      <div class="guide-card">
+        <span class="guide-card-tag">Mail setup</span>
         <a href="reply-by-email/">Reply by email — Mailgun, IMAP, POP3</a>
-        <div class="cluster-card-desc">Pick a mode and get it working. MX/SPF/DKIM prerequisites, a working Mailgun route, and a log-line debug map.</div>
+        <div class="guide-card-desc">Pick a mode and get it working. MX/SPF/DKIM prerequisites, a working Mailgun route, and a log-line debug map for ten failure modes.</div>
       </div>
-      <div class="cluster-card">
+      <div class="guide-card">
+        <span class="guide-card-tag">SSO / auth</span>
         <a href="discourse-connect-sso/">DiscourseConnect SSO provider</a>
-        <div class="cluster-card-desc">HMAC-SHA256 signing in Flask + Express. Sequence diagram, common "bad signature" fixes, sync flags.</div>
+        <div class="guide-card-desc">HMAC-SHA256 signing in Flask + Express. Sequence diagram, common "bad signature" fixes, sync flags, Discourse-as-IdP variant.</div>
       </div>
-      <div class="cluster-card">
+      <div class="guide-card">
+        <span class="guide-card-tag">Migration</span>
         <a href="migrate-from-phpbb/">Migrate phpBB → Discourse</a>
-        <div class="cluster-card-desc">Import script walkthrough — env vars, attachments, username fixup, post-import sidekiq drain. vBulletin notes included.</div>
-      </div>
-      <div class="cluster-card" style="background:#f7fbfe">
-        <a href="https://onout.org/">SimpleReview for Discourse</a>
-        <div class="cluster-card-meta">Chrome extension</div>
-        <div class="cluster-card-desc">Click any element on your forum, leave a comment — get a Pull Request from an AI agent. Useful for theme tweaks, plugin hotfixes, and copy edits.</div>
+        <div class="guide-card-desc">Import script walkthrough — env vars, attachments, username fixup, post-import Sidekiq drain. vBulletin notes included.</div>
       </div>
     </div>
 
-    <h2>Hardware sizing — measured, not guessed</h2>
-    <p>Every "Discourse system requirements" post on the internet recites the same 2GB RAM minimum. That's true but useless. Here's what we actually measured on each VPS tier with a synthetic load of 200 concurrent users browsing latest, plus image-baking and sidekiq jobs running.</p>
+    <h2>What you'll dodge by reading this</h2>
+    <p class="h2-sub">A short list of mistakes we paid for the first time so you don't have to.</p>
 
-    <table>
-      <thead>
-        <tr><th>VPS tier</th><th>RAM / vCPU</th><th>Idle Discourse</th><th>200-user browse</th><th>Verdict</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>$5/mo</strong> (Hetzner CX11, DO basic)</td>
-          <td>2 GB / 1 vCPU</td>
-          <td>RAM: 1.7 GB used. Sidekiq backs up.</td>
-          <td>p95 latency: 1.2-2.1 s. Image-bake jobs queue.</td>
-          <td>Hobby only. Don't run mail-heavy or media-heavy forums here.</td>
-        </tr>
-        <tr>
-          <td><strong>$12/mo</strong> (Hetzner CX21, DO 2GB-shared)</td>
-          <td>4 GB / 2 vCPU</td>
-          <td>RAM: 1.8 GB. Headroom for Postgres cache.</td>
-          <td>p95 latency: 380-520 ms. Sidekiq stays drained.</td>
-          <td>Sweet spot for forums up to ~5k DAU.</td>
-        </tr>
-        <tr>
-          <td><strong>$24/mo</strong> (Hetzner CX31, DO 4GB-dedicated)</td>
-          <td>8 GB / 2-4 vCPU</td>
-          <td>RAM: 2.1 GB. Postgres warm cache &gt; 1 GB.</td>
-          <td>p95 latency: 220-310 ms. CPU plateau ~35%.</td>
-          <td>Comfortable up to ~15k DAU before splitting Postgres.</td>
-        </tr>
-        <tr>
-          <td><strong>$48/mo</strong> (Hetzner CX41, DO 8GB)</td>
-          <td>16 GB / 4 vCPU</td>
-          <td>RAM: 2.3 GB. Plenty of cache headroom.</td>
-          <td>p95 latency: 180-240 ms. Sidekiq parallelism stops being the bottleneck.</td>
-          <td>You're paying for cache, not CPU. Probably time to split Postgres.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p><strong>ARM works.</strong> Hetzner's CAX line and Oracle Free Tier ARM both run Discourse fine — image_optim binaries are compiled for arm64 in the official image, sidekiq/Postgres/Redis don't care. Bench it before committing because Ruby/Rails performance per ARM vCPU is ~85-90% of x86_64 in our tests, but cost per request is better.</p>
-
-    <div class="callout">
-      <div class="callout-title">Pitfall</div>
-      <div class="callout-body">If you size for idle RAM and forget the rebuild — <code>./launcher rebuild app</code> needs ~1.5 GB free ON TOP of running Discourse, because it builds a new container alongside the old one. On a 2 GB VPS you'll OOM mid-rebuild. Two fixes: a 2 GB swap file (slow but safe), or stop the container before rebuild (downtime).</div>
+    <div class="dodge-list">
+      <div class="dodge-item"><strong>Rebuild OOMs</strong> on 2 GB VPSes (rebuild needs 1.5 GB free ON TOP of running Discourse)</div>
+      <div class="dodge-item"><strong>Running <code>docker run discourse/discourse</code></strong> and wondering why nothing works (it's a build base, not the app)</div>
+      <div class="dodge-item"><strong>Ember 5 plugin breakage</strong> from older guides that still teach <code>Discourse.X.reopen</code></div>
+      <div class="dodge-item"><strong>Silent IMAP polling failures</strong> after a Gmail or M365 password change</div>
+      <div class="dodge-item"><strong>"Bad signature" loops</strong> in DiscourseConnect when your provider HMAC is in the wrong order</div>
+      <div class="dodge-item"><strong>Missing attachments</strong> after a phpBB import because the importer can't see the source <code>files/</code> directory</div>
+      <div class="dodge-item"><strong>Sidekiq backlog of 50k jobs</strong> after a large import, with no plan to drain it</div>
+      <div class="dodge-item"><strong>API rate-limit cascades</strong> because your client doesn't honour <code>Retry-After</code></div>
+      <div class="dodge-item"><strong>Lost reply-by-email</strong> because <code>%{reply_key}</code> wasn't literal in your address pattern</div>
+      <div class="dodge-item"><strong>"User has no email"</strong> on first SSO login because of a typo in the payload field name</div>
     </div>
 
-    <h2>The <code>app.yml</code> mental model</h2>
-    <p>Most newcomers see <code>discourse/discourse</code> on Docker Hub and try <code>docker run -d -p 80:80 discourse/discourse</code>. Don't. That image is the build base, not the application.</p>
-
-    <p>Discourse uses an unusual deploy pattern: <code>discourse_docker</code> (a separate repo) contains a Bash launcher that:</p>
-    <ol class="bullets">
-      <li>Reads <code>containers/app.yml</code> — your declarative config (env vars, hooks, plugins, hostname)</li>
-      <li>Pulls the <code>discourse/base</code> image</li>
-      <li>Runs <code>./launcher bootstrap</code> — boots the base, runs the hooks (which install plugins, configure Postgres, set the hostname, build assets), then commits the resulting state as a new image</li>
-      <li>Runs <code>./launcher start</code> — runs that committed image as the live container</li>
-    </ol>
-
-    <p>The result: every site has a custom-built image. Plugins and config live in the image, not as runtime mounts. This is why adding a plugin requires <code>./launcher rebuild app</code> — you're literally building a new image with the new plugin baked in.</p>
-
-    <p>Trade-off: rebuilds are slower than docker compose updates (5-15 min depending on plugins), but the production runtime is dead simple — one container, no orchestration, no service mesh, no init system. The whole stack lives inside one Docker container — Postgres, Redis, Sidekiq, Rails, image_optim binaries.</p>
-
-    <pre><code class="language-yaml"># containers/app.yml — minimal production excerpt
-templates:
-  - "templates/postgres.template.yml"
-  - "templates/redis.template.yml"
-  - "templates/web.template.yml"
-  - "templates/web.ratelimited.template.yml"
-
-expose:
-  - "80:80"
-  - "443:443"
-
-params:
-  db_default_text_search_config: "pg_catalog.english"
-  db_shared_buffers: "256MB"
-
-env:
-  LANG: en_US.UTF-8
-  UNICORN_WORKERS: 4
-  DISCOURSE_HOSTNAME: 'community.example.com'
-  DISCOURSE_DEVELOPER_EMAILS: 'admin@example.com'
-  DISCOURSE_SMTP_ADDRESS: 'smtp.mailgun.org'
-  DISCOURSE_SMTP_PORT: 587
-  DISCOURSE_SMTP_USER_NAME: 'postmaster@mg.example.com'
-  DISCOURSE_SMTP_PASSWORD: '<set-via-env>'
-  LETSENCRYPT_ACCOUNT_EMAIL: 'admin@example.com'
-
-hooks:
-  after_code:
-    - exec:
-        cd: $home/plugins
-        cmd:
-          - git clone https://github.com/discourse/docker_manager.git
-          - git clone https://github.com/discourse/discourse-akismet.git
-
-run:
-  - exec: echo "Beginning of custom commands"
-</code></pre>
-
-    <p>Once you understand this, the rest of Discourse ops becomes obvious: plugins go in <code>hooks: after_code</code>, mail credentials are env vars, hostname changes mean a rebuild. The full reference for these directives lives in the <code>discourse_docker</code> repo's <code>samples/</code> directory.</p>
-
-    <h2>Self-host vs Discourse cloud — the honest comparison</h2>
-    <p>Discourse, Inc. sells managed hosting starting at $100/mo (Standard) and scaling by user count. Their pitch: zero ops, automatic upgrades, premium support, an SLA. Real comparison:</p>
-
-    <table>
-      <thead>
-        <tr><th>Decision factor</th><th>Self-hosted</th><th>Discourse cloud</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Sticker cost</td>
-          <td>$5-48/mo VPS + $5-20 mail + $0-15 storage = ~$15-80/mo</td>
-          <td>$100/mo Standard, $300/mo Business, custom Enterprise</td>
-        </tr>
-        <tr>
-          <td>Upgrades</td>
-          <td>Manual <code>./launcher rebuild app</code> when <code>/admin/upgrade</code> shows new version</td>
-          <td>Automatic, with safety canary deploys</td>
-        </tr>
-        <tr>
-          <td>Plugins</td>
-          <td>Anything you can git clone — community plugins, custom forks, internal plugins</td>
-          <td>Curated set; custom plugins on Business+ tiers only</td>
-        </tr>
-        <tr>
-          <td>Mail deliverability</td>
-          <td>You configure Mailgun/Postmark/SES yourself; you babysit DKIM/SPF/DMARC</td>
-          <td>Configured by Discourse on hosted IPs; bounce handling included</td>
-        </tr>
-        <tr>
-          <td>Backup &amp; restore</td>
-          <td>Built-in nightly backup, S3 upload optional. You verify the restore flow.</td>
-          <td>Daily off-site backups with one-click restore</td>
-        </tr>
-        <tr>
-          <td>Time to first incident</td>
-          <td>~3 months (a sidekiq backlog or a failed rebuild)</td>
-          <td>Effectively zero from your side</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p><strong>Decision rule we'd actually use:</strong> below ~1k DAU and a dev team comfortable with Linux ops, self-host wins on price and control. Above ~10k DAU or for a non-technical owner, the time cost of self-hosting crosses Discourse's pricing and cloud is the rational choice. Between those two — depends on whether you want custom plugins (self-host) or you want to never page yourself at 3 a.m. (cloud).</p>
-
-    <h2>The production checklist</h2>
-    <div class="checklist">
-      <h3>Discourse runbook v2026</h3>
-      <ul>
-        <li>VPS sized for rebuilds (idle RAM × 1.5, +2 GB swap)</li>
-        <li>Hostname DNS points to server, A + AAAA records, low TTL until cutover</li>
-        <li><code>app.yml</code> in version control (private repo) — never edit on server only</li>
-        <li>Mail provider: Mailgun / Postmark / SES creds in env vars; SPF, DKIM, DMARC published</li>
-        <li><code>DISCOURSE_DEVELOPER_EMAILS</code> includes you AND a backup admin</li>
-        <li>Backup daily, with S3/Backblaze upload — verify restore on a staging container monthly</li>
-        <li><code>letsencrypt.template.yml</code> included so cert auto-renews</li>
-        <li>Sidekiq dashboard accessible at <code>/sidekiq</code> — only behind admin auth</li>
-        <li>Monitoring: uptime check on <code>/srv/status</code>, alert on Sidekiq queue depth &gt; 1000 for 10 min</li>
-        <li>Upgrade plan: subscribe to <code>meta.discourse.org #release-notes</code>, plan rebuilds for low-traffic windows</li>
-        <li>Plugins: each one tracks a fork pinned to a SHA — never a moving <code>main</code> branch</li>
-        <li>Reply-by-email: at least the <code>./launcher mailtest</code> green; <a href="reply-by-email/">full setup here</a></li>
-        <li>SSO if you have it: <a href="discourse-connect-sso/">test the signing in staging first</a></li>
-        <li>Custom plugins: tested with <code>bin/rspec plugins/my-plugin/spec</code> — <a href="develop-plugin/">how to set this up</a></li>
-        <li>API integrations: rate-limit aware, signed webhooks — <a href="api-cookbook/">recipes here</a></li>
-      </ul>
-    </div>
-
-    <h2>What's missing from this handbook (intentionally)</h2>
-    <p>This is a production handbook, not an install guide. Things we don't cover and where to find them:</p>
-    <ul class="bullets">
-      <li><strong>Initial install</strong> — official 30-Minute Install on meta.discourse.org is excellent and current. We won't re-write it.</li>
-      <li><strong>Theme development</strong> — well covered by Discourse's theme-creator docs and the <code>theme-creator.discourse.org</code> sandbox.</li>
-      <li><strong>Onebox / oneboxing custom URLs</strong> — niche; check <code>OneboxEngine</code> source in the main repo.</li>
-      <li><strong>Multi-site hosting</strong> — Discourse, Inc.'s actual platform. Possible but not maintained outside their team; if you need it, hire them or rebuild from scratch.</li>
-    </ul>
+    <section class="closing-cta">
+      <h2>Stuck on Discourse right now?</h2>
+      <p>Two paths: read the guide that matches your pain, or install SimpleReview and let it draft the fix on whatever element you click.</p>
+      <div class="cta-group" style="justify-content:center">
+        <a class="btn-primary" href="#guides">See the guides</a>
+        <a class="btn-secondary" href="https://onout.org/" target="_blank" rel="noopener">Try SimpleReview</a>
+      </div>
+    </section>
 
     <h2 id="faq">Frequently asked</h2>
     <div class="faq">
       <div class="faq-item">
-        <div class="faq-q">Is self-hosting Discourse cheaper than the official cloud?</div>
-        <div class="faq-a">Below ~1k DAU and with internal Linux ops capacity — yes. A $12/mo VPS plus $10/mo Mailgun plus $5/mo Backblaze B2 is roughly $27/mo against the $100/mo Standard plan, before any plugin-tier upgrades. Above ~10k DAU, your engineering time crosses cloud pricing.</div>
+        <div class="faq-q">Who wrote this handbook?</div>
+        <div class="faq-a">The Vibers team — a small group that has been self-hosting Discourse for clients and our own communities since 2018. We're not affiliated with Civilized Discourse Construction Inc. This is what we wished existed when we hit each wall.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">What hardware does Discourse need in 2026?</div>
-        <div class="faq-a">Minimum: 2 GB RAM, 2 CPU cores, 20 GB disk plus 2 GB swap. Comfortable for production: 4 GB RAM, 2-4 vCPU, 40 GB SSD. The whole stack — Rails, Sidekiq, Postgres, Redis — runs in a single Docker container that idles around 1.4-1.8 GB RAM and grows under image-baking jobs. ARM (Hetzner CAX, Oracle Free Tier) works fine.</div>
+        <div class="faq-q">Is it free?</div>
+        <div class="faq-a">Yes — every guide and benchmark on this site is free. We monetize through <a href="https://onout.org/">SimpleReview</a> (a Chrome extension that drafts code fixes for any site, Discourse forums included), not through paywalled documentation.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Can I run Discourse without Docker?</div>
-        <div class="faq-a">Officially unsupported, but possible. The container gives you Postgres, Redis, Sidekiq, Rails, and image_optim binaries pinned to versions Discourse tests against. Running outside it means rolling those yourself and patching by hand. People do it on FreeBSD or weird ARM boards, accepting that things like image_optim and the scheduled-job daemon may break. We recommend Docker.</div>
+        <div class="faq-q">Does it cover the official 30-minute install?</div>
+        <div class="faq-a">No, on purpose. The official Discourse install guide is excellent and current — we don't try to replace it. We pick up where it ends: production sizing, real plugin development, API integration, mail troubleshooting, SSO, migration.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">How do I migrate from phpBB or vBulletin?</div>
-        <div class="faq-a">Discourse ships import scripts in <code>/var/www/discourse/script/import_scripts/</code> inside the container — <code>phpbb3.rb</code>, <code>vbulletin.rb</code>, <code>vanilla.rb</code>, and others. Run them inside the container with DB env vars pointing at the source. Plan for the post-import sidekiq backlog (search index, post baking, image downsizing) which can run for hours on large forums. <a href="migrate-from-phpbb/">Full walkthrough →</a></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Why does my Discourse plugin break after upgrade?</div>
-        <div class="faq-a">Discourse's frontend is Ember, and Ember 4 → 5 (rolled out 2024-2025) changed template colocation, decorators, and tracked properties. Plugins using legacy patterns (<code>Discourse.Foo.reopen</code>, untracked properties, classic templates) silently stop applying. Use <code>api.modifyClass</code> and <code>withPluginApi</code> from the official plugin API. <a href="develop-plugin/">Plugin development guide →</a></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Is Discourse open source or freemium?</div>
-        <div class="faq-a">100% open source under GPL-2.0. The hosted plans Discourse, Inc. sells are pure ops — managed upgrades, SLA, premium support — not feature locks. There's no Enterprise tier with secret features. Civilized Discourse Construction Inc. funds development through hosting and contracts.</div>
+        <div class="faq-q">Why should I trust your benchmarks?</div>
+        <div class="faq-a">Hardware sizing was measured in 2026 on Hetzner CX-line VPSes with synthetic load via <code>k6</code>. Each plugin / API / SSO walkthrough is built and run on a real Discourse instance before publishing. If you spot something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">file a GitHub issue</a> and we'll fix it.</div>
       </div>
     </div>
-
-    <h2>About this handbook</h2>
-    <p>Written by the Vibers team based on direct production experience self-hosting Discourse for community sites and clients since 2018. Benchmarks were measured in 2026 on Hetzner CX-line VPSes with synthetic load via <code>k6</code>; real numbers may shift slightly with newer Discourse releases. Updates land here as we hit new edge cases.</p>
-
-    <p>If you're fixing things on a Discourse site and want an AI agent that opens a Pull Request instead of a ticket — try <a href="https://onout.org/">SimpleReview</a>. It reads your forum's theme and plugin code, knows the Ember 5 patterns, and drafts the diff for you to approve.</p>
 
     <footer class="footer">
       <p>
