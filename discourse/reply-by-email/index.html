@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discourse reply by email (2026): Mailgun, IMAP, POP3 — pick a mode and get it working</title>
+  <meta name="description" content="Reply-by-email decision matrix for Discourse: forwarded vs polled vs IMAP, MX/SPF/DKIM prerequisites, working Mailgun route, log-line debug map. Copy-paste configs.">
+  <link rel="canonical" href="https://onout.org/discourse/reply-by-email/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Discourse reply by email (2026): Mailgun, IMAP, POP3 — pick a mode and get it working">
+  <meta property="og:description" content="Reply-by-email decision matrix for Discourse: forwarded vs polled vs IMAP, MX/SPF/DKIM prerequisites, working Mailgun route, log-line debug map.">
+  <meta property="og:url" content="https://onout.org/discourse/reply-by-email/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="discourse reply by email, discourse smtp, discourse mailgun, discourse imap support, discourse email setup, discourse polled mailbox, discourse pop3, discourse email troubleshooting">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Discourse reply by email (2026): Mailgun, IMAP, POP3 — pick a mode and get it working",
+    "description": "Reply-by-email decision matrix for Discourse: forwarded vs polled vs IMAP, MX/SPF/DKIM prerequisites, working Mailgun route, log-line debug map. Copy-paste configs.",
+    "url": "https://onout.org/discourse/reply-by-email/",
+    "datePublished": "2026-05-01",
+    "dateModified": "2026-05-01",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/discourse/reply-by-email/" },
+    "keywords": ["discourse reply by email", "discourse mailgun", "discourse imap", "discourse smtp", "discourse polled mailbox", "discourse email setup"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why is reply-by-email so hard to set up in Discourse?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Because reply-by-email is two completely separate flows. Sending email out is a normal SMTP relay (Mailgun, SES, Postmark, SendGrid). Receiving replies requires a public MX record pointing somewhere that can deliver inbound mail to Discourse — either an inbound webhook (forwarded mode), a mailbox Discourse polls over POP3, or an IMAP inbox Discourse syncs continuously. Each mode has its own DNS, auth, and failure surface, and most online tutorials only cover one of the three."}
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need MX records for Discourse reply by email?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes — replies have to reach a mailbox or webhook before Discourse can pull them in. The MX record on your reply domain (often a subdomain like reply.example.com) must point to your inbound provider: Mailgun's MX hosts in forwarded mode, or your mail server's hostname if Discourse polls a real mailbox. SPF, DKIM, and DMARC are also required — without them inbound spam filters will silently drop replies before Discourse ever sees them."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between polled mailbox and IMAP in Discourse?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Polled mailbox uses POP3 to fetch new replies on a schedule (Sidekiq job runs every minute). It's read-only, simple, and built for the reply_by_email_address pattern. IMAP support is different: it's designed for group inboxes — a shared support@example.com mailbox where staff and forum users see the same threads. IMAP keeps state synced both ways (read/unread, archive, delete), polls more aggressively, and is mapped to a Discourse group, not the global reply system."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can Discourse use Gmail for reply by email?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Technically yes via IMAP, but it's painful. Gmail blocks plain password login, so you need either an App Password (only works if 2FA is on and the account is not in advanced protection) or full OAuth, which Discourse doesn't natively support for IMAP. Most production setups use Mailgun or a dedicated mailbox on your own mail server. If you must use Gmail, generate an App Password and configure it in Settings → Email → IMAP."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why are replies bouncing with 'Bad destination address'?",
+        "acceptedAnswer": {"@type": "Answer", "text": "BadDestinationAddress is raised by Email::Receiver when the To: address doesn't match the reply_by_email_address pattern, or when the %{reply_key} token is missing or invalid. Common causes: the user replied to the From: address instead of the Reply-To:, the reply_by_email_address site setting was changed and old keys no longer decode, or a forwarder rewrote the recipient address. Check /logs and the Sidekiq Email::Receiver job for the exact failed address."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I test Discourse email without sending a real reply?",
+        "acceptedAnswer": {"@type": "Answer", "text": "For outgoing SMTP: from the Discourse host run ./launcher enter app, then rails c, then SiteSetting.notification_email — and trigger a test via the admin Email page (Send Test Email). For incoming, enable 'mailing list mode' on a test account, send a notification, then reply from a real mail client. Watch /admin/email/received and /logs for Email::Receiver entries. The launcher mailtest command is the fastest way to validate outbound credentials."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does Discourse support inbound webhooks from SES, Postmark, or SendGrid?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes, but with caveats. Discourse exposes /admin/email/handle_mail as a generic inbound endpoint that accepts a raw RFC 5322 email body. Mailgun's 'store and forward' route is the canonical example. Postmark inbound and SES inbound webhooks need a small adapter to convert their JSON payloads into a raw email POST — community plugins exist but aren't shipped by default. For SendGrid, the Inbound Parse webhook can be pointed directly at Discourse if you set the multipart format correctly."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── Discourse Email Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:18px 16px;background:#fff}
+    /* Discourse admin email settings page (TARGET) */
+    .sc-disc-header{background:#5b44e8;color:#fff;padding:6px 10px;font-size:11px;font-weight:700;border-radius:4px 4px 0 0;display:flex;justify-content:space-between;align-items:center}
+    .sc-disc-tabs{display:flex;gap:8px;font-size:9px;font-weight:500;color:#cfc7ff}
+    .sc-disc-tabs span{padding:2px 6px;border-radius:3px}
+    .sc-disc-tabs .active{background:rgba(255,255,255,.18);color:#fff}
+    .sc-settings-row{background:#fff;border:1px solid #e3e1e8;border-top:none;padding:8px 12px;font-size:11px;color:#333;display:flex;justify-content:space-between;align-items:center}
+    .sc-settings-row.target{border-left:4px solid #d63638;background:#fff;animation:errSel 28s infinite;outline-offset:3px;position:relative}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-settings-row.target::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-set-label{font-weight:600;color:#1a1a1a;font-size:11px}
+    .sc-set-value{color:#666;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:10px}
+    .sc-toggle{display:inline-block;width:26px;height:14px;background:#d63638;border-radius:7px;position:relative;animation:toggleFix 28s infinite}
+    .sc-toggle::after{content:'';position:absolute;width:10px;height:10px;background:#fff;border-radius:50%;top:2px;left:2px;animation:toggleSlide 28s infinite}
+    @keyframes toggleFix{0%,84%{background:#d63638}88%,100%{background:#28a745}}
+    @keyframes toggleSlide{0%,84%{left:2px}88%,100%{left:14px}}
+    .sc-banner-title{font-size:11px;font-weight:700;color:#1a1a1a;margin-bottom:6px;padding:0 2px}
+    .sc-banner-sub{font-size:9px;color:#888;margin-bottom:8px;padding:0 2px}
+    /* Recovered: replies posting */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:18px 16px}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    .sc-rec-msg{background:#f7f7fa;border:1px solid #e5e5e5;border-radius:5px;padding:7px 10px;font-size:10px;color:#333;margin-bottom:5px}
+    .sc-rec-msg strong{color:#5b44e8}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:160px;width:230px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:215px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:136px;opacity:1}
+      22%  {left:360px;top:136px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:170px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Discourse / Email</span>
+      <span>May 1, 2026</span>
+      <span>14 min read</span>
+    </div>
+
+    <h1>Discourse reply by email — pick a mode and actually get it working (2026)</h1>
+
+    <p class="article-lead">Outgoing email is easy. Incoming replies are where Discourse setups go to die. There are <strong>three completely different inbound modes</strong> — forwarded, polled POP3, and IMAP — and most online tutorials only cover one. This guide gives you a decision matrix, the DNS prerequisites every mode shares, working Mailgun and IMAP configs, and a log-line debug map that tells you which line in <code>app/services/email/processor.rb</code> rejected your reply and why.</p>
+
+    <!-- Animated banner -->
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview inspects Discourse Email Settings, detects the broken IMAP poll, and opens a one-line PR fix">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">forum.example.com/admin/site_settings/category/email</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <div class="sc-banner-title">Email Settings</div>
+            <div class="sc-banner-sub">Admin · Settings · Email · Incoming</div>
+            <div class="sc-disc-header">
+              <span>Discourse Admin</span>
+              <div class="sc-disc-tabs"><span>Sending</span><span class="active">Receiving</span><span>Templates</span></div>
+            </div>
+            <div class="sc-settings-row">
+              <div><div class="sc-set-label">reply_by_email_address</div><div class="sc-set-value">reply+%{reply_key}@reply.example.com</div></div>
+              <span class="sc-toggle" style="background:#28a745"></span>
+            </div>
+            <div class="sc-settings-row target">
+              <div><div class="sc-set-label">enable_imap (group inbox)</div><div class="sc-set-value">imap.example.com:993 · poll: BROKEN</div></div>
+              <span class="sc-toggle"></span>
+            </div>
+            <div class="sc-settings-row">
+              <div><div class="sc-set-label">pop3_polling_enabled</div><div class="sc-set-value">false (using IMAP instead)</div></div>
+              <span class="sc-toggle" style="background:#999"></span>
+            </div>
+            <div class="sc-settings-row">
+              <div><div class="sc-set-label">manual_polling_enabled</div><div class="sc-set-value">false (Mailgun forwards)</div></div>
+              <span class="sc-toggle" style="background:#999"></span>
+            </div>
+            <div class="sc-recovered">
+              <span class="sc-rec-success">✓ IMAP poll restored · 12 replies imported</span>
+              <div class="sc-rec-h">Latest replies via email</div>
+              <div class="sc-rec-msg"><strong>support@example.com</strong> → topic #4421 — "yes, that fixed it"</div>
+              <div class="sc-rec-msg"><strong>jane@acme.io</strong> → topic #4419 — "thanks for the workaround"</div>
+              <div class="sc-rec-msg"><strong>mike@startup.dev</strong> → topic #4418 — "shipping the patch today"</div>
+              <div class="sc-rec-msg"><strong>support@example.com</strong> → topic #4415 — "closing this — resolved"</div>
+            </div>
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">Replies aren't getting through — fix the IMAP poll config?</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Mode</span><span class="sc-sb-v">IMAP group</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Error</span><span class="sc-sb-v">poll timeout</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Last sync</span><span class="sc-sb-v">42 min ago</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Update <code style="font-size:8px">imap_password</code> (App Password expired) · re-enable poll job · validate folder mapping</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">IMAP IDLE reconnected. 12 queued replies imported into group inbox.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">fix(email): rotate IMAP App Password<br>app.yml · 1 line</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the broken IMAP toggle → <strong>Fix it</strong> → poll restored, replies flowing</div>
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Replies silently disappearing? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>app.yml</code> and Discourse site settings, replays the last failed inbound email through <code>Email::Receiver</code>, and opens a PR with the missing DNS record, wrong reply pattern, or expired App Password — without you ever opening Sidekiq.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>TL;DR — What you're about to read</h3>
+      <ul>
+        <li><strong>Three modes, pick one:</strong> Mailgun-forwarded webhook (cheapest, fragile to spam), POP3 polled mailbox (built-in, slow, 1-min poll cap), IMAP for group inboxes (only mode for shared support@).</li>
+        <li><strong>Prerequisites every mode shares:</strong> MX record on the reply subdomain, SPF + DKIM + DMARC on the sending domain, and a <code>reply_by_email_address</code> pattern that contains the literal token <code>%{reply_key}</code>.</li>
+        <li><strong>Validation in one command:</strong> <code>./launcher mailtest app</code> for outgoing SMTP. For incoming, send a real reply and watch <code>/admin/email/received</code> plus the Sidekiq <code>Email::Receiver</code> job.</li>
+        <li><strong>Debug entry point:</strong> <code>app/services/email/processor.rb</code> — every rejection raises a named exception (<code>BadDestinationAddress</code>, <code>NoBodyDetectedError</code>, <code>UserNotFoundError</code>) which lands in <code>/logs</code> with a one-line cause.</li>
+      </ul>
+    </div>
+
+    <h2>The three inbound modes — pick one</h2>
+
+    <p>Discourse's outbound side is straightforward: configure SMTP credentials in <code>app.yml</code> and point <code>DISCOURSE_SMTP_ADDRESS</code> at Mailgun, SES, Postmark, or your own postfix. Done. The inbound side is where forums wedge themselves for weeks. There is no single "incoming email" knob — there are three independent pipelines, and choosing the wrong one turns a 30-minute setup into a multi-day debugging session.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Mode</th><th>How it works</th><th>Best for</th><th>Pain point</th></tr>
+        <tr><td><strong>Forwarded (webhook)</strong></td><td>Mail provider receives MX, POSTs raw RFC 5322 to <code>/admin/email/handle_mail</code></td><td>Solo blogs, mid-size communities on Mailgun/SES/Postmark</td><td>Spam slips through; signing secret leaks let anyone forge replies</td></tr>
+        <tr><td><strong>Polled POP3</strong></td><td>Discourse Sidekiq job logs into a real mailbox every 1 minute and downloads new mail</td><td>Cheap shared hosts, no MX control, can't run webhooks</td><td>1-minute polling cap, no IDLE; mail provider locks accounts that "look like spam"</td></tr>
+        <tr><td><strong>IMAP (group inbox)</strong></td><td>Continuous IMAP sync between a mailbox and a Discourse <em>group</em>; bidirectional read/unread</td><td>Shared support inboxes (support@, sales@) where staff and forum users see same threads</td><td>OAuth pain (Gmail/O365), folder mapping, only available for groups, not global replies</td></tr>
+      </table>
+    </div>
+
+    <h3>Quick decision tree</h3>
+
+    <ul>
+      <li><strong>Solo blog or small community → Forwarded.</strong> Mailgun free tier handles inbound, you only need one DNS MX record and one route.</li>
+      <li><strong>Shared support inbox where staff already use email → IMAP.</strong> Map <code>support@example.com</code> to a Discourse group; replies show up in both Gmail and the forum.</li>
+      <li><strong>Cheap shared host, no inbound webhook capability → POP3 polled mailbox.</strong> Slow but works anywhere mail does.</li>
+      <li><strong>Multiple of the above → run them in parallel.</strong> Mailgun for global replies, IMAP for the support group inbox. They don't conflict.</li>
+    </ul>
+
+    <h2>Prerequisites you must get right (all three modes)</h2>
+
+    <p>Whatever mode you pick, the same DNS plumbing has to be in place. Skip any of these and replies will arrive at your mailbox but Discourse will refuse to process them — or worse, they'll be silently dropped by spam filters before you ever see them.</p>
+
+    <h3>1. MX record on the reply subdomain</h3>
+
+    <p>Pick a subdomain dedicated to replies — <code>reply.example.com</code> is the canonical choice. Don't use the apex domain, because that conflicts with sending mail and breaks DMARC alignment. Add an MX record:</p>
+
+    <pre><code># Mailgun forwarded mode
+reply.example.com.    IN  MX  10  mxa.mailgun.org.
+reply.example.com.    IN  MX  10  mxb.mailgun.org.
+
+# Polled POP3 / IMAP — point at your mail server
+reply.example.com.    IN  MX  10  mail.example.com.</code></pre>
+
+    <h3>2. SPF, DKIM, DMARC on the sending domain</h3>
+
+    <p>Discourse sends notifications <em>from</em> <code>noreply@example.com</code> (or whatever you set as <code>notification_email</code>) and users reply to that. If your sending domain doesn't have SPF/DKIM/DMARC, the reply you generate from Gmail or Outlook will be flagged as spoofed by the recipient's spam filter — even though "the recipient" is your own server.</p>
+
+    <pre><code># SPF (TXT on example.com)
+example.com.  IN  TXT  "v=spf1 include:mailgun.org ~all"
+
+# DKIM (TXT — selector from Mailgun/SES dashboard)
+mg._domainkey.example.com.  IN  TXT  "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..."
+
+# DMARC (TXT — start with p=none, tighten later)
+_dmarc.example.com.  IN  TXT  "v=DMARC1; p=none; rua=mailto:dmarc@example.com"</code></pre>
+
+    <h3>3. The reply pattern with literal <code>%{reply_key}</code></h3>
+
+    <p>This is the #1 silent-failure cause. In <code>/admin/site_settings</code> the field <code>reply_by_email_address</code> must contain the literal token <code>%{reply_key}</code> — Discourse substitutes a unique per-post key into outgoing notifications and uses it to match incoming replies back to the right topic. Forget the token and every reply will be rejected with <code>BadDestinationAddress</code>.</p>
+
+    <pre><code># ✅ correct
+reply+%{reply_key}@reply.example.com
+
+# ❌ silently broken — no token, all replies bounce
+reply@reply.example.com
+
+# ❌ also broken — Discourse doesn't expand outside the localpart
+reply@%{reply_key}.example.com</code></pre>
+
+    <div class="warn-box">
+      <strong>Plus-addressing requires mail-provider support.</strong> Mailgun, SES, and most modern providers handle <code>reply+anything@reply.example.com</code> correctly. Some legacy mail servers strip everything after the <code>+</code> — if you're using on-prem postfix, verify <code>recipient_delimiter = +</code> is set in <code>main.cf</code>.
+    </div>
+
+    <h3>4. <code>notification_email</code> and <code>reply_by_email_address</code> must be different</h3>
+
+    <p>Don't use the same address for both. <code>notification_email</code> is the From: header users see (<code>noreply@example.com</code>). <code>reply_by_email_address</code> is the Reply-To: header (<code>reply+%{reply_key}@reply.example.com</code>). Putting them on the same domain is fine; using the exact same mailbox is not — Discourse will fight itself trying to read its own outgoing notifications.</p>
+
+    <h2>Setup A — Mailgun forwarded mode (the canonical setup)</h2>
+
+    <p>This is the path described in the official Discourse Mailgun guide and the path 80% of self-hosted forums end up on. Mailgun handles SMTP outbound and inbound MX in one product; you only need one DNS zone, one set of credentials, and one inbound route.</p>
+
+    <h3>1. Add the domain to Mailgun</h3>
+
+    <p>In Mailgun → Domains → Add New Domain → enter <code>mg.example.com</code> (or use <code>example.com</code> directly). Mailgun will give you SPF, DKIM, and MX records to add. <em>Add all of them</em> — skipping the MX records is the bug that ships every week.</p>
+
+    <h3>2. Configure outbound SMTP in <code>app.yml</code></h3>
+
+    <pre><code>env:
+  DISCOURSE_SMTP_ADDRESS:        smtp.mailgun.org
+  DISCOURSE_SMTP_PORT:           587
+  DISCOURSE_SMTP_USER_NAME:      postmaster@mg.example.com
+  DISCOURSE_SMTP_PASSWORD:       "your-mailgun-smtp-password"
+  DISCOURSE_SMTP_DOMAIN:         mg.example.com
+  DISCOURSE_NOTIFICATION_EMAIL:  noreply@mg.example.com</code></pre>
+
+    <p>Then rebuild: <code>./launcher rebuild app</code>. Validate with <code>./launcher mailtest app</code> — it sends a test mail through the configured SMTP and reports the actual error if it fails (auth, TLS, rate limit, etc).</p>
+
+    <h3>3. Configure the Mailgun inbound route</h3>
+
+    <p>In Mailgun → Receiving → Create Route. Use the <strong>store and forward</strong> action with these settings:</p>
+
+    <pre><code>Expression Type:  Match Recipient
+Recipient:        ^reply\+(.*)@reply\.example\.com$
+
+Actions:
+  store(notify="https://forum.example.com/admin/email/handle_mail")
+  stop()
+
+Priority: 10</code></pre>
+
+    <p>Mailgun will store the raw email and POST a notification to your handle_mail endpoint. Discourse fetches the body, runs it through <code>Email::Receiver</code>, and creates the post. The <code>stop()</code> prevents Mailgun's default routes from firing.</p>
+
+    <h3>4. Set the Mailgun signing secret</h3>
+
+    <p>Mailgun signs every webhook POST. In <code>/admin/site_settings</code> search for <code>mailgun api key</code> and paste the key from Mailgun → Settings → API Keys → HTTP webhook signing key. Without it, anyone who guesses your handle_mail URL can inject forged replies.</p>
+
+    <h3>5. Wire up the reply pattern</h3>
+
+    <p>In <code>/admin/site_settings/category/email</code>:</p>
+
+    <ul>
+      <li><code>reply_by_email_address</code>: <code>reply+%{reply_key}@reply.example.com</code></li>
+      <li><code>reply_by_email_enabled</code>: <code>true</code></li>
+      <li><code>email_in</code>: leave empty (that's a different feature — creating new topics by email)</li>
+    </ul>
+
+    <h2>Setup B — Polled POP3 mailbox</h2>
+
+    <p>Use this when you can't run an inbound webhook (no public IP, behind NAT, shared host) but you do have a real mailbox somewhere. Discourse's Sidekiq runs the <code>Jobs::PollMailbox</code> job every minute, logs in over POP3, downloads new mail, processes it through <code>Email::Receiver</code>, and deletes it from the server.</p>
+
+    <h3>Configuration</h3>
+
+    <p>In <code>/admin/site_settings</code> → Email:</p>
+
+    <pre><code>pop3_polling_enabled:     true
+pop3_polling_ssl:         true
+pop3_polling_host:        mail.example.com
+pop3_polling_port:        995
+pop3_polling_username:    reply@example.com
+pop3_polling_password:    "mailbox-password"
+pop3_polling_period_mins: 1   # minimum is 1 — Discourse caps it</code></pre>
+
+    <h3>When POP3 is the right choice</h3>
+
+    <ul>
+      <li>Your forum runs on a shared host or PaaS with no inbound HTTP for arbitrary paths.</li>
+      <li>You don't want to deal with Mailgun signing secrets or DNS routes.</li>
+      <li>The mail volume is low (under a few hundred replies/day) — POP3's 1-minute floor adds up otherwise.</li>
+    </ul>
+
+    <h3>Gotchas</h3>
+
+    <ul>
+      <li><strong>POP3 deletes mail.</strong> Discourse removes processed messages from the server. Use a dedicated mailbox; don't point this at your real inbox.</li>
+      <li><strong>Provider locks accounts.</strong> Gmail will lock a POP3 account that polls every 60 seconds within hours, calling it "suspicious activity". Don't use Gmail for POP3 — use a real mail server, FastMail, or Migadu.</li>
+      <li><strong>Reply latency feels broken at 1 min.</strong> Users used to Slack-speed get confused by 60-second delays. Mention it in your community guidelines or use IMAP/Mailgun instead.</li>
+    </ul>
+
+    <h2>Setup C — IMAP for group inboxes</h2>
+
+    <p>IMAP support lives in a different code path than the global reply system. Each Discourse <em>group</em> can be linked to one IMAP folder; mail sent to the group's email lands in the forum, replies posted in the forum land back in the IMAP folder, and read/unread state syncs both ways. This is the only mode that gives you a real shared support inbox where the email team and the forum team see the same conversation.</p>
+
+    <h3>Configuration</h3>
+
+    <p>Step 1 — enable global IMAP support:</p>
+
+    <pre><code>enable_imap:  true</code></pre>
+
+    <p>Step 2 — open <code>/g/&lt;group&gt;/manage/email</code> for the group (e.g. <code>support</code>) and fill in:</p>
+
+    <pre><code>IMAP server:    imap.gmail.com   # or imap.fastmail.com, mail.example.com
+IMAP port:      993
+IMAP SSL:       true
+IMAP username:  support@example.com
+IMAP password:  &lt;App Password — NOT account password&gt;
+
+SMTP server:    smtp.gmail.com
+SMTP port:      465
+SMTP SSL:       true
+SMTP username:  support@example.com
+SMTP password:  &lt;same App Password&gt;</code></pre>
+
+    <p>Step 3 — assign mailboxes. Pick the IMAP folder that holds incoming support mail (usually <code>INBOX</code>) and a "trash" folder where Discourse will move processed mail.</p>
+
+    <h3>Gmail and Microsoft 365 quirks</h3>
+
+    <ul>
+      <li><strong>Gmail App Passwords:</strong> only available if 2-Step Verification is on. Generate at <code>myaccount.google.com/apppasswords</code>. They can't be used in Workspace accounts under Advanced Protection.</li>
+      <li><strong>Microsoft 365:</strong> requires modern auth (OAuth 2.0). Discourse doesn't natively support OAuth IMAP — community plugins exist but most production setups bridge through a postfix proxy or use a non-Microsoft provider for the group inbox.</li>
+      <li><strong>FastMail / Migadu:</strong> work natively with App Passwords. Recommended.</li>
+    </ul>
+
+    <h2>Validation flow — does it actually work?</h2>
+
+    <p>Before debugging, validate from both ends. Most "replies aren't working" tickets are actually outbound problems — users never get the notification, so no Reply-To: address ever exists.</p>
+
+    <h3>Step 1: outbound SMTP</h3>
+
+    <pre><code>cd /var/discourse
+./launcher mailtest app
+# prompts for an address, sends a real mail
+# any failure prints the full SMTP exchange</code></pre>
+
+    <p>Or from the admin UI: <code>/admin/email</code> → "Send test email". Look for the green confirmation and check Mailgun/SES dashboard for the delivered event.</p>
+
+    <h3>Step 2: send a real reply</h3>
+
+    <ol class="steps">
+      <li>Subscribe a real user (not your admin account — admins get notifications differently) to a topic with "Watching" mute level.</li>
+      <li>Have someone else post in that topic so the user receives a notification.</li>
+      <li>Reply to the email from the user's real mail client. <em>Don't</em> hit "Reply to All", <em>don't</em> edit the To: address — Discourse needs the Reply-To: with the <code>reply_key</code> intact.</li>
+      <li>Wait 1-3 minutes (or up to the POP3 poll interval).</li>
+      <li>Check <code>/admin/email/received</code> — successful inbound mail appears here with the matched topic.</li>
+      <li>Check <code>/admin/email/rejected</code> — failures land here with the exception name and a copy of the raw body.</li>
+      <li>Check <code>/logs</code> for any <code>Email::Receiver</code> exceptions if the reply doesn't appear in either list.</li>
+    </ol>
+
+    <h3>Step 3: read the Sidekiq queue</h3>
+
+    <p>Inbound processing is a Sidekiq job. If Sidekiq is wedged, replies queue up forever:</p>
+
+    <pre><code># inside the container
+./launcher enter app
+sv status sidekiq         # should be "run"
+# Sidekiq web UI:
+# /sidekiq → Scheduled / Retries / Dead
+# Look for Jobs::PollMailbox or Jobs::ProcessEmail entries</code></pre>
+
+    <h2>Debug map — failure mode → log line → fix</h2>
+
+    <p>Every rejection inside <code>app/services/email/processor.rb</code> and <code>app/services/email/receiver.rb</code> raises a named exception. Discourse catches it and writes one line to <code>/logs</code> with the exception class. This table maps every common failure to its log signature and the fix.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Symptom</th><th>Log line / exception</th><th>Fix</th></tr>
+        <tr><td>Reply lands in /admin/email/rejected with no body</td><td><code>Email::Receiver::NoBodyDetectedError</code></td><td>User replied with HTML-only mail and Discourse couldn't extract a text part. Check <code>strip_incoming_email_lines</code> setting and any custom signatures.</td></tr>
+        <tr><td>"Bad destination address"</td><td><code>Email::Receiver::BadDestinationAddressError</code></td><td>To: doesn't match <code>reply_by_email_address</code>. Verify the literal <code>%{reply_key}</code> is in the pattern. Check the user clicked Reply (not Forward).</td></tr>
+        <tr><td>Sender unknown</td><td><code>Email::Receiver::UserNotFoundFromEmailError</code></td><td>The From: address isn't on any Discourse user. Either the user replied from a different mailbox, or staged users are disabled.</td></tr>
+        <tr><td>Reply too short</td><td><code>Email::Receiver::TooShortPost</code></td><td><code>min_post_length</code> too high relative to mobile-quoted replies. Lower it or set <code>min_first_post_length</code> separately.</td></tr>
+        <tr><td>Group not found</td><td><code>Email::Receiver::BadDestinationAddressError</code> on group address</td><td>IMAP group email mismatch — the To: address isn't mapped to any group's <code>incoming_email</code>.</td></tr>
+        <tr><td>Reply silently dropped before Discourse</td><td>nothing in <code>/logs</code></td><td>SPF/DKIM failure — check the recipient mail provider's spam folder. Fix DMARC alignment.</td></tr>
+        <tr><td>550 bounce from spam filter</td><td>Mailgun event log: <code>5.7.1 spam content</code></td><td>Reply quoted too much of the original notification. Tune <code>strip_incoming_email_lines</code> or whitelist the sending domain in your spam filter.</td></tr>
+        <tr><td>"Email already processed"</td><td><code>Email::Receiver::EmailLogNotFound</code> or duplicate Message-ID</td><td>Mailgun retried delivery after webhook timeout. Discourse dedupes by Message-ID; this is benign unless every reply is a duplicate.</td></tr>
+        <tr><td>IMAP poll never runs</td><td>Sidekiq → Scheduled → empty</td><td><code>enable_imap</code> not set, or group's IMAP credentials missing. Check <code>/g/&lt;group&gt;/manage/email</code>.</td></tr>
+        <tr><td>IMAP poll authentication fails</td><td><code>Net::IMAP::NoResponseError: AUTHENTICATIONFAILED</code></td><td>Gmail App Password expired/revoked. Regenerate. Or 2FA disabled — App Passwords disappear when 2FA is off.</td></tr>
+      </table>
+    </div>
+
+    <h3>Where these are raised in the source</h3>
+
+    <p>If you want to read the actual logic: <code>app/services/email/receiver.rb</code> in the Discourse repo defines every <code>Email::Receiver::*Error</code> subclass at the top of the file. <code>app/services/email/processor.rb</code> is the orchestrator that catches them and writes the rejection record. Reading those two files is the fastest way to understand exactly which guard rejected your mail.</p>
+
+    <h2>Common gotchas (read this list before opening a ticket)</h2>
+
+    <ul>
+      <li><strong>Gmail OAuth vs App Password:</strong> SMTP can use OAuth (it does in many configurations); IMAP in Discourse cannot. Use App Passwords for IMAP.</li>
+      <li><strong>Postmark inbound vs Mailgun:</strong> Postmark's inbound webhook posts JSON, not raw RFC 5322. You need a small adapter (Cloudflare Worker, AWS Lambda) to repackage as a raw email POST. SES is the same — SES → SNS → Lambda → handle_mail.</li>
+      <li><strong>SendGrid Inbound Parse:</strong> works directly if you set "POST raw" mode on the parse webhook. Without that flag, SendGrid sends parsed JSON which Discourse can't read.</li>
+      <li><strong>The <code>%{reply_key}</code> token must be literal.</strong> Don't URL-encode it, don't paste it from a docs page where curly braces got smart-quoted.</li>
+      <li><strong>Topic must be open.</strong> Closed/archived topics reject email replies with a polite bounce notice — but only if outbound is working. If outbound is broken, the reply is silently dropped.</li>
+      <li><strong>Staged users can break.</strong> Discourse auto-creates "staged" users from email-only senders. If <code>enable_staged_users</code> is off, replies from non-registered emails get <code>UserNotFoundFromEmailError</code>.</li>
+      <li><strong>HTML-only mail clients (Outlook).</strong> Discourse extracts the text part. Outlook Web sometimes sends only HTML — the <code>strip_incoming_email_lines</code> heuristic falls over and the post body becomes garbled. Tell users to send plain text replies, or accept the noise.</li>
+      <li><strong>The reply-key TTL.</strong> Reply keys don't expire in current Discourse, but if you change the site's secret key (rare, but happens during disaster recovery) all old reply keys become invalid and old notifications can no longer be replied to.</li>
+      <li><strong>Mailgun route priorities.</strong> If multiple routes match, only the highest-priority one runs unless they all use <code>store()</code>. Use a single dedicated route for Discourse and put it at priority 10 with a <code>stop()</code>.</li>
+      <li><strong>DKIM alignment is the silent killer.</strong> If your sending domain is <code>example.com</code> but DKIM signs with <code>mg.example.com</code> and DMARC requires strict alignment, replies bounce upstream and never reach you. Use relaxed alignment in DMARC: <code>aspf=r; adkim=r;</code></li>
+    </ul>
+
+    <h2>When to hand it off to AI</h2>
+
+    <p>Email setup is famously the hardest part of running a Discourse forum. There are five DNS records, three site settings, one signing secret, one Sidekiq job, and seven different exceptions that all surface as "replies aren't working". <a href="https://onout.org/simple-review/">SimpleReview</a> automates the audit:</p>
+
+    <ol>
+      <li>Install the Chrome extension and open your Discourse admin email page.</li>
+      <li>Click any of the broken settings — the IMAP toggle, the reply pattern, the Mailgun secret field.</li>
+      <li>Type what you observe ("replies aren't getting through") and click <strong>Fix it</strong>.</li>
+      <li>SimpleReview reads <code>app.yml</code> over SFTP, queries Discourse's <code>/admin/email/rejected</code> for the last failures, replays the most recent rejected message through <code>Email::Receiver</code> in a sandbox, and opens a PR with the precise fix — usually a missing DNS record, a wrong reply pattern, or an expired App Password.</li>
+    </ol>
+
+    <p>Faster than reading <code>processor.rb</code> at 2 AM trying to figure out which exception you're hitting.</p>
+
+    <div class="cta-block">
+      <h3>Fix Discourse Email Without Reading the Source</h3>
+      <p>SimpleReview audits your DNS, app.yml, and site settings, replays failed inbound mail, and opens a PR with the one-line fix.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Self-hosting Discourse? <a href="https://onout.org/simple-review/" style="color:#5b44e8;font-weight:600">SimpleReview reads your container config over SFTP →</a></p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Why is reply-by-email so hard to set up in Discourse?</div>
+      <div class="faq-a">Because reply-by-email is two completely separate flows. Sending email out is a normal SMTP relay (Mailgun, SES, Postmark, SendGrid). Receiving replies requires a public MX record pointing somewhere that can deliver inbound mail to Discourse — either an inbound webhook (forwarded mode), a mailbox Discourse polls over POP3, or an IMAP inbox Discourse syncs continuously. Each mode has its own DNS, auth, and failure surface, and most online tutorials only cover one of the three.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need MX records for Discourse reply by email?</div>
+      <div class="faq-a">Yes — replies have to reach a mailbox or webhook before Discourse can pull them in. The MX record on your reply domain (often a subdomain like <code>reply.example.com</code>) must point to your inbound provider: Mailgun's MX hosts in forwarded mode, or your mail server's hostname if Discourse polls a real mailbox. SPF, DKIM, and DMARC are also required — without them inbound spam filters will silently drop replies before Discourse ever sees them.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between polled mailbox and IMAP in Discourse?</div>
+      <div class="faq-a">Polled mailbox uses POP3 to fetch new replies on a schedule (Sidekiq job runs every minute). It's read-only, simple, and built for the <code>reply_by_email_address</code> pattern. IMAP support is different: it's designed for group inboxes — a shared <code>support@example.com</code> mailbox where staff and forum users see the same threads. IMAP keeps state synced both ways (read/unread, archive, delete), polls more aggressively, and is mapped to a Discourse group, not the global reply system.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can Discourse use Gmail for reply by email?</div>
+      <div class="faq-a">Technically yes via IMAP, but it's painful. Gmail blocks plain password login, so you need either an App Password (only works if 2FA is on and the account is not in Advanced Protection) or full OAuth, which Discourse doesn't natively support for IMAP. Most production setups use Mailgun or a dedicated mailbox on your own mail server. If you must use Gmail, generate an App Password and configure it in Settings → Email → IMAP.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why are replies bouncing with "Bad destination address"?</div>
+      <div class="faq-a"><code>BadDestinationAddress</code> is raised by <code>Email::Receiver</code> when the To: address doesn't match the <code>reply_by_email_address</code> pattern, or when the <code>%{reply_key}</code> token is missing or invalid. Common causes: the user replied to the From: address instead of the Reply-To:, the <code>reply_by_email_address</code> site setting was changed and old keys no longer decode, or a forwarder rewrote the recipient address. Check <code>/logs</code> and the Sidekiq <code>Email::Receiver</code> job for the exact failed address.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I test Discourse email without sending a real reply?</div>
+      <div class="faq-a">For outgoing SMTP: from the Discourse host run <code>./launcher mailtest app</code>, or use the admin Email page's "Send Test Email" button. For incoming, enable mailing-list mode on a test account, send a notification, then reply from a real mail client. Watch <code>/admin/email/received</code> and <code>/logs</code> for <code>Email::Receiver</code> entries. The <code>launcher mailtest</code> command is the fastest way to validate outbound credentials.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does Discourse support inbound webhooks from SES, Postmark, or SendGrid?</div>
+      <div class="faq-a">Yes, but with caveats. Discourse exposes <code>/admin/email/handle_mail</code> as a generic inbound endpoint that accepts a raw RFC 5322 email body. Mailgun's "store and forward" route is the canonical example. Postmark inbound and SES inbound webhooks need a small adapter to convert their JSON payloads into a raw email POST — community plugins exist but aren't shipped by default. For SendGrid, the Inbound Parse webhook can be pointed directly at Discourse if you set the multipart format correctly.</div>
+    </div>
+
+    <h2>Related Discourse guides</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="../develop-plugin/">Develop a Discourse Plugin</a>
+          <p>Plugin scaffolding, hooks, and the lifecycle of a Discourse extension.</p>
+        </div>
+        <div class="related-card">
+          <a href="../api-cookbook/">Discourse API Cookbook</a>
+          <p>Recipes for the most common admin and content automation tasks.</p>
+        </div>
+        <div class="related-card">
+          <a href="../discourse-connect-sso/">Discourse Connect (SSO)</a>
+          <p>Single sign-on between your app and Discourse — payload signing and lifecycle.</p>
+        </div>
+        <div class="related-card">
+          <a href="../migrate-from-phpbb/">Migrate from phpBB</a>
+          <p>Importer config, user/category mapping, and post-migration cleanup.</p>
+        </div>
+        <div class="related-card">
+          <a href="../">Discourse Hub</a>
+          <p>All Discourse setup, plugin, and operations guides.</p>
+        </div>
+        <div class="related-card">
+          <a href="../../simple-review/">SimpleReview</a>
+          <p>Click any broken element → AI generates a PR with the one-line fix.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://meta.discourse.org/t/set-up-reply-via-email-support/14003">meta.discourse.org — Set up reply via email support</a></li>
+      <li><a href="https://meta.discourse.org/t/configure-discourse-with-mailgun/14393">meta.discourse.org — Configure Discourse with Mailgun</a></li>
+      <li><a href="https://meta.discourse.org/t/imap-support-for-group-inboxes/86230">meta.discourse.org — IMAP support for group inboxes</a></li>
+      <li><a href="https://meta.discourse.org/t/troubleshoot-email-on-a-new-discourse-install/16326">meta.discourse.org — Troubleshoot email on a new Discourse install</a></li>
+      <li><a href="https://github.com/discourse/discourse/blob/main/app/services/email/receiver.rb">github.com — Email::Receiver source (exception classes)</a></li>
+      <li><a href="https://github.com/discourse/discourse/blob/main/app/services/email/processor.rb">github.com — Email::Processor source (orchestration)</a></li>
+      <li><a href="https://documentation.mailgun.com/docs/mailgun/user-manual/receive-forward-store/">documentation.mailgun.com — Receiving, forwarding, storing email</a></li>
+      <li><a href="https://datatracker.ietf.org/doc/html/rfc7489">datatracker.ietf.org — RFC 7489 DMARC</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        var s = document.createElement('style');
+        s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+        document.head.appendChild(s);
+        banner.classList.add('r');
+        void banner.offsetWidth;
+        banner.classList.remove('r');
+        document.head.removeChild(s);
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

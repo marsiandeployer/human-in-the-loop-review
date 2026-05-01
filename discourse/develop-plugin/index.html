@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build your first Discourse plugin in 2026 — modifyClass, hot reload, Ember 5 changes</title>
+  <meta name="description" content="Working Discourse plugin walkthrough: plugin.rb, api.modifyClass for Ember 5, dev loop, server endpoints, testing. Real code that builds against current Discourse main.">
+  <link rel="canonical" href="https://onout.org/discourse/develop-plugin/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Build your first Discourse plugin in 2026 — modifyClass, hot reload, Ember 5 changes">
+  <meta property="og:description" content="Working Discourse plugin walkthrough: plugin.rb, api.modifyClass for Ember 5, dev loop, server endpoints, testing. Real code that builds against current Discourse main.">
+  <meta property="og:url" content="https://onout.org/discourse/develop-plugin/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="discourse plugin development, discourse api.modifyClass, discourse plugin tutorial 2026, discourse plugin ember 5, discourse withPluginApi, discourse develop plugin">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Build your first Discourse plugin in 2026 — modifyClass, hot reload, Ember 5 changes",
+    "description": "Working Discourse plugin walkthrough: plugin.rb, api.modifyClass for Ember 5, dev loop, server endpoints, testing. Real code that builds against current Discourse main.",
+    "url": "https://onout.org/discourse/develop-plugin/",
+    "datePublished": "2026-04-28",
+    "dateModified": "2026-04-28",
+    "inLanguage": "en",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/discourse/develop-plugin/" },
+    "keywords": ["discourse plugin development", "discourse api.modifyClass", "discourse plugin tutorial 2026", "discourse plugin ember 5", "discourse withPluginApi", "discourse develop plugin"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What language are Discourse plugins written in?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Discourse plugins are dual-stack. The server side is Ruby on Rails — controllers, models, migrations, and a top-level plugin.rb manifest that registers everything with Discourse. The client side is Ember.js (Ember 5 as of 2026), so JavaScript files live under assets/javascripts/discourse/ and use the withPluginApi initializer to extend the SPA. Most plugins also include SCSS in assets/stylesheets/ and translations under config/locales/."}
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to rebuild Discourse to test plugin changes?",
+        "acceptedAnswer": {"@type": "Answer", "text": "No. Use bin/ember-cli (the dev server) for client-side hot reload — JS, hbs templates, and SCSS recompile on save. You only need ./launcher rebuild app when you change plugin.rb, add a Ruby gem, or modify a migration. For pure Ruby controller/model changes the Rails dev reloader picks them up on the next request, no restart needed."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is api.modifyClass in Discourse?",
+        "acceptedAnswer": {"@type": "Answer", "text": "api.modifyClass is the supported way to extend an existing Ember class (component, controller, route, service) from a plugin. It replaces the legacy Discourse.SomeClass.reopen pattern that was deprecated when Discourse moved to Ember 3+ and finally removed during the Ember 5 migration. You call it inside withPluginApi, pass the class identifier (e.g. 'component:topic-list-item'), and supply a mixin object whose pluginId field is required to avoid duplicate-application warnings during HMR."}
+      },
+      {
+        "@type": "Question",
+        "name": "Where do I put server endpoints in a Discourse plugin?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Inside the plugin folder: app/controllers/<plugin_name>/items_controller.rb. Then in plugin.rb you wrap routes in Discourse::Application.routes.append { ... } using the standard Rails routing DSL — get '/my-plugin/items' => 'my_plugin/items#index' for example. Inherit your controller from ::ApplicationController and use render_json_dump to serialise responses the way Discourse expects."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I add a setting to a Discourse plugin?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Create config/settings.yml with the setting name, default, type, and an optional client: true flag if the value should be exposed to the JS bundle. Read it from Ruby with SiteSetting.my_plugin_enabled and from JS with this.siteSettings.my_plugin_enabled. The setting appears automatically in the admin UI under Settings → Plugins, no manual UI work needed."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I install a Discourse plugin in production?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Edit /var/discourse/containers/app.yml, add your plugin's git URL under the hooks: after_code: section, then run cd /var/discourse && ./launcher rebuild app. The rebuild causes 2-5 minutes of downtime — schedule it. The git URL is fetched fresh on every rebuild, so to update a plugin you just rebuild; pin to a specific commit/branch in app.yml if you want stability."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why does my plugin work in dev but break after rebuild?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Two common causes: (1) you're using a deprecated API in production that bin/ember-cli silently shimmed in dev — check the Discourse main CHANGELOG for removed APIs and run bin/rake javascript:test:plugins; (2) your plugin.rb references a file that wasn't committed, or a gem you only installed locally. Always test the plugin via ./launcher rebuild on a staging container before pointing production at it."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── Discourse Admin Plugins Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 16px;background:#fff}
+    /* Discourse admin header */
+    .sc-d-hdr{display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid #eee;margin-bottom:10px}
+    .sc-d-logo{width:18px;height:18px;background:#000;border-radius:50%;display:inline-block;position:relative}
+    .sc-d-logo::after{content:'';position:absolute;left:4px;top:4px;right:4px;bottom:4px;background:#fff;border-radius:50%}
+    .sc-d-title{font-size:13px;font-weight:700;color:#222}
+    .sc-d-crumb{font-size:11px;color:#888;margin-left:6px}
+    /* Plugin table */
+    .sc-plug-table{font-size:11px;width:100%;border-collapse:collapse}
+    .sc-plug-table th{background:#fafafa;color:#555;font-size:9px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;padding:5px 8px;text-align:left;border-bottom:1px solid #e5e5e5}
+    .sc-plug-table td{padding:6px 8px;border-bottom:1px solid #f0f0f0;color:#333;vertical-align:middle}
+    .sc-plug-name{font-weight:600;color:#222;font-size:11px}
+    .sc-plug-ver{font-family:'SF Mono',Monaco,Consolas,monospace;font-size:10px;color:#888}
+    .sc-plug-st{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:.3px}
+    .sc-st-on{background:#dcfce7;color:#166534}
+    .sc-st-err{background:#fee2e2;color:#b91c1c}
+    .sc-st-off{background:#f1f1f1;color:#777}
+    /* Highlighted broken row — TARGET */
+    .sc-row-target{position:relative;animation:rowSel 28s infinite;outline-offset:0}
+    @keyframes rowSel{0%,21%{outline:none;background:transparent}23%,86%{outline:2px solid #FF6B35;background:rgba(255,107,53,.06)}90%,100%{outline:none;background:transparent}}
+    .sc-row-target::after{content:'Selected';position:absolute;top:-9px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-line{font-family:'SF Mono',Monaco,Consolas,monospace;font-size:9px;color:#b91c1c;padding:2px 8px 6px 8px;display:block;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered (PR merged → plugin loads) */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+    .sc-rec-logo{font-size:12px;font-weight:700;color:#1a1a1a}
+    .sc-rec-nav{display:flex;gap:12px}
+    .sc-rec-nav span{font-size:9px;color:#555}
+    .sc-rec-content{flex:1;padding:14px 18px;background:#fafafa}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:300px;top:170px;opacity:1}
+      22%  {left:300px;top:170px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:160px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Discourse / Plugin Development</span>
+      <span>April 28, 2026</span>
+      <span>14 min read</span>
+    </div>
+
+    <h1>Build your first Discourse plugin in 2026 — modifyClass, hot reload &amp; what Ember 5 changed</h1>
+
+    <p class="article-lead">If you searched <em>"discourse develop plugin"</em> and landed on a 2022 tutorial telling you to call <code>Discourse.TopicController.reopen(...)</code>, close the tab — that pattern was deprecated three Ember versions ago and finally stripped out during the Ember 5 migration. Here's a working walkthrough, tested against Discourse <code>main</code> as of 2026-04, with <code>plugin.rb</code>, the current <code>api.modifyClass</code> pattern, the dev loop with <code>bin/ember-cli</code>, a server-side endpoint, settings, tests, and the actual rebuild incantation.</p>
+
+    <!-- Animated banner -->
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview spots a broken Discourse plugin row, opens a one-line PR fix for the api.modifyClass call, plugin loads green">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">discourse.example.com/admin/plugins</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <div class="sc-d-hdr">
+              <span class="sc-d-logo"></span>
+              <span class="sc-d-title">Discourse Admin</span>
+              <span class="sc-d-crumb">› Plugins</span>
+            </div>
+            <table class="sc-plug-table">
+              <thead>
+                <tr><th>Plugin</th><th>Version</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="sc-plug-name">discourse-chat-integration</span></td>
+                  <td><span class="sc-plug-ver">2.4.1</span></td>
+                  <td><span class="sc-plug-st sc-st-on">Enabled</span></td>
+                </tr>
+                <tr>
+                  <td><span class="sc-plug-name">discourse-solved</span></td>
+                  <td><span class="sc-plug-ver">1.9.0</span></td>
+                  <td><span class="sc-plug-st sc-st-on">Enabled</span></td>
+                </tr>
+                <tr class="sc-row-target">
+                  <td><span class="sc-plug-name">my-discourse-plugin</span></td>
+                  <td><span class="sc-plug-ver">0.1.0</span></td>
+                  <td><span class="sc-plug-st sc-st-err">Error</span></td>
+                </tr>
+                <tr class="sc-err-row"><td colspan="3"><span class="sc-err-line">NoMethodError: undefined method `modifyClass' on undefined — assets/javascripts/discourse/api-initializers/badge.js:7</span></td></tr>
+                <tr>
+                  <td><span class="sc-plug-name">discourse-akismet</span></td>
+                  <td><span class="sc-plug-ver">3.1.2</span></td>
+                  <td><span class="sc-plug-st sc-st-on">Enabled</span></td>
+                </tr>
+                <tr>
+                  <td><span class="sc-plug-name">discourse-data-explorer</span></td>
+                  <td><span class="sc-plug-ver">0.6</span></td>
+                  <td><span class="sc-plug-st sc-st-off">Disabled</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Recovered (after fix) -->
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-rec-logo">Discourse Admin · Plugins</div>
+                <div class="sc-rec-nav"><span>Settings</span><span>Logs</span><span>Backups</span></div>
+              </div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ my-discourse-plugin 0.1.0 — loaded after rebuild</span>
+                <div class="sc-rec-h">All plugins healthy</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+              </div>
+            </div>
+            <!-- Popup (cursor types Fix it request) -->
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">This plugin won't load — fix the api.modifyClass call?</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Plugin</span><span class="sc-sb-v">my-discourse-plugin</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">badge.js:7</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Wrap call in <code style="font-size:8px">withPluginApi("1.6.0", api =&gt; …)</code> · pass <code style="font-size:8px">pluginId</code> to modifyClass</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Plugin compiles · admin shows Enabled · Ember 5 deprecation cleared.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">fix: wrap modifyClass in withPluginApi<br>badge.js · 4 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">SimpleReview spots Discourse plugin errors and opens a <strong>Pull Request</strong> — no rebuild guesswork</div>
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Got a plugin that errors after a Discourse rebuild? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads the admin error trace, finds the deprecated API in your repo, and opens a one-line PR with the <code>withPluginApi</code> / <code>modifyClass</code> fix — no need to grep through Discourse's source for the new signature.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>TL;DR — what you actually need</h3>
+      <ul>
+        <li><strong>Env:</strong> Discourse dev container (<code>docker_manager</code> or <code>discourse_dev</code>), Ruby 3.3+, Node 20+, PostgreSQL 15, Redis 7. Ember CLI runs on <code>:4200</code> alongside Rails on <code>:3000</code>.</li>
+        <li><strong>Files:</strong> <code>plugin.rb</code> (manifest, registration, server hooks) + <code>assets/javascripts/discourse/</code> (Ember client) + optional <code>config/locales/</code>, <code>app/controllers/</code>, <code>db/migrate/</code>.</li>
+        <li><strong>Plugin lifecycle:</strong> <code>plugin.rb</code> top-level → <code>after_initialize</code> block → JS <code>api-initializers/*.js</code> with <code>apiInitializer</code> or <code>withPluginApi</code>.</li>
+        <li><strong>Hot reload:</strong> <code>bin/ember-cli</code> for JS / templates / SCSS — no rebuild. <code>./launcher rebuild app</code> only when <code>plugin.rb</code> or migrations change.</li>
+        <li><strong>Testing:</strong> JS tests in <code>test/javascripts/</code> run via <code>bin/rake javascript:test</code>. Ruby specs at <code>plugins/&lt;name&gt;/spec/</code> run via <code>bin/rspec plugins/&lt;name&gt;/spec</code>.</li>
+      </ul>
+    </div>
+
+    <h2>Why plugin docs are confusing in 2026</h2>
+
+    <p>Discourse's plugin API is older than its current Ember version by a wide margin. The official meta tutorial — <em>"Beginner's Guide to Developing Discourse Plugins"</em> — has been updated piecewise, but every blog post and Stack Overflow answer indexed by Google still references one of three different generations of the API:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Era</th><th>What you'll see in old guides</th><th>Status in 2026</th></tr>
+        <tr><td>Ember 1.x (pre-2017)</td><td><code>Discourse.TopicController.reopen({ … })</code></td><td>Removed. Throws <code>undefined</code> at runtime.</td></tr>
+        <tr><td>Ember 2/3 (2018–2021)</td><td><code>import { default as TopicController } from "discourse/controllers/topic"; TopicController.reopen(...)</code></td><td>Deprecated and dropped during Ember 5 migration.</td></tr>
+        <tr><td>Plugin API 0.x (2019–2022)</td><td><code>withPluginApi("0.8.31", api =&gt; api.modifyClass("controller:topic", { … }))</code></td><td>Works, but lots of helpers gained <code>pluginId</code> requirement.</td></tr>
+        <tr><td>Plugin API 1.x + apiInitializer (2024–)</td><td><code>export default apiInitializer("1.6.0", api =&gt; { … })</code></td><td>Current. What you should write.</td></tr>
+      </table>
+    </div>
+
+    <p>Two separate things break old tutorials. First, the <strong>plugin API has versioned</strong> — <code>withPluginApi("0.8.31", ...)</code> still mostly works, but newer hooks (sidebar sections, the new admin nav, glimmer header buttons) only exist at 1.x and require you to bump the version string. Second, the <strong>underlying Ember</strong> went 3 → 4 → 5 across 2023–2025, and that migration deleted <code>.reopen()</code>, made template colocation mandatory, and changed how component arguments are typed (<code>@arg</code> vs <code>this.arg</code> in templates).</p>
+
+    <p>If a tutorial doesn't show <code>pluginId</code> on its <code>modifyClass</code> calls, it predates Ember 4 — usable for inspiration, not for copy-paste.</p>
+
+    <h2>Plugin anatomy — what goes where</h2>
+
+    <p>A Discourse plugin lives in one folder under <code>plugins/&lt;name&gt;/</code>. Here's the canonical layout:</p>
+
+    <pre><code class="language-plain">plugins/my-discourse-plugin/
+├── plugin.rb                     # ← manifest + Ruby registrations
+├── README.md
+├── LICENSE
+├── about.json                    # optional, for the plugin browser
+├── config/
+│   ├── settings.yml              # site settings UI
+│   └── locales/
+│       ├── client.en.yml         # JS-side translations
+│       └── server.en.yml         # Ruby-side translations
+├── app/
+│   ├── controllers/
+│   │   └── my_plugin/
+│   │       └── items_controller.rb
+│   ├── models/
+│   │   └── my_plugin_item.rb
+│   └── serializers/
+│       └── my_plugin_item_serializer.rb
+├── db/
+│   └── migrate/
+│       └── 20260428120000_create_my_plugin_items.rb
+├── assets/
+│   ├── javascripts/discourse/
+│   │   ├── api-initializers/
+│   │   │   └── badge.js          # ← runs once on app boot
+│   │   ├── components/
+│   │   │   └── my-badge.gjs      # template-colocated component
+│   │   └── connectors/
+│   │       └── topic-above-posts/
+│   │           └── my-banner.hbs # plugin-outlet override
+│   └── stylesheets/
+│       └── my-discourse-plugin.scss
+├── spec/
+│   └── requests/
+│       └── items_controller_spec.rb
+└── test/
+    └── javascripts/
+        └── acceptance/
+            └── badge-test.js</code></pre>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Path</th><th>Purpose</th></tr>
+        <tr><td><code>plugin.rb</code></td><td>Top-level manifest. Registers the plugin name, version, dependencies, asset paths, server-side hooks, and routes.</td></tr>
+        <tr><td><code>assets/javascripts/discourse/api-initializers/</code></td><td>One-shot Ember initializers that call <code>withPluginApi</code> or <code>apiInitializer</code>. Most plugins start here.</td></tr>
+        <tr><td><code>assets/javascripts/discourse/connectors/&lt;outlet&gt;/</code></td><td>Templates that render into named plugin outlets — the safest, lowest-coupling extension point.</td></tr>
+        <tr><td><code>config/locales/</code></td><td>i18n YAML. <code>client.*</code> compiles into the JS bundle, <code>server.*</code> stays Ruby-side.</td></tr>
+        <tr><td><code>config/settings.yml</code></td><td>Plugin settings. Auto-rendered in admin, accessible as <code>SiteSetting.foo</code> server-side and <code>this.siteSettings.foo</code> client-side.</td></tr>
+        <tr><td><code>app/models/</code>, <code>app/controllers/</code>, <code>app/serializers/</code></td><td>Standard Rails MVC. Put them under a namespace folder (<code>my_plugin/</code>) to avoid collisions.</td></tr>
+        <tr><td><code>db/migrate/</code></td><td>ActiveRecord migrations. Run automatically on <code>./launcher rebuild app</code>.</td></tr>
+        <tr><td><code>spec/</code> &amp; <code>test/javascripts/</code></td><td>Ruby and JS test suites, picked up by Discourse's main test runners.</td></tr>
+      </table>
+    </div>
+
+    <h2>Hello world plugin — full code listing</h2>
+
+    <p>Goal: render a small "Hi from plugin" badge above the topic list, controlled by a site setting. Three files. We'll build them against Plugin API 1.6.0, which is current on Discourse <code>main</code> as of April 2026.</p>
+
+    <h3>1. <code>plugin.rb</code> — the manifest</h3>
+
+    <pre><code class="language-ruby"># name: my-discourse-plugin
+# about: A "Hello world" Discourse plugin demonstrating the 2026 plugin API
+# version: 0.1.0
+# authors: Vibers
+# url: https://github.com/example/my-discourse-plugin
+# required_version: 3.4.0
+
+enabled_site_setting :my_plugin_enabled
+
+register_asset "stylesheets/my-discourse-plugin.scss"
+
+after_initialize do
+  # Server-side hooks live here.
+  # Anything outside `after_initialize` runs before Rails is fully booted —
+  # most things you want (models, serializers, route helpers) need this block.
+
+  module ::MyPlugin
+    PLUGIN_NAME = "my-discourse-plugin"
+  end
+
+  # Example: register a custom field on Topic so we can persist a flag
+  Topic.register_custom_field_type("my_plugin_highlighted", :boolean)
+  add_to_serializer(:topic_view, :my_plugin_highlighted) do
+    object.topic.custom_fields["my_plugin_highlighted"]
+  end
+end</code></pre>
+
+    <p>The header comments (<code># name:</code>, <code># about:</code>, etc.) are <strong>not</strong> Ruby comments to Discourse — they're parsed as plugin metadata and shown in the admin UI. Get them wrong and your plugin loads but the version column is blank.</p>
+
+    <h3>2. <code>config/settings.yml</code></h3>
+
+    <pre><code class="language-yaml">plugins:
+  my_plugin_enabled:
+    default: true
+    client: true
+  my_plugin_badge_text:
+    default: "Hi from plugin"
+    client: true
+    type: string</code></pre>
+
+    <p><code>client: true</code> exposes the value to the JS bundle. Without it, <code>SiteSetting</code> lookups still work in Ruby but <code>this.siteSettings.my_plugin_badge_text</code> returns <code>undefined</code> in Ember.</p>
+
+    <h3>3. <code>assets/javascripts/discourse/api-initializers/badge.js</code></h3>
+
+    <pre><code class="language-javascript">import { apiInitializer } from "discourse/lib/api";
+
+export default apiInitializer("1.6.0", (api) =&gt; {
+  const siteSettings = api.container.lookup("service:site-settings");
+  if (!siteSettings.my_plugin_enabled) return;
+
+  api.modifyClass(
+    "component:topic-list",
+    (Superclass) =&gt;
+      class extends Superclass {
+        // Each modifyClass on a class needs a stable pluginId, otherwise
+        // Ember's HMR will warn "modifyClass called twice for X".
+        pluginId = "my-discourse-plugin";
+
+        get badgeText() {
+          return siteSettings.my_plugin_badge_text;
+        }
+      }
+  );
+
+  api.renderInOutlet(
+    "topic-list-before",
+    &lt;template&gt;
+      &lt;div class="my-plugin-badge"&gt;{{@outletArgs.badgeText}}&lt;/div&gt;
+    &lt;/template&gt;
+  );
+});</code></pre>
+
+    <p>Three things worth flagging in this snippet, because every one of them changed in the last 18 months:</p>
+
+    <ul>
+      <li><strong><code>apiInitializer</code> instead of <code>withPluginApi</code> + manual export.</strong> Same result, fewer boilerplate lines. <code>withPluginApi</code> is still supported and you'll see it in older code; for new files prefer <code>apiInitializer</code>.</li>
+      <li><strong>Class-callback signature for <code>modifyClass</code>.</strong> The old object-mixin form (<code>{ pluginId: "...", method() {...} }</code>) still works for <em>classic</em> Ember classes but breaks on native classes (anything with <code>@tracked</code> properties or <code>@action</code> decorators). The callback form — <code>(Superclass) =&gt; class extends Superclass { … }</code> — is the only signature that works for both.</li>
+      <li><strong>Inline <code>&lt;template&gt;</code> tag.</strong> Discourse templates are now colocated. You can either ship <code>.gjs</code> / <code>.gts</code> files (template + JS in one) or use the <code>&lt;template&gt;</code> tag inside a regular <code>.js</code> file when the build is set up for it.</li>
+    </ul>
+
+    <div class="warn-box">
+      <strong>Pitfall: forgetting <code>pluginId</code>.</strong> Without it, every hot reload re-applies your modifyClass mixin, the console fills with <code>"Calling modifyClass twice for the same class"</code> warnings, and after enough reloads your dev environment gets weird (event handlers fire twice). It costs nothing and prevents a class of bugs that take an hour to track down.
+    </div>
+
+    <h2>The dev loop — rebuild vs hot reload</h2>
+
+    <p>Plugin authors lose more time to "did I need to rebuild for this change?" than to any actual bug. Here's the rule, as it stands on Discourse <code>main</code>:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Change</th><th>What you run</th><th>Time</th></tr>
+        <tr><td>JS / Ember component / handlebars template / SCSS</td><td>Save file. <code>bin/ember-cli</code> rebuilds.</td><td>~1s, browser auto-reloads</td></tr>
+        <tr><td>Ruby controller / model / serializer body</td><td>Save file. Next request reloads it (Rails dev mode).</td><td>~2s on next page load</td></tr>
+        <tr><td><code>plugin.rb</code> registrations / new asset paths</td><td>Restart Rails: <code>bin/rails s</code>.</td><td>~10s</td></tr>
+        <tr><td>New gem in <code>plugin.rb</code> <code>gem</code> directive</td><td><code>bundle install</code> + Rails restart.</td><td>~30s</td></tr>
+        <tr><td>New migration / DB schema change</td><td><code>bin/rake db:migrate</code> + Rails restart.</td><td>~10s</td></tr>
+        <tr><td>Production install / <code>app.yml</code> change</td><td><code>cd /var/discourse &amp;&amp; ./launcher rebuild app</code></td><td>2–5 min downtime</td></tr>
+      </table>
+    </div>
+
+    <p>The local dev container's <code>bin/ember-cli</code> proxies API calls through to the Rails server on <code>:3000</code> while serving the Ember app on <code>:4200</code> with full HMR. Always develop against <code>:4200</code>, not <code>:3000</code> — the Rails-served bundle isn't watching your files.</p>
+
+    <h3><code>discourse-doctor</code> when something refuses to load</h3>
+
+    <p>If your plugin builds fine locally but doesn't appear in <code>/admin/plugins</code> after a rebuild, run:</p>
+
+    <pre><code class="language-bash">cd /var/discourse
+./discourse-doctor</code></pre>
+
+    <p>The script dumps versions, container status, free disk, free RAM, and — most relevant for plugin authors — the plugin manifests it was able to parse, plus the ones that errored out. A typical output for a broken plugin looks like:</p>
+
+    <pre><code class="language-plain">== Plugins ==
+✓ discourse-chat-integration   2.4.1
+✓ discourse-solved             1.9.0
+✗ my-discourse-plugin          ERROR — undefined local variable or method
+                                       `register_assett' for top-level
+                                       (plugin.rb:8)
+✓ discourse-akismet            3.1.2
+
+5 plugins discovered, 1 failed to load.
+See /shared/log/rails/production.log for full backtrace.</code></pre>
+
+    <p>If your plugin shows up in <code>discourse-doctor</code> but the Ember side is broken, the rails console is the next stop:</p>
+
+    <pre><code class="language-bash">./launcher enter app
+rails c
+&gt; SiteSetting.my_plugin_enabled    # confirm setting registered
+&gt; Topic.last.custom_fields         # confirm custom field saves
+&gt; Plugin::Instance.find_all("/var/www/discourse/plugins").map(&amp;:name)</code></pre>
+
+    <h2>Common breaking patterns from older guides</h2>
+
+    <p>If you're porting a 2020-era plugin (or following a tutorial from that era), these are the changes that bite hardest. Each one is a real Ember 5 deprecation that became a hard error.</p>
+
+    <h3>1. <code>Discourse.X.reopen</code> → <code>api.modifyClass</code></h3>
+
+    <pre><code class="language-javascript">// ❌ BEFORE (Ember 2/3 era)
+import TopicController from "discourse/controllers/topic";
+TopicController.reopen({
+  actions: {
+    customAction() { this.set("foo", "bar"); }
+  }
+});
+
+// ✅ AFTER (current)
+import { apiInitializer } from "discourse/lib/api";
+import { action } from "@ember/object";
+
+export default apiInitializer("1.6.0", (api) =&gt; {
+  api.modifyClass(
+    "controller:topic",
+    (Superclass) =&gt;
+      class extends Superclass {
+        pluginId = "my-discourse-plugin";
+
+        @action
+        customAction() {
+          this.foo = "bar";  // @tracked, no .set() needed
+        }
+      }
+  );
+});</code></pre>
+
+    <h3>2. <code>this.set(...)</code> on a tracked property</h3>
+
+    <p>Ember 5 uses native classes with <code>@tracked</code> for reactivity. <code>this.set("foo", "bar")</code> still works on classic classes but throws <code>"Assertion failed"</code> on tracked ones. Just assign: <code>this.foo = "bar"</code>.</p>
+
+    <h3>3. Template colocation</h3>
+
+    <p>Old: <code>app/components/my-badge.js</code> + <code>app/templates/components/my-badge.hbs</code>.<br>
+    New: <code>app/components/my-badge.hbs</code> next to <code>app/components/my-badge.js</code>, or a single <code>app/components/my-badge.gjs</code> with <code>&lt;template&gt;</code> tag. The legacy split-folder layout silently fails to find the template after Ember 5.</p>
+
+    <h3>4. <code>{{action "foo"}}</code> in templates</h3>
+
+    <p>The <code>{{action}}</code> helper is gone. Replace with <code>{{on "click" this.foo}}</code> and decorate the JS method with <code>@action</code>:</p>
+
+    <pre><code class="language-handlebars">{{!-- ❌ BEFORE --}}
+&lt;button {{action "submit"}}&gt;Send&lt;/button&gt;
+
+{{!-- ✅ AFTER --}}
+&lt;button {{on "click" this.submit}}&gt;Send&lt;/button&gt;</code></pre>
+
+    <h3>5. Computed properties → getters</h3>
+
+    <pre><code class="language-javascript">// ❌ BEFORE
+import { computed } from "@ember/object";
+fullName: computed("firstName", "lastName", function() {
+  return `${this.firstName} ${this.lastName}`;
+})
+
+// ✅ AFTER (when the deps are @tracked)
+get fullName() {
+  return `${this.firstName} ${this.lastName}`;
+}</code></pre>
+
+    <h2>Adding a server-side endpoint</h2>
+
+    <p>Most non-trivial plugins eventually need a JSON endpoint — either a custom admin tool or an API consumed by their own JS. The mechanics:</p>
+
+    <h3>Controller: <code>app/controllers/my_plugin/items_controller.rb</code></h3>
+
+    <pre><code class="language-ruby">module ::MyPlugin
+  class ItemsController &lt; ::ApplicationController
+    requires_plugin "my-discourse-plugin"
+
+    before_action :ensure_logged_in
+
+    def index
+      items = MyPluginItem
+        .where(user_id: current_user.id)
+        .order(created_at: :desc)
+        .limit(50)
+
+      render_json_dump(
+        items: ActiveModel::ArraySerializer.new(
+          items, each_serializer: MyPluginItemSerializer
+        ).as_json
+      )
+    end
+
+    def create
+      item = MyPluginItem.new(
+        user_id: current_user.id,
+        body: params.require(:body)
+      )
+
+      if item.save
+        render_json_dump(item: MyPluginItemSerializer.new(item).as_json)
+      else
+        render_json_error(item)
+      end
+    end
+  end
+end</code></pre>
+
+    <h3>Routes: registered from <code>plugin.rb</code></h3>
+
+    <pre><code class="language-ruby">after_initialize do
+  load File.expand_path("../app/controllers/my_plugin/items_controller.rb", __FILE__)
+  load File.expand_path("../app/models/my_plugin_item.rb", __FILE__)
+  load File.expand_path("../app/serializers/my_plugin_item_serializer.rb", __FILE__)
+
+  Discourse::Application.routes.append do
+    namespace :my_plugin, path: "/my-plugin", defaults: { format: :json } do
+      resources :items, only: %i[index create]
+    end
+  end
+end</code></pre>
+
+    <p>Test it the simplest way:</p>
+
+    <pre><code class="language-bash">curl -b cookies.txt http://localhost:3000/my-plugin/items.json
+# → {"items":[{"id":1,"body":"first","created_at":"2026-04-28..."}]}</code></pre>
+
+    <p><code>render_json_dump</code> wraps the response with the consistent envelope Discourse uses elsewhere and sets the right content-type. Always inherit from <code>::ApplicationController</code> (the leading <code>::</code> escapes your <code>MyPlugin</code> namespace), and always call <code>requires_plugin</code> — it returns 404 if the plugin is disabled, instead of leaking your endpoint.</p>
+
+    <h2>Adding a model and migration</h2>
+
+    <h3>Migration: <code>db/migrate/20260428120000_create_my_plugin_items.rb</code></h3>
+
+    <pre><code class="language-ruby">class CreateMyPluginItems &lt; ActiveRecord::Migration[7.1]
+  def change
+    create_table :my_plugin_items do |t|
+      t.integer :user_id, null: false
+      t.text    :body,    null: false
+      t.boolean :archived, default: false, null: false
+      t.timestamps
+    end
+
+    add_index :my_plugin_items, :user_id
+    add_index :my_plugin_items, [:user_id, :archived]
+  end
+end</code></pre>
+
+    <h3>Model: <code>app/models/my_plugin_item.rb</code></h3>
+
+    <pre><code class="language-ruby">class ::MyPluginItem &lt; ActiveRecord::Base
+  self.table_name = "my_plugin_items"
+
+  belongs_to :user
+  validates :body, presence: true, length: { maximum: 5_000 }
+
+  scope :active, -&gt; { where(archived: false) }
+end</code></pre>
+
+    <div class="warn-box">
+      <strong>Pitfall: reserved column names.</strong> Don't name a column <code>type</code> (Rails STI), <code>read</code>, <code>order</code>, or <code>group</code> — they shadow ActiveRecord internals and produce weird PostgreSQL errors at write time. Stick to descriptive names like <code>item_kind</code> or <code>read_at</code>. Also avoid clashing with Discourse's well-known fields: <code>topic_id</code>, <code>user_id</code>, <code>post_id</code> are fine and conventional, but <code>category_id</code> implicitly enables association magic that can surprise you.
+    </div>
+
+    <h2>Persisting plugin settings</h2>
+
+    <p>Site settings are the cleanest way to expose configuration. Anything you put in <code>config/settings.yml</code> appears in the admin under <strong>Settings → Plugins → my-discourse-plugin</strong> automatically — no UI work required.</p>
+
+    <pre><code class="language-yaml">plugins:
+  my_plugin_enabled:
+    default: true
+    client: true
+
+  my_plugin_max_items_per_user:
+    default: 50
+    type: integer
+    min: 1
+    max: 1000
+    client: false
+
+  my_plugin_allowed_groups:
+    default: ""
+    type: group_list
+    client: true
+
+  my_plugin_excerpt_length:
+    default: 280
+    type: integer
+
+  my_plugin_api_key:
+    default: ""
+    secret: true        # ← masks the value in the admin UI</code></pre>
+
+    <p>Read them server-side:</p>
+
+    <pre><code class="language-ruby">if SiteSetting.my_plugin_enabled
+  max = SiteSetting.my_plugin_max_items_per_user
+  groups = SiteSetting.my_plugin_allowed_groups_map
+  # …
+end</code></pre>
+
+    <p>And client-side, in any Ember component:</p>
+
+    <pre><code class="language-javascript">import Component from "@glimmer/component";
+import { service } from "@ember/service";
+
+export default class MyBadge extends Component {
+  @service siteSettings;
+
+  get visible() {
+    return this.siteSettings.my_plugin_enabled;
+  }
+}</code></pre>
+
+    <p><code>secret: true</code> is the right setting type for API keys and webhook secrets — it masks the value in the admin UI and excludes it from the JS bundle even if you set <code>client: true</code>.</p>
+
+    <h2>Testing your plugin</h2>
+
+    <p>Discourse's test runners pick up plugin tests automatically as long as you put them in the right place. Two suites:</p>
+
+    <h3>Ruby specs</h3>
+
+    <pre><code class="language-ruby"># plugins/my-discourse-plugin/spec/requests/items_controller_spec.rb
+require "rails_helper"
+
+describe MyPlugin::ItemsController do
+  fab!(:user)
+
+  before { sign_in(user) }
+
+  describe "POST /my-plugin/items" do
+    it "creates an item for the current user" do
+      expect {
+        post "/my-plugin/items.json", params: { body: "hello" }
+      }.to change { MyPluginItem.count }.by(1)
+
+      expect(response.status).to eq(200)
+      expect(MyPluginItem.last.user_id).to eq(user.id)
+    end
+
+    it "rejects empty body" do
+      post "/my-plugin/items.json", params: { body: "" }
+      expect(response.status).to eq(422)
+    end
+  end
+end</code></pre>
+
+    <p>Run with:</p>
+
+    <pre><code class="language-bash">bin/rspec plugins/my-discourse-plugin/spec
+# or a single file
+bin/rspec plugins/my-discourse-plugin/spec/requests/items_controller_spec.rb</code></pre>
+
+    <h3>JavaScript acceptance tests</h3>
+
+    <pre><code class="language-javascript">// plugins/my-discourse-plugin/test/javascripts/acceptance/badge-test.js
+import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { visit } from "@ember/test-helpers";
+import { assert } from "qunit";
+
+acceptance("My plugin badge", function (needs) {
+  needs.user();
+  needs.settings({
+    my_plugin_enabled: true,
+    my_plugin_badge_text: "Hi from plugin",
+  });
+
+  test("renders the badge above the topic list", async function (assert) {
+    await visit("/latest");
+    assert
+      .dom(".my-plugin-badge")
+      .hasText("Hi from plugin", "badge appears with configured text");
+  });
+});</code></pre>
+
+    <p>Run JS tests headless:</p>
+
+    <pre><code class="language-bash">bin/rake javascript:test:plugins[my-discourse-plugin]
+# or open http://localhost:4200/tests in a browser for live debugging</code></pre>
+
+    <h2>Shipping and installing</h2>
+
+    <p>Discourse plugins ship as git repositories — there's no package registry, no <code>npm publish</code>, no plugin store. Push your plugin to GitHub (public or private + deploy key), then point your production container at it:</p>
+
+    <pre><code class="language-yaml"># /var/discourse/containers/app.yml — partial
+hooks:
+  after_code:
+    - exec:
+        cd: $home/plugins
+        cmd:
+          - git clone https://github.com/discourse/docker_manager.git
+          - git clone https://github.com/example/my-discourse-plugin.git
+          # Pin to a specific tag/commit if you don't want surprises:
+          # - git clone -b v0.1.0 https://github.com/example/my-discourse-plugin.git</code></pre>
+
+    <p>Then rebuild:</p>
+
+    <pre><code class="language-bash">cd /var/discourse
+./launcher rebuild app</code></pre>
+
+    <p>The <code>rebuild</code> step:</p>
+
+    <ol>
+      <li>Pulls the latest Discourse base image.</li>
+      <li>Clones every plugin listed in <code>app.yml</code> from scratch (so plugin updates are just <code>./launcher rebuild app</code>).</li>
+      <li>Runs <code>bundle install</code> and asset precompilation inside the container.</li>
+      <li>Runs <code>db:migrate</code>, including any plugin migrations.</li>
+      <li>Stops the running container, starts the new one.</li>
+    </ol>
+
+    <p>Expect 2–5 minutes of downtime per rebuild on a default 2 GB droplet — longer if your plugin pulls a heavy gem. The image roughly doubles in size for every C-extension gem you add (<code>nokogiri</code>, <code>image_processing</code>, anything with <code>oj</code>), so think twice before reaching for one. If you can do it in pure Ruby, do it in pure Ruby.</p>
+
+    <p>Multi-container setups (separate web + data containers) need the rebuild on the <em>web</em> container only — data is untouched.</p>
+
+    <h2>When the rebuild fails</h2>
+
+    <p>The number-one cause of a failed rebuild on a previously-working site is a plugin pinning to a Discourse version it no longer supports. The <code># required_version: 3.4.0</code> header in <code>plugin.rb</code> is checked at load time; if your Discourse base just upgraded past the plugin's max version (or below its min), the plugin halts the boot. Check <code>./launcher logs app</code> for:</p>
+
+    <pre><code class="language-plain">Plugin "my-discourse-plugin" requires Discourse version &gt;= 3.4.0
+but the current version is 3.3.2. Plugin will not be loaded.</code></pre>
+
+    <p>Either downgrade the plugin (pin the git URL to an older tag) or upgrade Discourse first.</p>
+
+    <h2>When to hand it off to AI</h2>
+
+    <p>Plugin development on Discourse has a high "is this still the way?" cost — APIs migrate, the docs lag, and a lot of the institutional knowledge lives in Meta forum threads. <a href="https://onout.org/simple-review/">SimpleReview</a> closes that loop:</p>
+
+    <ol>
+      <li>Push your plugin branch to GitHub.</li>
+      <li>Install the SimpleReview Chrome extension. Open your dev or staging Discourse.</li>
+      <li>If the admin shows the plugin in error state, click on the error row.</li>
+      <li>Type <em>"fix the deprecated API calls"</em> and click <strong>Fix it</strong>.</li>
+      <li>SimpleReview reads the file referenced in the error trace, finds the deprecated <code>reopen</code> / <code>{{action}}</code> / un-pluginId-ed <code>modifyClass</code>, and opens a PR with the current-API replacement. You review the diff, merge, rebuild.</li>
+    </ol>
+
+    <p>Useful when you're porting an old plugin you didn't write, when a Discourse upgrade just broke five plugins at once, or when you don't want to spend an afternoon mapping every <code>{{action}}</code> in a 2 000-line template tree.</p>
+
+    <div class="cta-block">
+      <h3>Stop guessing which Discourse API got renamed this quarter</h3>
+      <p>SimpleReview reads your plugin error, finds the deprecated call, and opens a PR with the current-API fix.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Want it in your repo CI instead? <a href="https://onout.org/vibers/" style="color:#5b44e8;font-weight:600">Vibers — Human-in-the-loop Code Review →</a> looks at every PR before it lands.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What language are Discourse plugins written in?</div>
+      <div class="faq-a">Dual-stack: Ruby on Rails for the server (controllers, models, migrations, the <code>plugin.rb</code> manifest) and Ember.js for the client (JS files under <code>assets/javascripts/discourse/</code> using <code>withPluginApi</code> or <code>apiInitializer</code>). Most plugins also include SCSS in <code>assets/stylesheets/</code> and translations in <code>config/locales/</code>.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need to rebuild Discourse to test plugin changes?</div>
+      <div class="faq-a">No — for JS, hbs templates, and SCSS, <code>bin/ember-cli</code> hot-reloads on save. <code>./launcher rebuild app</code> is only needed for <code>plugin.rb</code> changes, new gems, or new migrations. For pure Ruby controller/model edits, the Rails dev reloader picks them up on the next request.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is api.modifyClass in Discourse?</div>
+      <div class="faq-a">The supported way to extend an existing Ember class (component, controller, route, service) from a plugin. Replaces the deprecated <code>Discourse.SomeClass.reopen</code> pattern. Call it inside <code>withPluginApi</code> / <code>apiInitializer</code>, pass an identifier like <code>"component:topic-list-item"</code>, and supply a class-callback whose <code>pluginId</code> field prevents duplicate-application warnings under HMR.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Where do I put server endpoints in a Discourse plugin?</div>
+      <div class="faq-a">Inside the plugin folder at <code>app/controllers/&lt;plugin_name&gt;/items_controller.rb</code>. Register routes in <code>plugin.rb</code> with <code>Discourse::Application.routes.append { ... }</code> using standard Rails routing DSL. Inherit from <code>::ApplicationController</code>, call <code>requires_plugin "my-discourse-plugin"</code> in a <code>before_action</code>, and use <code>render_json_dump</code> to serialise.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I add a setting to a Discourse plugin?</div>
+      <div class="faq-a">Create <code>config/settings.yml</code> with the setting name, default value, type, and an optional <code>client: true</code> flag if the JS bundle should see it. Read it from Ruby with <code>SiteSetting.my_plugin_enabled</code> and from JS with <code>this.siteSettings.my_plugin_enabled</code>. The setting appears automatically under <em>Admin → Settings → Plugins</em>.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I install a Discourse plugin in production?</div>
+      <div class="faq-a">Edit <code>/var/discourse/containers/app.yml</code>, add the plugin's git URL under <code>hooks: after_code:</code>, then run <code>cd /var/discourse &amp;&amp; ./launcher rebuild app</code>. Expect 2–5 minutes of downtime. To update later, just rebuild — the git URL is fetched fresh each time. Pin a branch or tag in <code>app.yml</code> if you want stability.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why does my plugin work in dev but break after rebuild?</div>
+      <div class="faq-a">Two common causes: (1) you're using a deprecated API that <code>bin/ember-cli</code> silently shimmed in dev — check the Discourse main CHANGELOG for removed APIs and run <code>bin/rake javascript:test:plugins</code>; (2) your <code>plugin.rb</code> references a file that wasn't committed, or a gem you only installed locally. Always test via <code>./launcher rebuild</code> on a staging container before pointing production at it.</div>
+    </div>
+
+    <h2>Related Discourse guides</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/discourse/api-cookbook/">Discourse API Cookbook</a>
+          <p>Common REST + WebHook recipes — search, post creation, user provisioning, with curl + Ruby examples.</p>
+        </div>
+        <div class="related-card">
+          <a href="/discourse/discourse-connect-sso/">DiscourseConnect SSO</a>
+          <p>Self-host Discourse as the SSO provider — payload signing, nonce flow, common 422 errors.</p>
+        </div>
+        <div class="related-card">
+          <a href="/discourse/reply-by-email/">Reply by email setup</a>
+          <p>Configure Postfix or Mailgun routing so users can reply to topic notifications by email.</p>
+        </div>
+        <div class="related-card">
+          <a href="/discourse/migrate-from-phpbb/">Migrate phpBB → Discourse</a>
+          <p>The phpBB import script, common encoding gotchas, attachments, user mapping, dry-run flags.</p>
+        </div>
+        <div class="related-card">
+          <a href="/discourse/">Self-hosting Discourse hub</a>
+          <p>All our Discourse self-host guides — install, backup, plugins, scaling.</p>
+        </div>
+        <div class="related-card">
+          <a href="../../simple-review/">SimpleReview</a>
+          <p>Click any plugin error → AI generates a PR with the one-line fix. Chrome + GitHub.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://meta.discourse.org/t/beginners-guide-to-developing-discourse-plugins-part-1-create-a-basic-plugin/30515">meta.discourse.org — Beginner's guide to developing Discourse plugins (part 1)</a></li>
+      <li><a href="https://meta.discourse.org/c/dev/plugin/56">meta.discourse.org — #dev:plugin category (recent breaking changes)</a></li>
+      <li><a href="https://github.com/discourse/discourse/tree/main/plugins">github.com/discourse/discourse — bundled plugin examples</a></li>
+      <li><a href="https://meta.discourse.org/t/install-plugins-in-discourse/19157">meta.discourse.org — Install plugins in Discourse (production)</a></li>
+      <li><a href="https://github.com/discourse/discourse/blob/main/CHANGELOG.md">github.com/discourse/discourse — CHANGELOG (Ember 5 migration notes)</a></li>
+      <li><a href="https://emberjs.com/blog/2024/01/26/ember-5-released.html">emberjs.com — Ember 5 release announcement</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        var s = document.createElement('style');
+        s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+        document.head.appendChild(s);
+        banner.classList.add('r');
+        void banner.offsetWidth;
+        banner.classList.remove('r');
+        document.head.removeChild(s);
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

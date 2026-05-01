@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Migrate phpBB to Discourse (2026): import script walkthrough + sidekiq tuning</title>
+  <meta name="description" content="End-to-end phpBB → Discourse migration: env vars, attachment paths, username fixup, post-import sidekiq drain, vBulletin notes, validation checklist.">
+  <link rel="canonical" href="https://onout.org/discourse/migrate-from-phpbb/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Migrate phpBB to Discourse (2026): import script walkthrough + sidekiq tuning">
+  <meta property="og:description" content="End-to-end phpBB → Discourse migration with the import_scripts/phpbb3.rb script: env vars, attachment paths, username fixup, post-import sidekiq drain, vBulletin notes.">
+  <meta property="og:url" content="https://onout.org/discourse/migrate-from-phpbb/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="discourse migration, phpbb to discourse, migrate to discourse, vbulletin to discourse, discourse import script, discourse phpbb3 import, discourse sidekiq tuning, discourse attachments import">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Migrate phpBB to Discourse (2026): import script walkthrough + sidekiq tuning",
+    "description": "End-to-end migration from phpBB 3.x to Discourse using the official import_scripts/phpbb3.rb script — environment variables, attachment paths, username fixup, post-import sidekiq drain, validation checklist, and vBulletin notes.",
+    "url": "https://onout.org/discourse/migrate-from-phpbb/",
+    "datePublished": "2026-05-01",
+    "dateModified": "2026-05-01",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/discourse/migrate-from-phpbb/" },
+    "keywords": ["discourse migration", "phpbb to discourse", "migrate to discourse", "vbulletin to discourse", "discourse import script", "discourse phpbb3 import"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I migrate from phpBB to Discourse?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Use the official phpbb3.rb import script that ships in the Discourse repo at script/import_scripts/phpbb3.rb. Spin up a fresh Discourse via ./launcher, enter the container with ./launcher enter app, give the container network access to your phpBB MySQL database, copy phpBB's files/ attachments directory into the container, then run bundle exec ruby script/import_scripts/phpbb3.rb with the right environment variables. After the import finishes you must wait for Sidekiq to drain — search index rebuild and post-baking jobs can take hours on large forums."}
+      },
+      {
+        "@type": "Question",
+        "name": "Where do the Discourse import scripts live?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Inside the Discourse repository under script/import_scripts/. The phpBB script is phpbb3.rb, vBulletin is vbulletin.rb (and vbulletin5.rb for the 5.x branch), Vanilla is vanilla.rb, and there are dozens more for SMF, MyBB, IPB, etc. They are not run on the host — they must run inside the Discourse Docker container so they can reach the Rails environment and the Postgres database that backs Discourse."}
+      },
+      {
+        "@type": "Question",
+        "name": "What gets imported from phpBB to Discourse?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Users (with hashed passwords — users get a one-time password reset on first login), categories (mapped from phpBB forums), topics, posts with BBCode mostly converted to Markdown/HTML, attachments and inline images, and private messages (partial — group PMs may collapse). Not imported: subscription state, custom user titles from non-standard mods, ranks/badges (you re-create those in Discourse), and any phpBB extension data such as portal modules or custom profile fields beyond the basics."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why is Sidekiq backed up after a Discourse import?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Every imported post triggers post-processing: Markdown re-bake, oneboxing of links, image downsize for thumbnails, search-index update, and notification fan-out. On a forum with 500k posts that's millions of jobs queued at once. Watch progress with Sidekiq::Stats.new in a Rails console — expect queue depth in the hundreds of thousands for the first hours. Don't open the site to users until the queue drains; broken thumbnails and missing search results otherwise."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can I migrate vBulletin to Discourse the same way?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes — same script directory, different file. Use script/import_scripts/vbulletin.rb for vBulletin 3.x/4.x and vbulletin5.rb for vBulletin 5. The pattern is identical: container access to the source MySQL, attachment directory copied in, env vars for DB credentials. The known wart is custom BBCode tags — vBulletin lets admins define [highlight], [spoiler], [rainbow] etc. and Discourse doesn't have a 1:1 mapping. Those tags survive as plain text; you'll need a discourse remap pass to convert them."}
+      },
+      {
+        "@type": "Question",
+        "name": "How long does a Discourse import take?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Roughly 1-3 hours per 100k posts on modest hardware (4 vCPU, 8GB RAM, SSD), but the import itself is the small part. The post-import Sidekiq drain — rebake, reindex, image processing — typically takes 2-5x longer than the import. A 1-million-post forum is realistically a 24-48 hour migration window from import start to fully-baked search-ready forum. Plan a maintenance window or run on a staging box and pg_dump → restore."}
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to upgrade phpBB before importing?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes if you're on phpBB 2.x — the script only supports phpBB 3.x. Upgrade phpBB 2.0 → 3.0 → 3.3 first using phpBB's own UMIL/converter, dump the database, then point the Discourse import script at the upgraded MySQL. Going from a recent 3.3 release to Discourse is a single pass; going from a 2002-era phpBB 2 forum is a two-step archaeological dig."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── Migration banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:18px 16px;background:#fff}
+    /* Discourse admin migration screen */
+    .sc-mig-box{background:#fff;border:1px solid #e0e0e0;border-radius:6px;max-width:560px;margin:14px auto 0;padding:14px 20px 16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-mig-box::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-mig-title{font-weight:700;font-size:13px;color:#1a1a1a;margin-bottom:8px;animation:errHide 28s infinite}
+    .sc-mig-row{display:flex;justify-content:space-between;font-size:10px;color:#444;margin-bottom:6px;font-family:'SF Mono',Monaco,Consolas,monospace;animation:errHide 28s infinite}
+    .sc-mig-row .k{color:#666}
+    .sc-mig-row .v{color:#0a7a0a;font-weight:700}
+    .sc-mig-row .v.warn{color:#b91c1c}
+    .sc-mig-bar{height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin:8px 0 6px;animation:errHide 28s infinite}
+    .sc-mig-fill{height:100%;background:linear-gradient(90deg,#5b44e8,#7e6bff);width:0;animation:migFill 28s linear infinite}
+    @keyframes migFill{0%{width:8%}20%{width:62%}50%{width:88%}90%,100%{width:100%}}
+    .sc-mig-log{font-size:9px;color:#666;font-family:'SF Mono',Monaco,Consolas,monospace;line-height:1.5;animation:errHide 28s infinite}
+    .sc-mig-log .err{color:#b91c1c}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered (post-fix) */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+    .sc-rec-logo{font-size:12px;font-weight:700;color:#1a1a1a}
+    .sc-rec-nav{display:flex;gap:12px}
+    .sc-rec-nav span{font-size:9px;color:#555}
+    .sc-rec-content{flex:1;padding:14px 18px;background:#fafafa}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:136px;opacity:1}
+      22%  {left:360px;top:136px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:160px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Discourse / Migration</span>
+      <span>May 1, 2026</span>
+      <span>14 min read</span>
+    </div>
+
+    <h1>Migrating phpBB to Discourse — The Real Walkthrough (2026)</h1>
+
+    <p class="article-lead">Migrating to Discourse is not a one-click affair. The import scripts live <em>inside</em> the Discourse Docker container, the source MySQL has to be reachable from that container, attachments need a path-mapping dance, usernames break on characters Discourse refuses, and once the import finishes you stare at a Sidekiq queue with hundreds of thousands of jobs that have to drain before users can log in. This guide is the end-to-end phpBB → Discourse run, with vBulletin notes at the bottom.</p>
+
+    <!-- Animated banner: Discourse migration in progress with SimpleReview side-fix on attachment paths -->
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: Discourse phpbb3 import is running, SimpleReview detects missing attachments and proposes a path fix PR">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">discourse.example.com/admin/migration</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <div class="sc-mig-box">
+              <div class="sc-mig-title">Discourse · Importing from phpBB 3.3</div>
+              <div class="sc-mig-row"><span class="k">Users</span><span class="v">12,481 / 12,481 ✓</span></div>
+              <div class="sc-mig-row"><span class="k">Topics</span><span class="v">48,202 / 48,202 ✓</span></div>
+              <div class="sc-mig-row"><span class="k">Posts</span><span class="v">421,930 / 491,612</span></div>
+              <div class="sc-mig-row"><span class="k">Attachments</span><span class="v warn">0 / 8,940 — path missing</span></div>
+              <div class="sc-mig-bar"><div class="sc-mig-fill"></div></div>
+              <div class="sc-mig-log">
+                [INFO] importing posts batch 422 of 492<br>
+                [INFO] sidekiq queue depth: 318,402<br>
+                <span class="err">[WARN] attachment file not found: files/2_a3f9...</span><br>
+                <span class="err">[WARN] ATTACHMENTS_BASE_DIR may be wrong</span>
+              </div>
+            </div>
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-rec-logo">discourse.example.com</div>
+                <div class="sc-rec-nav"><span>Latest</span><span>Categories</span><span>Top</span></div>
+              </div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ Import complete · 8,940 attachments restored · sidekiq drained</span>
+                <div class="sc-rec-h">Welcome to the new forum</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">phpBB attachments missing — fix path mapping?</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Issue</span><span class="sc-sb-v">attach 0/8940</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Var</span><span class="sc-sb-v">ATTACH_BASE</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Mount <code style="font-size:8px">/phpbb/files</code> into container · set <code style="font-size:8px">ATTACHMENTS_BASE_DIR</code> · re-run attach phase only</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">8,940 attachments imported · sidekiq draining 318k → 0</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">fix(import): mount phpBB files dir<br>containers/app.yml · 4 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select the failing attachment row → <strong>Fix it</strong> → ATTACHMENTS_BASE_DIR + volume mount patched</div>
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Stuck on a half-imported forum with broken attachments or a Sidekiq queue that won't drain? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>containers/app.yml</code>, the import log, and the Sidekiq stats, then opens a PR with the right <code>ATTACHMENTS_BASE_DIR</code>, volume mount, and <code>UNICORN_SIDEKIQS</code> bump — faster than re-running a 12-hour import.
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways (TL;DR)</h3>
+      <ul>
+        <li><strong>The script lives in the Discourse repo</strong> at <code>script/import_scripts/phpbb3.rb</code> — and it must run <em>inside</em> the Discourse Docker container, not on the host.</li>
+        <li><strong>Prerequisites:</strong> phpBB 3.x (upgrade 2.x first), MySQL reachable from container, attachments dir mounted in, fresh Discourse install (or <code>IMPORT_DESTRUCTIVE=1</code>).</li>
+        <li><strong>Always dry-run first</strong> — fork the script with <code>BATCH_SIZE=100</code> and a hard-coded LIMIT to validate connectivity, BBCode conversion, and username remap before committing 12 hours of CPU.</li>
+        <li><strong>Attachments are the #1 footgun:</strong> phpBB's <code>files/</code> directory has to be mounted into the container at the path <code>ATTACHMENTS_BASE_DIR</code> points to.</li>
+        <li><strong>Sidekiq drain is the second half of the migration.</strong> Watch <code>Sidekiq::Stats.new.enqueued</code> in a Rails console; bump <code>UNICORN_SIDEKIQS=4</code> in <code>app.yml</code> to drain faster.</li>
+      </ul>
+    </div>
+
+    <h2>What Actually Gets Imported</h2>
+
+    <p>Before you start, set expectations. Discourse's importer is not a 1:1 mirror — it's an opinionated remapping into Discourse's data model. Some things round-trip cleanly, others lose fidelity, others vanish entirely.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>phpBB concept</th><th>Maps to (Discourse)</th><th>Fidelity</th></tr>
+        <tr><td>Users (with bcrypt/phpBB3 hashes)</td><td>Users; password reset on first login</td><td>✓ Full — incl. signature, avatar, registration date</td></tr>
+        <tr><td>Forums / sub-forums</td><td>Categories / sub-categories</td><td>✓ Full — permissions reset, you re-grant</td></tr>
+        <tr><td>Topics</td><td>Topics</td><td>✓ Full — pinned, locked flags preserved</td></tr>
+        <tr><td>Posts (BBCode)</td><td>Posts (Markdown + HTML)</td><td>~ Mostly — standard tags convert; obscure mod tags survive as plain text</td></tr>
+        <tr><td>Attachments &amp; inline images</td><td>Uploads</td><td>✓ <em>Only if</em> ATTACHMENTS_BASE_DIR is set right</td></tr>
+        <tr><td>Private messages (1-to-1)</td><td>Personal messages</td><td>~ Mostly — group PMs sometimes collapse to threads</td></tr>
+        <tr><td>Topic subscriptions / "watching"</td><td>—</td><td>✗ Not imported — users re-watch</td></tr>
+        <tr><td>Reactions / +1 / phpBB karma</td><td>—</td><td>✗ Not imported (phpBB has no native concept)</td></tr>
+        <tr><td>Custom profile fields (mod-defined)</td><td>—</td><td>✗ Not imported unless you fork the script</td></tr>
+        <tr><td>Ranks &amp; badges</td><td>—</td><td>✗ Re-create with Discourse Trust Levels &amp; badges</td></tr>
+        <tr><td>Custom BBCode (e.g. <code>[highlight]</code>)</td><td>—</td><td>✗ Survives as raw text; needs a <code>discourse remap</code> pass</td></tr>
+      </table>
+    </div>
+
+    <p>For vBulletin migrations the table is essentially the same except <em>reactions</em> and <em>thanks</em> are imported (vBulletin does have those natively, and the importer respects them) and the BBCode loss is bigger because vBulletin lets admins register arbitrary tags.</p>
+
+    <h2>Prerequisites — What to Set Up Before You Touch the Script</h2>
+
+    <h3>1. Source side: phpBB 3.x</h3>
+
+    <p>The <code>phpbb3.rb</code> importer only understands phpBB 3.x schema (3.0, 3.1, 3.2, 3.3 all work — 3.3 is the smoothest). If you're on phpBB 2.x, upgrade first using phpBB's own <em>UMIL</em>/converter to at least 3.0, then ideally to 3.3, then point the importer at the upgraded MySQL. Going directly from 2.x is not supported.</p>
+
+    <p>You need <em>read</em> access to the phpBB MySQL database — the script never writes to phpBB. Either:</p>
+
+    <ul>
+      <li>Open MySQL on the source host to the Discourse server's IP (firewall rule + a read-only MySQL user), or</li>
+      <li>Take a <code>mysqldump</code> and restore it into a temporary MySQL on the Discourse server, or</li>
+      <li>Run a temporary MySQL inside the Discourse Docker container (the <em>simplest</em> option for one-shot migrations).</li>
+    </ul>
+
+    <h3>2. Disk for attachments</h3>
+
+    <p>Estimate: phpBB attachments live in <code>files/</code> at the forum root. Run <code>du -sh files/</code> on the source — that's your floor. Discourse re-encodes images and generates thumbnails, so reserve <strong>2-3x</strong> that figure on the Discourse host. A 20 GB attachment dir typically needs 50-60 GB of free disk after import.</p>
+
+    <h3>3. Target side: a fresh Discourse</h3>
+
+    <p>The official guidance is unambiguous: <strong>import into a fresh Discourse</strong>. The importer assumes user IDs, post IDs and category IDs that it can allocate freely. Importing into an existing forum with real users in it will collide on user IDs, mangle topics, and generally ruin your day.</p>
+
+    <p>If you must import into a non-empty Discourse (e.g. a staff Discourse that already exists), set:</p>
+
+    <pre><code>IMPORT_DESTRUCTIVE=1 bundle exec ruby script/import_scripts/phpbb3.rb</code></pre>
+
+    <p>This wipes the Discourse database before importing. There is no in-place "merge" mode. If you want to truly merge two forums, run two imports into two fresh Discourses, then export one and re-import via the Discourse-to-Discourse importer.</p>
+
+    <h3>4. Network: container ↔ source DB</h3>
+
+    <p>The import script runs inside the <code>app</code> Docker container. From <em>inside</em> that container, you must be able to <code>mysql -h SOURCE_HOST -u user -p phpbb_db</code>. Common pitfalls:</p>
+
+    <ul>
+      <li><code>localhost</code> means <em>the container</em>, not the host. If your phpBB MySQL is on the Discourse host's loopback, use <code>172.17.0.1</code> (Docker bridge) or the host's LAN IP.</li>
+      <li>MySQL 8 requires <code>caching_sha2_password</code> or you'll get auth failures — create the user with <code>IDENTIFIED WITH mysql_native_password</code> for the import.</li>
+      <li>If you mounted a mysqldump locally, just run a temp MySQL <em>inside</em> the same container and you skip the network problem entirely.</li>
+    </ul>
+
+    <h2>Step-by-Step: phpBB → Discourse</h2>
+
+    <ol class="steps">
+      <li>
+        <strong>Spin up Discourse normally.</strong> SSH into the target server, install Docker, clone <code>discourse/discourse_docker</code> into <code>/var/discourse</code>, configure <code>containers/app.yml</code> (SMTP, hostname, admin email), and run <code>./discourse-setup</code> or <code>./launcher rebuild app</code>. Confirm the empty Discourse loads at your domain. <strong>Do not</strong> create real users yet.
+      </li>
+      <li>
+        <strong>Mount the phpBB attachments directory into the container.</strong> Edit <code>containers/app.yml</code> and add a volume in the <code>volumes:</code> block:
+        <pre><code>volumes:
+  - volume:
+      host: /var/discourse/shared/standalone
+      guest: /shared
+  - volume:
+      host: /srv/phpbb-files
+      guest: /shared/import/phpbb-files</code></pre>
+        Copy or rsync the phpBB <code>files/</code> directory to <code>/srv/phpbb-files</code> on the host. Rebuild: <code>./launcher rebuild app</code>.
+      </li>
+      <li>
+        <strong>Enter the container.</strong>
+        <pre><code>cd /var/discourse
+./launcher enter app</code></pre>
+        Everything below runs inside that shell.
+      </li>
+      <li>
+        <strong>Configure the importer.</strong> The phpBB importer reads a YAML at <code>script/import_scripts/phpbb3/settings.yml</code>. Copy the example:
+        <pre><code>cd /var/www/discourse
+cp script/import_scripts/phpbb3/settings.yml \
+   script/import_scripts/phpbb3/settings.local.yml
+vim script/import_scripts/phpbb3/settings.local.yml</code></pre>
+        Set <code>database</code>, <code>username</code>, <code>password</code>, <code>host</code>, <code>table_prefix</code> (usually <code>phpbb_</code>), and the absolute container path to attachments under <code>phpbb_base_dir</code> (e.g. <code>/shared/import/phpbb-files</code>).
+      </li>
+      <li>
+        <strong>Dry-run on a sample.</strong> Don't commit the full import yet. Edit the script (or use the built-in <code>POSTS_LIMIT</code>/<code>SKIP_*</code> envs depending on the script version) to import only the first 100 topics. Verify usernames look right, BBCode rendered correctly, attachments resolve.
+      </li>
+      <li>
+        <strong>Run the real import.</strong>
+        <pre><code>cd /var/www/discourse
+bundle exec ruby script/import_scripts/phpbb3.rb \
+  script/import_scripts/phpbb3/settings.local.yml \
+  2>&amp;1 | tee /shared/import.log</code></pre>
+        Tail the log in another shell (<code>./launcher enter app</code> in a second window, then <code>tail -f /shared/import.log</code>). Expect: hours, not minutes. A 500k-post forum on a 4-vCPU box took ~9 hours in our test run.
+      </li>
+      <li>
+        <strong>Username fixup.</strong> phpBB allows usernames Discourse refuses (spaces, <code>%</code>, leading digits, etc.). The importer auto-rewrites them, but the rewrite isn't always pretty. Run a quick audit in a Rails console: <code>User.where("username LIKE ?", "%\\_%").count</code>. Use <code>UserUpdater</code> to bulk-rename if needed (see the script below).
+      </li>
+      <li>
+        <strong>Wait for Sidekiq to drain.</strong> The hardest, least-glamorous step. Section below covers monitoring and tuning.
+      </li>
+    </ol>
+
+    <h2>Environment Variables and Settings That Matter</h2>
+
+    <p>Different versions of the script read settings from different places. Modern Discourse (post-2018) uses the YAML; older versions used env vars. Here's the canonical set you'll be touching:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Setting</th><th>What it does</th><th>Typical value</th></tr>
+        <tr><td><code>database</code></td><td>phpBB MySQL DB name</td><td><code>phpbb</code></td></tr>
+        <tr><td><code>username</code> / <code>password</code></td><td>MySQL credentials</td><td>Read-only user</td></tr>
+        <tr><td><code>host</code></td><td>MySQL host as seen from container</td><td><code>172.17.0.1</code> or <code>db.internal</code></td></tr>
+        <tr><td><code>table_prefix</code></td><td>phpBB tables prefix</td><td><code>phpbb_</code></td></tr>
+        <tr><td><code>phpbb_base_dir</code></td><td>Container path to phpBB <code>files/</code></td><td><code>/shared/import/phpbb-files</code></td></tr>
+        <tr><td><code>username_as_email</code></td><td>If a user has no email, fabricate one</td><td><code>true</code></td></tr>
+        <tr><td><code>site_name</code></td><td>Used in email-fabrication domain</td><td><code>example.com</code></td></tr>
+        <tr><td><code>BATCH_SIZE</code> (env)</td><td>Rows fetched per query</td><td><code>1000</code> default; lower if OOM</td></tr>
+        <tr><td><code>IMPORT_DESTRUCTIVE</code> (env)</td><td>Wipe Discourse DB first</td><td><code>1</code> if forum not fresh</td></tr>
+        <tr><td><code>RAILS_ENV</code></td><td>Always <code>production</code> inside container</td><td><code>production</code></td></tr>
+      </table>
+    </div>
+
+    <div class="warn-box">
+      <strong>Do not run database migrations on an existing production Discourse before importing.</strong> Some old guides tell you to run <code>RAILS_ENV=production bundle exec rake db:migrate</code> before the import. That's already done by <code>./launcher rebuild</code>; running it again does nothing useful and on certain Discourse versions has side effects.
+    </div>
+
+    <h2>The Attachment Problem (and Its Fix)</h2>
+
+    <p>This is the single most common point of failure. Symptoms:</p>
+
+    <ul>
+      <li>Import runs to completion but every post that referenced an image shows broken thumbnails.</li>
+      <li>Log lines like <code>WARN attachment file not found: 2_a3f9b2c0c2c3...</code></li>
+      <li>Discourse shows the attachment filename as text instead of an image.</li>
+    </ul>
+
+    <p>The mechanic: phpBB stores attachments by hash filename in <code>files/</code>, with the database row referencing the hash. The importer reads the row, computes <code>{phpbb_base_dir}/{physical_filename}</code>, and tries to <code>File.read</code> it. If the path is wrong, it silently logs a warning and continues.</p>
+
+    <h3>Fix it</h3>
+
+    <ol>
+      <li>From inside the container: <code>ls /shared/import/phpbb-files | head</code>. You should see hash-style filenames like <code>2_a3f9b2c0c2c3a1b4</code>. If you see an empty directory, your volume mount is wrong — re-check <code>containers/app.yml</code>.</li>
+      <li>If the directory has files but the importer still warns, the <code>phpbb_base_dir</code> setting is pointing somewhere else. Match it byte-for-byte to the container path you see in <code>ls</code>.</li>
+      <li>If files are there but renamed (some shared hosts strip the <code>2_</code> prefix), you need to fork the script's <code>find_filename</code> method. This is rare — the default works on stock phpBB.</li>
+    </ol>
+
+    <p>If you finished the import and only realized attachments are broken later, you don't have to redo everything. Re-run the importer; it skips anything already imported and retries failed attachments.</p>
+
+    <h2>Username Fixup</h2>
+
+    <p>phpBB allows usernames like <code>John Doe</code>, <code>50%off</code>, and even Cyrillic. Discourse's username regex is much stricter (alphanumeric, <code>.</code>, <code>_</code>, <code>-</code>; first char alphanumeric; ASCII only by default). The importer remaps automatically — usually by replacing illegal chars with <code>_</code> — but the result can be ugly or collide.</p>
+
+    <p>After import, audit:</p>
+
+    <pre><code># inside container, in Rails console
+./launcher enter app
+cd /var/www/discourse
+RAILS_ENV=production bundle exec rails console
+
+&gt; User.where("username ~ '_{2,}'").count
+&gt; User.where("username LIKE '%\\_\\_%'").pluck(:id, :username).take(20)</code></pre>
+
+    <p>For a clean rewrite of the worst offenders:</p>
+
+    <pre><code># Rename users with double-underscore artifacts
+User.where("username LIKE '%\\_\\_%'").find_each do |u|
+  new = u.username.gsub(/_{2,}/, '_').sub(/^_+/, '').sub(/_+$/, '')
+  next if new.blank? || User.exists?(username_lower: new.downcase)
+  UsernameChanger.change(u, new, u)
+end</code></pre>
+
+    <p>If you want to enable Unicode usernames globally first (so the importer stops mangling Cyrillic / CJK names), set <code>unicode_usernames</code> in admin → settings <em>before</em> importing.</p>
+
+    <h2>Post-Import: Sidekiq Drain</h2>
+
+    <p>The import script writes raw rows. It does <em>not</em> bake posts (cook Markdown to HTML), build the search index, or generate image thumbnails. All of that happens via background Sidekiq jobs queued during import. On a 500k-post forum that's typically 300-700k jobs queued.</p>
+
+    <p>Check queue depth:</p>
+
+    <pre><code># inside Rails console
+&gt; Sidekiq::Stats.new.enqueued
+=&gt; 318402
+
+&gt; Sidekiq::Stats.new.queues
+=&gt; {"default"=&gt;284091, "low"=&gt;34211, "ultra_low"=&gt;100}</code></pre>
+
+    <p>Or visit <code>/sidekiq</code> as an admin in the browser — Discourse exposes the Sidekiq web UI.</p>
+
+    <h3>Tuning the drain</h3>
+
+    <p>Default Discourse runs <em>one</em> Sidekiq process per Unicorn master. To drain faster, bump it temporarily in <code>containers/app.yml</code>:</p>
+
+    <pre><code>env:
+  UNICORN_SIDEKIQS: 4
+  # also bump if memory allows
+  DISCOURSE_DB_POOL: 25</code></pre>
+
+    <p>Rebuild: <code>./launcher rebuild app</code>. Keep an eye on RAM — each extra Sidekiq process is ~300 MB resident. On an 8 GB box don't go above 4. Once the queue is empty, set <code>UNICORN_SIDEKIQS</code> back to the default (1) and rebuild again.</p>
+
+    <h3>Common slow jobs</h3>
+
+    <ul>
+      <li><strong><code>Jobs::ProcessPost</code></strong> — re-cooks Markdown, oneboxes external links, generates thumbnails. Slowest. ~80% of the queue.</li>
+      <li><strong><code>Jobs::PullHotlinkedImages</code></strong> — downloads images that posts hotlink to. Will hit external servers; respect their rate limits.</li>
+      <li><strong><code>Jobs::EmitWebHookEvent</code></strong> — disable webhooks during import (admin → API → webhooks) so you don't notify integrations 500k times.</li>
+    </ul>
+
+    <h2>Rebake and Remap (the cleanup pass)</h2>
+
+    <p>Once Sidekiq is empty, run a forced rebake to catch posts that didn't process correctly:</p>
+
+    <pre><code># inside Rails console
+&gt; Post.where("created_at &gt; ?", 1.day.ago).find_each(&amp;:rebake!)</code></pre>
+
+    <p>Or via rake (faster for full forums):</p>
+
+    <pre><code>RAILS_ENV=production bundle exec rake posts:rebake</code></pre>
+
+    <p>For URL fixups — old phpBB <code>viewtopic.php?t=123</code> links scattered through post bodies — use <code>discourse remap</code>:</p>
+
+    <pre><code>./launcher enter app
+cd /var/www/discourse
+
+# preview first
+RAILS_ENV=production bundle exec script/discourse remap \
+  "oldforum.com/viewtopic.php?t=" "discourse.example.com/t/" --dry-run
+
+# do it
+RAILS_ENV=production bundle exec script/discourse remap \
+  "oldforum.com/viewtopic.php?t=" "discourse.example.com/t/"
+
+# regex variant
+RAILS_ENV=production bundle exec script/discourse remap \
+  --regex "(http://oldforum\\.com)" "https://discourse.example.com"</code></pre>
+
+    <h2>Subdomain → Root Migration: 301 Map</h2>
+
+    <p>If your old phpBB lived at <code>forum.example.com</code> and Discourse now lives there too (or vice-versa), you need 301s for the old phpBB URL patterns. The script logs every <code>topic_id → discourse_topic_id</code> mapping in the import database tables; you can dump it and feed it to nginx.</p>
+
+    <p>Minimal nginx redirect block on the old host (or in front of Discourse if you kept the same domain):</p>
+
+    <pre><code># /etc/nginx/sites-available/phpbb-redirect.conf
+location /viewforum.php {
+  if ($arg_f) {
+    return 301 https://forum.example.com/c/$arg_f;
+  }
+}
+location /viewtopic.php {
+  if ($arg_t) {
+    return 301 https://forum.example.com/t/$arg_t;
+  }
+}
+location = /memberlist.php { return 301 https://forum.example.com/u; }
+location = /index.php       { return 301 https://forum.example.com/; }</code></pre>
+
+    <p>Discourse will resolve <code>/t/&lt;id&gt;</code> to the real topic slug and 301 again to the canonical URL. Two hops — but Google handles it fine and your link equity survives.</p>
+
+    <h2>Validation Checklist (Before You Open the Doors)</h2>
+
+    <ol>
+      <li>
+        <strong>Row counts match.</strong>
+        <pre><code># source MySQL
+SELECT COUNT(*) FROM phpbb_users WHERE user_type != 1;
+SELECT COUNT(*) FROM phpbb_topics;
+SELECT COUNT(*) FROM phpbb_posts;
+
+# target Postgres (Rails console)
+&gt; User.real.count
+&gt; Topic.count
+&gt; Post.count</code></pre>
+        Discourse counts will be slightly higher (system user, welcome topic). Anything more than +5 is suspicious.
+      </li>
+      <li><strong>Spot-check 5 random topics.</strong> Pick the most-viewed phpBB topics; open them in Discourse; check formatting, attachments, quoted replies.</li>
+      <li><strong>Test a user login.</strong> Pick a user with a known email; do a "Forgot password" flow; confirm reset email arrives and login works.</li>
+      <li><strong>Search works.</strong> Search for a phrase you know exists. If results are empty, the search index hasn't built yet — go back to Sidekiq drain.</li>
+      <li><strong>Categories and permissions.</strong> Default is "everyone can read"; if your phpBB had private forums, re-create those permissions in Discourse <em>before</em> users log in.</li>
+      <li><strong>Attachments load.</strong> Open a post you know has an image; check the image renders, not a broken-thumbnail icon.</li>
+      <li><strong>Email is sane.</strong> Send a test email from admin → email; verify it arrives. Discourse will fan out lots of email after launch — make sure SPF/DKIM are correct first.</li>
+    </ol>
+
+    <h2>Notes for vBulletin → Discourse</h2>
+
+    <p>The pattern is identical:</p>
+
+    <ul>
+      <li>Script: <code>script/import_scripts/vbulletin.rb</code> (3.x, 4.x) or <code>vbulletin5.rb</code> (5.x).</li>
+      <li>Settings: same YAML pattern, edit <code>script/import_scripts/vbulletin/settings.yml</code> (or the equivalent for v5).</li>
+      <li>Attachments: vBulletin has two storage modes — file system (<code>customavatars</code>, <code>attachments</code> folders) and <em>database BLOB</em>. The importer handles both, but BLOB-stored attachments are SLOW; convert to filesystem first using vBulletin's admin tool if you can.</li>
+      <li>Custom BBCode: vBulletin admins routinely register tags like <code>[highlight]</code>, <code>[spoiler]</code>, <code>[video]</code>. The importer doesn't know your custom tags. After import, run <code>discourse remap --regex</code> to convert each one. Common conversions:
+        <pre><code># [highlight]x[/highlight] → **x**
+remap --regex "\\[highlight\\](.*?)\\[/highlight\\]" "**\\1**"
+
+# [spoiler]x[/spoiler] → [details=Spoiler]x[/details]
+remap --regex "\\[spoiler\\](.*?)\\[/spoiler\\]" "[details=Spoiler]\\1[/details]"</code></pre>
+      </li>
+      <li>vBulletin 5's schema differs significantly from 3/4 — use <code>vbulletin5.rb</code> and expect rough edges. Some edge cases (channel-typed forums, blog channels) don't import; you'll lose them or re-create as Discourse categories manually.</li>
+    </ul>
+
+    <div class="stat-box">
+      <strong>Reality check:</strong> A "1-million-post vBulletin → Discourse" migration is not a weekend project. Plan a 2-week window: 2 days planning, 1 day staging import, 3-4 days fixing custom-BBCode/attachment edge cases on staging, 1 day production import, 2-3 days Sidekiq drain + rebake, 1 day comms / DNS cutover, several days hand-holding users post-launch.
+    </div>
+
+    <h2>Common Errors and Fixes</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+        <tr><td><code>Mysql2::Error: Can't connect to MySQL server</code></td><td>Container can't reach source DB</td><td>Use Docker bridge IP <code>172.17.0.1</code>, not <code>localhost</code></td></tr>
+        <tr><td><code>Mysql2::Error: Access denied for user</code> in MySQL 8</td><td>caching_sha2_password</td><td>Recreate user with <code>IDENTIFIED WITH mysql_native_password</code></td></tr>
+        <tr><td><code>WARN attachment file not found</code></td><td>phpbb_base_dir wrong or volume not mounted</td><td>See "Attachment Problem" section</td></tr>
+        <tr><td><code>ActiveRecord::RecordNotUnique on username</code></td><td>Two phpBB users normalize to same Discourse username</td><td>Pre-rename one in phpBB before import</td></tr>
+        <tr><td><code>NoMethodError: undefined method `cook'</code></td><td>Running script outside container / wrong RAILS_ENV</td><td>Always <code>./launcher enter app</code>, always production</td></tr>
+        <tr><td>Sidekiq queue stops draining</td><td>Worker crashed</td><td><code>Sidekiq::ProcessSet.new.size</code> in console; <code>./launcher restart app</code></td></tr>
+        <tr><td>Out of memory during import</td><td>BATCH_SIZE too high</td><td>Set <code>BATCH_SIZE=200</code>, retry</td></tr>
+        <tr><td>Some posts show raw BBCode</td><td>Custom phpBB mod tag</td><td>Post-import <code>discourse remap --regex</code></td></tr>
+      </table>
+    </div>
+
+    <h2>When to Ask Humans (or AI) for Help</h2>
+
+    <p>Discourse migrations have an unfortunate property: most failure modes are <em>silent</em>. The script prints "Done" with broken attachments and you only notice three days later when a user complains. <a href="https://onout.org/simple-review/">SimpleReview</a> can:</p>
+
+    <ul>
+      <li>Read the import log and flag warnings you missed (<code>attachment file not found</code> buried 50,000 lines deep).</li>
+      <li>Inspect <code>containers/app.yml</code> and verify your volumes / env vars match the script settings — open a PR if they don't.</li>
+      <li>Pull <code>Sidekiq::Stats.new</code> from a Rails console snippet, recommend <code>UNICORN_SIDEKIQS</code> bump if the queue isn't draining.</li>
+      <li>Generate the nginx 301 map from your phpBB topic-ID → Discourse topic-ID dump.</li>
+    </ul>
+
+    <p>Useful when you don't want to learn Sidekiq internals on your launch day.</p>
+
+    <div class="cta-block">
+      <h3>Don't Re-Run the 12-Hour Import — Patch the Config Instead</h3>
+      <p>Click on the failing import row, type the symptom, hit Fix it. SimpleReview reads your app.yml and import log, opens a PR with the corrected mount path, env var, or Sidekiq tuning.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Running Discourse on your own infra? <a href="https://onout.org/simple-review/" style="color:#5b44e8;font-weight:600">SimpleReview also reads server logs over SSH →</a></p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I migrate from phpBB to Discourse?</div>
+      <div class="faq-a">Use the official <code>script/import_scripts/phpbb3.rb</code> inside the Discourse Docker container. Mount phpBB's <code>files/</code> directory into the container, give the container network access to phpBB's MySQL, configure <code>script/import_scripts/phpbb3/settings.local.yml</code> with DB credentials and <code>phpbb_base_dir</code>, then run <code>bundle exec ruby script/import_scripts/phpbb3.rb settings.local.yml</code>. Wait for Sidekiq to drain afterward.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Where do the Discourse import scripts live?</div>
+      <div class="faq-a">Inside the Discourse repo at <code>script/import_scripts/</code>. <code>phpbb3.rb</code> for phpBB 3.x, <code>vbulletin.rb</code> for vB 3/4, <code>vbulletin5.rb</code> for vB 5, plus <code>vanilla.rb</code>, <code>smf2.rb</code>, <code>mybb.rb</code>, <code>ipboard.rb</code>, etc. They must run inside the Discourse container (<code>./launcher enter app</code>), not on the host.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What gets imported from phpBB?</div>
+      <div class="faq-a">Users (passwords reset on first login), forums → categories, topics, posts (with most BBCode converted), attachments and inline images, and 1-to-1 private messages. Not imported: subscription/watching state, custom user titles from non-standard mods, ranks/badges, custom profile fields beyond core ones, and any extension data (portals, gallery, etc.).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why is Sidekiq backed up after a Discourse import?</div>
+      <div class="faq-a">Each imported post triggers post-processing: Markdown rebake, link onebox, image downsize, search-index update. A 500k-post forum queues several hundred thousand jobs. Watch with <code>Sidekiq::Stats.new.enqueued</code> in Rails console; bump <code>UNICORN_SIDEKIQS=4</code> in <code>containers/app.yml</code> to drain faster. Don't open the site to users until the queue is empty.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I migrate vBulletin to Discourse the same way?</div>
+      <div class="faq-a">Yes — same directory, different script. <code>vbulletin.rb</code> for v3/v4, <code>vbulletin5.rb</code> for v5. Identical pattern: container DB access, attachment dir mounted, env/YAML for credentials. The known wart is custom BBCode tags (vBulletin admins can register arbitrary ones) — those survive as plain text and need a <code>discourse remap --regex</code> pass after import.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How long does a phpBB → Discourse migration take?</div>
+      <div class="faq-a">Roughly 1-3 hours of script runtime per 100k posts on modest hardware, but Sidekiq drain afterward typically takes 2-5x longer than the import itself. Plan a 24-48 hour window for a 1M-post forum from import start to fully-baked, search-ready forum. Stage on a copy first so production downtime is minimized.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need to upgrade phpBB before importing?</div>
+      <div class="faq-a">If you're on phpBB 2.x, yes — the importer only supports 3.x. Upgrade 2.x → 3.0 → 3.3 using phpBB's UMIL, dump the upgraded MySQL, point the Discourse importer at it. From phpBB 3.0/3.1/3.2/3.3 you can import directly; 3.3 is the smoothest.</div>
+    </div>
+
+    <h2>Related Discourse Guides</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="../develop-plugin/">Developing a Discourse Plugin</a>
+          <p>Plugin scaffolding, Ember/Glimmer components, server-side hooks, publishing.</p>
+        </div>
+        <div class="related-card">
+          <a href="../api-cookbook/">Discourse API Cookbook</a>
+          <p>Auth, rate limits, common endpoints — create topics, posts, users via API.</p>
+        </div>
+        <div class="related-card">
+          <a href="../reply-by-email/">Reply by Email</a>
+          <p>Configure inbound email so users can reply to notifications without opening the site.</p>
+        </div>
+        <div class="related-card">
+          <a href="../discourse-connect-sso/">Discourse Connect (SSO)</a>
+          <p>Single-sign-on with your existing identity provider — the canonical setup.</p>
+        </div>
+        <div class="related-card">
+          <a href="../">Discourse Hub</a>
+          <p>All Discourse guides on Vibers — installs, plugins, integrations, migrations.</p>
+        </div>
+        <div class="related-card">
+          <a href="../../simple-review/">SimpleReview</a>
+          <p>Click any broken element → AI generates a PR with the one-line fix. Chrome + WordPress.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://meta.discourse.org/t/import-from-phpbb3/30810">meta.discourse.org — Import from phpBB3</a></li>
+      <li><a href="https://github.com/discourse/discourse/tree/main/script/import_scripts">github.com/discourse/discourse — script/import_scripts/</a></li>
+      <li><a href="https://meta.discourse.org/t/importing-from-vbulletin/35517">meta.discourse.org — Importing from vBulletin</a></li>
+      <li><a href="https://meta.discourse.org/c/howto/import">meta.discourse.org — howto/import category</a></li>
+      <li><a href="https://meta.discourse.org/t/configure-sidekiq-and-unicorn-workers/">meta.discourse.org — Configure Sidekiq and Unicorn workers</a></li>
+      <li><a href="https://github.com/discourse/discourse_docker">github.com/discourse/discourse_docker — Official launcher / container config</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        var s = document.createElement('style');
+        s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+        document.head.appendChild(s);
+        banner.classList.add('r');
+        void banner.offsetWidth;
+        banner.classList.remove('r');
+        document.head.removeChild(s);
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

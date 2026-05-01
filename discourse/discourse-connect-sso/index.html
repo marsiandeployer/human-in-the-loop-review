@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DiscourseConnect SSO (2026): Flask + Express provider with HMAC done right</title>
+  <meta name="description" content="Working DiscourseConnect (formerly Discourse SSO) provider: HMAC-SHA256 signing in Flask + Express, sequence diagram, common 'bad signature' fixes, sync flags.">
+  <link rel="canonical" href="https://onout.org/discourse/discourse-connect-sso/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="DiscourseConnect SSO (2026): Flask + Express provider with HMAC done right">
+  <meta property="og:description" content="HMAC-SHA256 signing in Flask + Express, sequence diagram, common 'bad signature' fixes, override flags. The rebrand from 'Discourse SSO' explained.">
+  <meta property="og:url" content="https://onout.org/discourse/discourse-connect-sso/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="discourseconnect, discourse sso, sso discourse, discourse sso provider, discourse single sign on, discourse hmac signing, discourse sso flask example, discourse sso express, enable_discourse_connect_provider">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "DiscourseConnect SSO (2026): Flask + Express provider with HMAC done right",
+    "description": "Working DiscourseConnect (formerly Discourse SSO) provider implementations in Flask and Express, ASCII sequence diagram of the redirect dance, HMAC-SHA256 signing field map, and a debug table for the common 'bad signature' / nonce mismatch / email-already-taken errors.",
+    "url": "https://onout.org/discourse/discourse-connect-sso/",
+    "datePublished": "2026-05-01",
+    "dateModified": "2026-05-01",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/discourse/discourse-connect-sso/" },
+    "keywords": ["discourseconnect", "discourse sso", "sso discourse", "discourse sso provider", "discourse hmac signing", "discourse sso flask example"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is DiscourseConnect the same as Discourse SSO?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. DiscourseConnect is the new (2021+) name for the protocol previously called 'Discourse SSO'. The wire format, HMAC-SHA256 signing, base64 payload, and nonce flow are identical — only the name and the admin-panel setting key changed (from sso_* to discourse_connect_*). Older blog posts, plugins, and forum threads still call it 'Discourse SSO', and both terms appear in the Discourse codebase itself (the Ruby class is still SingleSignOn). Treat them as synonyms."}
+      },
+      {
+        "@type": "Question",
+        "name": "How does the DiscourseConnect signing work?",
+        "acceptedAnswer": {"@type": "Answer", "text": "The provider builds a URL-encoded payload (e.g. nonce=abc&email=foo@bar.com&external_id=42), base64-encodes it, then computes HMAC-SHA256 of the base64 string using the shared secret as the key. The hex digest of that HMAC is the 'sig'. Discourse re-runs the same HMAC on the received base64 'sso' value and compares — if the sig doesn't match, you get a 'Bad signature for payload' error. The HMAC is computed over the base64-encoded string itself, not the decoded payload."}
+      },
+      {
+        "@type": "Question",
+        "name": "What causes 'Bad signature for payload' in DiscourseConnect?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Five common causes: (1) sso_secret / discourse_connect_secret mismatch between provider and Discourse, (2) you signed the decoded payload instead of the base64 string, (3) base64 padding got URL-encoded incorrectly (=, +, / mangled in transit), (4) you used a different hash (SHA1, MD5) instead of HMAC-SHA256, or (5) you treated the secret as hex/base64 when it's a plain UTF-8 string. The fix is almost always: take the literal base64 string you're sending, compute hmac.new(secret_bytes, base64_bytes, sha256).hexdigest()."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between Discourse as RP and Discourse as IdP?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Discourse as RP (Relying Party) is the common case: your existing app is the source of truth for user accounts, and Discourse delegates login to it. Enable 'enable_discourse_connect' and set 'discourse_connect_url' in admin. Discourse as IdP (Identity Provider) is the reverse: Discourse owns the user accounts and other apps consume them. Enable 'enable_discourse_connect_provider' and define provider_secrets per consumer. Most teams want RP. IdP is for teams whose forum predates the rest of their product."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why am I getting a nonce mismatch error?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Discourse stores each generated nonce in Redis with a 10-minute TTL. If a user takes longer than 10 minutes to complete the login at your provider (e.g. password reset detour, email verification), the nonce expires and the callback fails with 'CSRF detected' or 'Nonce mismatch'. Either shorten your login flow, raise discourse_connect_nonce_minutes, or generate a fresh redirect from /session/sso when expiration is detected."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I sync usernames and avatars from my provider?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Set the override_X fields in the response payload. override_username=true forces Discourse to update the username on every login, override_name=true updates the display name, override_avatar=true re-fetches avatar_url. By default Discourse only sets these on first login (Just-In-Time provisioning) and lets users edit them in their Discourse profile. If your provider should be the source of truth, send the override_X flags. If users should be able to customize their forum identity, leave them off."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use DiscourseConnect with multiple consumer apps?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes, when Discourse is the IdP. In admin → Login → discourse_connect_provider_secrets you can pair multiple (consumer_url, secret) entries. Each consumer signs its requests with its own secret. When the user authenticates with Discourse, Discourse signs the response with that same per-consumer secret and redirects back. This is how forums act as SSO for related satellite tools like a knowledge base or marketplace."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+    .steps{counter-reset:step;padding-left:0;list-style:none}
+    .steps li{counter-increment:step;padding:12px 0 12px 52px;position:relative;border-bottom:1px solid #f0f0f0}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:32px;height:32px;background:#5b44e8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+    /* ─────── DiscourseConnect SSO Banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:18px 16px;background:#fff}
+    /* Discourse SSO error screen — TARGET */
+    .sc-error-box{background:#fff;border:1px solid #ccd0d4;border-left:4px solid #d63638;box-shadow:0 1px 1px rgba(0,0,0,.04);max-width:560px;margin:14px auto 0;padding:14px 22px 16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:0 1px 1px rgba(0,0,0,.04)}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-10px;right:10px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:13px;color:#d63638;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#444;font-size:11px;line-height:1.5;margin-bottom:6px;animation:errHide 28s infinite;font-family:'SF Mono',Monaco,Consolas,monospace}
+    .sc-err-msg .sc-fpath{color:#b91c1c}
+    .sc-err-meta{color:#666;font-size:10px;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered SSO success */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+    .sc-rec-logo{font-size:12px;font-weight:700;color:#1a1a1a}
+    .sc-rec-nav{display:flex;gap:12px}
+    .sc-rec-nav span{font-size:9px;color:#555}
+    .sc-rec-content{flex:1;padding:14px 18px;background:#fafafa}
+    .sc-rec-h{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+    .sc-rec-line{height:6px;background:#e0e0e0;border-radius:2px;margin-bottom:5px}
+    .sc-rec-line.short{width:60%}
+    .sc-rec-line.med{width:80%}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:410px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:240px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-cross,.sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-cross svg,.sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    .sc-cross{animation:crossVis 28s infinite}
+    .sc-arrow{animation:arrowVis 28s infinite}
+    @keyframes crossVis{0%,100%{opacity:0}}
+    @keyframes arrowVis{0%,96%{opacity:1}98%,100%{opacity:0}}
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:136px;opacity:1}
+      22%  {left:360px;top:136px;opacity:1}
+      26%  {left:211px;top:265px;opacity:1}
+      47%  {left:211px;top:265px;opacity:1}
+      49%  {left:211px;top:298px;opacity:1}
+      58%  {left:211px;top:298px;opacity:1}
+      74%  {left:621px;top:145px;opacity:1}
+      93%  {left:621px;top:145px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:130px}
+      .sc-popup{right:265px;width:160px}
+    }
+
+    .seq-diagram{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:18px 20px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:12px;line-height:1.5;overflow-x:auto;margin:20px 0;white-space:pre}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Discourse / Authentication</span>
+      <span>May 1, 2026</span>
+      <span>13 min read</span>
+    </div>
+
+    <h1>DiscourseConnect SSO — Working Flask + Express Provider with HMAC Done Right</h1>
+
+    <p class="article-lead">Discourse renamed "Discourse SSO" to <strong>DiscourseConnect</strong> in 2021, but every other blog post on the internet still calls it the old name — and the signing flow is delicate enough that a single base64 encoding mistake gives you the dreaded <em>"Bad signature for payload"</em> screen. This guide is a working reference: a Flask provider, an Express provider, an ASCII sequence diagram, and a field-by-field debug map for the four errors you will actually hit.</p>
+
+    <!-- Animated banner -->
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview catches the DiscourseConnect 'Bad signature' error and opens a PR fixing the HMAC encoding">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">forum.example.com/session/sso_login</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <div class="sc-error-box">
+              <div class="sc-err-title">⚠ Bad signature for payload</div>
+              <div class="sc-err-msg">Discourse received <span class="sc-fpath">sso=bm9uY2U9YWJj...</span> and computed HMAC-SHA256, but the <strong>sig</strong> did not match. Verify <code>discourse_connect_secret</code> matches your provider and that you signed the base64 string, not the decoded payload.</div>
+              <div class="sc-err-meta">DiscourseConnect · Provider: auth.example.com · sig length: 64 hex chars</div>
+            </div>
+            <div class="sc-recovered">
+              <div class="sc-rec-header">
+                <div class="sc-rec-logo">community.example.com</div>
+                <div class="sc-rec-nav"><span>Latest</span><span>Categories</span><span>You</span></div>
+              </div>
+              <div class="sc-rec-content">
+                <span class="sc-rec-success">✓ SSO login successful · external_id=42</span>
+                <div class="sc-rec-h">Welcome back, jane@example.com</div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+                <div class="sc-rec-line short"></div>
+                <div class="sc-rec-line"></div>
+                <div class="sc-rec-line med"></div>
+              </div>
+            </div>
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">DiscourseConnect signature verification fails — fix the HMAC encoding</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Error</span><span class="sc-sb-v">Bad signature</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">File</span><span class="sc-sb-v">sso_provider.py</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Sign <code style="font-size:8px">base64(payload)</code> not raw payload · use <code style="font-size:8px">hmac.new(secret, b64, sha256)</code></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">HMAC matches. /session/sso_login redirect succeeds.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">fix: sign base64 payload in DiscourseConnect<br>sso_provider.py · 3 lines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">Click SimpleReview → select "Bad signature" → <strong>Fix it</strong> → HMAC encoding patched, login succeeds</div>
+      <div class="sc-cursor">
+        <span class="sc-cross"><svg viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="#222" stroke-width="1.5"/>
+        </svg></span>
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Stuck on "Bad signature for payload"? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your provider code, compares the HMAC against a reference implementation, and opens a one-line PR — usually the fix is "sign the base64 string, not the decoded payload".
+    </div>
+
+    <div class="key-takeaways">
+      <h3>TL;DR</h3>
+      <ul>
+        <li><strong>DiscourseConnect = Discourse SSO.</strong> Same protocol, just a 2021 rebrand. Old guides use both terms interchangeably; the Ruby class is still called <code>SingleSignOn</code>.</li>
+        <li><strong>Two directions.</strong> Discourse as RP (your app authenticates users; most common) <em>or</em> Discourse as IdP (Discourse owns identities, satellite apps consume them via <code>enable_discourse_connect_provider</code>).</li>
+        <li><strong>Wire format:</strong> URL-encoded payload → base64 → HMAC-SHA256 with shared secret → hex digest. Both <code>sso</code> and <code>sig</code> ride as query params. Nonce TTL is 10 minutes by default.</li>
+        <li><strong>The mistake everyone makes:</strong> signing the decoded payload instead of the base64 string. The HMAC is computed over the base64 representation, not the raw URL-encoded payload.</li>
+      </ul>
+    </div>
+
+    <h2>DiscourseConnect vs Discourse SSO — Same Thing</h2>
+
+    <p>If you searched <em>"discourse sso"</em>, <em>"sso discourse"</em>, or <em>"discourse single sign on"</em> and ended up here while half the documentation calls it <em>"DiscourseConnect"</em>: both are the same protocol. Discourse renamed it in <a href="https://meta.discourse.org/t/discourseconnect-official-single-sign-on-for-discourse-sso/13045">August 2021</a> to avoid confusion with industry-standard SAML/OAuth SSO. The name change touched:</p>
+
+    <ul>
+      <li><code>sso_secret</code> → <code>discourse_connect_secret</code></li>
+      <li><code>sso_url</code> → <code>discourse_connect_url</code></li>
+      <li><code>enable_sso</code> → <code>enable_discourse_connect</code></li>
+      <li><code>enable_sso_provider</code> → <code>enable_discourse_connect_provider</code></li>
+    </ul>
+
+    <p>The <strong>endpoints</strong> (<code>/session/sso</code>, <code>/session/sso_login</code>, <code>/session/sso_provider</code>), the <strong>payload format</strong>, and the <strong>signing algorithm</strong> are unchanged. The Ruby implementation file is still <code>lib/single_sign_on.rb</code>. Old admin settings names continue to work as aliases. So when a 2018 blog post tells you to set <code>sso_secret</code>, that's the same thing as the 2026 admin field <code>discourse_connect_secret</code>.</p>
+
+    <div class="definition">
+      <strong>Why both names persist:</strong> Discourse never broke the wire format. Old plugins and providers still work without code changes. Only the human-facing names changed, so the community settled into using both terms interchangeably — "DiscourseConnect" in new docs, "Discourse SSO" in conversation and search.
+    </div>
+
+    <h2>Two Directions: Discourse as RP vs Discourse as IdP</h2>
+
+    <p>Before writing any code, decide who owns the user accounts. DiscourseConnect supports both roles:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Mode</th><th>Who owns identities</th><th>Use when</th><th>Admin setting</th></tr>
+        <tr><td><strong>Discourse as RP</strong> (Relying Party)</td><td>Your app</td><td>You already have a SaaS / WordPress / Rails app and want to add a forum that uses your existing accounts</td><td><code>enable_discourse_connect</code> + <code>discourse_connect_url</code> + <code>discourse_connect_secret</code></td></tr>
+        <tr><td><strong>Discourse as IdP</strong> (Identity Provider)</td><td>Discourse</td><td>Your forum predates other tools; you want satellite apps (knowledge base, marketplace, voting tool) to share Discourse accounts</td><td><code>enable_discourse_connect_provider</code> + <code>discourse_connect_provider_secrets</code></td></tr>
+      </table>
+    </div>
+
+    <p>Most teams want RP. The rest of this article focuses on writing a <strong>provider</strong> (the RP case — your app issues the identity) and then briefly covers IdP at the end.</p>
+
+    <h2>The Signing Protocol</h2>
+
+    <p>Both directions use the same wire format:</p>
+
+    <pre><code>1. Build a query-string payload:
+     nonce=cb68251eefb5211e58c00ff1395f0c0b&email=jane@example.com&external_id=42
+
+2. Base64-encode the bytes of that string:
+     bm9uY2U9Y2I2ODI1MWVlZmI1MjExZTU4YzAwZmYxMzk1ZjBjMGImZW1haWw9...
+
+3. Compute HMAC-SHA256 over the BASE64 STRING (not the decoded payload),
+   using the shared secret as the key. Take the hex digest:
+     2828aa29899722b35a2f191d34ef9b3ce695e0e6eeec47deb46d588d70c7cb56
+
+4. URL-encode and ship as two query params:
+     ?sso=bm9uY2U9Y2I2ODI1...&sig=2828aa29899722b35a2f...</code></pre>
+
+    <p>The verifier runs steps 2–3 in reverse on the received <code>sso</code> value and compares the computed sig against the received sig. If they match, the payload is trusted. Then it base64-decodes <code>sso</code>, parses the URL-encoded fields, and uses them.</p>
+
+    <h3>Required and optional payload fields</h3>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Field</th><th>Direction</th><th>Required</th><th>Notes</th></tr>
+        <tr><td><code>nonce</code></td><td>Both</td><td>Yes</td><td>Discourse generates on /session/sso, provider must echo back unchanged. Single-use, 10-min TTL.</td></tr>
+        <tr><td><code>return_sso_url</code></td><td>Discourse → provider</td><td>Yes</td><td>Where the provider redirects after auth. Always <code>/session/sso_login</code>.</td></tr>
+        <tr><td><code>email</code></td><td>Provider → Discourse</td><td>Yes</td><td>Verified email. Discourse trusts it as confirmed.</td></tr>
+        <tr><td><code>external_id</code></td><td>Provider → Discourse</td><td>Yes</td><td>Stable user ID in your system. Never reuse across users.</td></tr>
+        <tr><td><code>username</code></td><td>Provider → Discourse</td><td>No</td><td>Suggested username. Discourse normalizes (lowercase, strip).</td></tr>
+        <tr><td><code>name</code></td><td>Provider → Discourse</td><td>No</td><td>Display name.</td></tr>
+        <tr><td><code>avatar_url</code></td><td>Provider → Discourse</td><td>No</td><td>HTTPS URL to a square image.</td></tr>
+        <tr><td><code>bio</code></td><td>Provider → Discourse</td><td>No</td><td>User bio / about-me text.</td></tr>
+        <tr><td><code>admin</code></td><td>Provider → Discourse</td><td>No</td><td><code>true</code>/<code>false</code>. Promotes the user.</td></tr>
+        <tr><td><code>moderator</code></td><td>Provider → Discourse</td><td>No</td><td><code>true</code>/<code>false</code>.</td></tr>
+        <tr><td><code>add_groups</code></td><td>Provider → Discourse</td><td>No</td><td>Comma-separated group names to add the user to.</td></tr>
+        <tr><td><code>remove_groups</code></td><td>Provider → Discourse</td><td>No</td><td>Comma-separated group names to remove.</td></tr>
+        <tr><td><code>require_activation</code></td><td>Provider → Discourse</td><td>No</td><td><code>true</code> if email is unverified — Discourse will send activation.</td></tr>
+        <tr><td><code>suppress_welcome_message</code></td><td>Provider → Discourse</td><td>No</td><td><code>true</code> to skip the new-user welcome PM.</td></tr>
+        <tr><td><code>override_username</code></td><td>Provider → Discourse</td><td>No</td><td><code>true</code> to update on every login (sync).</td></tr>
+        <tr><td><code>override_name</code></td><td>Provider → Discourse</td><td>No</td><td><code>true</code> to overwrite display name.</td></tr>
+        <tr><td><code>override_avatar</code></td><td>Provider → Discourse</td><td>No</td><td><code>true</code> to refetch avatar.</td></tr>
+        <tr><td><code>logout</code></td><td>Provider → Discourse</td><td>No</td><td><code>true</code> to log the user out (used in logout flow).</td></tr>
+      </table>
+    </div>
+
+    <h2>The Redirect Dance — ASCII Sequence Diagram</h2>
+
+    <p>The full flow has six round trips. The user always thinks they "clicked Login on Discourse" but the actual path is:</p>
+
+    <div class="seq-diagram">User                Discourse                       Your Provider (auth.example.com)
+ |                     |                                        |
+ |  click "Log In"     |                                        |
+ |-------------------->|                                        |
+ |                     |  generate nonce, store in Redis        |
+ |                     |  payload = "nonce=ABC&return_sso_url=  |
+ |                     |             https://forum/session/     |
+ |                     |             sso_login"                 |
+ |                     |  sso = base64(payload)                 |
+ |                     |  sig = hmac_sha256(secret, sso).hex()  |
+ |                     |                                        |
+ |  302 Redirect to    |                                        |
+ |  auth.example.com/  |                                        |
+ |  sso?sso=...&sig=...|                                        |
+ |<--------------------|                                        |
+ |                                                              |
+ |  GET /sso?sso=...&sig=...                                    |
+ |------------------------------------------------------------->|
+ |                                                              |
+ |                          verify sig (HMAC match)             |
+ |                          decode payload, extract nonce       |
+ |                          show login form (or use session)    |
+ |                                                              |
+ |  user enters credentials                                     |
+ |------------------------------------------------------------->|
+ |                                                              |
+ |                          authenticate user                   |
+ |                          build response payload:             |
+ |                            nonce=ABC (echo back!)            |
+ |                            email=jane@example.com            |
+ |                            external_id=42                    |
+ |                            username=jane                     |
+ |                          sso = base64(response_payload)      |
+ |                          sig = hmac_sha256(secret, sso).hex()|
+ |                                                              |
+ |  302 Redirect to forum.example.com/session/sso_login         |
+ |  ?sso=...&sig=...                                            |
+ |<-------------------------------------------------------------|
+ |                                                              |
+ |  GET /session/sso_login?sso=...&sig=...                      |
+ |-------------------->|                                        |
+ |                     |  verify sig                            |
+ |                     |  base64-decode sso                     |
+ |                     |  check nonce matches Redis entry       |
+ |                     |  upsert user by external_id            |
+ |                     |  set session cookie                    |
+ |  302 to /           |                                        |
+ |<--------------------|                                        |
+ |                     |                                        |
+ |  GET / (logged in)  |                                        |
+ |-------------------->|                                        |
+ |  HTML home page     |                                        |
+ |<--------------------|                                        |</div>
+
+    <p>Notice the nonce travels in both directions: Discourse generates it, includes it in the outbound payload, and the provider must <strong>echo it back unchanged</strong> in the response. If the provider strips, regenerates, or forgets the nonce, Discourse rejects with "Nonce mismatch".</p>
+
+    <h2>Provider Implementation: Flask (Python)</h2>
+
+    <p>Here is a complete working Flask provider. Drop it in <code>app.py</code>, set <code>DISCOURSE_SECRET</code> and <code>DISCOURSE_URL</code> as env vars, and run with <code>flask run</code>. Replace the stub <code>authenticate_user()</code> with your real auth logic.</p>
+
+    <pre><code>import os
+import hmac
+import hashlib
+import base64
+from urllib.parse import parse_qs, urlencode
+
+from flask import Flask, request, redirect, session, render_template_string, abort
+
+app = Flask(__name__)
+app.secret_key = os.environ["FLASK_SECRET"]
+
+DISCOURSE_SECRET = os.environ["DISCOURSE_SECRET"].encode("utf-8")
+DISCOURSE_URL    = os.environ["DISCOURSE_URL"]   # e.g. https://forum.example.com
+
+
+def sign(payload_b64: bytes) -> str:
+    """HMAC-SHA256 of the base64 payload bytes, hex digest."""
+    return hmac.new(DISCOURSE_SECRET, payload_b64, hashlib.sha256).hexdigest()
+
+
+@app.route("/sso", methods=["GET"])
+def sso_entry():
+    sso  = request.args.get("sso", "")
+    sig  = request.args.get("sig", "")
+
+    # 1. Verify Discourse signed this request with our shared secret.
+    expected = sign(sso.encode("utf-8"))
+    if not hmac.compare_digest(expected, sig):
+        abort(403, "Bad signature on inbound request")
+
+    # 2. Decode the payload and extract the nonce + return_sso_url.
+    decoded = base64.b64decode(sso).decode("utf-8")
+    fields  = {k: v[0] for k, v in parse_qs(decoded).items()}
+    session["sso_nonce"]      = fields["nonce"]
+    session["sso_return_url"] = fields["return_sso_url"]
+
+    # 3. If user is already logged in, finish immediately. Else show login.
+    if "user_id" in session:
+        return _redirect_back_to_discourse(session["user_id"])
+    return render_template_string(LOGIN_FORM)
+
+
+@app.route("/login", methods=["POST"])
+def do_login():
+    user = authenticate_user(request.form["email"], request.form["password"])
+    if not user:
+        abort(401)
+    session["user_id"] = user["id"]
+    return _redirect_back_to_discourse(user["id"])
+
+
+def _redirect_back_to_discourse(user_id: int):
+    user = lookup_user(user_id)
+    payload = {
+        "nonce":       session["sso_nonce"],     # echo back unchanged
+        "email":       user["email"],
+        "external_id": str(user["id"]),
+        "username":    user["username"],
+        "name":        user["full_name"],
+        "avatar_url":  user.get("avatar_url", ""),
+    }
+    encoded   = urlencode(payload).encode("utf-8")
+    sso_b64   = base64.b64encode(encoded)
+    sig       = sign(sso_b64)
+    return redirect(
+        f"{session['sso_return_url']}?sso={sso_b64.decode()}&sig={sig}"
+    )
+
+
+# ── Stubs — replace with your auth + user lookup ──────────────────
+def authenticate_user(email, password):
+    # query DB, verify bcrypt hash, etc.
+    return {"id": 42, "email": email, "username": "jane", "full_name": "Jane Doe"}
+
+def lookup_user(user_id):
+    return {"id": user_id, "email": "jane@example.com", "username": "jane",
+            "full_name": "Jane Doe", "avatar_url": "https://cdn.example.com/jane.png"}
+
+
+LOGIN_FORM = """
+&lt;form method=post action=/login&gt;
+  &lt;input name=email type=email placeholder=Email required&gt;
+  &lt;input name=password type=password placeholder=Password required&gt;
+  &lt;button&gt;Sign in&lt;/button&gt;
+&lt;/form&gt;
+"""
+
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)</code></pre>
+
+    <p>Then in Discourse admin → Login:</p>
+
+    <ul>
+      <li><code>enable_discourse_connect</code> = ON</li>
+      <li><code>discourse_connect_url</code> = <code>https://auth.example.com/sso</code></li>
+      <li><code>discourse_connect_secret</code> = same value as <code>DISCOURSE_SECRET</code> env var (must be ≥ 10 chars)</li>
+    </ul>
+
+    <h2>Provider Implementation: Express (Node.js)</h2>
+
+    <p>The same flow in Node, using only the standard library plus <code>express</code> and <code>express-session</code>:</p>
+
+    <pre><code>const express = require("express");
+const session = require("express-session");
+const crypto  = require("crypto");
+const querystring = require("querystring");
+
+const DISCOURSE_SECRET = process.env.DISCOURSE_SECRET;
+const DISCOURSE_URL    = process.env.DISCOURSE_URL;
+
+const app = express();
+app.use(express.urlencoded({ extended: false }));
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true, httpOnly: true, sameSite: "lax" },
+}));
+
+function sign(b64) {
+  return crypto.createHmac("sha256", DISCOURSE_SECRET).update(b64).digest("hex");
+}
+
+app.get("/sso", (req, res) => {
+  const { sso, sig } = req.query;
+  if (!sso || !sig) return res.sendStatus(400);
+
+  // 1. Verify inbound HMAC.
+  const expected = sign(sso);
+  if (!crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(sig))) {
+    return res.status(403).send("Bad signature on inbound request");
+  }
+
+  // 2. Decode payload — extract nonce + return URL.
+  const decoded = Buffer.from(sso, "base64").toString("utf-8");
+  const fields  = querystring.parse(decoded);
+  req.session.ssoNonce     = fields.nonce;
+  req.session.ssoReturnUrl = fields.return_sso_url;
+
+  // 3. If already logged in, redirect immediately.
+  if (req.session.userId) return finishSso(req, res, req.session.userId);
+  res.send(LOGIN_FORM);
+});
+
+app.post("/login", async (req, res) => {
+  const user = await authenticateUser(req.body.email, req.body.password);
+  if (!user) return res.sendStatus(401);
+  req.session.userId = user.id;
+  return finishSso(req, res, user.id);
+});
+
+async function finishSso(req, res, userId) {
+  const user = await lookupUser(userId);
+  const payload = {
+    nonce:       req.session.ssoNonce,
+    email:       user.email,
+    external_id: String(user.id),
+    username:    user.username,
+    name:        user.fullName,
+    avatar_url:  user.avatarUrl || "",
+  };
+  const encoded = querystring.stringify(payload);
+  const ssoB64  = Buffer.from(encoded, "utf-8").toString("base64");
+  const sig     = sign(ssoB64);
+  res.redirect(
+    `${req.session.ssoReturnUrl}?sso=${encodeURIComponent(ssoB64)}&sig=${sig}`
+  );
+}
+
+// Stubs
+async function authenticateUser(email, password) {
+  return { id: 42, email, username: "jane", fullName: "Jane Doe" };
+}
+async function lookupUser(id) {
+  return { id, email: "jane@example.com", username: "jane",
+           fullName: "Jane Doe", avatarUrl: "https://cdn.example.com/jane.png" };
+}
+
+const LOGIN_FORM = `
+&lt;form method=post action=/login&gt;
+  &lt;input name=email type=email placeholder=Email required&gt;
+  &lt;input name=password type=password placeholder=Password required&gt;
+  &lt;button&gt;Sign in&lt;/button&gt;
+&lt;/form&gt;`;
+
+app.listen(5000);</code></pre>
+
+    <p>Two production gotchas with the Node version:</p>
+
+    <ul>
+      <li><strong>Use <code>crypto.timingSafeEqual</code></strong>, not <code>===</code>, for HMAC comparison. String compare leaks timing info that lets attackers brute-force the signature byte-by-byte. The Python version above uses <code>hmac.compare_digest</code> for the same reason.</li>
+      <li><strong>The buffers must be the same length.</strong> If you accidentally pass a Buffer with different length to <code>timingSafeEqual</code>, Node throws synchronously. Wrap in try/catch or pre-check lengths.</li>
+    </ul>
+
+    <h2>Common Errors and Fixes</h2>
+
+    <p>Field-by-field debug map for the four errors you'll actually see:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Error message</th><th>Cause</th><th>Fix</th></tr>
+        <tr>
+          <td><code>Bad signature for payload</code></td>
+          <td>Most likely: you signed the URL-encoded payload instead of the base64-encoded payload. Or the secret differs between provider and Discourse.</td>
+          <td>Compute <code>hmac.new(secret, base64_string, sha256).hexdigest()</code>. The HMAC input is the base64 string, not the decoded text. Verify <code>discourse_connect_secret</code> in admin matches your env var byte-for-byte (no trailing newlines).</td>
+        </tr>
+        <tr>
+          <td><code>CSRF detected</code> / <code>Nonce mismatch</code></td>
+          <td>The user took longer than 10 minutes to complete login at the provider, so the nonce in Redis expired. Or your provider is generating a new nonce instead of echoing the one it received.</td>
+          <td>Echo <code>nonce</code> from inbound payload back unchanged. If your login flow includes email verification, raise <code>discourse_connect_nonce_minutes</code> in admin (default 10) or shorten the flow.</td>
+        </tr>
+        <tr>
+          <td><code>Email is already taken</code></td>
+          <td>A Discourse user with that email already exists, but with a different <code>external_id</code> than your provider sends. Common during migrations: existing forum users sign up with email, then you bolt on SSO afterward.</td>
+          <td>Either include the missing <code>external_id</code> in the existing Discourse user via the API (<code>PUT /admin/users/:id/sync_sso</code>), or send the <code>require_activation=true</code> flag and let the user verify ownership.</td>
+        </tr>
+        <tr>
+          <td><code>User has no email</code> / <code>Email is invalid</code></td>
+          <td>Field-name typo in the payload (e.g. <code>emai</code>, <code>e-mail</code>, <code>userEmail</code>) — Discourse silently ignores unknown fields, so missing <code>email</code> looks like the user has none.</td>
+          <td>Use exactly the field names from the table above. Run <code>print(payload)</code> before signing — the field name is <code>email</code>, lowercase, no underscore.</td>
+        </tr>
+        <tr>
+          <td><code>403 Forbidden</code> at /session/sso_login</td>
+          <td>Either the inbound sig is wrong (provider bug), or Discourse has <code>enable_discourse_connect</code> turned off, or the user is logged out and Discourse rejects the unsolicited callback.</td>
+          <td>Confirm the user actually started at <code>/session/sso</code> on Discourse. Don't link directly to your provider's <code>/sso</code> endpoint — let Discourse generate the nonce.</td>
+        </tr>
+        <tr>
+          <td><code>Discourse SSO error: Sso disabled</code></td>
+          <td>Toggle was reset (admin flipped it back) or the secret changed.</td>
+          <td>Re-enable <code>enable_discourse_connect</code>; confirm the secret is at least 10 characters.</td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>The five-minute debug routine</h3>
+
+    <ol class="steps">
+      <li>On the provider, log the inbound <code>sso</code> and <code>sig</code> verbatim and the computed expected sig. Compare them character by character. A single trailing newline in your secret env var corrupts every HMAC.</li>
+      <li>Base64-decode the inbound <code>sso</code> on the command line: <code>echo "&lt;sso_value&gt;" | base64 -d</code>. You should see <code>nonce=...&amp;return_sso_url=...</code>. If not, the value got URL-encoded twice somewhere.</li>
+      <li>On the response side, before you redirect, print the response payload, the base64, and the sig. Verify Discourse-side using the same <code>echo | base64 -d</code> trick on the value you're about to ship.</li>
+      <li>In a Discourse rails console: <code>DiscourseConnect.parse(sso, sig).lookup_or_create_user(...)</code> — this is what Discourse runs internally, and it gives a clearer error than the web UI.</li>
+      <li>If Discourse logs are accessible: <code>tail -f /var/discourse/shared/standalone/log/rails/production.log</code>. The exact failure line is logged with the constructed expected sig.</li>
+    </ol>
+
+    <h2>Discourse as IdP — The Reverse Direction</h2>
+
+    <p>If your forum predates the rest of your product, you can flip the script: Discourse becomes the identity provider, and a satellite app (knowledge base, internal tool, marketplace) consumes Discourse identities.</p>
+
+    <p>In Discourse admin → Login:</p>
+
+    <ul>
+      <li><code>enable_discourse_connect_provider</code> = ON</li>
+      <li><code>discourse_connect_provider_secrets</code>: one entry per consumer, format <code>https://kb.example.com|secret_for_kb</code>, one per line.</li>
+    </ul>
+
+    <p>The flow is the same protocol in mirror image. Your consumer app generates the nonce, Discourse authenticates the user, Discourse signs the response. Skeleton consumer code in Python:</p>
+
+    <pre><code>import secrets, base64, hmac, hashlib
+from urllib.parse import urlencode, parse_qs
+
+DISCOURSE_URL = "https://forum.example.com"
+SECRET        = b"secret_for_kb"
+
+def start_login(return_url):
+    nonce   = secrets.token_hex(16)
+    payload = urlencode({"nonce": nonce, "return_sso_url": return_url}).encode()
+    sso     = base64.b64encode(payload)
+    sig     = hmac.new(SECRET, sso, hashlib.sha256).hexdigest()
+    # Save nonce in your session for later verification
+    return f"{DISCOURSE_URL}/session/sso_provider?sso={sso.decode()}&amp;sig={sig}", nonce
+
+def verify_callback(sso, sig, expected_nonce):
+    if hmac.new(SECRET, sso.encode(), hashlib.sha256).hexdigest() != sig:
+        raise ValueError("Bad signature")
+    fields = {k: v[0] for k, v in parse_qs(base64.b64decode(sso).decode()).items()}
+    if fields["nonce"] != expected_nonce:
+        raise ValueError("Nonce mismatch")
+    return fields  # {email, external_id, username, ...}</code></pre>
+
+    <p>The endpoint is <code>/session/sso_provider</code> on Discourse (not <code>/session/sso</code>). The response payload contains the same fields as before, plus Discourse-specific extras like <code>admin</code>, <code>moderator</code>, <code>groups</code>, and <code>profile_background_url</code>.</p>
+
+    <h2>Sync vs JIT Provisioning: When to Use override_X</h2>
+
+    <p>By default Discourse uses Just-In-Time provisioning: on first login, fields like <code>username</code>, <code>name</code>, and <code>avatar_url</code> are taken from your payload, but on subsequent logins the user can edit them inside Discourse and your provider's values are ignored. This is usually what you want.</p>
+
+    <p>Set <code>override_X=true</code> when:</p>
+
+    <ul>
+      <li><strong><code>override_username</code></strong> — your app is the source of truth for usernames (e.g. employee directory). Otherwise leave off so users can pick a forum-specific handle.</li>
+      <li><strong><code>override_name</code></strong> — names change on the provider side (marriage, legal change) and you want them mirrored.</li>
+      <li><strong><code>override_avatar</code></strong> — you have a Gravatar-like centralized avatar. Note: every login fetches the URL, which adds latency.</li>
+      <li><strong><code>override_email</code></strong> — only when your provider is authoritative for email. Discourse will update the user's email and require re-verification.</li>
+    </ul>
+
+    <div class="warn-box">
+      <strong>Don't override username casually.</strong> Discourse usernames appear in @-mentions and post URLs. Forcing a rename via <code>override_username=true</code> breaks every mention and link to the user's old name. If you turn this on, also enable <code>username_change_period=0</code> so users can't fight the sync.
+    </div>
+
+    <h2>Group Sync</h2>
+
+    <p>The <code>add_groups</code> and <code>remove_groups</code> fields let you synchronize Discourse group membership from your app. Send the comma-separated list of group <em>names</em> (not IDs):</p>
+
+    <pre><code># In your provider response:
+payload = {
+    "nonce":         nonce,
+    "email":         user.email,
+    "external_id":   str(user.id),
+    "add_groups":    "customers,early_access",
+    "remove_groups": "trial",
+}</code></pre>
+
+    <p>This is how teams gate Discourse categories by their own subscription tiers — your billing system tracks who's a Pro customer, the SSO payload says <code>add_groups=pro_customers</code>, and Discourse grants access to the Pro-only category.</p>
+
+    <h2>Logout Flow</h2>
+
+    <p>Single sign-out is opt-in. To log a user out from Discourse when they log out of your app:</p>
+
+    <ol>
+      <li>In admin, set <code>logout_redirect</code> to your app's logout URL.</li>
+      <li>When your app logs the user out, also call the Discourse Admin API: <code>POST /admin/users/:id/log_out</code> (requires API key).</li>
+      <li>Alternatively, send <code>logout=true</code> in an SSO payload — Discourse will log the user out and not re-authenticate.</li>
+    </ol>
+
+    <h2>When to Hand It Off to AI</h2>
+
+    <p>HMAC bugs are the worst kind: silent, deterministic, and the error message ("Bad signature for payload") only tells you the comparison failed, not <em>why</em>. Half the time it's a base64-vs-raw mistake; the other half it's a one-character secret diff between admin and env var.</p>
+
+    <p><a href="https://onout.org/simple-review/">SimpleReview</a> diffs your provider implementation against the canonical Ruby <code>SingleSignOn</code> class, runs an HMAC against a known-good fixture, and opens a PR with the fix. Useful when you're staring at the bad-signature screen and have already triple-checked the secret.</p>
+
+    <div class="cta-block">
+      <h3>Stop Debugging HMAC by Eyeball</h3>
+      <p>Click the "Bad signature for payload" error — SimpleReview reads your provider, finds the encoding mismatch, and opens a PR with the fix.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Want a Discourse plugin with built-in SSO debugging? <a href="../develop-plugin/" style="color:#5b44e8;font-weight:600">See: Develop a Discourse plugin →</a></p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Is DiscourseConnect the same as Discourse SSO?</div>
+      <div class="faq-a">Yes. DiscourseConnect is the new (2021+) name for the protocol previously called "Discourse SSO". The wire format, HMAC-SHA256 signing, and nonce flow are identical. Older blog posts and the Ruby class name still use "SSO". Treat them as synonyms.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does the DiscourseConnect signing work?</div>
+      <div class="faq-a">Build a URL-encoded payload, base64-encode it, then compute HMAC-SHA256 of the base64 string using the shared secret as the key. Hex digest of that HMAC is the <code>sig</code>. Discourse re-runs the same HMAC on the received <code>sso</code> value and compares.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What causes "Bad signature for payload"?</div>
+      <div class="faq-a">Five common causes: (1) secret mismatch between provider and Discourse, (2) you signed the decoded payload instead of the base64 string, (3) base64 padding was URL-encoded incorrectly, (4) you used SHA1/MD5 instead of HMAC-SHA256, or (5) you treated the secret as hex/base64 when it's a plain UTF-8 string.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between Discourse as RP and Discourse as IdP?</div>
+      <div class="faq-a">RP (Relying Party): your existing app owns identities, Discourse delegates login to it. IdP (Identity Provider): Discourse owns accounts, satellite apps consume them. Most teams want RP. IdP is for forums that predate the rest of the product.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why am I getting a nonce mismatch error?</div>
+      <div class="faq-a">Discourse stores each generated nonce in Redis with a 10-minute TTL. If a user takes longer than 10 minutes to authenticate at your provider, the nonce expires. Either shorten the login flow or raise <code>discourse_connect_nonce_minutes</code>.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I sync usernames and avatars from my provider?</div>
+      <div class="faq-a">Set <code>override_username=true</code>, <code>override_name=true</code>, or <code>override_avatar=true</code> in the response payload. By default Discourse only sets these on first login (JIT) and lets users edit them.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I use DiscourseConnect with multiple consumer apps?</div>
+      <div class="faq-a">Yes, when Discourse is the IdP. Set <code>discourse_connect_provider_secrets</code> with one entry per consumer (URL|secret). Each consumer signs requests with its own secret.</div>
+    </div>
+
+    <h2>Related Discourse Guides</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="../develop-plugin/">Develop a Discourse Plugin</a>
+          <p>Plugin scaffold, hooks, custom routes, and how to add SSO-aware features.</p>
+        </div>
+        <div class="related-card">
+          <a href="../api-cookbook/">Discourse API Cookbook</a>
+          <p>Common admin API recipes: <code>sync_sso</code>, user management, group membership.</p>
+        </div>
+        <div class="related-card">
+          <a href="../reply-by-email/">Reply by Email Setup</a>
+          <p>Pop3, mail receiver, bounce handling — the other half of community auth UX.</p>
+        </div>
+        <div class="related-card">
+          <a href="../migrate-from-phpbb/">Migrate from phpBB</a>
+          <p>Importing legacy users so existing accounts merge cleanly with new SSO logins.</p>
+        </div>
+        <div class="related-card">
+          <a href="../">Discourse Hub</a>
+          <p>All Vibers Discourse fixes and integration guides.</p>
+        </div>
+        <div class="related-card">
+          <a href="../../simple-review/">SimpleReview</a>
+          <p>Click any error → AI generates a PR with the one-line fix. Discourse, Rails, Flask, Express.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://meta.discourse.org/t/discourseconnect-official-single-sign-on-for-discourse-sso/13045">meta.discourse.org — DiscourseConnect: Official Single Sign On (rebrand thread)</a></li>
+      <li><a href="https://github.com/discourse/discourse/blob/main/lib/single_sign_on.rb">github.com/discourse — lib/single_sign_on.rb (canonical signing implementation)</a></li>
+      <li><a href="https://meta.discourse.org/t/setting-up-discourseconnect-as-an-sso-provider/13234">meta.discourse.org — Setting up DiscourseConnect as an SSO Provider (Discourse-as-IdP)</a></li>
+      <li><a href="https://meta.discourse.org/c/support/sso/">meta.discourse.org — Support category: SSO troubleshooting threads</a></li>
+      <li><a href="https://meta.discourse.org/t/sync-sso-user-data-with-the-sync-sso-route/84398">meta.discourse.org — sync_sso admin API for backfilling external_id</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        var s = document.createElement('style');
+        s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+        document.head.appendChild(s);
+        banner.classList.add('r');
+        void banner.offsetWidth;
+        banner.classList.remove('r');
+        document.head.removeChild(s);
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

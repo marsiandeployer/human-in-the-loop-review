@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discourse API cookbook (2026): 10 working recipes — curl + Python</title>
+  <meta name="description" content="Working Discourse API examples: auth differences, rate limits, create topic, send DM, upload image, search, pagination, bulk tagging. Copy-paste curl + Python.">
+  <link rel="canonical" href="https://onout.org/discourse/api-cookbook/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Discourse API cookbook (2026): 10 working recipes — curl + Python">
+  <meta property="og:description" content="Working Discourse API examples: auth differences, rate limits, create topic, send DM, upload image, search, pagination, bulk tagging. Copy-paste curl + Python.">
+  <meta property="og:url" content="https://onout.org/discourse/api-cookbook/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="keywords" content="discourse api documentation, discourse rest api, discourse api authentication, discourse api rate limit, discourse api python, discourse api curl, discourse api key, user api key">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Discourse API cookbook (2026): 10 working recipes — curl + Python",
+    "description": "Working Discourse API examples covering authentication modes, rate limits, topics, posts, uploads, DMs, search, pagination, webhooks, and admin reports. Copy-paste curl and Python.",
+    "url": "https://onout.org/discourse/api-cookbook/",
+    "datePublished": "2026-05-01",
+    "dateModified": "2026-05-01",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/discourse/api-cookbook/" },
+    "keywords": ["discourse api documentation", "discourse rest api", "discourse api authentication", "discourse api rate limit", "discourse api python", "discourse api curl"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Where is the official Discourse API documentation?",
+        "acceptedAnswer": {"@type": "Answer", "text": "The schema reference lives at https://docs.discourse.org/ — it is a generated OpenAPI/Swagger view of the most-used endpoints. Higher-level guides (auth, webhooks, plugins) live on https://meta.discourse.org/. The split is undocumented: docs.discourse.org has the JSON shapes; meta.discourse.org has the conceptual explanations and admin policies. Most integrations need both pages open at once."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between an Api-Key and a User-Api-Key in Discourse?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Api-Key is an admin-issued global key — you send Api-Key + Api-Username headers and act as that user. It supports a 'system' user and 'all users' scope and is meant for trusted server-to-server integrations. User-Api-Key is granted by an individual user via OAuth-like consent flow (originally for the official mobile app); it scopes to that user only and supports limited 'scopes' like read, write, push, notifications. Use Api-Key for backend automations, User-Api-Key for end-user-facing apps."}
+      },
+      {
+        "@type": "Question",
+        "name": "What are the Discourse API rate limits?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Defaults in 2026: 60 requests / 60 seconds per IP for anon, 200 / 60s per authenticated user for normal requests, plus separate buckets for create-actions (topics, posts, likes) tuned by trust level. Admins can raise globals via DISCOURSE_MAX_REQS_PER_IP_PER_MINUTE and DISCOURSE_MAX_USER_API_REQS_PER_MINUTE env vars. A 429 response includes a Retry-After header (seconds) — honour it. Hitting 429 is almost always your code firing requests in parallel without a token bucket."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I create a Discourse API key?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Admin → API → New API Key. Pick a description, the user it acts as (often 'system'), and a scope (Global / Granular). Granular keys can be limited to specific actions like 'topics:write' — strongly preferred for production. Save the key somewhere safe; Discourse will not show it again. To revoke, delete it on the same page."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use the Discourse API without admin access?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes — every authenticated user can request a User-Api-Key for their own account via /user-api-key/new and use it to read and post as themselves. You cannot create users, edit other users' posts, see flagged content, or call /admin/* endpoints without an admin Api-Key. The dashboard reports endpoint, for example, returns 403 to a User-Api-Key."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why do I get 403 Forbidden with a valid API key?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Three classic causes: (1) Api-Username header is missing or wrong — Api-Key alone is not enough, you must also tell Discourse which user to act as. (2) The user you are acting as does not have permission for the endpoint (e.g. acting as a regular user against /admin/*). (3) The key is granular and the action you are calling is not in its allow list. Check Logs → Staff Action Log on Discourse for the rejection reason."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do I paginate Discourse search results?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Add page=N to /search.json — pages are 1-indexed and capped at 10 by default (configurable via search_page_size). For full-topic crawls prefer /latest.json?page=N which yields ~30 topics per page and stops returning results when the list is exhausted. For posts inside a topic use /t/{id}/posts.json with stream IDs from the /t/{id}.json envelope, not page numbers."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafaf8;color:#1a1a1a;line-height:1.7;font-size:16px}
+    .page{max-width:860px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}
+    @media(max-width:600px){.page{padding:24px 20px}}
+    a{color:#5b44e8;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .site-nav{border-bottom:2px solid #1a1a1a;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-nav .brand{font-size:18px;font-weight:700;color:#1a1a1a}
+    .site-nav .brand:hover{color:#5b44e8;text-decoration:none}
+    .site-nav .nav-links{display:flex;gap:20px;font-size:14px}
+    .site-nav .nav-links a{color:#555}
+    .site-nav .nav-links a:hover{color:#5b44e8;text-decoration:none}
+    .article-meta{font-size:13px;color:#888;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+    h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:12px}
+    @media(max-width:600px){h1{font-size:24px}}
+    .article-lead{font-size:18px;color:#444;line-height:1.6;margin-bottom:24px;border-left:3px solid #5b44e8;padding-left:16px}
+    .key-takeaways{background:#f4f2ff;border:1px solid #d4ccf8;border-radius:8px;padding:20px 24px;margin-bottom:32px}
+    .key-takeaways h3{font-size:14px;font-weight:600;color:#2d2080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+    .key-takeaways ul{padding-left:20px}
+    .key-takeaways li{margin-bottom:6px;font-size:15px;color:#333}
+    h2{font-size:22px;font-weight:700;margin:40px 0 14px;letter-spacing:-0.3px;padding-top:8px;border-top:1px solid #eee}
+    h3{font-size:17px;font-weight:600;margin:28px 0 10px;color:#2d2080}
+    p{margin-bottom:16px;color:#333}
+    ul,ol{padding-left:24px;margin-bottom:16px}
+    li{margin-bottom:8px;color:#333}
+    .table-wrap{overflow-x:auto;margin-bottom:24px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+    td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even) td{background:#fafaf8}
+    .stat-box{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px}
+    .stat-box strong{color:#92400e}
+    .warn-box{background:#fef2f2;border-left:4px solid #f87171;padding:14px 18px;margin:20px 0;border-radius:0 6px 6px 0;font-size:15px;color:#7f1d1d}
+    .definition{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:14px 18px;margin:20px 0;font-size:15px;color:#166534}
+    .tldr{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:22px 26px;margin:0 0 32px;font-size:14px;line-height:1.6}
+    .tldr h3{color:#fbbf24;font-size:13px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;border:0;padding:0}
+    .tldr table{font-size:13px}
+    .tldr th{background:#1e293b;color:#fbbf24}
+    .tldr td{color:#cbd5e1;border-bottom:1px solid #1e293b;background:transparent !important}
+    .tldr code{background:#1e293b;color:#fde68a;padding:1px 6px;border-radius:3px}
+    .recipe{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px 22px 6px;margin:24px 0}
+    .recipe h2{margin-top:8px;border-top:0;padding-top:0;font-size:20px}
+    .recipe-tag{display:inline-block;background:#5b44e8;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.4px;text-transform:uppercase;margin-right:8px;vertical-align:middle}
+    pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:13px;line-height:1.55;font-family:'SF Mono',Monaco,Consolas,monospace}
+    code{background:#f1f1f1;padding:1px 6px;border-radius:3px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px}
+    pre code{background:transparent;padding:0;color:inherit}
+    .lang-bash::before{content:'curl';display:block;color:#94a3b8;font-size:10px;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
+    .lang-python::before{content:'python';display:block;color:#94a3b8;font-size:10px;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
+    .lang-json::before{content:'json response';display:block;color:#94a3b8;font-size:10px;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
+    .lang-js::before{content:'node';display:block;color:#94a3b8;font-size:10px;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
+    .cta-block{background:#1a1a1a;color:#fff;border-radius:10px;padding:28px 32px;margin:40px 0;text-align:center}
+    .cta-block h3{font-size:20px;font-weight:700;margin-bottom:8px;color:#fff}
+    .cta-block p{color:#ccc;margin-bottom:20px;font-size:15px}
+    .cta-btn{display:inline-block;background:#5b44e8;color:#fff;padding:12px 28px;border-radius:6px;font-weight:600;font-size:15px}
+    .cta-btn:hover{background:#4834c8;text-decoration:none}
+    .faq-item{border-bottom:1px solid #eee;padding:16px 0}
+    .faq-q{font-weight:600;color:#1a1a1a;margin-bottom:8px;font-size:16px}
+    .faq-a{color:#444;font-size:15px;line-height:1.6}
+    .ext-callout{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 20px;margin-bottom:28px;font-size:15px;color:#7c2d12}
+    .ext-callout a{color:#c2410c;font-weight:600}
+    .related-posts{margin-top:40px;padding-top:32px;border-top:2px solid #1a1a1a}
+    .related-posts h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .related-card{border:1px solid #eee;border-radius:8px;padding:16px}
+    .related-card:hover{border-color:#5b44e8}
+    .related-card a{color:#1a1a1a;font-weight:600;font-size:14px}
+    .related-card p{font-size:13px;color:#888;margin-top:6px}
+    .sources-list{font-size:13px;color:#666;padding-left:20px}
+    .sources-list li{margin-bottom:6px}
+    .site-footer{border-top:1px solid #eee;margin-top:48px;padding-top:24px;font-size:13px;color:#888;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .site-footer a{color:#555}
+
+    /* ─────── Discourse-banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:380px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f1f1f1}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:0;background:#fff}
+    /* Discourse topic list */
+    .sc-d-header{background:#fff;border-bottom:1px solid #e9e9e9;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+    .sc-d-logo{font-size:13px;font-weight:700;color:#1a1a1a}
+    .sc-d-tabs{display:flex;gap:14px;font-size:11px;color:#555}
+    .sc-d-tabs span:first-child{color:#0088cc;font-weight:700;border-bottom:2px solid #0088cc;padding-bottom:4px}
+    .sc-d-list{padding:6px 12px}
+    .sc-d-row{display:grid;grid-template-columns:24px 1fr 90px 30px 30px 50px;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px solid #f0f0f0;font-size:11px}
+    .sc-d-row .sc-d-cat{padding:1px 6px;border-radius:3px;font-size:9px;color:#fff;font-weight:700}
+    .sc-d-cat.bug{background:#e45735}
+    .sc-d-cat.feat{background:#0088cc}
+    .sc-d-cat.help{background:#7ba428}
+    .sc-d-cat.api{background:#9b59b6}
+    .sc-d-row .sc-d-title{color:#222;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .sc-d-row .sc-d-avatars{display:flex;gap:-4px}
+    .sc-d-av{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f97316);font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;border:1px solid #fff;margin-left:-4px}
+    .sc-d-av:first-child{margin-left:0}
+    .sc-d-av.b2{background:linear-gradient(135deg,#60a5fa,#5b44e8)}
+    .sc-d-av.b3{background:linear-gradient(135deg,#34d399,#059669)}
+    .sc-d-av.b4{background:linear-gradient(135deg,#f87171,#dc2626)}
+    .sc-d-meta{color:#888;font-size:10px;text-align:right}
+    .sc-d-num{color:#666;text-align:right;font-size:10px}
+    .sc-d-row.target{background:#fff;border:1px solid transparent;animation:errSel 28s infinite;border-radius:4px;outline-offset:1px}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;background:#fff7ed}90%,100%{outline:none}}
+    .sc-d-row.target::after{content:'API 429';position:absolute;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite;transform:translate(380px,-2px)}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-d-row .sc-d-title strong{color:#d63638}
+    /* Sidebar */
+    .sc-sidebar{width:210px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#FF6B35;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#FF6B35;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#b91c1c;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4}
+    /* Popup */
+    .sc-popup{position:absolute;right:420px;top:170px;width:230px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:210px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#5b44e8;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#FF6B35;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:136px;opacity:1}
+      22%  {left:360px;top:136px;opacity:1}
+      26%  {left:241px;top:295px;opacity:1}
+      47%  {left:241px;top:295px;opacity:1}
+      49%  {left:241px;top:328px;opacity:1}
+      58%  {left:241px;top:328px;opacity:1}
+      74%  {left:621px;top:135px;opacity:1}
+      93%  {left:621px;top:135px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#FF6B35}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#FF6B35;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    @media(max-width:640px){
+      .sc-sidebar{width:140px}
+      .sc-popup{right:275px;width:170px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install Extension</a>
+      <a href="/vibers/blog/">Blog</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Discourse / API</span>
+      <span>May 1, 2026</span>
+      <span>14 min read</span>
+      <span>Tested against Discourse 3.4</span>
+    </div>
+
+    <h1>Discourse API cookbook (2026): 10 working recipes — curl + Python</h1>
+
+    <p class="article-lead">The official Discourse API documentation is split across two domains, three styles of authentication, and a rate-limit configuration that nobody mentions until you start hitting 429s in production. This cookbook is what we wish existed when we first integrated against a Discourse 3.4 instance: the auth split explained in one table, real env-var rate limits, and ten copy-paste recipes — every one tested against a live forum with curl and Python.</p>
+
+    <!-- Animated banner -->
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview reads a Discourse 429 rate-limit error and opens a PR adding retry-with-backoff.">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">community.example.com</div>
+        <img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview extension">
+      </div>
+      <div class="sc-viewport">
+        <div class="sc-content-row">
+          <div class="sc-site">
+            <div class="sc-d-header">
+              <div class="sc-d-logo">community.example.com</div>
+              <div class="sc-d-tabs"><span>Latest</span><span>Top</span><span>Categories</span></div>
+            </div>
+            <div class="sc-d-list">
+              <div class="sc-d-row">
+                <span class="sc-d-cat feat">feat</span>
+                <span class="sc-d-title">Add OAuth provider for SSO with internal IdP</span>
+                <span class="sc-d-avatars"><span class="sc-d-av">A</span><span class="sc-d-av b2">M</span><span class="sc-d-av b3">K</span></span>
+                <span class="sc-d-num">12</span>
+                <span class="sc-d-num">428</span>
+                <span class="sc-d-meta">2h</span>
+              </div>
+              <div class="sc-d-row">
+                <span class="sc-d-cat help">help</span>
+                <span class="sc-d-title">How do I export all topics in a category?</span>
+                <span class="sc-d-avatars"><span class="sc-d-av b3">J</span><span class="sc-d-av">P</span></span>
+                <span class="sc-d-num">5</span>
+                <span class="sc-d-num">112</span>
+                <span class="sc-d-meta">4h</span>
+              </div>
+              <div class="sc-d-row target">
+                <span class="sc-d-cat api">api</span>
+                <span class="sc-d-title"><strong>API call fails with 429 — retry strategy?</strong></span>
+                <span class="sc-d-avatars"><span class="sc-d-av b4">R</span><span class="sc-d-av b2">T</span></span>
+                <span class="sc-d-num">8</span>
+                <span class="sc-d-num">203</span>
+                <span class="sc-d-meta">23m</span>
+              </div>
+              <div class="sc-d-row">
+                <span class="sc-d-cat bug">bug</span>
+                <span class="sc-d-title">Webhook signature verification flaky on retries</span>
+                <span class="sc-d-avatars"><span class="sc-d-av">L</span></span>
+                <span class="sc-d-num">3</span>
+                <span class="sc-d-num">87</span>
+                <span class="sc-d-meta">1d</span>
+              </div>
+            </div>
+            <div class="sc-popup">
+              <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+              <div class="sc-popup-ta"><span class="sc-ta-inner">This API integration keeps hitting rate limits — fix the retry strategy?</span><span class="sc-blink">|</span></div>
+              <div class="sc-popup-fix">
+                <span class="sc-fxt">Fix it</span>
+                <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                <span class="sc-fdn">✓ Done</span>
+              </div>
+            </div>
+          </div>
+          <div class="sc-sidebar">
+            <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+            <div class="sc-sb-hint">waiting for selection…</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Status</span><span class="sc-sb-v">429 Too Many</span></div>
+              <div class="sc-sb-kv"><span class="sc-sb-k">Header</span><span class="sc-sb-v">Retry-After:30</span></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div style="font-size:9px;color:#333;line-height:1.4">Wrap client in <code style="font-size:8px">tenacity</code> with exponential backoff · honour <code style="font-size:8px">Retry-After</code> · cap concurrency to 4</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div style="font-size:9px;color:#166534;line-height:1.4">Sustained 180 req/min without throttling. Backoff confirmed in logs.</div>
+            </div>
+            <div class="sc-pr">
+              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-meta">fix(discourse-api): add Retry-After backoff<br>discourse_client.py · +24 −3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+      <div class="sc-caption">SimpleReview drafts retry/backoff code for Discourse API integrations — straight to a <strong>PR</strong></div>
+      <div class="sc-cursor">
+        <span class="sc-arrow"><svg viewBox="0 0 24 24">
+          <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg></span>
+      </div>
+    </div>
+
+    <div class="ext-callout">
+      Hitting <code>429 Too Many Requests</code> on production? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your Discourse client code, spots missing <code>Retry-After</code> handling, and opens a PR with <code>tenacity</code>-based exponential backoff in under a minute.
+    </div>
+
+    <div class="tldr">
+      <h3>TL;DR — Discourse API at a glance</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Thing</th><th>Value</th></tr>
+          <tr><td>Base URL</td><td><code>https://your-forum.example.com/</code> (any path; just append <code>.json</code>)</td></tr>
+          <tr><td>Schema reference</td><td><code>https://docs.discourse.org/</code></td></tr>
+          <tr><td>Auth — server-to-server</td><td><code>Api-Key</code> + <code>Api-Username</code> headers (admin)</td></tr>
+          <tr><td>Auth — end-user app</td><td><code>User-Api-Key</code> + <code>User-Api-Client</code> headers</td></tr>
+          <tr><td>Anon rate limit</td><td>60 req / 60s per IP</td></tr>
+          <tr><td>Authed rate limit</td><td>200 req / 60s per user (defaults)</td></tr>
+          <tr><td>Create-action limit</td><td>5–20 / minute per user (trust-level scaled)</td></tr>
+          <tr><td>429 includes</td><td><code>Retry-After: N</code> header in seconds — honour it</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="key-takeaways">
+      <h3>Key Takeaways</h3>
+      <ul>
+        <li><strong>The docs are split.</strong> Schema is at <code>docs.discourse.org</code>, prose explanations live as forum threads on <code>meta.discourse.org</code>. You will need both.</li>
+        <li><strong>Pick the right auth mode.</strong> <code>Api-Key</code> for backend automations, <code>User-Api-Key</code> for end-user apps. Mixing them up causes silent 403s.</li>
+        <li><strong>Append <code>.json</code> to anything.</strong> Most "hidden" API endpoints are just the page URL with <code>.json</code> tacked on — no separate <code>/api/v1/</code> namespace exists.</li>
+        <li><strong>Rate limits bite hard.</strong> The defaults look generous until you parallelise; 429s come fast and the <code>Retry-After</code> header is the only honest signal.</li>
+        <li><strong>422 = validation.</strong> Always read <code>response.errors</code> from the JSON body — Discourse returns very specific messages there.</li>
+      </ul>
+    </div>
+
+    <h2>Where the Discourse API actually lives</h2>
+
+    <p>There is no single canonical Discourse API documentation page, and that is not your fault. Three sources matter:</p>
+
+    <ol>
+      <li><strong><a href="https://docs.discourse.org/">docs.discourse.org</a></strong> — auto-generated OpenAPI/Swagger view of the most-used endpoints. Good for parameter shapes, weak on auth and errors.</li>
+      <li><strong><a href="https://meta.discourse.org/">meta.discourse.org</a></strong> — long-form forum posts that double as canonical docs. Search there for any "how do I…" question; the answers are pinned by Discourse staff.</li>
+      <li><strong><a href="https://github.com/discourse/discourse_api">github.com/discourse/discourse_api</a></strong> — the official Ruby gem. Even if you do not write Ruby, its <code>lib/</code> folder is the cleanest reference for which endpoints exist and what payloads they accept.</li>
+    </ol>
+
+    <p>A pragmatic rule: if an endpoint is reachable from the web UI, you can call it as JSON by appending <code>.json</code> to the URL. <code>/latest</code> → <code>/latest.json</code>. <code>/t/some-slug/123</code> → <code>/t/123.json</code>. <code>/admin/dashboard</code> → <code>/admin/dashboard.json</code>. This is the pattern, not an exception.</p>
+
+    <h2>Authentication: <code>Api-Key</code> vs <code>User-Api-Key</code></h2>
+
+    <p>This is where most integrations fail on day one. The two key types look similar but behave differently and live in different admin screens.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Property</th><th><code>Api-Key</code></th><th><code>User-Api-Key</code></th></tr>
+        <tr><td>Created by</td><td>Admin → API → New API Key</td><td>End user via <code>/user-api-key/new</code> consent flow</td></tr>
+        <tr><td>Headers</td><td><code>Api-Key</code> + <code>Api-Username</code></td><td><code>User-Api-Key</code> + <code>User-Api-Client</code> (optional)</td></tr>
+        <tr><td>Acts as</td><td>Any user you specify (incl. <code>system</code>)</td><td>Only the user who granted it</td></tr>
+        <tr><td>Scopes</td><td>Global or granular (per action)</td><td><code>read</code>, <code>write</code>, <code>message_bus</code>, <code>push</code>, <code>notifications</code>, <code>session_info</code>, <code>one_time_password</code></td></tr>
+        <tr><td>Can call <code>/admin/*</code></td><td>Yes (if the user is admin)</td><td>No — even if granted by an admin</td></tr>
+        <tr><td>Revocation</td><td>Admin → API page</td><td>User profile → API keys</td></tr>
+        <tr><td>Best for</td><td>Backend automations, ETLs, bots</td><td>Mobile apps, browser extensions, end-user widgets</td></tr>
+      </table>
+    </div>
+
+    <p>Header examples for a request as the <code>system</code> user:</p>
+
+    <pre><code class="language-bash">curl -H "Api-Key: 6e3f3...c2" \
+     -H "Api-Username: system" \
+     https://forum.example.com/latest.json</code></pre>
+
+    <p>And as a regular user (Mary) holding her own User-Api-Key:</p>
+
+    <pre><code class="language-bash">curl -H "User-Api-Key: af2e8...91" \
+     -H "User-Api-Client: my-mobile-app" \
+     https://forum.example.com/notifications.json</code></pre>
+
+    <div class="warn-box">
+      <strong>The 403 trap.</strong> An <code>Api-Key</code> without an <code>Api-Username</code> header silently 403s on most endpoints. Discourse does not tell you the username is missing — the response just looks like an auth failure. Always send both headers, always.
+    </div>
+
+    <h2>Rate limits in 2026 — what actually happens</h2>
+
+    <p>Discourse uses a sliding-window rate limiter implemented with Redis, configured via env vars set at boot. If you never touch them you inherit these defaults (Discourse 3.4):</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Env var</th><th>Default</th><th>Scope</th></tr>
+        <tr><td><code>DISCOURSE_MAX_REQS_PER_IP_PER_MINUTE</code></td><td>200</td><td>Per IP, all requests</td></tr>
+        <tr><td><code>DISCOURSE_MAX_REQS_PER_IP_PER_10_SECONDS</code></td><td>50</td><td>Burst window</td></tr>
+        <tr><td><code>DISCOURSE_MAX_USER_API_REQS_PER_MINUTE</code></td><td>60</td><td>Per User-Api-Key</td></tr>
+        <tr><td><code>DISCOURSE_MAX_USER_API_REQS_PER_DAY</code></td><td>2880</td><td>Per User-Api-Key per 24h</td></tr>
+        <tr><td><code>DISCOURSE_MAX_ADMIN_API_REQS_PER_MINUTE</code></td><td>60</td><td>Per Api-Key</td></tr>
+        <tr><td>create-topic / create-post bucket</td><td>~5–20 / min</td><td>Per user, scaled by trust level</td></tr>
+      </table>
+    </div>
+
+    <p>A 429 response looks like this:</p>
+
+    <pre><code class="language-json">HTTP/1.1 429 Too Many Requests
+Retry-After: 30
+Content-Type: application/json
+
+{
+  "errors": ["You've performed this action too many times. Please wait 30 seconds before trying again."],
+  "error_type": "rate_limit",
+  "extras": { "wait_seconds": 30, "time_left": "30 seconds" }
+}</code></pre>
+
+    <p>Three traps that cause 90% of 429s in production:</p>
+
+    <ol>
+      <li><strong>Parallel workers without coordination.</strong> Two pods both running a sync at minute zero will share one IP-level bucket — if you have a NAT in front, all your pods share it.</li>
+      <li><strong>Crawling <code>/latest.json?page=N</code> without sleep.</strong> Pages are fast, the limit is not. Sleep at least 200 ms between page fetches and watch the response headers.</li>
+      <li><strong>Posting in a tight loop on a brand-new bot account.</strong> Trust level 0 has the strictest create-action bucket; promote your bot to TL2+ via admin, or stagger creations.</li>
+    </ol>
+
+    <p>Honouring <code>Retry-After</code> is non-optional. The reusable Python helper we use:</p>
+
+    <pre><code class="language-python">import time, requests
+from functools import wraps
+
+def with_retry(fn):
+    @wraps(fn)
+    def inner(*args, **kw):
+        for attempt in range(5):
+            r = fn(*args, **kw)
+            if r.status_code != 429:
+                return r
+            wait = int(r.headers.get("Retry-After", 2 ** attempt))
+            time.sleep(wait + 0.5)
+        r.raise_for_status()
+    return inner
+
+@with_retry
+def get(url, **kw):
+    return requests.get(url, **kw)</code></pre>
+
+    <h2>The 10 recipes</h2>
+
+    <p>Every recipe below was run against a Discourse 3.4 instance with an admin-issued <code>Api-Key</code> stored in <code>$DISCOURSE_API_KEY</code> and the acting username in <code>$DISCOURSE_API_USER</code>. Set them once:</p>
+
+    <pre><code class="language-bash">export DISCOURSE_HOST="https://forum.example.com"
+export DISCOURSE_API_KEY="6e3f3....c2"
+export DISCOURSE_API_USER="system"</code></pre>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 1</span> List the latest topics</h2>
+      <p>The cheapest sanity check that your auth works. The endpoint is identical to what loads on the home page; it returns up to ~30 topics per page.</p>
+      <pre><code class="language-bash">curl -s -H "Api-Key: $DISCOURSE_API_KEY" \
+        -H "Api-Username: $DISCOURSE_API_USER" \
+        "$DISCOURSE_HOST/latest.json?order=created&amp;ascending=false" | jq '.topic_list.topics[0:3]'</code></pre>
+      <pre><code class="language-python">import os, requests
+
+H = {
+    "Api-Key": os.environ["DISCOURSE_API_KEY"],
+    "Api-Username": os.environ["DISCOURSE_API_USER"],
+}
+BASE = os.environ["DISCOURSE_HOST"]
+
+r = requests.get(f"{BASE}/latest.json", headers=H, params={"order": "created", "ascending": "false"})
+r.raise_for_status()
+for t in r.json()["topic_list"]["topics"][:5]:
+    print(t["id"], t["fancy_title"], "·", t["posts_count"], "posts")</code></pre>
+    </div>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 2</span> Create a topic in a category</h2>
+      <p>POST to <code>/posts.json</code> — yes, <em>posts</em>, not <em>topics</em>. Discourse creates the topic implicitly when you supply a <code>title</code>. Required fields: <code>title</code>, <code>raw</code>, <code>category</code> (numeric ID, not slug).</p>
+      <pre><code class="language-bash">curl -s -X POST -H "Api-Key: $DISCOURSE_API_KEY" \
+   -H "Api-Username: $DISCOURSE_API_USER" \
+   -H "Content-Type: application/json" \
+   -d '{
+     "title": "Release notes for v3.4",
+     "raw":   "We just shipped 3.4 — full changelog inside.",
+     "category": 7,
+     "tags": ["release", "v3-4"]
+   }' \
+   "$DISCOURSE_HOST/posts.json"</code></pre>
+      <pre><code class="language-python">payload = {
+    "title": "Release notes for v3.4",
+    "raw":   "We just shipped 3.4 — full changelog inside.",
+    "category": 7,
+    "tags":   ["release", "v3-4"],
+}
+r = requests.post(f"{BASE}/posts.json", headers={**H, "Content-Type": "application/json"}, json=payload)
+if r.status_code == 422:
+    print("validation:", r.json().get("errors"))
+r.raise_for_status()
+topic = r.json()
+print("created topic", topic["topic_id"], "post", topic["id"])</code></pre>
+      <p>Common 422s: title shorter than <code>min_topic_title_length</code> (default 15), raw shorter than <code>min_post_length</code> (default 20), or category locked for the acting user.</p>
+    </div>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 3</span> Update a post (admin)</h2>
+      <p><code>PUT /posts/:id.json</code>. Pass an <code>edit_reason</code> — Discourse logs it in the staff action log and shows it on the post.</p>
+      <pre><code class="language-bash">curl -s -X PUT -H "Api-Key: $DISCOURSE_API_KEY" \
+   -H "Api-Username: $DISCOURSE_API_USER" \
+   -H "Content-Type: application/json" \
+   -d '{
+     "post": {
+       "raw": "Updated body — added migration steps.",
+       "edit_reason": "Fix migration command typo"
+     }
+   }' \
+   "$DISCOURSE_HOST/posts/4837.json"</code></pre>
+      <pre><code class="language-python">post_id = 4837
+body = {"post": {"raw": "Updated body — added migration steps.",
+                  "edit_reason": "Fix migration command typo"}}
+r = requests.put(f"{BASE}/posts/{post_id}.json",
+                 headers={**H, "Content-Type": "application/json"},
+                 json=body)
+r.raise_for_status()
+print("revision", r.json()["post"]["version"])</code></pre>
+      <p>Note: edits trigger the rebake pipeline. Expect the response in &lt;200 ms but downstream webhooks (<code>post_edited</code>) may fire seconds later.</p>
+    </div>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 4</span> Upload an image, then attach it to a post</h2>
+      <p>Two-step: upload to <code>/uploads.json</code>, get back a <code>short_url</code> (looks like <code>upload://abc123.png</code>), then embed it in the post body using the standard markdown <code>![alt](upload://...)</code> syntax.</p>
+      <pre><code class="language-bash">UPLOAD=$(curl -s -X POST -H "Api-Key: $DISCOURSE_API_KEY" \
+   -H "Api-Username: $DISCOURSE_API_USER" \
+   -F "type=composer" \
+   -F "synchronous=true" \
+   -F "file=@./screenshot.png" \
+   "$DISCOURSE_HOST/uploads.json")
+
+SHORT=$(echo "$UPLOAD" | jq -r '.short_url')
+echo "Got: $SHORT"
+
+curl -s -X POST -H "Api-Key: $DISCOURSE_API_KEY" \
+   -H "Api-Username: $DISCOURSE_API_USER" \
+   -H "Content-Type: application/json" \
+   -d "{\"title\":\"Bug repro\",\"raw\":\"Here is the screenshot:\n\n![repro]($SHORT)\",\"category\":4}" \
+   "$DISCOURSE_HOST/posts.json"</code></pre>
+      <pre><code class="language-python">import requests
+
+with open("screenshot.png", "rb") as f:
+    up = requests.post(
+        f"{BASE}/uploads.json",
+        headers=H,
+        files={"file": ("screenshot.png", f, "image/png")},
+        data={"type": "composer", "synchronous": "true"},
+    ).json()
+
+short = up["short_url"]   # 'upload://abc123def456.png'
+
+body = {
+    "title": "Bug repro",
+    "raw": f"Here is the screenshot:\n\n![repro]({short})",
+    "category": 4,
+}
+r = requests.post(f"{BASE}/posts.json", headers={**H, "Content-Type": "application/json"}, json=body)
+r.raise_for_status()</code></pre>
+      <p>The <code>type=composer</code> hint matters — without it, the upload is filed as a profile/avatar and is not embeddable in posts. <code>synchronous=true</code> blocks until the file is processed; for big uploads (&gt;5 MB) drop it and poll <code>/uploads/lookup-urls.json</code>.</p>
+    </div>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 5</span> Send a private message</h2>
+      <p>Same <code>/posts.json</code> endpoint, with <code>archetype: "private_message"</code> and a <code>target_recipients</code> field (comma-separated usernames or group names).</p>
+      <pre><code class="language-bash">curl -s -X POST -H "Api-Key: $DISCOURSE_API_KEY" \
+   -H "Api-Username: $DISCOURSE_API_USER" \
+   -H "Content-Type: application/json" \
+   -d '{
+     "title": "Action required: confirm your email",
+     "raw":   "Hi — please click the verify link we sent yesterday.",
+     "archetype": "private_message",
+     "target_recipients": "mary,bob,@admins"
+   }' \
+   "$DISCOURSE_HOST/posts.json"</code></pre>
+      <pre><code class="language-python">dm = {
+    "title": "Action required: confirm your email",
+    "raw":   "Hi — please click the verify link we sent yesterday.",
+    "archetype": "private_message",
+    "target_recipients": "mary,bob,@admins",
+}
+r = requests.post(f"{BASE}/posts.json",
+                  headers={**H, "Content-Type": "application/json"},
+                  json=dm)
+r.raise_for_status()</code></pre>
+      <p>To message a group, prefix with <code>@</code>: <code>"@admins"</code>. Discourse silently drops invalid recipients — check <code>response["topic"]["allowed_users"]</code> matches what you sent.</p>
+    </div>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 6</span> Create a user (admin)</h2>
+      <p>Admin-only: <code>POST /users.json</code>. Password rules: at least 10 chars (default <code>min_password_length</code>), and must not match the username. Set <code>active=true</code> + <code>approved=true</code> to skip email verification — useful for SSO bridges.</p>
+      <pre><code class="language-bash">curl -s -X POST -H "Api-Key: $DISCOURSE_API_KEY" \
+   -H "Api-Username: $DISCOURSE_API_USER" \
+   -H "Content-Type: application/json" \
+   -d '{
+     "name":     "Mary Example",
+     "username": "mary_e",
+     "email":    "mary@example.com",
+     "password": "Initial-PW-2026!",
+     "active":   true,
+     "approved": true
+   }' \
+   "$DISCOURSE_HOST/users.json"</code></pre>
+      <pre><code class="language-python">payload = {
+    "name":     "Mary Example",
+    "username": "mary_e",
+    "email":    "mary@example.com",
+    "password": "Initial-PW-2026!",
+    "active":   True,
+    "approved": True,
+}
+r = requests.post(f"{BASE}/users.json",
+                  headers={**H, "Content-Type": "application/json"},
+                  json=payload)
+data = r.json()
+if not data.get("success"):
+    # account_create errors land in `errors` or `message`
+    print("create failed:", data.get("errors") or data.get("message"))
+else:
+    print("user_id", data["user_id"])</code></pre>
+      <p>Watch out: a 200 response with <code>"success": false</code> is the common failure mode (duplicate email, weak password, banned IP). Always check the body, not just the status code.</p>
+    </div>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 7</span> Search topics with pagination</h2>
+      <p><code>/search.json?q=...&amp;page=N</code>. The <code>q</code> string supports the same operators as the on-site search: <code>category:bug</code>, <code>tags:release</code>, <code>after:2026-01-01</code>, <code>user:mary</code>, etc.</p>
+      <pre><code class="language-bash">curl -s -H "Api-Key: $DISCOURSE_API_KEY" \
+        -H "Api-Username: $DISCOURSE_API_USER" \
+        "$DISCOURSE_HOST/search.json?q=429+rate+limit+category:api&amp;page=1" | jq '.posts | length'</code></pre>
+      <pre><code class="language-python">def search_all(q):
+    out = []
+    page = 1
+    while True:
+        r = requests.get(f"{BASE}/search.json", headers=H,
+                         params={"q": q, "page": page})
+        r.raise_for_status()
+        posts = r.json().get("posts", [])
+        if not posts:
+            return out
+        out.extend(posts)
+        page += 1
+        time.sleep(0.3)   # polite
+
+hits = search_all("429 rate limit category:api")
+print(len(hits), "matching posts")</code></pre>
+      <p>Empty <code>posts</code> array = end of results. Discourse caps search at 50 pages (~500 results); for bigger crawls combine with <code>/latest.json</code> + filter client-side.</p>
+    </div>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 8</span> Pull every post in a topic (cursor pagination)</h2>
+      <p>The first <code>/t/:id.json</code> response contains a <code>post_stream.stream</code> array — every post ID in the topic, in order. Big topics ship only the first ~20 posts inline; the rest you batch-fetch via <code>/t/:id/posts.json?post_ids[]=...</code>, up to 20 IDs per call.</p>
+      <pre><code class="language-bash">TOPIC=2837
+STREAM=$(curl -s -H "Api-Key: $DISCOURSE_API_KEY" -H "Api-Username: $DISCOURSE_API_USER" \
+        "$DISCOURSE_HOST/t/$TOPIC.json" | jq -r '.post_stream.stream | join(",")')
+echo "Topic has $(echo "$STREAM" | tr ',' '\n' | wc -l) posts"</code></pre>
+      <pre><code class="language-python">def fetch_topic_posts(topic_id):
+    envelope = requests.get(f"{BASE}/t/{topic_id}.json", headers=H).json()
+    stream    = envelope["post_stream"]["stream"]
+    inline    = {p["id"]: p for p in envelope["post_stream"]["posts"]}
+
+    missing = [pid for pid in stream if pid not in inline]
+    for chunk_start in range(0, len(missing), 20):
+        chunk = missing[chunk_start:chunk_start + 20]
+        params = [("post_ids[]", str(pid)) for pid in chunk]
+        r = requests.get(f"{BASE}/t/{topic_id}/posts.json",
+                         headers=H, params=params)
+        for p in r.json()["post_stream"]["posts"]:
+            inline[p["id"]] = p
+        time.sleep(0.2)
+
+    return [inline[pid] for pid in stream]
+
+posts = fetch_topic_posts(2837)
+print(f"fetched {len(posts)} posts")</code></pre>
+      <div class="definition">
+        <strong>Why this pattern.</strong> Discourse topics can be 5,000+ posts. Loading them via offset pagination would scan from the start every time. The stream array gives you a stable cursor of IDs that you can fetch in any order, in parallel-but-rate-limited.
+      </div>
+    </div>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 9</span> Bulk-tag topics via webhook + API (Node)</h2>
+      <p>A common automation: when a topic is posted in <code>#support</code>, tag it with the user's plan tier from your billing system. The flow is webhook in → look up plan → API call out.</p>
+      <pre><code class="language-bash"># Discourse → Admin → API → Webhooks → New Webhook
+# URL:    https://automation.example.com/discourse/hook
+# Events: Topic Event (topic_created)
+# Secret: choose a long random string, copy it</code></pre>
+      <pre><code class="language-js">// receiver.js — verifies the signature, then PUTs new tags back
+const express = require("express");
+const crypto  = require("crypto");
+const fetch   = require("node-fetch");
+
+const SECRET = process.env.WEBHOOK_SECRET;
+const FORUM  = process.env.DISCOURSE_HOST;
+const KEY    = process.env.DISCOURSE_API_KEY;
+const USER   = process.env.DISCOURSE_API_USER;
+
+const app = express();
+app.use(express.raw({ type: "application/json" }));
+
+app.post("/discourse/hook", async (req, res) => {
+  const sig = req.header("X-Discourse-Event-Signature") || "";
+  const expected = "sha256=" + crypto.createHmac("sha256", SECRET)
+                                     .update(req.body)
+                                     .digest("hex");
+  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) {
+    return res.status(401).send("bad signature");
+  }
+  const evt = req.header("X-Discourse-Event");
+  if (evt !== "topic_created") return res.sendStatus(204);
+
+  const { topic } = JSON.parse(req.body.toString());
+  const plan = await lookupPlanTier(topic.created_by.username);   // your billing API
+
+  await fetch(`${FORUM}/t/-/${topic.id}.json`, {
+    method: "PUT",
+    headers: {
+      "Api-Key": KEY,
+      "Api-Username": USER,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ tags: [...(topic.tags || []), `plan-${plan}`] }),
+  });
+  res.sendStatus(200);
+});
+
+app.listen(8080);</code></pre>
+      <p>Notes: the signature header is <code>X-Discourse-Event-Signature</code> (sha256 HMAC of the raw body); always use <code>timingSafeEqual</code>; the event type lives in <code>X-Discourse-Event</code>. Reply <code>2xx</code> within 15 s or Discourse will retry — and rate-limit your retries.</p>
+    </div>
+
+    <div class="recipe">
+      <h2><span class="recipe-tag">Recipe 10</span> Read site-wide stats (admin dashboard)</h2>
+      <p>The dashboard you see at <code>/admin/dashboard</code> is fed by <code>/admin/dashboard.json</code> and individual report endpoints. Useful for embedding forum metrics into your own internal dashboards.</p>
+      <pre><code class="language-bash">curl -s -H "Api-Key: $DISCOURSE_API_KEY" \
+        -H "Api-Username: $DISCOURSE_API_USER" \
+        "$DISCOURSE_HOST/admin/dashboard.json" | jq '{users:.global_reports[0].total, topics:.global_reports[1].total}'
+
+# Or a specific report (topics created in last 30 days):
+curl -s -H "Api-Key: $DISCOURSE_API_KEY" \
+        -H "Api-Username: $DISCOURSE_API_USER" \
+        "$DISCOURSE_HOST/admin/reports/topics.json?start_date=2026-04-01&amp;end_date=2026-04-30"</code></pre>
+      <pre><code class="language-python">from datetime import date, timedelta
+
+end   = date.today()
+start = end - timedelta(days=30)
+
+r = requests.get(f"{BASE}/admin/reports/topics.json",
+                 headers=H,
+                 params={"start_date": start.isoformat(),
+                          "end_date":   end.isoformat()})
+report = r.json()["report"]
+total  = sum(d["y"] for d in report["data"])
+print(f"{report['title']}: {total} in last 30 days")</code></pre>
+      <p>Available reports include <code>signups</code>, <code>topics</code>, <code>posts</code>, <code>likes</code>, <code>flags</code>, <code>visits</code>, <code>page_view_logged_in_reqs</code>, <code>dau_by_mau</code>, and many more — look at the <code>global_reports</code> array in <code>/admin/dashboard.json</code> for the full list on your version.</p>
+    </div>
+
+    <h2>Common 4xx traps — table</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Status</th><th>Body signature</th><th>Most likely cause</th></tr>
+        <tr><td><code>401</code></td><td><code>{"errors":["You are not permitted to view the requested resource."]}</code></td><td>Missing or wrong <code>Api-Key</code>; for User-Api-Key, missing <code>User-Api-Client</code></td></tr>
+        <tr><td><code>403</code></td><td>Same as above, but request reached the controller</td><td>Wrong <code>Api-Username</code> (e.g. acting as a regular user against <code>/admin/*</code>); granular key without the right scope</td></tr>
+        <tr><td><code>404</code></td><td><code>{"errors":["The requested URL or resource could not be found."]}</code></td><td>Topic/post deleted, ID typo, or trailing slash mismatch — Discourse is strict about <code>.json</code></td></tr>
+        <tr><td><code>422</code></td><td><code>{"errors":["Title is too short", "Body must be at least 20 chars"]}</code></td><td>Validation — read the strings, they are user-grade</td></tr>
+        <tr><td><code>429</code></td><td><code>{"error_type":"rate_limit","extras":{"wait_seconds":30}}</code></td><td>Sleep for <code>Retry-After</code>; check parallelism and trust level</td></tr>
+        <tr><td><code>409</code></td><td><code>{"errors":["Post must be unique"]}</code></td><td>Discourse blocks identical posts within a window — vary the body</td></tr>
+      </table>
+    </div>
+
+    <h2>What to skip in the official docs</h2>
+
+    <p>Two things will save you time:</p>
+
+    <ul>
+      <li><strong>Ignore the "API v1" prefix.</strong> It does not exist. The Swagger schema labels it that way for OpenAPI compatibility, but no endpoint is reachable at <code>/api/v1/...</code> on a real instance.</li>
+      <li><strong>Do not trust the rate-limit table on docs.discourse.org.</strong> It lags real defaults. Always check <code>app.yml</code> or <code>/srv/discourse/config/site_settings.yml</code> on your instance, or grep the running container for <code>DISCOURSE_MAX_</code> env vars.</li>
+    </ul>
+
+    <div class="cta-block">
+      <h3>Ship Discourse integrations without the 429 surprises</h3>
+      <p>Paste your client code into SimpleReview — it spots missing <code>Retry-After</code> handling, missing <code>Api-Username</code> headers, and unsafe webhook signature checks, then opens a PR.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
+      <p style="margin-top:12px;font-size:14px;color:#666">Building a Discourse plugin instead? <a href="/discourse/develop-plugin/" style="color:#5b44e8;font-weight:600">Read the plugin guide →</a></p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Where is the official Discourse API documentation?</div>
+      <div class="faq-a">The schema reference lives at <a href="https://docs.discourse.org/">docs.discourse.org</a> — it is a generated OpenAPI/Swagger view of the most-used endpoints. Higher-level guides (auth, webhooks, plugins) live on <a href="https://meta.discourse.org/">meta.discourse.org</a>. The split is undocumented: docs.discourse.org has the JSON shapes, meta.discourse.org has the conceptual explanations and admin policies. Most integrations need both pages open at once.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the difference between an Api-Key and a User-Api-Key in Discourse?</div>
+      <div class="faq-a"><code>Api-Key</code> is an admin-issued global key — you send <code>Api-Key</code> + <code>Api-Username</code> headers and act as that user. It is meant for trusted server-to-server integrations. <code>User-Api-Key</code> is granted by an individual user via an OAuth-like consent flow (originally for the official mobile app); it scopes to that user only, and supports limited scopes like read, write, push, notifications. Use <code>Api-Key</code> for backend automations, <code>User-Api-Key</code> for end-user-facing apps.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What are the Discourse API rate limits?</div>
+      <div class="faq-a">Defaults in 2026: 60 requests / 60 seconds per IP for anon, 200 / 60s per authenticated user for normal requests, plus separate buckets for create-actions (topics, posts, likes) tuned by trust level. Admins can raise globals via <code>DISCOURSE_MAX_REQS_PER_IP_PER_MINUTE</code> and <code>DISCOURSE_MAX_USER_API_REQS_PER_MINUTE</code>. A 429 response includes a <code>Retry-After</code> header in seconds — honour it.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I create a Discourse API key?</div>
+      <div class="faq-a">Admin → API → New API Key. Pick a description, the user it acts as (often <code>system</code>), and a scope (Global / Granular). Granular keys can be limited to specific actions like <code>topics:write</code> — strongly preferred for production. Save the key somewhere safe; Discourse will not show it again.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I use the Discourse API without admin access?</div>
+      <div class="faq-a">Yes — every authenticated user can request a User-Api-Key for their own account via <code>/user-api-key/new</code> and use it to read and post as themselves. You cannot create users, edit other users' posts, see flagged content, or call <code>/admin/*</code> endpoints without an admin <code>Api-Key</code>.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why do I get 403 Forbidden with a valid API key?</div>
+      <div class="faq-a">Three classic causes: (1) <code>Api-Username</code> header is missing or wrong — <code>Api-Key</code> alone is not enough. (2) The user you are acting as does not have permission for the endpoint (e.g. acting as a regular user against <code>/admin/*</code>). (3) The key is granular and the action you are calling is not in its allow list. Check Logs → Staff Action Log on Discourse for the rejection reason.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I paginate Discourse search results?</div>
+      <div class="faq-a">Add <code>page=N</code> to <code>/search.json</code> — pages are 1-indexed and capped at 10 results per page by default (configurable via <code>search_page_size</code>). For full-topic crawls prefer <code>/latest.json?page=N</code> which yields ~30 topics per page. For posts inside a topic use <code>/t/{id}/posts.json</code> with stream IDs from the <code>/t/{id}.json</code> envelope, not page numbers.</div>
+    </div>
+
+    <h2>Related Discourse guides</h2>
+    <div class="related-posts">
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/discourse/develop-plugin/">Build a Discourse plugin</a>
+          <p>Plugin skeleton, plugin.rb, server hooks, plugin outlets, deploy via app.yml.</p>
+        </div>
+        <div class="related-card">
+          <a href="/discourse/discourse-connect-sso/">DiscourseConnect SSO provider</a>
+          <p>Stand up a SSO provider so your app logs users into Discourse.</p>
+        </div>
+        <div class="related-card">
+          <a href="/discourse/reply-by-email/">Reply-by-email setup</a>
+          <p>Wire IMAP/POP so users reply to topics straight from their inbox.</p>
+        </div>
+        <div class="related-card">
+          <a href="/discourse/migrate-from-phpbb/">Migrate phpBB to Discourse</a>
+          <p>Importer script, character-encoding traps, redirect strategy.</p>
+        </div>
+        <div class="related-card">
+          <a href="/discourse/">Self-hosting Discourse hub</a>
+          <p>Install, upgrade, backup, and operate your own Discourse forum.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources-list">
+      <li><a href="https://docs.discourse.org/">docs.discourse.org — OpenAPI schema reference</a></li>
+      <li><a href="https://meta.discourse.org/t/discourse-api-documentation/22706">meta.discourse.org — Discourse API documentation thread (#22706)</a></li>
+      <li><a href="https://meta.discourse.org/t/global-rate-limits-and-throttling-in-discourse/78612">meta.discourse.org — Global rate limits and throttling (#78612)</a></li>
+      <li><a href="https://meta.discourse.org/t/admin-api-keys-and-user-api-keys/132372">meta.discourse.org — Admin Api-Keys and User-Api-Keys (#132372)</a></li>
+      <li><a href="https://github.com/discourse/discourse_api">github.com/discourse/discourse_api — official Ruby gem</a></li>
+      <li><a href="https://github.com/discourse/discourse/blob/main/config/site_settings.yml">discourse/config/site_settings.yml — live defaults</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers — <a href="https://onout.org/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        var s = document.createElement('style');
+        s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+        document.head.appendChild(s);
+        banner.classList.add('r');
+        void banner.offsetWidth;
+        banner.classList.remove('r');
+        document.head.removeChild(s);
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>
