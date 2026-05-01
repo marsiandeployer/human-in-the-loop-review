@@ -60,6 +60,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [google-2026-content-strategy.md](google-2026-content-strategy.md) | **NEW** Google March 2026 правила: что банят (scaled abuse), что поднимают (Information Gain). Наша стратегия. |
 | [bug-cluster-research.md](bug-cluster-research.md) | **NEW** 30 багов из SO + GitHub, классифицированы по SimpleReview fit и Noxon expertise. Roadmap на 5-10 статей. |
 | [animated-banner-guide.md](animated-banner-guide.md) | Инструкция по созданию анимированных баннеров (cursor→highlight→popup→spinner→PR sidebar) для статей блога и лендингов. Включает формат voiceover JSON (зашитые субтитры для диктора). |
+| [marketplace-cover-banners.md](marketplace-cover-banners.md) | HTML-варианты и правила обложек для маркетплейсов/Kwork: `Проблема -> Работа -> Фикс`, CMS-логотипы, пути `/root/kwork/cover-html/*.html` и `/root/kwork/covers/*.png`. |
 
 ### Workflow: написание SEO-статьи для блога
 
@@ -73,8 +74,86 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 4. **Баннер** — каждая статья должна иметь анимированный `.cap-banner` с `cap-voiceover` JSON внутри (инструкция в `animated-banner-guide.md`)
 5. **CTA** — минимум 2: один сразу после баннера (ext-callout), один в конце статьи (`.cta-block`)
 6. **Meta tags** — `<meta name="keywords">` + `<meta name="description">` + OG-теги
+7. **⛔ Не палить SEO** на видимой странице — никаких "N mo. searches", "KD X", "targeted keyword" в копи. Эти метрики только в коммитах + `docs/keywords/libs/*.md`. Подробности ниже в [Cluster writing playbook](#cluster-writing-playbook).
+
+### Cluster writing playbook (lib hubs + cluster articles)
+
+Применяется когда мы пишем по либе из 38-lib pain-points список (`docs/keywords/libs/_pain-points.md`). Pillar+cluster pattern: 1 hub `/<lib>/` + 5 cluster articles `/<lib>/<slug>/`.
+
+#### Структура
+
+| Тип страницы | Путь | Стиль | Содержит |
+|---|---|---|---|
+| **Hub** | `/<lib>/index.html` | Landing-page как `onout.org/` (а не handbook-style) | Hero + банер + TL;DR + **honest disclaimer callout** + practical guides grid (БЕЗ SEO-цифр) + оригинальный материал хаба (бенчмарки, decision matrix) + production checklist + FAQ + footer |
+| **Cluster article** | `/<lib>/<slug>/index.html` | Article-style (~600-1000 строк HTML) | TL;DR + research-backed разделы + **first-hand артефакт** (рабочий конфиг/код/бенчмарк/CVE PoC) + debug-таблица или decision-matrix + FAQ + cross-link на 4 sibling-статьи + back to hub |
+
+#### Hub — обязательные элементы
+
+1. **Hero** — strong promise (что юзер получит), 2 CTA (главный → most-pain guide; secondary → SimpleReview)
+2. **Анимированный SimpleReview баннер** в hero — мокап админки этой либы на фоне, курсор анимируется на кнопку **Fix It** в sidebar
+3. **TL;DR card** (5 буллетов что есть в хабе)
+4. **Honest disclaimer callout** ([тон как у `simple-review/index.html`](../simple-review/index.html)) — кто мы, чем НЕ являемся (не аффилированы с компанией-разработчиком), приглашение фиксить ошибки на GitHub. Ставится сразу после TL;DR.
+5. **Practical guides grid** (5 cluster cards + 1 SimpleReview card) — без SEO-метрик, только title + plain description
+6. **Оригинальный материал хаба** — то, ради чего форум-юзеры останутся: hardware benchmark table, decision matrix self-host vs cloud, app.yml mental model, production checklist
+7. **FAQ** + FAQPage JSON-LD
+8. **Author byline** (Vibers org) в `Article` JSON-LD + видимая ссылка в footer
+
+#### Cluster article — обязательные элементы
+
+1. **Inline animated banner** — мокап на фоне строго по теме статьи (URL bar = relevant admin URL, highlighted element = relevant feature, sidebar comment = topic-specific), курсор → **Fix It button**. Каждая статья = уникальный мокап, не одинаковый template.
+2. **TL;DR card** (3-5 буллетов)
+3. **Real research** — WebFetch на оф. доки, GitHub source, meta-форумы. Цитировать конкретные имена методов/файлов.
+4. **First-hand артефакт** — обязательно. Без рабочего кода / конфига / бенчмарка / debug-table статья не публикуется.
+5. **Cross-link block** — 4 sibling-статьи + back to hub
+6. **FAQ** (5-7 Q&A) + FAQPage JSON-LD
+7. **Article JSON-LD** с author bylines
+
+#### ⛔ Что НЕ палить на user-facing страницах
+
+- "N mo. searches" / "KD X" / любые метрики поискового объёма
+- "Targeted keyword:" / "SEO score:" / "Vol/KD"
+- "We wrote this to rank for X"
+- AI-template phrasing: "In this comprehensive guide", "Without further ado", "Buckle up", "Let's dive in"
+- Дубль одной и той же структуры через все 5 статей (это паттерн scaled-content abuse, см. [google-2026-content-strategy.md](google-2026-content-strategy.md))
+
+Внутренние трекинги (search vol, KD, target keyword) живут только в:
+- Commit messages
+- `docs/keywords/libs/<slug>.md` per-lib backlogs
+- `docs/keywords/libs/_summary.md`, `_pain-points.md`
+- GitHub issue threads
+
+#### Источник трафика — профильные форумы
+
+Hub-страница = landing для трафика с meta.discourse.org / r/selfhosted / HN / профильных форумов. Эта аудитория мгновенно палит SEO-bait. Поэтому:
+- Honest disclaimer ОБЯЗАТЕЛЬНО (форумные читатели агрессивно проверяют "кто это и зачем")
+- Текст в первом лице ("we tested", "we measured") с реальными артефактами (бенчи, конфиги, скриншоты)
+- Author byline видимый
+- Hub-страница это handbook FOR self-hosters, написанный self-hosters'ами — не SaaS-мaркетинг
+
+#### Cluster execution flow
+
+1. Создать папки `/root/vibers/<lib>/{slug1,slug2,slug3,slug4,slug5}/`
+2. Hub писать самому (по референсу `/root/vibers/discourse/index.html`)
+3. 5 cluster articles запустить параллельно через Agents (каждый агент пишет 1 статью с полным research через WebFetch)
+4. После всех 5 — обновить nginx (regex `^/(...|<lib>)(/|$)` в `/etc/nginx/sites-available/onout.org`)
+5. Live-тест 6 URL → 200 OK
+6. Commit + push с "How to test" в теле, comment на issue #69 с прогрессом
+
+Reference cluster: `/root/vibers/discourse/` (1 hub + 5 articles, написан 2026-05-01).
 | [marker-io-keyword-insights.md](marker-io-keyword-insights.md) | **NEW** Анализ marker.io 4431 KW: топ-кластеры, "free" intent, чего НЕ копировать. |
 | [WIKI.md#seo-intelligence](WIKI.md#seo-intelligence-april-2026) | Google March 2026 Core Update итоги + Claude SEO Prompts methodology |
+
+### Marketplace Cover Banners
+
+Для Kwork и похожих маркетплейсов использовать сохраненный HTML-паттерн из [marketplace-cover-banners.md](marketplace-cover-banners.md).
+
+Текущий удачный формат:
+- `660x440` PNG, без бокового кропа в карточке Kwork.
+- CMS-логотип и название видны сразу.
+- Четкий посыл: `Проблема -> Работа -> Фикс`.
+- Визуальный стиль похож на SimpleReview: браузерная карточка, белый фон, оранжевый CTA, минимум декоративного шума.
+
+Исходники HTML хранятся в `/root/kwork/cover-html/*.html`, финальные PNG — в `/root/kwork/covers/*.png`.
 
 ### Directory Submission Targets (из бэклинков конкурентов, 2026-04-18)
 
@@ -243,6 +322,19 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | `vibe-coding-mistakes-production` | vibe coding mistakes production | Listicle |
 | `vibe-coding-security-risks` | vibe coding security risks | Security |
 | `claude-ai-performance-issues` | claude ai performance issues | Issue guide |
+
+## Multilingual CMS Articles
+
+CMS marketplace hubs use split domains by language. English pages are canonical on `https://onout.org/[cms]/`; Russian pages are canonical on `https://habab.ru/[cms]/` and are served by habab from `/root/vibers/[cms]/index.ru.html`.
+
+Rules for adding or editing multilingual articles:
+
+- Keep canonical, `og:url`, BlogPosting `url`, and BlogPosting `mainEntityOfPage.@id` on the public canonical URL for that language.
+- On EN pages, hreflang `en` and `x-default` point to onout. If RU exists, hreflang `ru` points to habab.
+- On RU pages, hreflang `ru` points to habab, and `en`/`x-default` point to onout.
+- Add every new RU CMS hub to `VIBERS_CMS_PAGES` in `/root/space2/hababru/src/backend/routes/main_routes.py`; do not rely on nginx to serve RU pages from onout.
+- Regenerate `https://onout.org/sitemap.xml` with `timeout 30s scripts/generate-onout-sitemap.py`; nginx serves that file from `/root/vibers/generated/onout-sitemap.xml`.
+- Validate before release with `timeout 30s scripts/lint-cms-hubs.py`; validate production with `timeout 30s scripts/lint-cms-hubs.py --live`.
 
 ## Product Evaluation
 

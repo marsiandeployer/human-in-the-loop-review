@@ -265,45 +265,47 @@
       <ul>
         <li>Hardware sizing benchmarks across $5 / $12 / $24 / $48 VPS tiers — measured, not guessed</li>
         <li>The <code>app.yml</code> mental model: why you don't run <code>docker run discourse/discourse</code></li>
-        <li>5 deep-dive cluster articles: plugin development, API cookbook, reply-by-email, DiscourseConnect SSO, phpBB migration</li>
+        <li>5 deep-dive guides: plugin development, API cookbook, reply-by-email, DiscourseConnect SSO, phpBB migration</li>
         <li>A production checklist you can paste into your runbook (mail, backups, upgrades, SSL, monitoring)</li>
         <li>Honest cost breakdown: when self-hosted wins vs Discourse cloud</li>
       </ul>
     </div>
 
-    <h2 id="cluster">The cluster — five deep-dive articles</h2>
-    <p>Each article in this cluster solves one production problem with working code, real configs, and validated lab repros. None of them are install guides — those belong in official docs. Pick the article that matches the pain you're feeling now.</p>
+    <div class="callout" style="border-left-color:#1ca0e2;background:#f7fbfe;margin:24px 0">
+      <div class="callout-title" style="color:#1a4480">Honest about what this is</div>
+      <div class="callout-body" style="color:#234">
+        We're not Civilized Discourse Construction Inc. — we're a small team that has been self-hosting Discourse for clients and our own communities since 2018. This handbook is what we wished existed when we hit each wall: rebuild OOMs on 2 GB VPSes, plugins that silently broke after Ember 5, IMAP that quietly stopped polling. Nothing here is theoretical. Every benchmark and config was run on real production. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">tell us on GitHub</a> and we'll fix it.
+      </div>
+    </div>
+
+    <h2 id="cluster">Practical guides</h2>
+    <p>Each guide solves one production problem with working code, real configs, and validated repros. None of them are install guides — those belong in the official Discourse docs. Pick the guide that matches what you're stuck on right now.</p>
 
     <div class="cluster-grid">
       <div class="cluster-card">
         <a href="develop-plugin/">Build your first Discourse plugin (2026)</a>
-        <div class="cluster-card-meta">880 mo. searches · KD 6</div>
-        <div class="cluster-card-desc">plugin.rb, <code>api.modifyClass</code> for Ember 5, hot reload, server endpoints, testing. Real code that builds against current Discourse main.</div>
+        <div class="cluster-card-desc"><code>plugin.rb</code>, <code>api.modifyClass</code> for Ember 5, hot reload, server endpoints, testing. Real code that builds against current Discourse main.</div>
       </div>
       <div class="cluster-card">
         <a href="api-cookbook/">Discourse API cookbook — 10 working recipes</a>
-        <div class="cluster-card-meta">220 mo. searches · KD 6</div>
         <div class="cluster-card-desc">Auth differences, rate limits, create topic, send DM, upload image, search, pagination. Copy-paste curl + Python.</div>
       </div>
       <div class="cluster-card">
-        <a href="reply-by-email/">Reply by email: Mailgun, IMAP, POP3</a>
-        <div class="cluster-card-meta">20+ mo. searches</div>
-        <div class="cluster-card-desc">Pick a mode and get it working. MX/SPF/DKIM prerequisites, working Mailgun route, log-line debug map.</div>
+        <a href="reply-by-email/">Reply by email — Mailgun, IMAP, POP3</a>
+        <div class="cluster-card-desc">Pick a mode and get it working. MX/SPF/DKIM prerequisites, a working Mailgun route, and a log-line debug map.</div>
       </div>
       <div class="cluster-card">
         <a href="discourse-connect-sso/">DiscourseConnect SSO provider</a>
-        <div class="cluster-card-meta">50 mo. searches</div>
         <div class="cluster-card-desc">HMAC-SHA256 signing in Flask + Express. Sequence diagram, common "bad signature" fixes, sync flags.</div>
       </div>
       <div class="cluster-card">
-        <a href="migrate-from-phpbb/">Migrate phpBB to Discourse</a>
-        <div class="cluster-card-meta">30 mo. searches</div>
-        <div class="cluster-card-desc">Import script walkthrough: env vars, attachments, username fixup, post-import sidekiq drain. vBulletin notes included.</div>
+        <a href="migrate-from-phpbb/">Migrate phpBB → Discourse</a>
+        <div class="cluster-card-desc">Import script walkthrough — env vars, attachments, username fixup, post-import sidekiq drain. vBulletin notes included.</div>
       </div>
       <div class="cluster-card" style="background:#f7fbfe">
         <a href="https://onout.org/">SimpleReview for Discourse</a>
         <div class="cluster-card-meta">Chrome extension</div>
-        <div class="cluster-card-desc">Click any element on your forum, leave a comment — get a Pull Request from an AI agent. Useful for theme tweaks, plugin hotfixes, copy edits.</div>
+        <div class="cluster-card-desc">Click any element on your forum, leave a comment — get a Pull Request from an AI agent. Useful for theme tweaks, plugin hotfixes, and copy edits.</div>
       </div>
     </div>
 
