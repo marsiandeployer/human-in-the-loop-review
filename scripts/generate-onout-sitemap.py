@@ -27,6 +27,18 @@ CMS_SLUGS = (
     "opencart",
     "shopware",
     "drupal",
+    "woocommerce",
+    "modx",
+    "strapi",
+    "directus",
+    "craft-cms",
+    "statamic",
+    "payload-cms",
+    "umbraco",
+    "nopcommerce",
+    "dnn",
+    "concrete-cms",
+    "typo3",
 )
 RU_CMS_SLUGS = {"bitrix", "webasyst"}
 

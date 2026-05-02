@@ -143,6 +143,18 @@ We ship a SimpleReview module/extension to every major CMS marketplace. Each CMS
 | OpenCart | [/opencart/](https://onout.org/opencart/) | [How to fix OpenCart issues](https://onout.org/opencart/how-to-fix-opencart-issues/) + [Edit OpenCart without a developer](https://onout.org/opencart/edit-opencart-without-developer/) | OpenCart Extension Store |
 | Shopware 6 | [/shopware/](https://onout.org/shopware/) | [How to fix Shopware 6 issues](https://onout.org/shopware/how-to-fix-shopware-6-issues/) | Shopware Store |
 | Drupal 10/11 | [/drupal/](https://onout.org/drupal/) | [How to fix Drupal issues](https://onout.org/drupal/how-to-fix-drupal-issues/) + [Hire Drupal developer or use SimpleReview](https://onout.org/drupal/hire-drupal-developer-or-use-simplereview/) | drupal.org/project/ |
+| WooCommerce | [/woocommerce/](https://onout.org/woocommerce/) | Hub only; deep articles require per-topic research | Woo Marketplace |
+| MODX | [/modx/](https://onout.org/modx/) | Hub only; deep articles require per-topic research | MODX Extras |
+| Strapi | [/strapi/](https://onout.org/strapi/) | Hub only; deep articles require per-topic research | Strapi Marketplace |
+| Directus | [/directus/](https://onout.org/directus/) | Hub only; deep articles require per-topic research | Directus Marketplace |
+| Craft CMS | [/craft-cms/](https://onout.org/craft-cms/) | Hub only; deep articles require per-topic research | Craft Plugin Store |
+| Statamic | [/statamic/](https://onout.org/statamic/) | Hub only; deep articles require per-topic research | Statamic Marketplace |
+| Payload CMS | [/payload-cms/](https://onout.org/payload-cms/) | Hub only; deep articles require per-topic research | Payload plugin ecosystem |
+| Umbraco | [/umbraco/](https://onout.org/umbraco/) | Hub only; deep articles require per-topic research | Umbraco Marketplace |
+| nopCommerce | [/nopcommerce/](https://onout.org/nopcommerce/) | Hub only; deep articles require per-topic research | nopCommerce Marketplace |
+| DNN | [/dnn/](https://onout.org/dnn/) | Hub only; deep articles require per-topic research | DNN Store |
+| Concrete CMS | [/concrete-cms/](https://onout.org/concrete-cms/) | Hub only; deep articles require per-topic research | Concrete CMS Marketplace |
+| TYPO3 | [/typo3/](https://onout.org/typo3/) | Hub only; deep articles require per-topic research | TYPO3 Extension Repository |
 
 ### Language routing and sitemap checks
 
@@ -163,9 +175,9 @@ When adding a translated hub:
 Every `/[cms]/index.html` follows the same composition:
 
 1. **Hero** — H1 with platform-specific value prop + Chrome Web Store CTA
-2. **Animated banner** (28s cycle, `.sc-*` CSS classes) — cursor → extension icon → target element → SimpleReview popup → "Fix it" → recovered state + PR sidebar; auto-restart on scroll-in via IntersectionObserver
+2. **Animated banner** (28s cycle, `.sc-*` CSS classes) — cursor → extension icon → target element → SimpleReview popup → "Fix it" → ready-to-upload site fix; auto-restart on scroll-in via IntersectionObserver
 3. **What SimpleReview can fix** — 8 grid items, platform-specific (theme paths, hooks, language strings, etc.)
-4. **How it works** — 4 steps adapted per platform (auto-detect mechanism, repo connection, click → PR)
+4. **How it works** — 4 steps adapted per platform (auto-detect mechanism, repo/SFTP connection, click → site fix)
 5. **Comparison table** — freelancer/specialist hourly rate vs SimpleReview, 8 rows
 6. **Use cases** — 4 personas (store owners, agencies, freelancers, non-tech)
 7. **FAQ** — 6 Q&A mirrored in `FAQPage` JSON-LD (BlogPosting JSON-LD also present)
@@ -176,7 +188,7 @@ Brand color is platform-specific (PrestaShop pink `#df0067`, Magento orange `#ee
 
 ### Source data + planning
 
-- Keyword research per CMS: [`docs/keywords/*_broad-match_*_2026-04-30.csv`](docs/keywords/) (Semrush exports, 9 CMSs, ~250K total keywords)
+- Keyword research per CMS: [`docs/keywords/*_broad-match_*_2026-04-30.csv`](docs/keywords/) plus WooCommerce 2026-04-23 export where available. New hub-only CMS pages are source-researched first; deep cluster articles wait for Semrush coverage or per-topic manual research.
 - Article backlog: [`docs/keywords/cms-content-backlog-2026-04-30.md`](docs/keywords/cms-content-backlog-2026-04-30.md) (62 articles, Tier 1-3 by KD)
 - CMS cluster articles are published one by one with source research and a page-specific SimpleReview animated banner; do not bulk-generate thin template pages.
 - Master tracker: [Issue #66](https://github.com/marsiandeployer/human-in-the-loop-review/issues/66)

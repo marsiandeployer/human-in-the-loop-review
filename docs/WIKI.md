@@ -11,11 +11,11 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [../SKILL.md](../SKILL.md) | AI Agent skill — client-facing quickstart (English) |
 | [../REVIEW-RUNBOOK.md](../REVIEW-RUNBOOK.md) | Step-by-step review workflow for reviewers |
 | [../CLAUDE.md](../CLAUDE.md) | Claude Code project instructions |
-| [../simple-review/index.html](../simple-review/index.html) | **SimpleReview** — Chrome Extension "Website Feedback & Fix Tool". Click element → Fix It → real PR. Beta, free first fix. Landing at `/simple-review/` |
+| [../simple-review/index.html](../simple-review/index.html) | **SimpleReview** — Chrome Extension "Website Feedback & Fix Tool". Click element → Fix It → code fix that can be uploaded to the site. Beta, free first fix. Landing at `/simple-review/` |
 
 ### SimpleReview — Visual Feedback & Fix Chrome Extension
 
-**Positioning:** "Website Feedback & Fix Tool" — отличие от конкурентов: не просто репортит баг, а чинит (PR).
+**Positioning:** "Website Feedback & Fix Tool" — отличие от конкурентов: не просто репортит баг, а чинит и даёт фикс, который можно залить на сайт.
 
 **Direct competitors (visual feedback tools):**
 
@@ -37,7 +37,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 
 **Полный список (12):** Marker.io, Userback, BugHerd, Usersnap, Ruttl, Pastel, MarkUp.io, Feedbucket, Webvizio, PageProofer, Jam.dev, Bird Eats Bug. → подробные профили в [COMPETITORS.md](COMPETITORS.md).
 
-**Key message:** All of them → ticket. SimpleReview → PR. All paid, SimpleReview free (BYOK).
+**Key message:** All of them → ticket. SimpleReview → site-ready fix. All paid, SimpleReview free (BYOK).
 
 **Alternative-статьи (опубликованы 2026-04-18):** `/blog/markerio-alternative/`, `/blog/bugherd-alternative/`, `/blog/usersnap-alternative/`. Все таргетят low-KD KWs (KD 1-4) + "free X" intent.
 
@@ -59,7 +59,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [topic-research-20260414.xlsx](topic-research-20260414.xlsx) | SEMrush Topic Research — 108 content ideas with volumes, questions, backlinks |
 | [google-2026-content-strategy.md](google-2026-content-strategy.md) | **NEW** Google March 2026 правила: что банят (scaled abuse), что поднимают (Information Gain). Наша стратегия. |
 | [bug-cluster-research.md](bug-cluster-research.md) | **NEW** 30 багов из SO + GitHub, классифицированы по SimpleReview fit и Noxon expertise. Roadmap на 5-10 статей. |
-| [animated-banner-guide.md](animated-banner-guide.md) | Инструкция по созданию анимированных баннеров (cursor→highlight→popup→spinner→PR sidebar) для статей блога и лендингов. Включает формат voiceover JSON (зашитые субтитры для диктора). |
+| [animated-banner-guide.md](animated-banner-guide.md) | Инструкция по созданию анимированных баннеров (cursor→highlight→popup→spinner→ready-to-upload fix sidebar) для статей блога и лендингов. Включает формат voiceover JSON (зашитые субтитры для диктора). |
 | [marketplace-cover-banners.md](marketplace-cover-banners.md) | HTML-варианты и правила обложек для маркетплейсов/Kwork: `Проблема -> Работа -> Фикс`, CMS-логотипы, пути `/root/kwork/cover-html/*.html` и `/root/kwork/covers/*.png`. |
 
 ### Workflow: написание SEO-статьи для блога
@@ -204,7 +204,7 @@ Reference cluster: `/root/vibers/discourse/` (1 hub + 5 articles, написан
 2. **React state/effect bugs в AI-coded apps** — MultiCurrencyWallet (540⭐) expertise
 3. **Web3 wallet/DEX UX bugs** — unifactory, MCW, definance expertise
 
-Каждая статья: 1 конкретный баг + интерактивный live-баннер с демкой бага + наш PR-fix flow + реальная отсылка к коду из Noxon-репо.
+Каждая статья: 1 конкретный баг + интерактивный live-баннер с демкой бага + flow "fix uploaded to site" + реальная отсылка к коду из Noxon-репо.
 
 **Опубликовано в bug-cluster (2026-04-18):**
 - [x] `/blog/react-usestate-not-updating/` — vol ~929k SO views, KD high. С live-баннером (broken counter → SimpleReview → fixed counter)
@@ -379,7 +379,7 @@ Rules for adding or editing multilingual articles:
 
 > **Готовые наборы ассетов для заливки** (разделены по продуктам):
 > - **Vibers** (human-in-the-loop, GitHub App): [listing-assets.md](listing-assets.md)
-> - **SimpleReview** (Chrome Extension, AI → PR): [simple-review-listing-assets.md](simple-review-listing-assets.md)
+> - **SimpleReview** (Chrome Extension, AI → site-ready fix): [simple-review-listing-assets.md](simple-review-listing-assets.md)
 >
 > Внутри каждого — pitch'и всех длин, скриншоты, FAQ, теги, UTM-инструкция.
 
@@ -428,19 +428,51 @@ Rules for adding or editing multilingual articles:
 
 Задача: искать обсуждения конкретных платформ, где владельцы сайтов жалуются на баги, сломанные шаблоны, checkout, mobile layout, forms, custom code и AI/no-code сборки. Это не места для прямого спама "купите SimpleReview"; рабочий формат — полезный ответ, мини-разбор проблемы, раскрытие affiliation и ссылка только когда она реально помогает.
 
-**Наш продукт — SimpleReview.** Главная страница onout.org/ — это лендинг SimpleReview ("Click any issue on your website. Get a code fix."). Chrome extension: кликаешь на проблему на сайте → получаешь code fix (PR-ready). Built-in AI mode, либо BYOK через Claude Code / Codex. Vibers (human-in-the-loop review через GitHub App) — отдельная вторичная линия, в форумных ответах НЕ упоминать, чтобы не размывать сообщение.
+**Наш продукт — SimpleReview.** Главная страница onout.org/ — это лендинг SimpleReview ("Click any issue on your website. Get a code fix."). Chrome extension: кликаешь на проблему на сайте → получаешь code fix, который можно залить на сайт через Git, SFTP/SSH или обычный deploy-flow. Built-in AI mode, либо BYOK через Claude Code / Codex. Vibers (human-in-the-loop review через GitHub App) — отдельная вторичная линия, в форумных ответах НЕ упоминать, чтобы не размывать сообщение.
 
 **Правила выбора ссылки в форумном ответе:**
-- CMS-форум (WordPress, Shopify, OpenCart, PrestaShop, Joomla, Magento, Bitrix, Webflow, Bubble, Squarespace, Wix, Drupal, Shopware, CS-Cart) → CMS-специфичный лендинг: `https://onout.org/<cms>/` (например `/wordpress/`, `/opencart/`, `/prestashop/`, `/joomla/`, `/bitrix/`, `/webflow/`, `/bubble/`)
+- CMS-форум (WordPress, WooCommerce, OpenCart, PrestaShop, Joomla, Magento, Bitrix, MODX, Strapi, Directus, Drupal, Shopware, CS-Cart и т.п.) → CMS-специфичный лендинг: `https://onout.org/<cms>/` (например `/wordpress/`, `/woocommerce/`, `/opencart/`, `/prestashop/`, `/joomla/`, `/bitrix/`)
 - Общий вебмастерский / SEO / hosting / web-dev форум (SitePoint, Habr, Namepros, webhostingdiscussion, lowendtalk, freecodecamp, HTMLForums и т.п.) → главная `https://onout.org/`
 - SimpleReview-специфичный лендинг: `https://onout.org/simple-review/` (когда тема прямо про visual feedback / Marker.io alternatives)
+
+#### CMS announcement links
+
+Использовать эти URL как основной destination для форумных анонсов, marketplace profiles, подписи в профиле и мягких disclosure-ссылок. В анонсах вести на hub `/<cms>/`; deep article ссылать только когда тред реально про конкретный баг/кластер.
+
+UTM-шаблон:
+`?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement`
+
+| CMS / platform | Announcement URL | UTM URL |
+|----------------|------------------|---------|
+| WordPress | https://onout.org/wordpress/ | `https://onout.org/wordpress/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| WooCommerce | https://onout.org/woocommerce/ | `https://onout.org/woocommerce/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| 1C-Bitrix | https://onout.org/bitrix/ | `https://onout.org/bitrix/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Magento / Adobe Commerce | https://onout.org/magento/ | `https://onout.org/magento/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Joomla | https://onout.org/joomla/ | `https://onout.org/joomla/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| PrestaShop | https://onout.org/prestashop/ | `https://onout.org/prestashop/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| CS-Cart | https://onout.org/cs-cart/ | `https://onout.org/cs-cart/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Webasyst / Shop-Script | https://onout.org/webasyst/ | `https://onout.org/webasyst/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| OpenCart | https://onout.org/opencart/ | `https://onout.org/opencart/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Shopware | https://onout.org/shopware/ | `https://onout.org/shopware/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Drupal | https://onout.org/drupal/ | `https://onout.org/drupal/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| MODX | https://onout.org/modx/ | `https://onout.org/modx/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Strapi | https://onout.org/strapi/ | `https://onout.org/strapi/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Directus | https://onout.org/directus/ | `https://onout.org/directus/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Craft CMS | https://onout.org/craft-cms/ | `https://onout.org/craft-cms/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Statamic | https://onout.org/statamic/ | `https://onout.org/statamic/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Payload CMS | https://onout.org/payload-cms/ | `https://onout.org/payload-cms/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Umbraco | https://onout.org/umbraco/ | `https://onout.org/umbraco/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| nopCommerce | https://onout.org/nopcommerce/ | `https://onout.org/nopcommerce/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| DNN | https://onout.org/dnn/ | `https://onout.org/dnn/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Concrete CMS | https://onout.org/concrete-cms/ | `https://onout.org/concrete-cms/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| TYPO3 | https://onout.org/typo3/ | `https://onout.org/typo3/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
 
 Источник из чата: приватная ChatGPT-ссылка `/c/69f30833-8508-8389-a94b-5ab7e00d468c` недоступна без аккаунта/публичного share URL (403). Ниже — сохранённая рабочая версия из открытых источников.
 
 | Платформа | Куда идти | Приоритет | Что можно делать | Ограничения / риск |
 |-----------|-----------|------------|------------------|--------------------|
 | Shopify | https://community.shopify.com/ + гайд Shopify для app marketing: https://shopify.dev/docs/apps/launch/marketing | HIGH | Отвечать на темы про theme bugs, checkout UX, app conflicts, slow pages. Shopify прямо рекомендует создавать ценность в Community forums и предлагать app только если он решает проблему. | Не поднимать старые темы ради промо, не писать "contact me here" без полезного ответа. |
-| Webflow | https://forum.webflow.com/ + guidelines: https://discourse.webflow.com/guidelines | HIGH для SimpleReview | Искать layout/design/CMS/mobile issues, давать конкретный CSS/структурный совет, затем мягко показывать SimpleReview как способ превратить visual bug в fix/PR. Можно отдельный Show & tell, если есть хороший кейс. | Guidelines прямо просят избегать advertising/spam и irrelevant comments. |
+| Webflow | https://forum.webflow.com/ + guidelines: https://discourse.webflow.com/guidelines | HIGH для SimpleReview | Искать layout/design/CMS/mobile issues, давать конкретный CSS/структурный совет, затем мягко показывать SimpleReview как способ превратить visual bug в фикс для сайта. Можно отдельный Show & tell, если есть хороший кейс. | Guidelines прямо просят избегать advertising/spam и irrelevant comments. |
 | Bubble | https://forum.bubble.io/ + guidelines: https://forum.bubble.io/guidelines | HIGH для no-code/AI-shippers | Отвечать на темы "my app broke", responsive issue, workflows/API bugs. Хороший угол: "no-code/AI app before launch sanity check". | Нужны полезные технические ответы, не чистый launch-пост. |
 | Squarespace | https://forum.squarespace.com/ + guidelines: https://forum.squarespace.com/guidelines/ | MEDIUM | Отвечать на advanced customization, CSS, template, responsive bugs. Допустимо упоминать paid/service resource после бесплатной помощи и disclosure. | Forum просит lead with free help first, paid resources second; affiliation нужно указывать каждый раз. |
 | Wix Studio | https://forum.wixstudio.com/ + code of conduct: https://www.wix.com/studio/community/code-of-conduct | MEDIUM/LOW | Только полезные ответы по site/editor issues, без прямой продажи. Лучше использовать как мониторинг болей и source для контента. | Code of Conduct говорит, что community не место для solicitation или commercial self-promotion. |
@@ -471,7 +503,7 @@ This looks like a frontend/regression issue rather than a platform-wide outage.
 I would first check: [1] ..., [2] ..., [3] ...
 
 Disclosure: I work on SimpleReview — a Chrome extension that turns visual bugs
-into a code fix (PR-ready), not just a ticket. If a second pair of eyes would help
+into a site-ready code fix, not just a ticket. If a second pair of eyes would help
 before launch, this is exactly the kind of issue we handle:
 https://onout.org/<cms>/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=platform_forums
 ```

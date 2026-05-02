@@ -4,21 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SimpleReview — Website Feedback & Fix Tool (Chrome Extension)</title>
-  <meta name="description" content="Chrome extension for website feedback. Click any element, leave a comment — the extension sends it to an AI agent that opens a real Pull Request, not just a screenshot.">
+  <meta name="description" content="Chrome extension for website fixes. Click any element, leave a comment — SimpleReview sends it to an AI agent and gives you a fix that can be uploaded to the site.">
   <link rel="canonical" href="https://onout.org/">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:title" content="SimpleReview — Website Feedback & Fix Tool">
-  <meta property="og:description" content="Chrome extension for website feedback. Click any element, send it off — get a real Pull Request from an AI agent. Not just a screenshot tool.">
+  <meta property="og:description" content="Chrome extension for website fixes. Click any element, send it off — get a real fix you can upload to the site. Not just a screenshot tool.">
   <meta property="og:url" content="https://onout.org/">
   <meta property="og:image" content="https://onout.org/vibers/banner400.png">
   <meta property="og:image:width" content="669">
   <meta property="og:image:height" content="462">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="SimpleReview — Website Feedback & Fix Tool">
-  <meta name="twitter:description" content="Turn website feedback into real PRs. Click, comment, fix.">
+  <meta name="twitter:description" content="Turn website feedback into fixes that can be uploaded to the site. Click, comment, fix.">
   <meta name="twitter:image" content="https://onout.org/vibers/banner400.png">
   <!-- Reddit Pixel -->
   <script>!function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js";t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','t2_133sby');rdt('track','PageVisit');</script>
@@ -34,7 +34,7 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "SimpleReview",
-    "description": "Chrome extension for website feedback. Click any element, leave a comment — an AI agent turns it into a real Pull Request.",
+    "description": "Chrome extension for website fixes. Click any element, leave a comment — an AI agent turns it into a fix that can be uploaded to the site.",
     "url": "https://onout.org/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Chrome",
@@ -49,11 +49,11 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {"@type": "Question", "name": "How is SimpleReview different from Marker.io or other feedback tools?", "acceptedAnswer": {"@type": "Answer", "text": "Most feedback tools stop at screenshots and bug reports. SimpleReview turns the issue into a real code fix — a Pull Request, not a ticket."}},
+      {"@type": "Question", "name": "How is SimpleReview different from Marker.io or other feedback tools?", "acceptedAnswer": {"@type": "Answer", "text": "Most feedback tools stop at screenshots and bug reports. SimpleReview turns the issue into a real code fix that can be uploaded to the site."}},
       {"@type": "Question", "name": "Do I need my own AI agent?", "acceptedAnswer": {"@type": "Answer", "text": "Use your own Claude Code or Codex for free. A built-in AI mode is also available with no setup."}},
       {"@type": "Question", "name": "What does the Fix It button do?", "acceptedAnswer": {"@type": "Answer", "text": "It captures the selected element, DOM context, and your comment, then hands the package to your coding agent to generate a fix or patch."}},
       {"@type": "Question", "name": "What kinds of sites does it work on?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview works on any code-accessible site, including React, Vue, Next.js, WordPress, plain HTML/CSS, and legacy codebases. It does not work on closed no-code platforms without file access."}},
-      {"@type": "Question", "name": "What do I get back?", "acceptedAnswer": {"@type": "Answer", "text": "A code fix, not just a screenshot — a patch or PR-ready output produced by your chosen coding agent."}},
+      {"@type": "Question", "name": "What do I get back?", "acceptedAnswer": {"@type": "Answer", "text": "A code fix, not just a screenshot — a patch, direct upload path, or reviewable change produced by your chosen coding agent."}},
       {"@type": "Question", "name": "How much does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "The Chrome extension is free. Use your own Claude Code or Codex for free, or try the optional built-in AI mode."}}
     ]
   }
@@ -422,7 +422,7 @@
     .cta-box {
       margin: 40px 0;
       padding: 32px;
-      background: url('images/cta-bg.jpg') center/cover no-repeat, #1a1a1a;
+      background: url('/simple-review/images/cta-bg.jpg') center/cover no-repeat, #1a1a1a;
       color: #fff;
       border-radius: 8px;
       text-align: center;
@@ -1657,7 +1657,7 @@
         <div class="step-num">4</div>
         <div class="step-content">
           <h3 data-i18n="step4-h3">Get a code fix, not just feedback</h3>
-          <p data-i18n="step4-p">You get a patch or PR-ready output from your coding agent &mdash; not a screenshot, not a ticket. Review and merge on GitHub, or apply to wp-content for WordPress sites.</p>
+          <p data-i18n="step4-p">You get a site-ready fix from your coding agent &mdash; not a screenshot, not a ticket. Upload it through Git, SFTP/SSH, or apply it directly to wp-content for WordPress sites.</p>
         </div>
       </div>
     </div>
@@ -1690,7 +1690,7 @@
           <td class="col-vibers"><span class="check" data-i18n="vs-yes">Yes</span></td>
         </tr>
         <tr>
-          <td data-i18n="vs-row4">Produces a code fix / PR-ready patch</td>
+          <td data-i18n="vs-row4">Produces a site-ready code fix</td>
           <td><span class="cross" data-i18n="vs-no">No</span></td>
           <td class="col-vibers"><span class="check" data-i18n="vs-yes">Yes</span></td>
         </tr>
@@ -1744,7 +1744,7 @@
     <h2 data-i18n="h2-faq">FAQ</h2>
     <div class="faq-item">
       <div class="faq-q" data-i18n="faq-q1">How is SimpleReview different from Marker.io or other feedback tools?</div>
-      <div class="faq-a" data-i18n="faq-a1">Most feedback tools stop at screenshots and bug reports. SimpleReview captures the issue and turns it into a real code fix &mdash; a Pull Request, not a ticket.</div>
+      <div class="faq-a" data-i18n="faq-a1">Most feedback tools stop at screenshots and bug reports. SimpleReview captures the issue and turns it into a real code fix you can upload to the site.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q" data-i18n="faq-q2">Do I need my own AI agent?</div>
@@ -1760,7 +1760,7 @@
     </div>
     <div class="faq-item">
       <div class="faq-q" data-i18n="faq-q5">What do I get back?</div>
-      <div class="faq-a" data-i18n="faq-a5">A code fix, not just a screenshot &mdash; a patch or PR-ready output produced by your chosen coding agent. You stay in control: review, merge, or discard.</div>
+      <div class="faq-a" data-i18n="faq-a5">A code fix, not just a screenshot &mdash; a site-ready patch produced by your chosen coding agent. You stay in control: upload, review, or discard.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q" data-i18n="faq-q6">How much does it cost?</div>
@@ -1793,27 +1793,27 @@ var TAB_DATA = {
     url: 'onout.org/dashboard/',
     desc: 'Example: you ship a SaaS dashboard with revenue stats. A user emails screenshots — a button label is overflowing the KPI card. You don\'t want to open the IDE just for this. (1) Click the broken element, (2) describe it in plain English, (3) send it off.',
     text: "the 'View all transaction details →' button overflows the KPI card width — shorten to 'View details'",
-    caption: '✓ PR #247 merged — button copy fixed in 2 hours',
+    caption: '✓ Fix uploaded — button copy fixed in 2 hours',
     element: 'Selected <span class="kpi-btn">\nsrc/components/dashboard/KPICard.tsx:42',
-    pr:       '📦 PR #247 opened\nfix: prevent kpi button overflow on narrow viewports\nbranch: fix/kpi-button-overflow\n1 file changed',
+    pr:       '🛠 Fix ready\nfix: prevent kpi button overflow on narrow viewports\nupload path: src/components/dashboard/KPICard.tsx\n1 file changed',
     deploy:   '🚀 Deployed to production\nGitHub Pages · just now\n✓ Live on onout.org'
   },
   feature: {
     url: 'onout.org/dashboard/',
-    desc: 'Example: you\'re running an analytics dashboard. Support keeps getting the same ask — "how do I filter transactions by date?" — but nobody opens a proper ticket. (1) Pick the table where the filter belongs, (2) describe it in one line, (3) a PR shows up with the working feature.',
+    desc: 'Example: you\'re running an analytics dashboard. Support keeps getting the same ask — "how do I filter transactions by date?" — but nobody opens a proper ticket. (1) Pick the table where the filter belongs, (2) describe it in one line, (3) the working fix is ready to upload.',
     text: "can we add a search bar here? users keep asking how to filter transactions by date",
-    caption: '✓ PR #248 merged — search filter added to nav',
+    caption: '✓ Fix uploaded — search filter added to nav',
     element: 'Selected <section class="transactions">\nsrc/components/TransactionsTable.tsx',
-    pr:       '📦 PR #248 opened\nfeat: add transaction search + date filter\nbranch: feat/transaction-search\n1 file changed',
+    pr:       '🛠 Fix ready\nfeat: add transaction search + date filter\nupload path: src/components/TransactionsTable.tsx\n1 file changed',
     deploy:   '🚀 Deployed to production\nVercel — build passed · just now\n✓ Live on dashboard.app'
   },
   improve: {
     url: 'onout.org/landing/',
-    desc: 'Example: you have a marketing landing and conversion is flat. The hero feels too generic — you\'ve been meaning to rewrite it for weeks. (1) Click the headline, (2) dictate the tone you want, (3) a PR lands with the new copy ready to A/B test.',
+    desc: 'Example: you have a marketing landing and conversion is flat. The hero feels too generic — you\'ve been meaning to rewrite it for weeks. (1) Click the headline, (2) dictate the tone you want, (3) the new copy is ready to upload and A/B test.',
     text: "headline feels too generic — 'See exactly where your money goes' might convert better",
-    caption: '✓ PR #249 merged — hero copy rewritten, CTR +18%',
+    caption: '✓ Fix uploaded — hero copy rewritten, CTR +18%',
     element: 'Selected <section class="hero"> > h1\nsrc/pages/landing/Hero.tsx',
-    pr:       '📦 PR #249 opened\ncopy: rewrite hero headline for clarity + CTR\nbranch: copy/hero-headline\n1 file changed',
+    pr:       '🛠 Fix ready\ncopy: rewrite hero headline for clarity + CTR\nupload path: src/pages/landing/Hero.tsx\n1 file changed',
     deploy:   '🚀 Deployed to production\nNetlify — build passed · just now\n✓ Live — CTR tracking started'
   },
   wp: {
@@ -2221,7 +2221,7 @@ var ru = {
   'step3-h3': 'Отправить вашему агенту',
   'step3-p':  'Расширение захватывает элемент и DOM-контекст, затем передаёт вашему Claude Code или Codex — бесплатно — для генерации фикса. Или используйте встроенный AI без настройки.',
   'step4-h3': 'Получить код-фикс, а не просто фидбек',
-  'step4-p':  'Вы получаете патч или готовый PR от вашего агента — не скриншот, не тикет. Просматривайте и мёрджите на GitHub, или применяйте к wp-content для WordPress.',
+  'step4-p':  'Вы получаете фикс, готовый к заливке на сайт — не скриншот и не тикет. Залейте его через Git, SFTP/SSH или примените напрямую в wp-content для WordPress.',
 
   'vs-th-feature':  'Функция',
   'vs-yes':         'Да',
@@ -2229,7 +2229,7 @@ var ru = {
   'vs-row1':        'Визуальный фидбек на живом сайте',
   'vs-row2':        'Скриншот + контекст элемента',
   'vs-row3':        'Создаёт тикет',
-  'vs-row4':        'Генерирует код-фикс / PR-ready патч',
+  'vs-row4':        'Генерирует код-фикс, готовый к заливке на сайт',
   'vs-row5':        'Работает с вашим агентом',
   'vs-row5-sr':     'Да — Claude Code, Codex',
   'vs-row6':        'Встроенный AI (без настройки)',
@@ -2249,7 +2249,7 @@ var ru = {
   'case4-p':  'Вы видите что не так, но не хотите открывать редактор. Кликните на элемент, опишите проблему — ваш агент напишет фикс.',
 
   'faq-q1': 'Чем SimpleReview отличается от Marker.io и других инструментов фидбека?',
-  'faq-a1': 'Большинство инструментов останавливаются на скриншотах и репортах. SimpleReview фиксирует проблему и превращает её в реальный код-фикс — Pull Request, а не тикет.',
+  'faq-a1': 'Большинство инструментов останавливаются на скриншотах и репортах. SimpleReview фиксирует проблему и превращает её в реальный код-фикс, который можно залить на сайт.',
   'faq-q2': 'Нужен ли мне собственный AI-агент?',
   'faq-a2': 'Используйте Claude Code или Codex бесплатно. Также доступен встроенный AI без настройки.',
   'faq-q3': 'Что делает кнопка Fix It?',
@@ -2257,7 +2257,7 @@ var ru = {
   'faq-q4': 'На каких сайтах это работает?',
   'faq-a4': 'SimpleReview работает на любом сайте с доступом к коду: React, Vue, Next.js, WordPress, чистый HTML/CSS и legacy. Не работает на закрытых no-code платформах без доступа к файлам.',
   'faq-q5': 'Что я получу в итоге?',
-  'faq-a5': 'Код-фикс, а не просто скриншот — патч или готовый PR от вашего агента. Вы контролируете результат: просматриваете, мёрджите или отклоняете.',
+  'faq-a5': 'Код-фикс, а не просто скриншот — патч, готовый к заливке на сайт. Вы контролируете результат: заливаете, ревьюите или отклоняете.',
   'faq-q6': 'Сколько это стоит?',
   'faq-a6': 'Расширение Chrome бесплатно. Используйте Claude Code или Codex бесплатно, или попробуйте встроенный AI.',
   'footer-copy': 'SimpleReview превращает фидбек по сайту в код-фиксы. Сделано <a href="/vibers/">Vibers</a>. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Блог</a> &nbsp;|&nbsp; <a href="https://t.me/VibersReview" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a>'
@@ -2265,8 +2265,8 @@ var ru = {
 
 TAB_DESC_RU = {
   bug:     'Пример: у тебя SaaS-дашборд со статистикой. Юзер присылает скрин — подпись кнопки вылезает за карточку. Открывать IDE ради этого не хочется. (1) Кликаешь по сломанному элементу, (2) объясняешь словами что не так, (3) отправляешь.',
-  feature: 'Пример: ты ведёшь аналитический дашборд. Поддержке регулярно пишут — "а можно фильтр транзакций по дате?" — но тикетов никто не заводит. (1) Выбираешь таблицу, где фильтр должен быть, (2) описываешь одной строкой, (3) приходит PR с готовой фичей.',
-  improve: 'Пример: у тебя маркетинговый лендинг, конверсия не растёт. Заголовок в hero слишком общий — давно хочется переписать, но руки не доходят. (1) Кликаешь по заголовку, (2) говоришь какой тон хочешь, (3) получаешь PR с новым текстом, готовым к A/B-тесту.',
+  feature: 'Пример: ты ведёшь аналитический дашборд. Поддержке регулярно пишут — "а можно фильтр транзакций по дате?" — но тикетов никто не заводит. (1) Выбираешь таблицу, где фильтр должен быть, (2) описываешь одной строкой, (3) получаешь готовый фикс для заливки на сайт.',
+  improve: 'Пример: у тебя маркетинговый лендинг, конверсия не растёт. Заголовок в hero слишком общий — давно хочется переписать, но руки не доходят. (1) Кликаешь по заголовку, (2) говоришь какой тон хочешь, (3) получаешь новый текст, готовый к заливке и A/B-тесту.',
   wp:      'Пример: у тебя WooCommerce-магазин. Товар в наличии, но кнопка упорно пишет "Unavailable" — классический баг статуса. Разработчика под рукой нет, GitHub-репо тоже. (1) Кликаешь по кнопке, (2) описываешь проблему, (3) мы правим wp-content и деплоим по FTP/SSH за минуты.'
 };
 

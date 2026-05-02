@@ -23,6 +23,18 @@ CMS_HUBS = {
     "opencart": {"ru": False},
     "shopware": {"ru": False},
     "drupal": {"ru": False},
+    "woocommerce": {"ru": False},
+    "modx": {"ru": False},
+    "strapi": {"ru": False},
+    "directus": {"ru": False},
+    "craft-cms": {"ru": False},
+    "statamic": {"ru": False},
+    "payload-cms": {"ru": False},
+    "umbraco": {"ru": False},
+    "nopcommerce": {"ru": False},
+    "dnn": {"ru": False},
+    "concrete-cms": {"ru": False},
+    "typo3": {"ru": False},
 }
 
 ONOUT = "https://onout.org"

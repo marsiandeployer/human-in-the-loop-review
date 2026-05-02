@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fix Directus extensions and Studio workflows without blind edits — SimpleReview for Directus</title>
+  <meta name="description" content="Click the broken interface, module, operation, or Studio field. SimpleReview reads extension code and Directus configuration, then prepares the smallest sa">
+  <meta name="keywords" content="Directus SimpleReview, fix Directus site, Directus developer, Directus Marketplace">
+  <link rel="canonical" href="https://onout.org/directus/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Fix Directus extensions and Studio workflows without blind edits">
+  <meta property="og:description" content="Click the broken interface, module, operation, or Studio field. SimpleReview reads extension code and Directus configuration, then prepares the smallest safe fix for your Directus project.">
+  <meta property="og:url" content="https://onout.org/directus/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fix Directus extensions and Studio workflows without blind edits">
+  <meta name="twitter:description" content="Click the broken interface, module, operation, or Studio field. SimpleReview reads extension code and Directus configuration, then prepares the smallest safe fix for your Directus project.">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <link rel="alternate" hreflang="en" href="https://onout.org/directus/">
+  <link rel="alternate" hreflang="x-default" href="https://onout.org/directus/">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "inLanguage": "en",
+    "headline": "Fix Directus extensions and Studio workflows without blind edits",
+    "description": "Click the broken interface, module, operation, or Studio field. SimpleReview reads extension code and Directus configuration, then prepares the smallest safe fix for your Directus project.",
+    "url": "https://onout.org/directus/",
+    "datePublished": "2026-05-02",
+    "dateModified": "2026-05-02",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/directus/" },
+    "citation": ["https://docs.directus.io/user-guide/marketplace/overview", "https://docs.directus.io/guides/extensions", "https://directus.io/extensions"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","inLanguage":"en","mainEntity":[{"@type":"Question","name":"Can SimpleReview edit Directus safely?","acceptedAnswer":{"@type":"Answer","text":"Yes for narrow file-level edits in extensions/interfaces/, extensions/modules/, extensions/operations/, schema snapshots, flows. For schema migrations, permission models, data integrity, custom auth, and API security, use Vibers human review before merge."}},
+      {"@type":"Question","name":"Where should announcements for Directus point?","acceptedAnswer":{"@type":"Answer","text":"Use this hub, https://onout.org/directus/, as the forum and marketplace announcement URL. Deep guides should only be linked when answering a specific technical problem."}},
+      {"@type":"Question","name":"Does this replace a Directus developer?","acceptedAnswer":{"@type":"Answer","text":"No. It removes the waiting time for small template, copy, UI, and documentation fixes. Complex engineering still needs a specialist and human review."}},
+      {"@type":"Question","name":"How does the site fix workflow work?","acceptedAnswer":{"@type":"Answer","text":"Connect Git or SFTP/SSH, click the problem in the browser, describe the change, and let SimpleReview draft a focused fix that can be uploaded to the site or reviewed first."}}]}
+  </script>
+  <style>
+    *{box-sizing:border-box}html{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-text-size-adjust:100%}body{margin:0;background:#fff;color:#1a1a1a;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}a{color:#6644ff;text-decoration:none}a:hover{text-decoration:underline}code{background:#f1f1f1;border-radius:4px;padding:1px 5px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em;overflow-wrap:anywhere}.page{max-width:900px;margin:0 auto;padding:24px 32px 48px}.site-nav{font-size:13px;color:#888;margin-bottom:32px}.site-nav a{color:#888;border-bottom:1px solid #ddd}.hero{border-bottom:2px solid #1a1a1a;padding:28px 0 32px;margin-bottom:32px}.hero-badge{display:inline-flex;align-items:center;gap:8px;color:#6644ff;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}.hero-badge:before{content:"";width:7px;height:7px;border-radius:50%;background:#6644ff}h1{font-size:48px;line-height:1.05;letter-spacing:-.9px;margin:0 0 16px;color:#151515}h2{font-size:29px;line-height:1.18;letter-spacing:-.4px;margin:0 0 16px;color:#151515}h3{font-size:18px;margin:0 0 8px;color:#151515}p{margin:0 0 14px}.hero-sub{font-size:19px;color:#333;max-width:760px;line-height:1.48}.cta-group{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:8px;padding:12px 22px;font-weight:700}.btn-primary{background:#6644ff;color:#fff}.btn-secondary{background:#fff;color:#151515;border:1px solid #d8d8d8}section{margin:38px 0}.what-fixes{border:1px solid #e8e8e8;border-radius:8px;padding:24px}.fixes-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-top:16px}.fix-item{font-size:15px;color:#333;display:flex;gap:8px}.fix-item:before{content:"->";color:#6644ff;font-weight:800;flex-shrink:0}.steps{display:grid;gap:16px}.step{display:flex;gap:16px;align-items:flex-start;border:1px solid #e8e8e8;border-radius:8px;padding:18px}.step>div:last-child{min-width:0}.step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:#6644ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}.vs-section{background:#fafafa;border:1px solid #e6e6e6;border-radius:8px;padding:24px}.case-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.case-card{border:1px solid #e8e8e8;border-radius:8px;padding:18px}.faq-item{border-bottom:1px solid #e8e8e8;padding:15px 0}.faq-q{font-weight:700;font-size:17px;margin-bottom:6px}.faq-a{color:#444;font-size:15px}.source-list{padding-left:20px}.cta-box{background:#151515;color:#fff;border-radius:8px;padding:30px;text-align:center}.cta-box h2{color:#fff}.cta-box p{color:#ddd}footer{border-top:1px solid #e8e8e8;margin-top:46px;padding-top:22px;color:#888;font-size:13px}
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 34px;box-shadow:0 4px 32px rgba(0,0,0,.18);position:relative}.sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}.sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:block}.sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}.sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px}.sc-ext-icon{width:20px;height:20px;border-radius:4px;animation:extPulse 28s infinite}@keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}13%,100%{box-shadow:none}}.sc-viewport{min-height:380px;position:relative;background:#fff;overflow:hidden}.sc-content-row{position:relative;min-height:380px;overflow:hidden;background:#f6f6f6}.sc-site{padding-right:220px;min-height:380px}.sc-topbar{background:#1d1d1b;color:#fff;font-size:10px;padding:6px 18px;display:flex;justify-content:space-between}.sc-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:12px 18px;display:flex;justify-content:space-between;align-items:center}.sc-logo{font-size:15px;font-weight:900}.sc-logo span{color:#6644ff}.sc-pill{background:#6644ff;color:#fff;border-radius:18px;padding:4px 12px;font-size:11px;font-weight:800}.sc-target{max-width:500px;margin:22px 0 0 28px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;animation:targetSel 28s infinite;outline-offset:3px;position:relative}@keyframes targetSel{0%,21%{outline:none;box-shadow:none}23%,86%{outline:3px solid #ff6b35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none;box-shadow:none}}.sc-target:after{content:"Selected";position:absolute;top:-10px;right:10px;background:#ff6b35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;opacity:0;animation:selBadge 28s infinite}@keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}.sc-target-head{background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 14px;font-size:12px;font-weight:900;color:#151515}.sc-row{display:flex;justify-content:space-between;gap:12px;padding:11px 14px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#3f3f46}.sc-row:last-child{border-bottom:none}.sc-alert{position:absolute;left:28px;top:265px;width:500px;background:#fff7ed;border:1px solid #fb923c;border-left:4px solid #f97316;border-radius:6px;padding:10px 14px;font-size:11px;color:#7c2d12;opacity:0;animation:alertShow 28s infinite}@keyframes alertShow{0%,55%{opacity:0;transform:translateY(8px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}.sc-sidebar{width:205px;background:#f8fafc;border-left:1px solid #e5e7eb;position:absolute;right:0;top:0;bottom:0;z-index:5;padding:11px 10px;animation:sbSlide 28s infinite}@keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}.sc-panel-logo{font-size:12px;font-weight:900;color:#ff6b35;margin-bottom:10px}.sc-card{background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:9px;margin-bottom:8px;font-size:10px;color:#374151;opacity:0}.sc-c1{animation:card1 28s infinite}.sc-c2{animation:card2 28s infinite}.sc-c3{animation:card3 28s infinite}@keyframes card1{0%,57%{opacity:0;transform:translateY(8px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}@keyframes card2{0%,64%{opacity:0;transform:translateY(8px)}68%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}@keyframes card3{0%,71%{opacity:0;transform:translateY(8px)}75%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}.sc-card b{display:block;color:#111827;margin-bottom:3px}.sc-popup{position:absolute;right:420px;top:184px;width:245px;background:#fff;border:1px solid #d7d7d8;border-radius:8px;box-shadow:0 12px 36px rgba(0,0,0,.18);z-index:8;padding:11px;opacity:0;animation:popupShow 28s infinite}@keyframes popupShow{0%,24%{opacity:0;transform:translateY(8px)}26%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}.sc-popup-title{font-size:10px;font-weight:900;color:#6644ff;margin-bottom:7px}.sc-popup-ta{min-height:50px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:5px;padding:8px;font-size:10px;color:#111827;line-height:1.35}.sc-type{display:inline-block;white-space:nowrap;overflow:hidden;border-right:1px solid #111827;max-width:0;animation:typeText 28s infinite steps(42,end)}@keyframes typeText{0%,27%{max-width:0}46%,93%{max-width:220px}96%,100%{max-width:0}}.sc-popup-fix{margin-top:8px;background:#6644ff;color:#fff;border-radius:5px;padding:7px 10px;text-align:center;font-size:10px;font-weight:900}.sc-cursor{position:absolute;width:18px;height:18px;z-index:20;pointer-events:none;left:360px;top:235px;opacity:0;animation:scCur 28s infinite}.sc-cursor:before{content:"";position:absolute;width:0;height:0;border-left:14px solid #111827;border-top:9px solid transparent;border-bottom:9px solid transparent;transform:rotate(-28deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}.sc-cursor:after{content:"";position:absolute;left:5px;top:10px;width:7px;height:12px;background:#111827;transform:rotate(-28deg);border-radius:2px}@keyframes scCur{0%{left:360px;top:235px;opacity:0}2%{left:360px;top:235px;opacity:1}10%{left:695px;top:24px;opacity:1}14%{left:695px;top:24px;opacity:1}20%{left:430px;top:156px;opacity:1}26%{left:180px;top:232px;opacity:1}49%{left:180px;top:304px;opacity:1}74%{left:610px;top:208px;opacity:1}93%{left:610px;top:208px;opacity:1}96%,100%{opacity:0}}.sc-progress{height:4px;background:#2a2a2e}.sc-progress-fill{height:100%;width:0;background:#ff6b35;animation:prog 28s infinite linear}@keyframes prog{0%{width:0}93%{width:100%}96%,100%{width:0}}.sc-caption{background:#111827;color:#e5e7eb;padding:10px 14px;font-size:12px}
+    @media(max-width:760px){.page{padding:18px 18px 42px}h1{font-size:32px}h2{font-size:24px}.hero-sub{font-size:17px}.fixes-grid,.case-grid{grid-template-columns:1fr}.btn{width:100%}.sc-banner{display:none}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <nav class="site-nav"><a href="/vibers/">Vibers</a> &nbsp;/&nbsp; <a href="/simple-review/">SimpleReview</a> &nbsp;/&nbsp; Directus</nav>
+  <header class="hero">
+    <div class="hero-badge">SimpleReview for Directus</div>
+    <h1>Fix Directus extensions and Studio workflows without blind edits</h1>
+    <p class="hero-sub">Click the broken interface, module, operation, or Studio field. SimpleReview reads extension code and Directus configuration, then prepares the smallest safe fix for your Directus project.</p>
+    <div class="cta-group">
+      <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_directus_hub&utm_medium=hero_cta">Get SimpleReview for Chrome</a>
+      <a class="btn btn-secondary" href="/vibers/">Need human review?</a>
+    </div>
+  </header>
+
+  <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated SimpleReview demo for Directus">
+    <div class="sc-chrome">
+      <div class="sc-dots"><span></span><span></span><span></span></div>
+      <div class="sc-url">data.example.com/admin/content/articles</div>
+      <img class="sc-ext-icon" src="../favicon.png" alt="SimpleReview">
+    </div>
+    <div class="sc-viewport">
+      <div class="sc-content-row">
+        <div class="sc-site">
+          <div class="sc-topbar"><span>Directus</span><span>Live site / admin</span></div>
+          <div class="sc-header"><div class="sc-logo">Directus<span>Review</span></div><div class="sc-pill">Connected repo</div></div>
+          <div class="sc-target">
+            <div class="sc-target-head">custom interface missing from Studio</div>
+            <div class="sc-row"><span>Platform path</span><code>extensions/interfaces/</code></div>
+            <div class="sc-row"><span>Issue type</span><span>file-level fix</span></div>
+            <div class="sc-row"><span>Output</span><strong>Site fix</strong></div>
+          </div>
+          <div class="sc-alert"><strong>Risk check:</strong> SimpleReview drafts the small diff; Vibers reviews changes touching schema migrations, permission models, data integrity, custom auth, and API security.</div>
+        </div>
+        <div class="sc-sidebar">
+          <div class="sc-panel-logo">SimpleReview</div>
+          <div class="sc-card sc-c1"><b>Detected Directus</b>Mapped the selected UI to project files.</div>
+          <div class="sc-card sc-c2"><b>Patch scope</b>Keep the diff narrow: copy, template, config, or docs.</div>
+          <div class="sc-card sc-c3"><b>Ready to upload</b>Includes changed files, test notes, and rollback guidance.</div>
+        </div>
+        <div class="sc-popup">
+          <div class="sc-popup-title">Comment to SimpleReview</div>
+          <div class="sc-popup-ta"><span class="sc-type">fix Directus interface registration</span></div>
+          <div class="sc-popup-fix">Fix it</div>
+        </div>
+        <div class="sc-cursor"></div>
+      </div>
+    </div>
+    <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+    <div class="sc-caption">SimpleReview turns a visible Directus problem into a fix you can upload to the site instead of a vague support ticket.</div>
+  </div>
+
+  <section class="what-fixes">
+    <h2>What SimpleReview can fix on Directus</h2>
+    <p>Use this hub as the public announcement URL for forums and directories. It is optimized for Directus admins, data teams, and extension developers; deep technical guides should be linked only when answering a matching problem.</p>
+    <div class="fixes-grid">
+        <div class="fix-item">interface labels</div>
+        <div class="fix-item">module panels</div>
+        <div class="fix-item">flow operation copy</div>
+        <div class="fix-item">extension props</div>
+        <div class="fix-item">schema notes</div>
+        <div class="fix-item">validation text</div>
+        <div class="fix-item">admin UI spacing</div>
+        <div class="fix-item">docs snippets</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div><h3>Open the Directus page or admin screen</h3><p>SimpleReview detects the platform and keeps the task anchored to the real UI the user wants to change.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div><h3>Click the broken element</h3><p>The extension captures the selected context and maps it to likely paths such as <code>extensions/interfaces/, extensions/modules/, extensions/operations/, schema snapshots, flows</code>.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div><h3>Describe the change in plain language</h3><p>The agent drafts a focused diff instead of rewriting unrelated parts of the CMS project.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div><h3>Upload the fix to the site</h3><p>Apply small file-level fixes through Git, SFTP/SSH, or your normal deployment flow; escalate schema migrations, permission models, data integrity, custom auth, and API security to Vibers human review.</p></div></div>
+    </div>
+  </section>
+
+  <section class="vs-section">
+    <h2>Where this fits</h2>
+    <p><strong>Good fit:</strong> small recurring CMS fixes that should become a site update. <strong>Not a fit for unattended AI:</strong> schema migrations, permission models, data integrity, custom auth, and API security. That split keeps the forum promise honest: SimpleReview is a practical tool, not a replacement for senior platform engineering.</p>
+  </section>
+
+  <section class="use-cases">
+    <h2>Use cases</h2>
+    <div class="case-grid">
+      <div class="case-card"><h3>Site owners</h3><p>Fix visible copy, layout, and admin issues without waiting for a maintenance retainer slot.</p></div>
+      <div class="case-card"><h3>Agencies</h3><p>Turn the boring tickets into site-ready fixes so senior developers stay focused on architecture and integration work.</p></div>
+      <div class="case-card"><h3>Plugin and addon developers</h3><p>Use the hub as a support-friendly announcement page for Directus Marketplace users.</p></div>
+      <div class="case-card"><h3>Forum helpers</h3><p>Link this hub for the product overview, then link deep guides only when the thread asks for that specific fix.</p></div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2>FAQ</h2>
+      <div class="faq-item"><div class="faq-q">Can SimpleReview edit Directus safely?</div><div class="faq-a">Yes for narrow file-level edits in extensions/interfaces/, extensions/modules/, extensions/operations/, schema snapshots, flows. For schema migrations, permission models, data integrity, custom auth, and API security, use Vibers human review before merge.</div></div>
+      <div class="faq-item"><div class="faq-q">Where should announcements for Directus point?</div><div class="faq-a">Use this hub, https://onout.org/directus/, as the forum and marketplace announcement URL. Deep guides should only be linked when answering a specific technical problem.</div></div>
+      <div class="faq-item"><div class="faq-q">Does this replace a Directus developer?</div><div class="faq-a">No. It removes the waiting time for small template, copy, UI, and documentation fixes. Complex engineering still needs a specialist and human review.</div></div>
+      <div class="faq-item"><div class="faq-q">How does the site fix workflow work?</div><div class="faq-a">Connect Git or SFTP/SSH, click the problem in the browser, describe the change, and let SimpleReview draft a focused fix that can be uploaded to the site or reviewed first.</div></div>
+  </section>
+
+  <section>
+    <h2>Sources checked for this hub</h2>
+    <ul class="source-list">
+        <li><a href="https://docs.directus.io/user-guide/marketplace/overview" rel="nofollow">Directus Marketplace docs</a></li>
+        <li><a href="https://docs.directus.io/guides/extensions" rel="nofollow">Directus extension guides</a></li>
+        <li><a href="https://directus.io/extensions" rel="nofollow">Directus Extensions Marketplace</a></li>
+    </ul>
+  </section>
+
+  <section class="cta-box">
+    <h2>Send a Directus fix to your site</h2>
+    <p>Use SimpleReview for narrow platform edits that can be uploaded through Git, SFTP/SSH, or your normal deploy flow. Bring Vibers in when the change needs human signoff before production.</p>
+    <div class="cta-group" style="justify-content:center">
+      <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_directus_hub&utm_medium=bottom_cta">Install SimpleReview</a>
+      <a class="btn btn-secondary" href="/vibers/">Get human review</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>SimpleReview for Directus is a product by <a href="/vibers/">Vibers</a>. This hub is the public forum and marketplace announcement target for <a href="https://onout.org/directus/">onout.org/directus/</a>.</p>
+  </footer>
+</main>
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>
