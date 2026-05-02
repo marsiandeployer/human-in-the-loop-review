@@ -1781,7 +1781,7 @@
   </p>
 
   <footer>
-    <p>SimpleReview is a product by <a href="/vibers/">Vibers</a> &mdash; Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Blog</a> &nbsp;|&nbsp; <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a></p>
+    <p data-i18n="footer-copy">SimpleReview turns WordPress feedback into code fixes. Built by <a href="/vibers/">Vibers</a>. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Blog</a> &nbsp;|&nbsp; <a href="https://t.me/VibersReview" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a></p>
   </footer>
   </div><!-- /content-wrap main -->
 
@@ -2137,7 +2137,7 @@ window.addEventListener('hashchange', function() {
 
 // init — set up tab state, but hold the animation until the banner scrolls into view
 var initTab = location.hash.replace('#', '');
-switchTab(TAB_DATA[initTab] ? initTab : 'bug');
+switchTab(TAB_DATA[initTab] ? initTab : 'bug', true);
 
 (function gateAnimOnScroll() {
   var banner = document.querySelector('.demo-banner');
@@ -2182,7 +2182,7 @@ function trackClick(event) {
 var ru = {
   'badge':               'SimpleReview · Chrome Расширение — Ранний доступ',
   'hero-title':          'Кликни на любой баг на сайте. Получи <abbr title="Фикс может быть автоматически залит в GitHub в виде коммита, пулреквеста или напрямую на ваш сервер">код-фикс</abbr>.',
-  'hero-sub':            'Для всех, кто видит проблему, но не хочет разбираться с ней руками.',
+  'hero-sub':            'Для тех, кто видит проблему, но не хочет привлекать программиста для её решения.',
   'cta-download':        'Скачать расширение',
   'cta-primary':         'Получить ранний доступ',
   'cta-secondary':       'Как это работает →',
@@ -2258,7 +2258,8 @@ var ru = {
   'faq-q5': 'Что я получу в итоге?',
   'faq-a5': 'Код-фикс, а не просто скриншот — патч или готовый PR от вашего агента. Вы контролируете результат: просматриваете, мёрджите или отклоняете.',
   'faq-q6': 'Сколько это стоит?',
-  'faq-a6': 'Расширение Chrome бесплатно. Используйте Claude Code или Codex бесплатно, или попробуйте встроенный AI.'
+  'faq-a6': 'Расширение Chrome бесплатно. Используйте Claude Code или Codex бесплатно, или попробуйте встроенный AI.',
+  'footer-copy': 'SimpleReview превращает фидбек по WordPress-сайту в код-фиксы. Сделано <a href="/vibers/">Vibers</a>. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Блог</a> &nbsp;|&nbsp; <a href="https://t.me/VibersReview" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:support@onout.org">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a>'
 };
 
 TAB_DESC_RU = {

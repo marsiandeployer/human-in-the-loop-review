@@ -41,7 +41,7 @@ Cost: ~1-2 days. Target: ship-then-measure.
 | ☐ | shopware | `cost-of-shopware-6-real-numbers` | Cost of Shopware 6 in 2026 — Real Numbers | `cost of shopware 6` | 590 | 16 | KD 16 |
 | ☐ | shopware | `magento-to-shopware-migration-guide` | Magento → Shopware Migration Guide | `magento shopware migration` | 50 | 2 | KD 2-9 — very easy |
 | ☐ | shopware | `shopware-agentur-oder-simplereview` | Shopware Agentur oder SimpleReview? (DE) | `shopware agentur` | 480 | 5 | KD 1-10 — DE market |
-| ☐ | prestashop | `prestashop-stripe-double-charge-fix` | Fix the PrestaShop Stripe Double-Charge Bug | `prestashop stripe double charge` | 880 | 15 | KD 15 — specific bug |
+| ☑ | prestashop | `prestashop-stripe-double-charge-fix` | Fix the PrestaShop Stripe Double-Charge Bug | `prestashop stripe double charge` | 880 | 15 | Published 2026-05-02 with source research + SimpleReview animated banner |
 | ☐ | prestashop | `prestashop-vs-bigcommerce` | PrestaShop vs BigCommerce | `prestashop vs bigcommerce` | 110 | 5 | KD 5 |
 | ☐ | prestashop | `prestashop-vs-wordpress-when-each-wins` | PrestaShop vs WordPress: When Each Wins | `prestashop vs wordpress` | 110 | 3 | KD 3 |
 | ☐ | prestashop | `prestashop-meta-keywords-guide` | PrestaShop Meta Keywords: Are They Still Worth It? | `prestashop meta keywords` | 390 | 11 | KD 11 |

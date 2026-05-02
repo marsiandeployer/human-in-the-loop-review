@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fix the PrestaShop Stripe Double-Charge Bug | SimpleReview</title>
+  <meta name="description" content="PrestaShop Stripe double charge troubleshooting: duplicate orders, webhook plus redirect races, id_cart checks, idempotency keys, and safe PR workflow.">
+  <meta name="keywords" content="prestashop stripe double charge, prestashop duplicate payment, prestashop duplicate order, stripe idempotency prestashop, prestashop checkout stripe">
+  <link rel="canonical" href="https://onout.org/prestashop/prestashop-stripe-double-charge-fix/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Fix the PrestaShop Stripe Double-Charge Bug">
+  <meta property="og:description" content="A practical debugging guide for duplicate PrestaShop Stripe charges and orders, with a SimpleReview PR workflow.">
+  <meta property="og:url" content="https://onout.org/prestashop/prestashop-stripe-double-charge-fix/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fix the PrestaShop Stripe Double-Charge Bug">
+  <meta name="twitter:description" content="Debug duplicate Stripe payments in PrestaShop without guessing.">
+  <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "inLanguage": "en",
+    "headline": "Fix the PrestaShop Stripe Double-Charge Bug",
+    "description": "PrestaShop Stripe double charge troubleshooting: duplicate orders, webhook plus redirect races, id_cart checks, idempotency keys, and safe PR workflow.",
+    "url": "https://onout.org/prestashop/prestashop-stripe-double-charge-fix/",
+    "datePublished": "2026-05-02",
+    "dateModified": "2026-05-02",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/prestashop/prestashop-stripe-double-charge-fix/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "en",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why can a PrestaShop Stripe store show a double charge?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The common causes are duplicate customer submits, a payment module confirming the same cart from both redirect and webhook paths, missing idempotency around Stripe POST calls, or duplicate-looking PrestaShop order references that are not actually the same payment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I refund immediately?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "First compare Stripe payment IDs, PrestaShop order IDs, order_payment rows, and timestamps. If there are two real Stripe charges for one intended order, refund the duplicate. If there is one Stripe charge and two PrestaShop rows, fix the PrestaShop/module logic before refunding."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can SimpleReview fix this automatically?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SimpleReview can draft the narrow PR: disable double submit, add a cart/payment guard, log webhook event IDs, or add idempotency keys in a custom module. Because this touches payment flow, Vibers human review should inspect the PR before production merge."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    html { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: #fff; color: #1a1a1a; font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    a { color: #df0067; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    code { background: #f4f4f5; border-radius: 4px; padding: 1px 5px; font-size: .92em; }
+    pre { overflow-x: auto; background: #111827; color: #f9fafb; border-radius: 8px; padding: 18px; font-size: 13px; line-height: 1.55; }
+    pre code { background: transparent; color: inherit; border-radius: 0; padding: 0; font-size: inherit; }
+    .page { max-width: 920px; margin: 0 auto; padding: 24px 32px 52px; }
+    .site-nav { font-size: 13px; color: #71717a; margin-bottom: 28px; }
+    .site-nav a { color: #71717a; border-bottom: 1px solid #d4d4d8; }
+    .hero { border-bottom: 2px solid #18181b; padding: 18px 0 30px; margin-bottom: 30px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; color: #df0067; font-size: 12px; font-weight: 800; letter-spacing: .9px; text-transform: uppercase; margin-bottom: 12px; }
+    .hero-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #df0067; }
+    h1 { font-size: 48px; line-height: 1.04; letter-spacing: -1px; margin: 0 0 16px; color: #18181b; }
+    h2 { font-size: 29px; line-height: 1.2; margin: 0 0 14px; color: #18181b; }
+    h3 { font-size: 19px; margin: 20px 0 8px; color: #18181b; }
+    p { margin: 0 0 14px; }
+    .lead { font-size: 19px; line-height: 1.5; max-width: 780px; color: #3f3f46; }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; border-radius: 8px; padding: 11px 20px; font-weight: 700; }
+    .btn-primary { background: #df0067; color: #fff; }
+    .btn-primary:hover { background: #b80056; text-decoration: none; }
+    .btn-secondary { background: #fff; color: #18181b; border: 1px solid #d4d4d8; }
+    section { margin: 36px 0; }
+    .summary { background: #fff0f7; border: 1px solid #f7c4dc; border-left: 5px solid #df0067; border-radius: 8px; padding: 20px 22px; }
+    .summary ul, .checklist { margin: 10px 0 0; padding-left: 22px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .card { border: 1px solid #e4e4e7; border-radius: 8px; padding: 18px; background: #fff; }
+    .table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
+    .table th, .table td { text-align: left; padding: 11px 12px; border-bottom: 1px solid #e4e4e7; vertical-align: top; }
+    .table th { border-bottom: 2px solid #18181b; }
+    .warn { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 18px; }
+    .callout { background: #18181b; color: #fff; border-radius: 8px; padding: 26px; }
+    .callout h2 { color: #fff; }
+    .callout p { color: #d4d4d8; }
+    .faq-item { border-bottom: 1px solid #e4e4e7; padding: 14px 0; }
+    footer { border-top: 1px solid #e4e4e7; margin-top: 42px; padding-top: 22px; color: #71717a; font-size: 13px; }
+
+    .sc-banner { background: #0f0f10; border-radius: 12px; overflow: hidden; margin: 0 0 34px; box-shadow: 0 4px 32px rgba(0,0,0,.18); position: relative; }
+    .sc-chrome { background: #e7e7e8; border-bottom: 1px solid #d0d0d2; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
+    .sc-dots { display: flex; gap: 5px; }
+    .sc-dots span { width: 10px; height: 10px; border-radius: 50%; display: block; }
+    .sc-dots span:nth-child(1) { background: #ff5f57; }
+    .sc-dots span:nth-child(2) { background: #ffbd2e; }
+    .sc-dots span:nth-child(3) { background: #28c840; }
+    .sc-url { flex: 1; background: #fff; border: 1px solid #c8c8c8; border-radius: 4px; padding: 4px 12px; font-size: 12px; color: #444; margin: 0 8px; }
+    .sc-ext-icon { width: 20px; height: 20px; border-radius: 4px; animation: extPulse 28s infinite; }
+    @keyframes extPulse { 0%,10%{box-shadow:none} 11.5%{box-shadow:0 0 0 6px rgba(255,107,53,.7)} 13%,100%{box-shadow:none} }
+    .sc-viewport { min-height: 390px; position: relative; background: #fff; overflow: hidden; }
+    .sc-content-row { position: relative; min-height: 390px; overflow: hidden; background: #f6f6f6; }
+    .sc-site { padding: 0 220px 0 0; min-height: 390px; }
+    .sc-ps-topbar { background: #1d1d1b; color: #fff; font-size: 10px; padding: 6px 18px; display: flex; justify-content: space-between; }
+    .sc-ps-header { background: #fff; padding: 12px 18px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: space-between; }
+    .sc-logo { font-size: 15px; font-weight: 800; }
+    .sc-logo span { color: #df0067; }
+    .sc-cart { background: #df0067; color: #fff; border-radius: 18px; padding: 4px 12px; font-size: 11px; font-weight: 700; }
+    .sc-checkout { max-width: 500px; margin: 18px 0 0 28px; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; animation: checkoutSel 28s infinite; outline-offset: 3px; position: relative; }
+    @keyframes checkoutSel { 0%,21%{outline:none;box-shadow:none} 23%,86%{outline:3px solid #ff6b35;box-shadow:0 0 0 4px rgba(255,107,53,.18)} 90%,100%{outline:none;box-shadow:none} }
+    .sc-checkout::after { content: "Selected"; position: absolute; top: -10px; right: 10px; background: #ff6b35; color: #fff; font-size: 8px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; opacity: 0; animation: selBadge 28s infinite; }
+    @keyframes selBadge { 0%,21%{opacity:0} 23%,86%{opacity:1} 90%,100%{opacity:0} }
+    .sc-step-head { background: #fff0f7; border-bottom: 1px solid #f7c4dc; padding: 10px 14px; font-size: 12px; font-weight: 800; color: #9d174d; }
+    .sc-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #e5e7eb; font-size: 11px; color: #3f3f46; }
+    .sc-row:last-child { border-bottom: none; }
+    .sc-pay-btn { background: #635bff; color: #fff; border-radius: 5px; padding: 7px 12px; font-size: 11px; font-weight: 800; animation: payButton 28s infinite; }
+    @keyframes payButton { 0%,82%{opacity:1} 88%,99%{opacity:.3} 100%{opacity:1} }
+    .sc-dup-alert { position: absolute; left: 28px; top: 265px; width: 500px; background: #fff7ed; border: 1px solid #fb923c; border-left: 4px solid #f97316; border-radius: 6px; padding: 10px 14px; font-size: 11px; color: #7c2d12; animation: dupAlert 28s infinite; }
+    @keyframes dupAlert { 0%,55%{opacity:0;transform:translateY(8px)} 61%,93%{opacity:1;transform:translateY(0)} 96%,100%{opacity:0} }
+    .sc-popup { position: absolute; right: 420px; top: 184px; width: 245px; background: #fff; border: 1px solid #d7d7d8; border-radius: 8px; box-shadow: 0 12px 36px rgba(0,0,0,.18); z-index: 8; padding: 11px; opacity: 0; animation: popupShow 28s infinite; }
+    @keyframes popupShow { 0%,24%{opacity:0;transform:translateY(8px)} 26%,93%{opacity:1;transform:translateY(0)} 96%,100%{opacity:0} }
+    .sc-popup-title { font-size: 10px; font-weight: 800; color: #df0067; margin-bottom: 7px; }
+    .sc-popup-ta { min-height: 50px; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 5px; padding: 8px; font-size: 10px; color: #111827; line-height: 1.35; }
+    .sc-type { display: inline-block; white-space: nowrap; overflow: hidden; border-right: 1px solid #111827; max-width: 0; animation: typeText 28s infinite steps(44,end); }
+    @keyframes typeText { 0%,27%{max-width:0} 46%,93%{max-width:220px} 96%,100%{max-width:0} }
+    .sc-popup-fix { margin-top: 8px; background: #df0067; color: #fff; border-radius: 5px; padding: 7px 10px; text-align: center; font-size: 10px; font-weight: 800; }
+    .sc-sidebar { width: 205px; background: #f8fafc; border-left: 1px solid #e5e7eb; position: absolute; right: 0; top: 0; bottom: 0; z-index: 5; padding: 11px 10px; animation: sbSlide 28s infinite; }
+    @keyframes sbSlide { 0%,11%{transform:translateX(100%);opacity:0} 14%,93%{transform:translateX(0);opacity:1} 96%,100%{transform:translateX(100%);opacity:0} }
+    .sc-panel-logo { font-size: 12px; font-weight: 900; color: #ff6b35; margin-bottom: 10px; }
+    .sc-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 9px; margin-bottom: 8px; font-size: 10px; color: #374151; opacity: 0; }
+    .sc-c1 { animation: card1 28s infinite; }
+    .sc-c2 { animation: card2 28s infinite; }
+    .sc-c3 { animation: card3 28s infinite; }
+    @keyframes card1 { 0%,57%{opacity:0;transform:translateY(8px)} 61%,93%{opacity:1;transform:translateY(0)} 96%,100%{opacity:0} }
+    @keyframes card2 { 0%,64%{opacity:0;transform:translateY(8px)} 68%,93%{opacity:1;transform:translateY(0)} 96%,100%{opacity:0} }
+    @keyframes card3 { 0%,71%{opacity:0;transform:translateY(8px)} 75%,93%{opacity:1;transform:translateY(0)} 96%,100%{opacity:0} }
+    .sc-card b { display: block; color: #111827; margin-bottom: 3px; }
+    .sc-cursor { position: absolute; width: 18px; height: 18px; z-index: 20; pointer-events: none; left: 360px; top: 235px; opacity: 0; animation: scCur 28s infinite; }
+    .sc-cursor::before { content: ""; position: absolute; width: 0; height: 0; border-left: 14px solid #111827; border-top: 9px solid transparent; border-bottom: 9px solid transparent; transform: rotate(-28deg); filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+    .sc-cursor::after { content: ""; position: absolute; left: 5px; top: 10px; width: 7px; height: 12px; background: #111827; transform: rotate(-28deg); border-radius: 2px; }
+    @keyframes scCur {
+      0% { left: 360px; top: 235px; opacity: 0; }
+      2% { left: 360px; top: 235px; opacity: 1; }
+      10% { left: 695px; top: 24px; opacity: 1; }
+      14% { left: 695px; top: 24px; opacity: 1; }
+      20% { left: 435px; top: 158px; opacity: 1; }
+      26% { left: 180px; top: 232px; opacity: 1; }
+      49% { left: 180px; top: 304px; opacity: 1; }
+      74% { left: 610px; top: 208px; opacity: 1; }
+      93% { left: 610px; top: 208px; opacity: 1; }
+      96%,100% { opacity: 0; }
+    }
+    .sc-progress { height: 4px; background: #2a2a2e; }
+    .sc-progress-fill { height: 100%; width: 0; background: #ff6b35; animation: prog 28s infinite linear; }
+    @keyframes prog { 0%{width:0} 93%{width:100%} 96%,100%{width:0} }
+    .sc-caption { background: #111827; color: #e5e7eb; padding: 10px 14px; font-size: 12px; }
+
+    @media (max-width: 760px) {
+      .page { padding: 18px 18px 42px; }
+      h1 { font-size: 34px; }
+      h2 { font-size: 24px; }
+      .lead { font-size: 17px; }
+      .grid { grid-template-columns: 1fr; }
+      .btn { width: 100%; }
+      .sc-banner { display: none; }
+    }
+  </style>
+</head>
+<body>
+<main class="page">
+  <nav class="site-nav"><a href="/vibers/">Vibers</a> / <a href="/simple-review/">SimpleReview</a> / <a href="/prestashop/">PrestaShop</a></nav>
+
+  <header class="hero">
+    <div class="hero-badge">PrestaShop Stripe troubleshooting</div>
+    <h1>Fix the PrestaShop Stripe Double-Charge Bug</h1>
+    <p class="lead">A real double charge is a payment incident, not an SEO topic. This guide starts from the payment path: Stripe event IDs, PrestaShop carts, <code>order_payment</code> rows, webhook delivery, redirect confirmation, and the exact guardrails a safe PR should add.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_prestashop_stripe_double_charge&utm_medium=hero_cta">Open SimpleReview</a>
+      <a class="btn btn-secondary" href="/prestashop/how-to-fix-prestashop-issues/">Read the PrestaShop fix guide</a>
+    </div>
+  </header>
+
+  <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated SimpleReview demo fixing duplicate PrestaShop Stripe order creation">
+    <div class="sc-chrome">
+      <div class="sc-dots"><span></span><span></span><span></span></div>
+      <div class="sc-url">store.example.com/order</div>
+      <img class="sc-ext-icon" src="../../favicon.png" alt="SimpleReview">
+    </div>
+    <div class="sc-viewport">
+      <div class="sc-content-row">
+        <div class="sc-site">
+          <div class="sc-ps-topbar"><span>PrestaShop 8.1</span><span>Customer checkout</span></div>
+          <div class="sc-ps-header"><div class="sc-logo">demo<span>shop</span></div><div class="sc-cart">Cart $128.00</div></div>
+          <div class="sc-checkout">
+            <div class="sc-step-head">Stripe payment</div>
+            <div class="sc-row"><span>Cart ID</span><strong>#41892</strong></div>
+            <div class="sc-row"><span>Payment intent</span><code>pi_3P...A2</code></div>
+            <div class="sc-row"><span>Webhook</span><span>payment_intent.succeeded received twice</span></div>
+            <div class="sc-row"><span>Customer action</span><div class="sc-pay-btn">Place order</div></div>
+          </div>
+          <div class="sc-dup-alert"><strong>Risk found:</strong> redirect and webhook can both call <code>validateOrder()</code> for cart #41892.</div>
+        </div>
+        <div class="sc-sidebar">
+          <div class="sc-panel-logo">SimpleReview</div>
+          <div class="sc-card sc-c1"><b>PrestaShop module scan</b>Found Stripe confirmation in <code>modules/stripe_official/</code>.</div>
+          <div class="sc-card sc-c2"><b>Duplicate guard</b>Add cart plus payment-intent lock before <code>validateOrder()</code>.</div>
+          <div class="sc-card sc-c3"><b>PR ready</b>Logs event ID, blocks double submit, adds rollback note.</div>
+        </div>
+        <div class="sc-popup">
+          <div class="sc-popup-title">Comment to SimpleReview</div>
+          <div class="sc-popup-ta"><span class="sc-type">Prevent duplicate Stripe order creation</span></div>
+          <div class="sc-popup-fix">Fix it</div>
+        </div>
+        <div class="sc-cursor"></div>
+      </div>
+    </div>
+    <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+    <div class="sc-caption">SimpleReview selects the risky checkout path, adds a duplicate-payment guard, and opens a PR for human review before production.</div>
+  </div>
+
+  <section class="summary">
+    <h2>Short answer</h2>
+    <p>If a PrestaShop Stripe customer reports a double charge, do not start by guessing. First decide whether you have two real Stripe charges, one Stripe charge with duplicate PrestaShop records, or duplicate-looking order references caused by PrestaShop order splitting or race conditions.</p>
+    <ul>
+      <li>Compare Stripe payment IDs, PrestaShop order IDs, cart IDs, customer IDs, timestamps, and <code>order_payment</code> rows.</li>
+      <li>Check whether both the customer redirect path and the Stripe webhook path can create or validate the same order.</li>
+      <li>Add idempotency or a local payment lock before creating Stripe objects or calling <code>validateOrder()</code>.</li>
+      <li>Because this touches payments, treat the fix as a PR that gets human review before merge.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Research notes before the fix</h2>
+    <table class="table">
+      <thead><tr><th>Source</th><th>What matters for this bug</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><a href="https://devdocs.prestashop-project.org/9/modules/payment/" rel="nofollow">PrestaShop payment module docs</a></td>
+          <td>External payment modules can receive both a customer return and a server-to-server notification. The docs also emphasize checking <code>id_cart</code>, amount source, and callback signature before order validation.</td>
+        </tr>
+        <tr>
+          <td><a href="https://docs.stripe.com/api/idempotent_requests" rel="nofollow">Stripe idempotent requests</a></td>
+          <td>Stripe supports idempotency keys on POST requests so a retry does not accidentally create a second object or operation.</td>
+        </tr>
+        <tr>
+          <td><a href="https://docs.stripe.com/use-stripe-apps/prestashop/configuration" rel="nofollow">Stripe PrestaShop configuration</a></td>
+          <td>The Stripe PrestaShop module exposes payment-flow, capture, logging, and refund settings that change how the order and charge lifecycle behaves.</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/PrestaShop/PrestaShop/issues/11115" rel="nofollow">PrestaShop duplicate reference issue</a></td>
+          <td>Duplicate-looking orders are not always duplicate payments. One long-running PrestaShop issue documents several different causes, including legitimate split orders and race-condition style behavior.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Step 1: classify the incident</h2>
+    <p>Use the payment provider as the source of truth for money movement, and PrestaShop as the source of truth for order state. The dangerous mistake is refunding or patching before you know which system duplicated what.</p>
+    <table class="table">
+      <thead><tr><th>Pattern</th><th>Likely meaning</th><th>First action</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Two Stripe payment IDs for one intended cart</td>
+          <td>Real duplicate charge or duplicate checkout session.</td>
+          <td>Refund the duplicate after matching amount, customer, and timestamps. Then add idempotency or submit-lock protection.</td>
+        </tr>
+        <tr>
+          <td>One Stripe payment ID, two PrestaShop order rows</td>
+          <td>Order creation or confirmation path duplicated the local record.</td>
+          <td>Inspect module confirmation code, webhook logs, and <code>order_payment</code>.</td>
+        </tr>
+        <tr>
+          <td>Same PrestaShop reference across multiple rows</td>
+          <td>May be split order, address/shipping edge case, invoice race, or a real bug.</td>
+          <td>Check cart contents, carriers, addresses, warehouse settings, and invoice number behavior.</td>
+        </tr>
+        <tr>
+          <td>Pending order in PrestaShop, paid in Stripe</td>
+          <td>Webhook or return handling failed after the charge.</td>
+          <td>Enable module logging, inspect Stripe webhook delivery, and reconcile the order status.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Step 2: inspect the duplicate path</h2>
+    <p>The common integration bug is not "Stripe randomly charged twice." It is usually one of these local paths:</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Double submit</h3>
+        <p>The customer clicks Place Order twice, the browser retries, or a slow checkout leaves the button active. Fix: disable the submit button after the first attempt and re-enable only on a real payment error.</p>
+      </div>
+      <div class="card">
+        <h3>Webhook plus redirect</h3>
+        <p>The redirect controller and webhook handler both call order confirmation logic. Fix: one path creates or validates the order; the other only reconciles status after checking the existing payment lock.</p>
+      </div>
+      <div class="card">
+        <h3>Missing idempotency</h3>
+        <p>A retry creates a second Stripe object. Fix: use an idempotency key derived from the cart and intended payment attempt when the module creates a PaymentIntent or Checkout Session.</p>
+      </div>
+      <div class="card">
+        <h3>Duplicate local display</h3>
+        <p>PrestaShop may show duplicate-looking orders or payments even when only one charge exists. Fix: verify <code>order_payment</code>, <code>orders</code>, and Stripe IDs before touching money.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Step 3: add a safe guard in the module</h2>
+    <p>The exact module path depends on your Stripe connector, but the guard belongs before order validation. The shape is simple: for a cart/payment pair, one process wins; every later callback sees the existing record and exits safely.</p>
+    <pre><code>// Pseudocode for a custom PrestaShop payment guard.
+$cartId = (int) $cart-&gt;id;
+$paymentIntent = $stripePayload['payment_intent'] ?? null;
+
+if (!$paymentIntent) {
+    throw new PaymentException('Missing Stripe payment intent');
+}
+
+if ($this-&gt;paymentAttemptExists($cartId, $paymentIntent)) {
+    $this-&gt;logDuplicateCallback($cartId, $paymentIntent, $stripeEventId);
+    return $this-&gt;redirectToExistingOrder($cartId, $paymentIntent);
+}
+
+$this-&gt;createPaymentAttemptLock($cartId, $paymentIntent, $stripeEventId);
+$this-&gt;validateOrder($cartId, $paidAmountFromStripe, $paymentIntent);</code></pre>
+    <div class="warn">
+      <strong>Important:</strong> this is intentionally pseudocode. Payment modules differ, and a production fix must match the installed Stripe module, PrestaShop version, multishop state, and order flow setting. Do not paste a generic payment patch into a live store.
+    </div>
+  </section>
+
+  <section>
+    <h2>Step 4: what SimpleReview should open as a PR</h2>
+    <p>A good PR for this issue is small and auditable. It should not rewrite checkout. It should add observability and prevent the duplicate path.</p>
+    <ul class="checklist">
+      <li>Add a submit-state guard in the checkout template if the button can be clicked twice.</li>
+      <li>Add a server-side guard keyed by <code>id_cart</code> plus Stripe payment intent or checkout session.</li>
+      <li>Log Stripe event IDs so webhook retries are visible and searchable.</li>
+      <li>Verify callback signatures or tokens before trusting payment status.</li>
+      <li>Use Stripe idempotency keys where the module creates Stripe objects through POST requests.</li>
+      <li>Add a rollback note: how to disable the guard or revert the module override.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to test before production</h2>
+    <ol class="checklist">
+      <li>Run the checkout on staging with Stripe test mode and module extended logging enabled.</li>
+      <li>Double-click Place Order, refresh after submit, and use browser back to retry the payment step.</li>
+      <li>Replay the same webhook event or trigger a retry from Stripe test tooling if available.</li>
+      <li>Confirm there is one order for one intended payment attempt, or one existing order redirect on duplicate callback.</li>
+      <li>Confirm refunds still work from PrestaShop and Stripe dashboards.</li>
+      <li>Test mobile checkout, cached checkout page behavior, and guest checkout.</li>
+    </ol>
+  </section>
+
+  <section class="faq">
+    <h2>FAQ</h2>
+    <div class="faq-item">
+      <h3>Is the Stripe module always responsible?</h3>
+      <p>No. The issue can be theme JavaScript, a custom checkout module, a third-party payment module, webhook retries, multishop configuration, or a PrestaShop order-display edge case. Start from payment IDs and logs.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Should the fix live in an override?</h3>
+      <p>Prefer the smallest maintainable path. If the bug is in custom code, patch custom code. If it is in a vendor module, avoid editing licensed source directly unless you own the maintenance path. A wrapper, hook, or custom module may be safer.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can this be solved only with JavaScript?</h3>
+      <p>No. Disabling the button helps user double-clicks, but webhooks, retries, and server races still need a server-side guard.</p>
+    </div>
+  </section>
+
+  <section class="callout">
+    <h2>Make the payment fix reviewable</h2>
+    <p>Let SimpleReview draft the narrow diff, then use Vibers human review before merging payment code. This is the right split: AI for file discovery and PR scaffolding, human review for money movement.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_prestashop_stripe_double_charge&utm_medium=bottom_cta">Install SimpleReview</a>
+      <a class="btn btn-secondary" href="/vibers/">Get human review</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <ul class="checklist">
+      <li><a href="https://devdocs.prestashop-project.org/9/modules/payment/" rel="nofollow">PrestaShop Developer Documentation: Payment modules</a></li>
+      <li><a href="https://docs.stripe.com/api/idempotent_requests" rel="nofollow">Stripe API Reference: Idempotent requests</a></li>
+      <li><a href="https://docs.stripe.com/use-stripe-apps/prestashop/configuration" rel="nofollow">Stripe Documentation: Install and configure the Stripe module for PrestaShop</a></li>
+      <li><a href="https://github.com/PrestaShop/PrestaShop/issues/11115" rel="nofollow">PrestaShop GitHub issue: duplicate order reference discussion</a></li>
+    </ul>
+  </section>
+
+  <p>More PrestaShop resources: <a href="/prestashop/">PrestaShop hub</a> · <a href="/prestashop/how-to-fix-prestashop-issues/">PrestaShop fix guide</a> · <a href="/simple-review/">SimpleReview</a></p>
+
+  <footer>
+    <p>SimpleReview for PrestaShop is a product by <a href="/vibers/">Vibers</a>. This article was written from a narrow Semrush cluster and source research, not generated as a bulk template page.</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

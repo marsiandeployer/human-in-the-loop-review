@@ -133,6 +133,10 @@ alternative-to-userback, wordpress, woocommerce, indie-hackers
 
 ## 9. Visual assets (пути и публичные URL)
 
+Marketplace/Kwork cover variants for CMS-fix services are documented separately:
+[marketplace-cover-banners.md](marketplace-cover-banners.md). Source HTML files are kept in
+`/root/kwork/cover-html/*.html`; final cover PNGs are in `/root/kwork/covers/*.png`.
+
 | Asset | Public URL | Use |
 |-------|------------|-----|
 | Demo: comment → PR (1) | https://i.wpmix.net/image/photo/image_2026-04-19_18-15-44_1776611748531.png | screenshot: popup on landing |

@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
+Sitemap: https://onout.org/sitemap.xml
 Sitemap: https://onout.org/vibers/sitemap.xml
