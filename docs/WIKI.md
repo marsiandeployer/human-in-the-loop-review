@@ -426,7 +426,14 @@ Rules for adding or editing multilingual articles:
 
 ### Platform-specific forums for community placement (2026-04-30)
 
-Задача: искать обсуждения конкретных платформ, где владельцы сайтов жалуются на баги, сломанные шаблоны, checkout, mobile layout, forms, custom code и AI/no-code сборки. Это не места для прямого спама "купите Vibers"; рабочий формат — полезный ответ, мини-разбор проблемы, раскрытие affiliation и ссылка только когда она реально помогает.
+Задача: искать обсуждения конкретных платформ, где владельцы сайтов жалуются на баги, сломанные шаблоны, checkout, mobile layout, forms, custom code и AI/no-code сборки. Это не места для прямого спама "купите SimpleReview"; рабочий формат — полезный ответ, мини-разбор проблемы, раскрытие affiliation и ссылка только когда она реально помогает.
+
+**Наш продукт — SimpleReview.** Главная страница onout.org/ — это лендинг SimpleReview ("Click any issue on your website. Get a code fix."). Chrome extension: кликаешь на проблему на сайте → получаешь code fix (PR-ready). Built-in AI mode, либо BYOK через Claude Code / Codex. Vibers (human-in-the-loop review через GitHub App) — отдельная вторичная линия, в форумных ответах НЕ упоминать, чтобы не размывать сообщение.
+
+**Правила выбора ссылки в форумном ответе:**
+- CMS-форум (WordPress, Shopify, OpenCart, PrestaShop, Joomla, Magento, Bitrix, Webflow, Bubble, Squarespace, Wix, Drupal, Shopware, CS-Cart) → CMS-специфичный лендинг: `https://onout.org/<cms>/` (например `/wordpress/`, `/opencart/`, `/prestashop/`, `/joomla/`, `/bitrix/`, `/webflow/`, `/bubble/`)
+- Общий вебмастерский / SEO / hosting / web-dev форум (SitePoint, Habr, Namepros, webhostingdiscussion, lowendtalk, freecodecamp, HTMLForums и т.п.) → главная `https://onout.org/`
+- SimpleReview-специфичный лендинг: `https://onout.org/simple-review/` (когда тема прямо про visual feedback / Marker.io alternatives)
 
 Источник из чата: приватная ChatGPT-ссылка `/c/69f30833-8508-8389-a94b-5ab7e00d468c` недоступна без аккаунта/публичного share URL (403). Ниже — сохранённая рабочая версия из открытых источников.
 
@@ -452,23 +459,27 @@ Rules for adding or editing multilingual articles:
 
 1. Найти свежую тему с конкретной болью: broken checkout, mobile layout, form not submitting, plugin conflict, AI/no-code app regression.
 2. Дать бесплатный diagnostic answer: 2-4 шага проверки, возможная причина, короткий код/настройка если очевидно.
-3. Если ссылка уместна, раскрыть связь: "Disclosure: I work on Vibers/SimpleReview." Затем одна ссылка с UTM.
+3. Если ссылка уместна, раскрыть связь: "Disclosure: I work on SimpleReview." Затем одна ссылка с UTM (по правилу выбора лендинга выше).
 4. Не писать одинаковые сообщения в разные темы. Для каждого форума вести 5-10 полезных ответов на 1 ссылку.
 
-#### Шаблон мягкого упоминания
+#### Шаблон мягкого упоминания (SimpleReview)
+
+Для CMS-форума (подставить `<cms>`):
 
 ```
 This looks like a frontend/regression issue rather than a platform-wide outage.
 I would first check: [1] ..., [2] ..., [3] ...
 
-Disclosure: I work on SimpleReview/Vibers. If you want a second pair of eyes on this before launch, this is the kind of issue we review and turn into a concrete fix/PR:
-https://onout.org/simple-review/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=platform_forums
+Disclosure: I work on SimpleReview — a Chrome extension that turns visual bugs
+into a code fix (PR-ready), not just a ticket. If a second pair of eyes would help
+before launch, this is exactly the kind of issue we handle:
+https://onout.org/<cms>/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=platform_forums
 ```
 
-Для Vibers вместо SimpleReview:
+Для общего веб-форума:
 
 ```
-https://onout.org/vibers/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=platform_forums
+https://onout.org/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=platform_forums
 ```
 
 ### Статус размещений
