@@ -322,10 +322,10 @@
             <div class="sc-recovered">
               <span class="sc-rec-success">✓ IMAP poll restored · 12 replies imported</span>
               <div class="sc-rec-h">Latest replies via email</div>
-              <div class="sc-rec-msg"><strong>support@example.com</strong> → topic #4421 — "yes, that fixed it"</div>
-              <div class="sc-rec-msg"><strong>jane@acme.io</strong> → topic #4419 — "thanks for the workaround"</div>
-              <div class="sc-rec-msg"><strong>mike@startup.dev</strong> → topic #4418 — "shipping the patch today"</div>
-              <div class="sc-rec-msg"><strong>support@example.com</strong> → topic #4415 — "closing this — resolved"</div>
+              <div class="sc-rec-msg"><strong>&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;</strong> → topic #4421 — "yes, that fixed it"</div>
+              <div class="sc-rec-msg"><strong>&#106;&#97;&#110;&#101;&#64;&#97;&#99;&#109;&#101;&#46;&#105;&#111;</strong> → topic #4419 — "thanks for the workaround"</div>
+              <div class="sc-rec-msg"><strong>&#109;&#105;&#107;&#101;&#64;&#115;&#116;&#97;&#114;&#116;&#117;&#112;&#46;&#100;&#101;&#118;</strong> → topic #4418 — "shipping the patch today"</div>
+              <div class="sc-rec-msg"><strong>&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;</strong> → topic #4415 — "closing this — resolved"</div>
             </div>
             <div class="sc-popup">
               <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
@@ -406,7 +406,7 @@
 
     <ul>
       <li><strong>Solo blog or small community → Forwarded.</strong> Mailgun free tier handles inbound, you only need one DNS MX record and one route.</li>
-      <li><strong>Shared support inbox where staff already use email → IMAP.</strong> Map <code>support@example.com</code> to a Discourse group; replies show up in both Gmail and the forum.</li>
+      <li><strong>Shared support inbox where staff already use email → IMAP.</strong> Map <code>&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;</code> to a Discourse group; replies show up in both Gmail and the forum.</li>
       <li><strong>Cheap shared host, no inbound webhook capability → POP3 polled mailbox.</strong> Slow but works anywhere mail does.</li>
       <li><strong>Multiple of the above → run them in parallel.</strong> Mailgun for global replies, IMAP for the support group inbox. They don't conflict.</li>
     </ul>
@@ -428,7 +428,7 @@ reply.example.com.    IN  MX  10  mail.example.com.</code></pre>
 
     <h3>2. SPF, DKIM, DMARC on the sending domain</h3>
 
-    <p>Discourse sends notifications <em>from</em> <code>noreply@example.com</code> (or whatever you set as <code>notification_email</code>) and users reply to that. If your sending domain doesn't have SPF/DKIM/DMARC, the reply you generate from Gmail or Outlook will be flagged as spoofed by the recipient's spam filter — even though "the recipient" is your own server.</p>
+    <p>Discourse sends notifications <em>from</em> <code>&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;</code> (or whatever you set as <code>notification_email</code>) and users reply to that. If your sending domain doesn't have SPF/DKIM/DMARC, the reply you generate from Gmail or Outlook will be flagged as spoofed by the recipient's spam filter — even though "the recipient" is your own server.</p>
 
     <pre><code># SPF (TXT on example.com)
 example.com.  IN  TXT  "v=spf1 include:mailgun.org ~all"
@@ -437,7 +437,7 @@ example.com.  IN  TXT  "v=spf1 include:mailgun.org ~all"
 mg._domainkey.example.com.  IN  TXT  "v=DKIM1; k=rsa; p=MIGfMA0GCSqG..."
 
 # DMARC (TXT — start with p=none, tighten later)
-_dmarc.example.com.  IN  TXT  "v=DMARC1; p=none; rua=mailto:dmarc@example.com"</code></pre>
+_dmarc.example.com.  IN  TXT  "v=DMARC1; p=none; rua=mailto:&#100;&#109;&#97;&#114;&#99;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;"</code></pre>
 
     <h3>3. The reply pattern with literal <code>%{reply_key}</code></h3>
 
@@ -458,7 +458,7 @@ reply@%{reply_key}.example.com</code></pre>
 
     <h3>4. <code>notification_email</code> and <code>reply_by_email_address</code> must be different</h3>
 
-    <p>Don't use the same address for both. <code>notification_email</code> is the From: header users see (<code>noreply@example.com</code>). <code>reply_by_email_address</code> is the Reply-To: header (<code>reply+%{reply_key}@reply.example.com</code>). Putting them on the same domain is fine; using the exact same mailbox is not — Discourse will fight itself trying to read its own outgoing notifications.</p>
+    <p>Don't use the same address for both. <code>notification_email</code> is the From: header users see (<code>&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;</code>). <code>reply_by_email_address</code> is the Reply-To: header (<code>reply+%{reply_key}@reply.example.com</code>). Putting them on the same domain is fine; using the exact same mailbox is not — Discourse will fight itself trying to read its own outgoing notifications.</p>
 
     <h2>Setup A — Mailgun forwarded mode (the canonical setup)</h2>
 
@@ -682,7 +682,7 @@ sv status sidekiq         # should be "run"
     </div>
     <div class="faq-item">
       <div class="faq-q">What is the difference between polled mailbox and IMAP in Discourse?</div>
-      <div class="faq-a">Polled mailbox uses POP3 to fetch new replies on a schedule (Sidekiq job runs every minute). It's read-only, simple, and built for the <code>reply_by_email_address</code> pattern. IMAP support is different: it's designed for group inboxes — a shared <code>support@example.com</code> mailbox where staff and forum users see the same threads. IMAP keeps state synced both ways (read/unread, archive, delete), polls more aggressively, and is mapped to a Discourse group, not the global reply system.</div>
+      <div class="faq-a">Polled mailbox uses POP3 to fetch new replies on a schedule (Sidekiq job runs every minute). It's read-only, simple, and built for the <code>reply_by_email_address</code> pattern. IMAP support is different: it's designed for group inboxes — a shared <code>&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;</code> mailbox where staff and forum users see the same threads. IMAP keeps state synced both ways (read/unread, archive, delete), polls more aggressively, and is mapped to a Discourse group, not the global reply system.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Can Discourse use Gmail for reply by email?</div>
