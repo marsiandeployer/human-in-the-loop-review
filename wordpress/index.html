@@ -586,7 +586,7 @@
     </p>
 
     <footer>
-      <p>SimpleReview for WordPress is a product by <a href="/vibers/">Vibers</a> — Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener">onout.org</a> | <a href="/vibers/blog/">Blog</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener">Telegram</a> | <a href="mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;">Email</a> | <a href="/vibers/privacy.html">Privacy</a></p>
+      <p>SimpleReview for WordPress is a product by <a href="/vibers/">Vibers</a> — Human-in-the-loop code review for vibecoded projects. <a href="https://onout.org" target="_blank" rel="noopener">onout.org</a> | <a href="/vibers/blog/">Blog</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener">Telegram</a> | <span class="js-email" data-u="support" data-d="onout.org" >Email</span> | <a href="/vibers/privacy.html">Privacy</a></p>
     </footer>
 
   </div><!-- /content-wrap -->
@@ -620,5 +620,6 @@
   io.observe(banner);
 })();
 </script>
+<script>document.querySelectorAll('span.js-email').forEach(function(e){var u=e.dataset.u,d=e.dataset.d,m=u+'@'+d,a=document.createElement('a');a.href='mailto:'+m;a.textContent=m;a.className=e.className.replace('js-email','').trim();e.parentNode.replaceChild(a,e);});</script>
 </body>
 </html>

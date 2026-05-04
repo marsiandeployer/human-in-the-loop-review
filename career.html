@@ -431,7 +431,7 @@
 
 <footer>
     <div class="container">
-        <p><a href="/vibers/">Human-in-the-loop Review</a> &mdash; by <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> | <a href="mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;">Email</a></p>
+        <p><a href="/vibers/">Human-in-the-loop Review</a> &mdash; by <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> | <a href="https://t.me/onoutnoxon" target="_blank" rel="noopener noreferrer">Telegram</a> | <span class="js-email" data-u="support" data-d="onout.org" >Email</span></p>
     </div>
 </footer>
 
@@ -561,5 +561,6 @@ function setLang(lang) {
 })();
 </script>
 
+<script>document.querySelectorAll('span.js-email').forEach(function(e){var u=e.dataset.u,d=e.dataset.d,m=u+'@'+d,a=document.createElement('a');a.href='mailto:'+m;a.textContent=m;a.className=e.className.replace('js-email','').trim();e.parentNode.replaceChild(a,e);});</script>
 </body>
 </html>

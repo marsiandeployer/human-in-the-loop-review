@@ -65,7 +65,7 @@
 
     <h2>Your Rights</h2>
     <p>You can revoke the App's access at any time: <strong>GitHub Settings → Applications → Installed GitHub Apps → Vibers Review → Uninstall</strong>. This immediately removes all repository access.</p>
-    <p>To request deletion of any stored data, email us at <a href="mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;</a>.</p>
+    <p>To request deletion of any stored data, email us at <span class="js-email" data-u="support" data-d="onout.org" >&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;</span>.</p>
 
     <h2>Security</h2>
     <p>Access to your code is restricted to reviewers working on your specific review. We use webhook signature verification to ensure all GitHub events are authentic. Our server does not store repository clones after the review is complete.</p>
@@ -74,7 +74,8 @@
     <p>We may update this policy. The "Last updated" date at the top reflects the most recent revision. Continued use of the App after changes constitutes acceptance.</p>
 
     <h2>Contact</h2>
-    <p>Questions? Email <a href="mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;</a> or open an issue at <a href="https://github.com/apps/vibers-review">github.com/apps/vibers-review</a>.</p>
+    <p>Questions? Email <span class="js-email" data-u="support" data-d="onout.org" >&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;</span> or open an issue at <a href="https://github.com/apps/vibers-review">github.com/apps/vibers-review</a>.</p>
 </div>
+<script>document.querySelectorAll('span.js-email').forEach(function(e){var u=e.dataset.u,d=e.dataset.d,m=u+'@'+d,a=document.createElement('a');a.href='mailto:'+m;a.textContent=m;a.className=e.className.replace('js-email','').trim();e.parentNode.replaceChild(a,e);});</script>
 </body>
 </html>

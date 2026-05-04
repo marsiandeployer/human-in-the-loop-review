@@ -1781,7 +1781,7 @@
   </p>
 
   <footer>
-    <p data-i18n="footer-copy">SimpleReview turns website feedback into code fixes. Built by <a href="/vibers/">Vibers</a>. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Blog</a> &nbsp;|&nbsp; <a href="https://t.me/VibersReview" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a></p>
+    <p data-i18n="footer-copy">SimpleReview turns website feedback into code fixes. Built by <a href="/vibers/">Vibers</a>. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Blog</a> &nbsp;|&nbsp; <a href="https://t.me/VibersReview" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <span class="js-email" data-u="support" data-d="onout.org" >Email</span> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a></p>
   </footer>
   </div><!-- /content-wrap main -->
 
@@ -2260,7 +2260,7 @@ var ru = {
   'faq-a5': 'Код-фикс, а не просто скриншот — патч, готовый к заливке на сайт. Вы контролируете результат: заливаете, ревьюите или отклоняете.',
   'faq-q6': 'Сколько это стоит?',
   'faq-a6': 'Расширение Chrome бесплатно. Используйте Claude Code или Codex бесплатно, или попробуйте встроенный AI.',
-  'footer-copy': 'SimpleReview превращает фидбек по сайту в код-фиксы. Сделано <a href="/vibers/">Vibers</a>. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Блог</a> &nbsp;|&nbsp; <a href="https://t.me/VibersReview" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <a href="mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#111;&#110;&#111;&#117;&#116;&#46;&#111;&#114;&#103;">Email</a> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a>'
+  'footer-copy': 'SimpleReview превращает фидбек по сайту в код-фиксы. Сделано <a href="/vibers/">Vibers</a>. <a href="https://onout.org" target="_blank" rel="noopener noreferrer">onout.org</a> &nbsp;|&nbsp; <a href="/vibers/blog/">Блог</a> &nbsp;|&nbsp; <a href="https://t.me/VibersReview" target="_blank" rel="noopener noreferrer">Telegram</a> &nbsp;|&nbsp; <span class="js-email" data-u="support" data-d="onout.org" >Email</span> &nbsp;|&nbsp; <a href="/vibers/privacy.html">Privacy</a>'
 };
 
 TAB_DESC_RU = {
@@ -2308,5 +2308,6 @@ function setLang(lang) {
 })();
 </script>
 <script src="https://op.wpmix.net/embed.js" data-app="vibers"></script>
+<script>document.querySelectorAll('span.js-email').forEach(function(e){var u=e.dataset.u,d=e.dataset.d,m=u+'@'+d,a=document.createElement('a');a.href='mailto:'+m;a.textContent=m;a.className=e.className.replace('js-email','').trim();e.parentNode.replaceChild(a,e);});</script>
 </body>
 </html>
