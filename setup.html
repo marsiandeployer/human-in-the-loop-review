@@ -117,6 +117,12 @@
     </div>
     <div class="subtitle">App installed ✓ &nbsp;—&nbsp; Help us review better by sharing a few details. All fields are optional.</div>
 
+    <div id="repos-block" style="display:none;">
+      <label>Repositories to review <span class="opt">pick one or more</span></label>
+      <div id="repos-list" style="border:1px solid #e0e0e0; border-radius:8px; padding:10px 12px; max-height:180px; overflow-y:auto; font-size:14px;"></div>
+      <div class="hint" id="repos-hint"></div>
+    </div>
+
     <label>Brief, spec or materials folder <span class="opt">optional</span></label>
     <input type="url" id="spec_url" placeholder="https://docs.google.com/... or Notion / Confluence link">
     <div class="hint">Google Doc, Notion, Confluence, or a folder link — we'll review code against it</div>
@@ -146,6 +152,42 @@ function getInstallationId() {
   return new URLSearchParams(window.location.search).get('installation_id') || '';
 }
 
+function loadRepos() {
+  const iid = getInstallationId();
+  if (!iid) return;
+  fetch('/github/setup/repos?installation_id=' + encodeURIComponent(iid))
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d || !d.ok) return;
+      const block = document.getElementById('repos-block');
+      const list = document.getElementById('repos-list');
+      const hint = document.getElementById('repos-hint');
+      if (!d.repos || d.repos.length === 0) {
+        list.innerHTML = '<div style="color:#999;">No repositories found for this installation.</div>';
+        block.style.display = 'block';
+        return;
+      }
+      const checked = d.repos.length === 1 ? ' checked' : '';
+      list.innerHTML = d.repos.map(r =>
+        `<label style="display:flex; align-items:center; gap:8px; padding:4px 0; cursor:pointer; font-weight:normal;">
+           <input type="checkbox" class="repo-cb" value="${r}"${checked} style="margin:0; width:auto;">
+           <span style="font-family:ui-monospace,monospace; font-size:13px;">${r}</span>
+         </label>`
+      ).join('');
+      hint.textContent = d.repository_selection === 'all'
+        ? 'App is installed on ALL repos in this account (including future ones). Pick which ones we should review.'
+        : 'Pick which repos we should review against the spec/figma below.';
+      block.style.display = 'block';
+    })
+    .catch(() => {});
+}
+
+function getSelectedRepos() {
+  return Array.from(document.querySelectorAll('.repo-cb:checked')).map(c => c.value);
+}
+
+document.addEventListener('DOMContentLoaded', loadRepos);
+
 function submitSetup() {
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
@@ -156,6 +198,7 @@ function submitSetup() {
     spec_url: document.getElementById('spec_url').value.trim(),
     figma_url: document.getElementById('figma_url').value.trim(),
     telegram: document.getElementById('telegram').value.trim(),
+    selected_repos: getSelectedRepos(),
   };
 
   fetch('/github/setup', {

@@ -366,6 +366,8 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             self._cors_headers()
             self.end_headers()
             self.wfile.write(json.dumps(health).encode())
+        elif self.path.startswith("/github/setup/repos"):
+            self._handle_setup_repos()
         elif self.path.startswith("/click"):
             parsed = urllib.parse.urlparse(self.path)
             params = urllib.parse.parse_qs(parsed.query)
@@ -622,6 +624,53 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _handle_setup_repos(self):
+        """GET /github/setup/repos?installation_id=N — return live repo list for picker."""
+        parsed = urllib.parse.urlparse(self.path)
+        params = urllib.parse.parse_qs(parsed.query)
+        iid_raw = params.get("installation_id", [""])[0]
+        try:
+            iid = int(iid_raw) if iid_raw else 0
+        except (ValueError, TypeError):
+            iid = 0
+
+        if not iid:
+            self.send_response(400)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "installation_id required"}')
+            return
+
+        try:
+            token = get_installation_token(iid)
+            req = urllib.request.Request(
+                "https://api.github.com/installation/repositories?per_page=100",
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Accept": "application/vnd.github+json",
+                    "User-Agent": f"vibers-review-app/{GH_APP_SLUG}",
+                }
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                info = json.loads(resp.read())
+            selection = info.get("repository_selection", "selected")
+            repos = [r["full_name"] for r in info.get("repositories", [])]
+            body = json.dumps({
+                "ok": True,
+                "repository_selection": selection,
+                "repos": repos,
+            }).encode()
+            self.send_response(200)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(body)
+        except Exception as e:
+            print(f"[setup-repos] error iid={iid}: {e}", file=sys.stderr)
+            self.send_response(403)
+            self._cors_headers()
+            self.end_headers()
+            self.wfile.write(b'{"error": "could not fetch repos"}')
+
     def _handle_github_setup(self):
         data, err = self._read_json_body(max_size=5000)
         if err:
@@ -633,23 +682,50 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         except (ValueError, TypeError):
             iid = 0
 
-        # Validate: only accept known installations (verified via webhook)
-        if iid not in _app_installations and str(iid) not in _setup_data:
-            self.send_response(403)
-            self._cors_headers()
-            self.end_headers()
-            self.wfile.write(b'{"error": "unknown installation_id"}')
-            return
+        # Validate: accept known installations (via webhook) OR verify via GitHub API
+        # (webhook may have been missed, or server restarted and lost in-memory state)
+        if iid and iid not in _app_installations and str(iid) not in _setup_data:
+            try:
+                get_installation_token(iid)
+                # Token obtained → real installation of our app. Fetch account info.
+                jwt_token = make_github_app_jwt()
+                req = urllib.request.Request(
+                    f"https://api.github.com/app/installations/{iid}",
+                    headers={
+                        "Authorization": f"Bearer {jwt_token}",
+                        "Accept": "application/vnd.github+json",
+                        "User-Agent": f"vibers-review-app/{GH_APP_SLUG}",
+                    }
+                )
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    info = json.loads(resp.read())
+                account_login = (info.get("account") or {}).get("login", "unknown")
+                _app_installations[iid] = {"account": account_login, "repos": []}
+                _save_installs(_app_installations)
+            except Exception as e:
+                print(f"[setup] reject installation_id={iid}: {e}", file=sys.stderr)
+                self.send_response(403)
+                self._cors_headers()
+                self.end_headers()
+                self.wfile.write(b'{"error": "unknown installation_id"}')
+                return
 
         spec_url = str(data.get("spec_url") or "").strip()[:500]
         figma_url = str(data.get("figma_url") or "").strip()[:500]
         telegram = str(data.get("telegram") or "").strip()[:100]
+
+        selected_repos_raw = data.get("selected_repos") or []
+        if isinstance(selected_repos_raw, list):
+            selected_repos = [str(r).strip()[:200] for r in selected_repos_raw if r][:50]
+        else:
+            selected_repos = []
 
         entry = {
             "installation_id": iid,
             "spec_url": spec_url,
             "figma_url": figma_url,
             "telegram": telegram,
+            "selected_repos": selected_repos,
             "saved_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         }
 
@@ -664,7 +740,9 @@ class FeedbackHandler(BaseHTTPRequestHandler):
 
         # Telegram notification
         parts = [f"📋 **Setup Filled**\n\nAccount: {account}"]
-        if repos:
+        if selected_repos:
+            parts.append(f"Selected repos: {', '.join(selected_repos[:5])}")
+        elif repos:
             parts.append(f"Repos: {', '.join(repos[:3])}")
         if spec_url:
             parts.append(f"Spec: {spec_url}")
@@ -675,7 +753,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
         if not any([spec_url, figma_url, telegram]):
             parts.append("_(skipped all fields)_")
 
-        send_telegram("\n".join(parts))
+        send_telegram("\n".join(parts), TELEGRAM_REVIEW_CHAT_ID)
 
         self.send_response(200)
         self._cors_headers()
@@ -795,7 +873,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             if units:
                 msg += f"\nUnits: {units}"
 
-        send_telegram(msg)
+        send_telegram(msg, TELEGRAM_REVIEW_CHAT_ID)
 
     def _handle_github_webhook(self):
         """Handle GitHub App webhook events."""
@@ -816,14 +894,16 @@ class FeedbackHandler(BaseHTTPRequestHandler):
 
         # Verify webhook signature
         sig = self.headers.get("X-Hub-Signature-256", "")
+        event_hdr = self.headers.get("X-GitHub-Event", "")
         if not verify_github_signature(raw_body, sig):
+            print(f"[webhook] INVALID SIGNATURE event={event_hdr} sig_present={bool(sig)} secret_configured={bool(GH_WEBHOOK_SECRET)}", file=sys.stderr)
             self.send_response(401)
             self._cors_headers()
             self.end_headers()
             self.wfile.write(b'{"error": "invalid signature"}')
             return
 
-        event = self.headers.get("X-GitHub-Event", "")
+        event = event_hdr
 
         try:
             data = json.loads(raw_body) if raw_body else {}
@@ -847,6 +927,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
             action = data.get("action", "")
             installation = data.get("installation", {})
             installation_id = installation.get("id")
+            print(f"[webhook] installation event: action={action} id={installation_id}", file=sys.stderr)
             account = installation.get("account", {}).get("login", "unknown")
             repos = [r["full_name"] for r in data.get("repositories", [])]
 
@@ -889,7 +970,7 @@ class FeedbackHandler(BaseHTTPRequestHandler):
                 else:
                     return  # ignore other sub-actions
 
-                send_telegram(msg)
+                send_telegram(msg, TELEGRAM_REVIEW_CHAT_ID)
             return
 
         if event == "push":
