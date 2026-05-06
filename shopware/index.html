@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fix Shopware 6 Stores Without a €80/hr Symfony Developer — SimpleReview</title>
-  <meta name="description" content="Click any element on your Shopware 6 storefront. SimpleReview reads `custom/plugins/`, knows the Twig storefront overrides and theme inheritance — and opens a Pull Request.">
+  <meta name="description" content="Click any element on your Shopware 6 storefront. SimpleReview reads `custom/plugins/`, knows the Twig storefront overrides and theme inheritance — and prepares a direct site fix.">
   <meta name="keywords" content="fix shopware 6, shopware twig override, shopware plugin simplereview, sw6 storefront customization, shopware store extension">
   <link rel="canonical" href="https://onout.org/shopware/">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
@@ -12,12 +12,12 @@
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Fix Shopware 6 Stores Without a €80/hr Symfony Developer — SimpleReview">
-  <meta property="og:description" content="Click any element on your Shopware 6 storefront. SimpleReview reads custom/plugins/, knows the Twig storefront overrides — and opens a Pull Request.">
+  <meta property="og:description" content="Click any element on your Shopware 6 storefront. SimpleReview reads custom/plugins/, knows the Twig storefront overrides — and prepares a direct site fix.">
   <meta property="og:url" content="https://onout.org/shopware/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fix Shopware 6 Stores Without a €80/hr Symfony Developer — SimpleReview">
-  <meta name="twitter:description" content="Click any element on your Shopware 6 storefront. Get a Pull Request, not a ticket.">
+  <meta name="twitter:description" content="Click any element on your Shopware 6 storefront. Get a direct site fix, not a ticket.">
   <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
@@ -30,7 +30,7 @@
     "@type": "BlogPosting",
     "inLanguage": "en",
     "headline": "Fix Shopware 6 Stores Without a €80/hr Symfony Developer — SimpleReview",
-    "description": "Click any element on your Shopware 6 storefront. SimpleReview reads custom/plugins/, knows the Twig storefront overrides and theme inheritance — and opens a Pull Request.",
+    "description": "Click any element on your Shopware 6 storefront. SimpleReview reads custom/plugins/, knows the Twig storefront overrides and theme inheritance — and prepares a direct site fix.",
     "url": "https://onout.org/shopware/",
     "datePublished": "2026-04-30",
     "dateModified": "2026-04-30",
@@ -51,12 +51,12 @@
     "@type": "FAQPage",
     "inLanguage": "en",
     "mainEntity": [
-      {"@type": "Question", "name": "Can I edit my Shopware 6 store without a developer?", "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic and structural edits — yes. Twig storefront overrides in custom/plugins/[Plugin]/src/Resources/views/storefront/, SCSS theme overrides, snippet JSON files, and config.xml plugin settings. SimpleReview opens a PR for those in seconds. For custom payment integrations, complex Symfony service decorators, and headless API work — pair with Vibers human review."}},
+      {"@type": "Question", "name": "Can I edit my Shopware 6 store without a developer?", "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic and structural edits — yes. Twig storefront overrides in custom/plugins/[Plugin]/src/Resources/views/storefront/, SCSS theme overrides, snippet JSON files, and config.xml plugin settings. SimpleReview prepares a direct site fix for those in seconds. For custom payment integrations, complex Symfony service decorators, and headless API work — pair with Vibers human review."}},
       {"@type": "Question", "name": "How does SimpleReview install on Shopware 6?", "acceptedAnswer": {"@type": "Answer", "text": "Today: install the Chrome Extension and connect your Git repo. Tomorrow: native plugin on the Shopware Store (in approval — usual review cycle 4-8 weeks). Once approved, install via Extensions → My extensions → Upload extension → Activate, then bin/console plugin:refresh && plugin:install."}},
       {"@type": "Question", "name": "Which Shopware versions are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Shopware 6.5 and 6.6 — full support (primary target). Shopware 6.4 — limited (older Twig namespaces, deprecated DI patterns). Shopware 5 is NOT supported — completely different architecture (Smarty + Zend Framework, not Symfony + Twig). Shopware Apps support is coming; today we cover Plugins."}},
       {"@type": "Question", "name": "Does it work with custom themes inheriting from @Storefront?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Theme inheritance is a first-class concept in SimpleReview. We resolve the theme.json inheritance chain, walk @Storefront → @Parent → @YourTheme, and patch the right Twig in your theme plugin (not in vendor/shopware/storefront/) so theme:compile picks it up cleanly."}},
-      {"@type": "Question", "name": "Is it safe for a live Shopware 6 store?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview never pushes to your live branch directly. Every change is a Pull Request you review and merge. After merge, the PR description includes the post-deploy checklist: bin/console theme:refresh && theme:compile && cache:clear. Pair with a staging clone and the worst case is a PR you reject."}},
-      {"@type": "Question", "name": "How is this cheaper than a €80/hr Symfony freelancer?", "acceptedAnswer": {"@type": "Answer", "text": "Speed and recurring cost. A Shopware Symfony freelancer charges €60–120/hr and takes 1–3 hours to clone the repo, set up Docker, locate the override path, and figure out theme:compile flags. The actual edit is often one Twig line. SimpleReview already knows custom/plugins/[Plugin]/src/Resources/views/storefront/ and opens the PR in seconds. For custom payment apps, headless API, and migrations — keep your dev; that is what Vibers is for."}}
+      {"@type": "Question", "name": "Is it safe for a live Shopware 6 store?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview never pushes to your live branch directly. Every change is a direct site fix you review and merge. After merge, the direct site fix description includes the post-deploy checklist: bin/console theme:refresh && theme:compile && cache:clear. Pair with a staging clone and the worst case is a direct site fix you reject."}},
+      {"@type": "Question", "name": "How is this cheaper than a €80/hr Symfony freelancer?", "acceptedAnswer": {"@type": "Answer", "text": "Speed and recurring cost. A Shopware Symfony freelancer charges €60–120/hr and takes 1–3 hours to clone the repo, set up Docker, locate the override path, and figure out theme:compile flags. The actual edit is often one Twig line. SimpleReview already knows custom/plugins/[Plugin]/src/Resources/views/storefront/ and opens the site-ready fix in seconds. For custom payment apps, headless API, and migrations — keep your dev; that is what Vibers is for."}}
     ]
   }
   </script>
@@ -314,15 +314,15 @@
 
     <header class="hero">
       <div class="hero-badge">SimpleReview · for Shopware 6 · Chrome Extension</div>
-      <h1>Click any element on your Shopware 6 store. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, pull request, or deployed directly to your server">code fix</abbr>.</h1>
-      <p class="hero-sub">Stop paying €60–120/hr Symfony/Vue dev rates for one-Twig-file edits. SimpleReview reads <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code>, knows the theme inheritance graph — and opens a Pull Request with the right <code>theme:compile</code> notes.</p>
+      <h1>Click any element on your Shopware 6 store. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, direct site fix, or deployed directly to your server">code fix</abbr>.</h1>
+      <p class="hero-sub">Stop paying €60–120/hr Symfony/Vue dev rates for one-Twig-file edits. SimpleReview reads <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code>, knows the theme inheritance graph — and prepares a direct site fix with the right <code>theme:compile</code> notes.</p>
       <div class="cta-group">
         <a class="btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_shopware_hub&utm_medium=hero">Download Extension</a>
         <a class="btn-secondary" href="/shopware/how-to-fix-shopware-6-issues/">Read the Shopware 6 fix guide →</a>
       </div>
     </header>
 
-    <div id="sc-banner-fallback" class="sc-banner shopware" aria-label="Animated demo: SimpleReview's Shopware expert repairs the broken cookie banner dismiss button and opens a PR">
+    <div id="sc-banner-fallback" class="sc-banner shopware" aria-label="Animated demo: SimpleReview's Shopware expert repairs the broken cookie banner dismiss button and prepares a direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mystore.de</div>
@@ -374,7 +374,7 @@
               </div>
               <div class="sc-rec-banner"><span class="sc-rec-pct">FREI</span>Versand ab 50 € · Frühlings-Sale läuft jetzt</div>
               <div class="sc-rec-content">
-                <span class="sc-rec-success">✓ Cookie banner dismissable · cookie-permission.html.twig patched · PR #42</span>
+                <span class="sc-rec-success">✓ Cookie banner dismissable · cookie-permission.html.twig patched · Fix #42</span>
                 <div class="sc-rec-h">Beliebte Produkte</div>
                 <div class="sc-rec-line"></div>
                 <div class="sc-rec-line med"></div>
@@ -414,14 +414,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">× button works again. GDPR consent stored, banner stays closed.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-title">✓ Fix #42 ready</div>
               <div class="sc-pr-meta">fix(cookie): repair dismiss button<br>cookie-permission.twig · +6 / -1</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click SimpleReview → select the stuck cookie banner → <strong>Fix it</strong> → PR opens, no Symfony dev needed</div>
+      <div class="sc-caption">Click SimpleReview → select the stuck cookie banner → <strong>Fix it</strong> → the fix is ready, no Symfony dev needed</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -439,7 +439,7 @@
         <div class="fix-item">JS plugins extending core via decoration</div>
         <div class="fix-item">Cookie consent banner customization</div>
         <div class="fix-item">Hide "Powered by Shopware" / footer credits</div>
-        <div class="fix-item">Cache + <code>theme:compile</code> awareness in PR description</div>
+        <div class="fix-item">Cache + <code>theme:compile</code> awareness in direct site fix description</div>
       </div>
       <p style="font-size:13px; color:#888; margin-top:16px;">
         Works with Shopware 6.5+ and 6.6 (primary). 6.4 limited. Shopware 5 NOT supported (different architecture — Smarty + Zend, not Symfony + Twig). Apps (vs Plugins) — apps support coming, plugin support today.
@@ -473,8 +473,8 @@
         <div class="step">
           <div class="step-num">4</div>
           <div class="step-content">
-            <h3>Click the element. Get a Pull Request.</h3>
-            <p>Hover any block. Type the change. The agent edits the right Twig/SCSS/JSON in your plugin and opens a PR — with post-merge notes: <code>bin/console theme:refresh && theme:compile && cache:clear</code>.</p>
+            <h3>Click the element. Get a direct site fix.</h3>
+            <p>Hover any block. Type the change. The agent edits the right Twig/SCSS/JSON in your plugin and prepares a direct site fix — with post-merge notes: <code>bin/console theme:refresh && theme:compile && cache:clear</code>.</p>
           </div>
         </div>
       </div>
@@ -512,12 +512,12 @@
             <td class="col-vibers">Auto-resolves the inheritance graph</td>
           </tr>
           <tr>
-            <td>Includes <code>theme:compile</code> + <code>cache:clear</code> in PR notes</td>
+            <td>Includes <code>theme:compile</code> + <code>cache:clear</code> in direct site fix notes</td>
             <td>Sometimes (depends on freelancer)</td>
-            <td class="col-vibers">Always — checklist in every PR description</td>
+            <td class="col-vibers">Always — checklist in every direct site fix description</td>
           </tr>
           <tr>
-            <td>Opens a PR you can review</td>
+            <td>Opens a direct site fix you can review</td>
             <td>Sometimes (if they use Git)</td>
             <td class="col-vibers">Always</td>
           </tr>
@@ -552,7 +552,7 @@
         </div>
         <div class="case-card">
           <h3>Non-technical merchants</h3>
-          <p>See the broken thing on the storefront, click it, describe in plain language. Get a PR your hosting partner or junior dev can merge.</p>
+          <p>See the broken thing on the storefront, click it, describe in plain language. Get a direct site fix your hosting partner or junior dev can merge.</p>
         </div>
       </div>
     </section>
@@ -561,7 +561,7 @@
       <h2>FAQ</h2>
       <div class="faq-item">
         <div class="faq-q">Can I edit my Shopware 6 store without a developer?</div>
-        <div class="faq-a">For most cosmetic and structural edits — yes. Twig storefront overrides in <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code>, SCSS theme overrides, snippet JSON files, and <code>config.xml</code> plugin settings. SimpleReview opens a PR for those in seconds. For custom payment integrations, complex Symfony service decorators, and headless API work — pair with <a href="/vibers/">Vibers human review</a>.</div>
+        <div class="faq-a">For most cosmetic and structural edits — yes. Twig storefront overrides in <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code>, SCSS theme overrides, snippet JSON files, and <code>config.xml</code> plugin settings. SimpleReview prepares a direct site fix for those in seconds. For custom payment integrations, complex Symfony service decorators, and headless API work — pair with <a href="/vibers/">Vibers human review</a>.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">How does SimpleReview install — Chrome ext or native Shopware Store plugin?</div>
@@ -577,17 +577,17 @@
       </div>
       <div class="faq-item">
         <div class="faq-q">Is it safe for a live Shopware 6 store?</div>
-        <div class="faq-a">SimpleReview never pushes to your live branch directly. Every change is a Pull Request you review and merge. After merge, the PR description includes the post-deploy checklist: <code>bin/console theme:refresh && theme:compile && cache:clear</code>. Pair with a staging clone and the worst case is a PR you reject.</div>
+        <div class="faq-a">SimpleReview never pushes to your live branch directly. Every change is a direct site fix you review and merge. After merge, the direct site fix description includes the post-deploy checklist: <code>bin/console theme:refresh && theme:compile && cache:clear</code>. Pair with a staging clone and the worst case is a direct site fix you reject.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">How is this cheaper than a €80/hr Symfony freelancer?</div>
-        <div class="faq-a">Speed and recurring cost. A Shopware Symfony freelancer charges €60–120/hr and takes 1–3 hours to clone the repo, set up Docker, locate the override path, and figure out <code>theme:compile</code> flags. The actual edit is often one Twig line. SimpleReview already knows <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code> and opens the PR in seconds. For custom payment apps, headless API, and migrations — keep your dev; that is what <a href="/vibers/">Vibers</a> is for.</div>
+        <div class="faq-a">Speed and recurring cost. A Shopware Symfony freelancer charges €60–120/hr and takes 1–3 hours to clone the repo, set up Docker, locate the override path, and figure out <code>theme:compile</code> flags. The actual edit is often one Twig line. SimpleReview already knows <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code> and opens the site-ready fix in seconds. For custom payment apps, headless API, and migrations — keep your dev; that is what <a href="/vibers/">Vibers</a> is for.</div>
       </div>
     </section>
 
     <div class="cta-box">
       <h2>Stop paying €80/hr for one-Twig-file Shopware edits</h2>
-      <p>SimpleReview's Shopware-aware AI agent already knows the storefront override system, theme inheritance, and theme:compile workflow. Click the element, type the change, get a Pull Request.</p>
+      <p>SimpleReview's Shopware-aware AI agent already knows the storefront override system, theme inheritance, and theme:compile workflow. Click the element, type the change, get a direct site fix.</p>
       <a class="btn-white" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_shopware_hub&utm_medium=cta">Get SimpleReview for Chrome →</a>
       <p style="margin-top:14px;font-size:14px;opacity:0.85">Shopware 5 → 6 migration, custom payment apps, headless? → <a href="/vibers/" style="color:inherit;text-decoration:underline">Get a human review</a></p>
     </div>

@@ -296,7 +296,7 @@
     <p class="article-lead">The official Discourse API documentation is split across two domains, three styles of authentication, and a rate-limit configuration that nobody mentions until you start hitting 429s in production. This cookbook is what we wish existed when we first integrated against a Discourse 3.4 instance: the auth split explained in one table, real env-var rate limits, and ten copy-paste recipes — every one tested against a live forum with curl and Python.</p>
 
     <!-- Animated banner -->
-    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview reads a Discourse 429 rate-limit error and opens a PR adding retry-with-backoff.">
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview reads a Discourse 429 rate-limit error and prepares a site fix adding retry-with-backoff.">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">community.example.com</div>
@@ -370,14 +370,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Sustained 180 req/min without throttling. Backoff confirmed in logs.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">fix(discourse-api): add Retry-After backoff<br>discourse_client.py · +24 −3</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">SimpleReview drafts retry/backoff code for Discourse API integrations — straight to a <strong>PR</strong></div>
+      <div class="sc-caption">SimpleReview drafts retry/backoff code for Discourse API integrations — straight to a <strong>site fix</strong></div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -386,7 +386,7 @@
     </div>
 
     <div class="ext-callout">
-      Hitting <code>429 Too Many Requests</code> on production? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your Discourse client code, spots missing <code>Retry-After</code> handling, and opens a PR with <code>tenacity</code>-based exponential backoff in under a minute.
+      Hitting <code>429 Too Many Requests</code> on production? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your Discourse client code, spots missing <code>Retry-After</code> handling, and prepares a fix with <code>tenacity</code>-based exponential backoff in under a minute.
     </div>
 
     <div class="tldr">
@@ -857,7 +857,7 @@ print(f"{report['title']}: {total} in last 30 days")</code></pre>
 
     <div class="cta-block">
       <h3>Ship Discourse integrations without the 429 surprises</h3>
-      <p>Paste your client code into SimpleReview — it spots missing <code>Retry-After</code> handling, missing <code>Api-Username</code> headers, and unsafe webhook signature checks, then opens a PR.</p>
+      <p>Paste your client code into SimpleReview — it spots missing <code>Retry-After</code> handling, missing <code>Api-Username</code> headers, and unsafe webhook signature checks, then prepares a site fix.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Building a Discourse plugin instead? <a href="/discourse/develop-plugin/" style="color:#5b44e8;font-weight:600">Read the plugin guide →</a></p>
     </div>

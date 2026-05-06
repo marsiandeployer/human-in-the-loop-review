@@ -4,6 +4,10 @@
 .claude/
 
 # Runtime state
+.env
+.env.*
+!.env.example
+.meta-ads/
 scripts/.env
 scripts/*.pem
 scripts/.htpasswd

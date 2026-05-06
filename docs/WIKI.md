@@ -61,6 +61,7 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [bug-cluster-research.md](bug-cluster-research.md) | **NEW** 30 багов из SO + GitHub, классифицированы по SimpleReview fit и Noxon expertise. Roadmap на 5-10 статей. |
 | [animated-banner-guide.md](animated-banner-guide.md) | Инструкция по созданию анимированных баннеров (cursor→highlight→popup→spinner→ready-to-upload fix sidebar) для статей блога и лендингов. Включает формат voiceover JSON (зашитые субтитры для диктора). |
 | [marketplace-cover-banners.md](marketplace-cover-banners.md) | HTML-варианты и правила обложек для маркетплейсов/Kwork: `Проблема -> Работа -> Фикс`, CMS-логотипы, пути `/root/kwork/cover-html/*.html` и `/root/kwork/covers/*.png`. |
+| [meta-cms-creatives-2026-05-05.md](meta-cms-creatives-2026-05-05.md) | Meta Ads creative pack for 22 CMS hubs + Discourse: landing URLs with UTM, primary text, headlines, descriptions, and visual templates. |
 
 ### Workflow: написание SEO-статьи для блога
 
@@ -327,6 +328,63 @@ Reference cluster: `/root/vibers/discourse/` (1 hub + 5 articles, написан
 
 CMS marketplace hubs use split domains by language. English pages are canonical on `https://onout.org/[cms]/`; Russian pages are canonical on `https://habab.ru/[cms]/` and are served by habab from `/root/vibers/[cms]/index.ru.html`.
 
+### CMS coverage index (2026-05-05)
+
+Source of truth for **currently shipped CMS hubs** is code, not memory:
+
+- `scripts/generate-onout-sitemap.py` → `CMS_SLUGS` controls clean `/[cms]/` routes included in `generated/onout-sitemap.xml`.
+- `scripts/lint-cms-hubs.py` → `CMS_HUBS` controls SEO/i18n/banner validation for hub pages.
+- `README.md` → public project-level summary table.
+- This wiki section → operational checklist for forum links, content planning, and future CMS phases.
+
+Live indexed CMS hubs (22):
+
+| Phase | CMS / platform | Slug | Public URL | RU sibling |
+|-------|----------------|------|------------|------------|
+| 1 | WordPress | `wordpress` | https://onout.org/wordpress/ | — |
+| 1 | 1C-Bitrix | `bitrix` | https://onout.org/bitrix/ | https://habab.ru/bitrix/ |
+| 1 | Magento / Adobe Commerce | `magento` | https://onout.org/magento/ | — |
+| 1 | Joomla | `joomla` | https://onout.org/joomla/ | — |
+| 1 | PrestaShop | `prestashop` | https://onout.org/prestashop/ | — |
+| 1 | CS-Cart | `cs-cart` | https://onout.org/cs-cart/ | — |
+| 1 | Webasyst / Shop-Script | `webasyst` | https://onout.org/webasyst/ | https://habab.ru/webasyst/ |
+| 1 | OpenCart | `opencart` | https://onout.org/opencart/ | — |
+| 1 | Shopware | `shopware` | https://onout.org/shopware/ | — |
+| 1 | Drupal | `drupal` | https://onout.org/drupal/ | — |
+| 1.5 | WooCommerce | `woocommerce` | https://onout.org/woocommerce/ | — |
+| 2 | MODX | `modx` | https://onout.org/modx/ | — |
+| 2 | Strapi | `strapi` | https://onout.org/strapi/ | — |
+| 2 | Directus | `directus` | https://onout.org/directus/ | — |
+| 2 | Craft CMS | `craft-cms` | https://onout.org/craft-cms/ | — |
+| 2 | Statamic | `statamic` | https://onout.org/statamic/ | — |
+| 2 / 5 | Payload CMS | `payload-cms` | https://onout.org/payload-cms/ | — |
+| 2 | Umbraco | `umbraco` | https://onout.org/umbraco/ | — |
+| 2 | nopCommerce | `nopcommerce` | https://onout.org/nopcommerce/ | — |
+| 2 | DNN | `dnn` | https://onout.org/dnn/ | — |
+| 2 | Concrete CMS | `concrete-cms` | https://onout.org/concrete-cms/ | — |
+| 2 | TYPO3 | `typo3` | https://onout.org/typo3/ | — |
+
+Separate platform cluster, not part of `CMS_SLUGS` yet:
+
+| Platform | Disk path | Public URL | Notes |
+|----------|-----------|------------|-------|
+| Discourse | `/root/vibers/discourse/` | https://onout.org/discourse/ | 1 hub + 5 researched articles, reference cluster for self-hosted/software-platform pages. Add to sitemap/nginx intentionally if we want it treated like CMS hubs. |
+
+Planned CMS/platform backlog from GitHub issue #66 (no `/root/vibers/<slug>/index.html` yet unless listed above):
+
+| Phase | Group | Candidates |
+|-------|-------|------------|
+| 3 | Flat-file / Git-based CMS | Grav, Bludit, Kirby, Decap CMS, Keystatic, Publii. Pico is intentionally skipped because it is deprecated. |
+| 4 | RU/CIS source-available CMS | UMI.CMS, NetCat, HostCMS, DataLife Engine (DLE), Amiro.CMS |
+| 5 | Headless CMS | KeystoneJS, TinaCMS, Static CMS, Squidex, dotCMS, October CMS. Payload CMS is already live. |
+| 6 | Python CMS | Wagtail, django CMS, Plone, Mezzanine |
+| 7 | .NET CMS | Orchard Core, Piranha CMS. Umbraco is already live. |
+| 8 | Java CMS / portals | OpenCms, Liferay Portal, Jahia |
+| 9 | Ruby/Rails CMS | Refinery CMS, Comfortable Mexican Sofa, LocomotiveCMS |
+| 10 | E-commerce frameworks | Sylius, Saleor |
+
+When adding a new CMS hub, update all four places in the same task: `scripts/generate-onout-sitemap.py`, `scripts/lint-cms-hubs.py`, `README.md`, and this wiki's **CMS announcement links** table. Then run `timeout 30s scripts/generate-onout-sitemap.py` and `timeout 30s scripts/lint-cms-hubs.py`.
+
 Rules for adding or editing multilingual articles:
 
 - Keep canonical, `og:url`, BlogPosting `url`, and BlogPosting `mainEntityOfPage.@id` on the public canonical URL for that language.
@@ -432,6 +490,7 @@ Rules for adding or editing multilingual articles:
 
 **Правила выбора ссылки в форумном ответе:**
 - CMS-форум (WordPress, WooCommerce, OpenCart, PrestaShop, Joomla, Magento, Bitrix, MODX, Strapi, Directus, Drupal, Shopware, CS-Cart и т.п.) → CMS-специфичный лендинг: `https://onout.org/<cms>/` (например `/wordpress/`, `/woocommerce/`, `/opencart/`, `/prestashop/`, `/joomla/`, `/bitrix/`)
+- Discourse / forum / self-hosting темы → Discourse cluster: `https://onout.org/discourse/` или deep article из `/discourse/.../`, если вопрос про SSO, email replies, migration, API, plugin development, production/self-hosting.
 - Общий вебмастерский / SEO / hosting / web-dev форум (SitePoint, Habr, Namepros, webhostingdiscussion, lowendtalk, freecodecamp, HTMLForums и т.п.) → главная `https://onout.org/`
 - SimpleReview-специфичный лендинг: `https://onout.org/simple-review/` (когда тема прямо про visual feedback / Marker.io alternatives)
 
@@ -466,6 +525,7 @@ UTM-шаблон:
 | DNN | https://onout.org/dnn/ | `https://onout.org/dnn/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
 | Concrete CMS | https://onout.org/concrete-cms/ | `https://onout.org/concrete-cms/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
 | TYPO3 | https://onout.org/typo3/ | `https://onout.org/typo3/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
+| Discourse | https://onout.org/discourse/ | `https://onout.org/discourse/?utm_source=PLATFORM_FORUM&utm_medium=community&utm_campaign=cms_announcement` |
 
 Источник из чата: приватная ChatGPT-ссылка `/c/69f30833-8508-8389-a94b-5ab7e00d468c` недоступна без аккаунта/публичного share URL (403). Ниже — сохранённая рабочая версия из открытых источников.
 

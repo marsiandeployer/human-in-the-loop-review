@@ -71,7 +71,7 @@
       {
         "@type": "Question",
         "name": "How do I remove a duplicate page from WordPress?",
-        "acceptedAnswer": {"@type": "Answer", "text": "If it's a duplicate post/page row in the database, delete it from Pages → All Pages → Trash. If it's a duplicate element injected by a theme or plugin (two footers, two menus, two 'Add to cart' buttons), the fix is in code — either unhook the duplicate action via remove_action(), or patch the template. SimpleReview can do this from a single click: point at the duplicate element, describe what to remove, and it opens a PR against your theme or plugin."}
+        "acceptedAnswer": {"@type": "Answer", "text": "If it's a duplicate post/page row in the database, delete it from Pages → All Pages → Trash. If it's a duplicate element injected by a theme or plugin (two footers, two menus, two 'Add to cart' buttons), the fix is in code — either unhook the duplicate action via remove_action(), or patch the template. SimpleReview can do this from a single click: point at the duplicate element, describe what to remove, and it prepares a direct site fix against your theme or plugin."}
       }
     ]
   }
@@ -277,7 +277,7 @@
 
     <p class="article-lead">WordPress still doesn't ship a Duplicate button on the Pages list. Here are the 4 working methods plus one that adds a proper Duplicate action in one click.</p>
 
-    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: WordPress Pages list has no Duplicate row action, SimpleReview adds one via a single functions.php PR, Pricing page cloned as Draft in one click">
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: WordPress Pages list has no Duplicate row action, SimpleReview adds one via a single functions.php direct site fix, Pricing page cloned as Draft in one click">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com/wp-admin/edit.php?post_type=page</div>
@@ -355,7 +355,7 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Duplicate action on all post types. No plugin. Child-theme safe.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">feat: add Duplicate row action<br>functions.php · +28 lines</div>
             </div>
           </div>
@@ -371,7 +371,7 @@
     </div>
 
     <div class="ext-callout">
-      Need to clone a page for a landing-page test or a locked draft? Scroll down. Got two Add-to-cart buttons, two menus, or duplicate checkout fields you can't find in wp-admin? → <a href="https://onout.org/simple-review/">SimpleReview</a> lets you click the duplicate, describe what to remove, and opens a one-line PR against the responsible theme or plugin file.
+      Need to clone a page for a landing-page test or a locked draft? Scroll down. Got two Add-to-cart buttons, two menus, or duplicate checkout fields you can't find in wp-admin? → <a href="https://onout.org/simple-review/">SimpleReview</a> lets you click the duplicate, describe what to remove, and opens a one-line direct site fix against the responsible theme or plugin file.
     </div>
 
     <div class="key-takeaways">
@@ -540,12 +540,12 @@ wp post meta list $SRC --format=json | \
     <ol>
       <li>Open the page with the duplicate element.</li>
       <li>Click the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">SimpleReview</a> extension, then click the duplicate element itself (the second Add-to-cart, the extra footer).</li>
-      <li>Type "Remove this duplicate" and click <strong>Fix it</strong>. SimpleReview walks the rendered DOM back to the PHP template or plugin that emitted it, finds the responsible hook or template include, and opens a PR that removes it — usually a one-line change in your child theme.</li>
+      <li>Type "Remove this duplicate" and click <strong>Fix it</strong>. SimpleReview walks the rendered DOM back to the PHP template or plugin that emitted it, finds the responsible hook or template include, and prepares a direct site fix that removes it — usually a one-line change in your child theme.</li>
     </ol>
 
     <div class="cta-block">
       <h3>Got an Accidental Duplicate Element on Your Site?</h3>
-      <p>Click on it — SimpleReview finds the theme file or plugin hook that emitted it, and opens a PR removing it.</p>
+      <p>Click on it — SimpleReview finds the theme file or plugin hook that emitted it, and prepares a direct site fix removing it.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="https://onout.org/simple-review-wordpress/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
     </div>
@@ -586,7 +586,7 @@ wp post meta list $SRC --format=json | \
         </div>
         <div class="related-card">
           <a href="/simple-review/">SimpleReview</a>
-          <p>Click any element on your WordPress site — SimpleReview opens a PR that fixes or removes it.</p>
+          <p>Click any element on your WordPress site — SimpleReview prepares a direct site fix that fixes or removes it.</p>
         </div>
       </div>
     </div>

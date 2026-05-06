@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fix Any Drupal 10/11 Site Without a $90/hr Acquia Specialist — SimpleReview</title>
-  <meta name="description" content="Click any element on your Drupal site. SimpleReview reads `themes/custom/[theme]/` and `modules/custom/`, knows the override system and Configuration Management — opens a Pull Request.">
+  <meta name="description" content="Click any element on your Drupal site. SimpleReview reads `themes/custom/[theme]/` and `modules/custom/`, knows the override system and Configuration Management — prepares a direct site fix.">
   <meta name="keywords" content="fix drupal site, drupal ai assistant, drupal module simplereview, edit drupal without acquia, drupal.org project simplereview">
   <link rel="canonical" href="https://onout.org/drupal/">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
@@ -12,12 +12,12 @@
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Fix Any Drupal 10/11 Site Without a $90/hr Acquia Specialist — SimpleReview">
-  <meta property="og:description" content="Click any element on your Drupal site. SimpleReview reads themes/custom/[theme]/ and modules/custom/, knows the override system and Configuration Management — opens a Pull Request.">
+  <meta property="og:description" content="Click any element on your Drupal site. SimpleReview reads themes/custom/[theme]/ and modules/custom/, knows the override system and Configuration Management — prepares a direct site fix.">
   <meta property="og:url" content="https://onout.org/drupal/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fix Any Drupal 10/11 Site Without a $90/hr Acquia Specialist — SimpleReview">
-  <meta name="twitter:description" content="Click any element on your Drupal site. Get a Pull Request, not an Acquia ticket.">
+  <meta name="twitter:description" content="Click any element on your Drupal site. Get a direct site fix, not an Acquia ticket.">
   <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
@@ -30,7 +30,7 @@
     "@type": "BlogPosting",
     "inLanguage": "en",
     "headline": "Fix Any Drupal 10/11 Site Without a $90/hr Acquia Specialist — SimpleReview",
-    "description": "Click any element on your Drupal site. SimpleReview reads themes/custom/[theme]/ and modules/custom/, knows the override system and Configuration Management — opens a Pull Request.",
+    "description": "Click any element on your Drupal site. SimpleReview reads themes/custom/[theme]/ and modules/custom/, knows the override system and Configuration Management — prepares a direct site fix.",
     "url": "https://onout.org/drupal/",
     "datePublished": "2026-04-30",
     "dateModified": "2026-04-30",
@@ -51,12 +51,12 @@
     "@type": "FAQPage",
     "inLanguage": "en",
     "mainEntity": [
-      {"@type": "Question", "name": "Can I edit my Drupal site without a developer?", "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic and structural edits — yes. Theme overrides in web/themes/custom/[theme]/templates/, .theme preprocess hooks, custom CSS/JS, Twig template overrides (block--system-powered-by-block.html.twig), translation overrides, block/view config in config/sync/. SimpleReview opens a PR for those in seconds. For schema migrations, security audits, multi-site config, and D7-to-D10 upgrades — pair with Vibers human review."}},
+      {"@type": "Question", "name": "Can I edit my Drupal site without a developer?", "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic and structural edits — yes. Theme overrides in web/themes/custom/[theme]/templates/, .theme preprocess hooks, custom CSS/JS, Twig template overrides (block--system-powered-by-block.html.twig), translation overrides, block/view config in config/sync/. SimpleReview prepares a direct site fix for those in seconds. For schema migrations, security audits, multi-site config, and D7-to-D10 upgrades — pair with Vibers human review."}},
       {"@type": "Question", "name": "How does SimpleReview install on a Drupal site?", "acceptedAnswer": {"@type": "Answer", "text": "Today: install the Chrome Extension and connect your Composer-managed Git repo. Tomorrow: native Drupal contrib module on drupal.org/project/simplereview (in submission — typical 4-12 week security review for new modules). Once approved, install via composer require drupal/simplereview and enable in Extend."}},
       {"@type": "Question", "name": "Which Drupal versions are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Drupal 10.x and 11.x — full support (Twig, Symfony, Configuration Management, modern hooks). Drupal 9.x — limited (works for theme overrides; some hook signatures changed). Drupal 7 — EOL January 2025, very limited support (different module system, no Twig, no CMI). Custom themes Olivero, Claro, Bootstrap, Gin — supported if they follow the standard override pattern."}},
       {"@type": "Question", "name": "Does it work with Olivero, Claro, Gin and other admin themes?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Olivero (default front-end), Claro (default admin), Gin (popular admin replacement), Bootstrap 5, Radix — all use the standard Drupal theme inheritance and Twig override pattern. SimpleReview detects the active theme via the regions exposed in HTML and writes overrides into the correct web/themes/custom/[theme]/templates/ path. For paid premium themes, modifications require you sign off (license check)."}},
-      {"@type": "Question", "name": "Does SimpleReview need Composer access?", "acceptedAnswer": {"@type": "Answer", "text": "For theme overrides and content/config changes — no. SimpleReview edits files inside web/themes/custom/, web/modules/custom/, and config/sync/, then opens a PR. Composer is only needed when adding a new contrib module — at which point you (or your CI) run composer require on the merged PR. SimpleReview will not modify composer.json without an explicit instruction."}},
-      {"@type": "Question", "name": "How is this cheaper than a $90/hr Acquia or senior Drupal dev?", "acceptedAnswer": {"@type": "Answer", "text": "Senior Drupal devs bill $80-150/hr, Acquia certified specialists $90-200/hr. About 70% of those paid hours is just locating the right file — Drupal's override cascade (core → contrib → custom theme → custom module) takes time even for experts. SimpleReview already knows the override paths, opens the PR in seconds, and you only pay pennies of API usage. For schema migrations, security audits, and complex Views handlers — you still want the human; that's what Vibers is for."}}
+      {"@type": "Question", "name": "Does SimpleReview need Composer access?", "acceptedAnswer": {"@type": "Answer", "text": "For theme overrides and content/config changes — no. SimpleReview edits files inside web/themes/custom/, web/modules/custom/, and config/sync/, then prepares a direct site fix. Composer is only needed when adding a new contrib module — at which point you (or your CI) run composer require on the merged direct site fix. SimpleReview will not modify composer.json without an explicit instruction."}},
+      {"@type": "Question", "name": "How is this cheaper than a $90/hr Acquia or senior Drupal dev?", "acceptedAnswer": {"@type": "Answer", "text": "Senior Drupal devs bill $80-150/hr, Acquia certified specialists $90-200/hr. About 70% of those paid hours is just locating the right file — Drupal's override cascade (core → contrib → custom theme → custom module) takes time even for experts. SimpleReview already knows the override paths, opens the site-ready fix in seconds, and you only pay pennies of API usage. For schema migrations, security audits, and complex Views handlers — you still want the human; that's what Vibers is for."}}
     ]
   }
   </script>
@@ -315,15 +315,15 @@
 
     <header class="hero">
       <div class="hero-badge">SimpleReview · for Drupal · Chrome Extension</div>
-      <h1>Click any element on your Drupal site. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, pull request, or deployed directly to your server">code fix</abbr>.</h1>
-      <p class="hero-sub">Senior Drupal devs bill $80–150/hr; ~70% of paid hours is "find the file" work — walking the override cascade from <code>core/</code> through <code>modules/contrib/</code> down to <code>themes/custom/</code>. SimpleReview already knows the override paths and opens a Pull Request in seconds.</p>
+      <h1>Click any element on your Drupal site. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, direct site fix, or deployed directly to your server">code fix</abbr>.</h1>
+      <p class="hero-sub">Senior Drupal devs bill $80–150/hr; ~70% of paid hours is "find the file" work — walking the override cascade from <code>core/</code> through <code>modules/contrib/</code> down to <code>themes/custom/</code>. SimpleReview already knows the override paths and prepares a direct site fix in seconds.</p>
       <div class="cta-group">
         <a class="btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_drupal_hub&utm_medium=hero">Download Extension</a>
         <a class="btn-secondary" href="/drupal/how-to-fix-drupal-issues/">Read the Drupal fix guide →</a>
       </div>
     </header>
 
-    <div id="sc-banner-fallback" class="sc-banner drupal" aria-label="Animated demo: SimpleReview's Drupal expert hides Powered-by Drupal and clears the WSOD warning, then opens a PR">
+    <div id="sc-banner-fallback" class="sc-banner drupal" aria-label="Animated demo: SimpleReview's Drupal expert hides Powered-by Drupal and clears the WSOD warning, then prepares a direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com</div>
@@ -375,7 +375,7 @@
               </div>
               <div class="sc-rec-banner"><span class="sc-rec-pct">CLEAN</span>Powered-by hidden via theme override · WSOD warning resolved</div>
               <div class="sc-rec-content">
-                <span class="sc-rec-success">✓ block--system-powered-by-block.html.twig added · drush cr · PR #42</span>
+                <span class="sc-rec-success">✓ block--system-powered-by-block.html.twig added · drush cr · Fix #42</span>
                 <div class="sc-rec-h">Latest articles</div>
                 <div class="sc-rec-line"></div>
                 <div class="sc-rec-line med"></div>
@@ -416,14 +416,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Drupal branding hidden. WSOD log resolved. Cache rebuilt cleanly.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-title">✓ Fix #42 ready</div>
               <div class="sc-pr-meta">fix(footer): override Powered-by block<br>powered-by.twig · -2 lines</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click SimpleReview → select the Powered-by block → <strong>Fix it</strong> → PR opens, no Acquia specialist needed</div>
+      <div class="sc-caption">Click SimpleReview → select the Powered-by block → <strong>Fix it</strong> → the fix is ready, no Acquia specialist needed</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -475,8 +475,8 @@
         <div class="step">
           <div class="step-num">4</div>
           <div class="step-content">
-            <h3>Click → PR with cache + config notes</h3>
-            <p>Hover any element, describe the change. Agent edits the right Twig override or YAML config and opens a PR. For config changes the PR description includes <code>drush cr &amp;&amp; drush cim</code> notes so deployment is one command.</p>
+            <h3>Click → direct site fix with cache + config notes</h3>
+            <p>Hover any element, describe the change. Agent edits the right Twig override or YAML config and prepares a direct site fix. For config changes the direct site fix description includes <code>drush cr &amp;&amp; drush cim</code> notes so deployment is one command.</p>
           </div>
         </div>
       </div>
@@ -516,10 +516,10 @@
           <tr>
             <td>Configuration Management aware (<code>config/sync/*.yml</code> + <code>drush cim</code>)</td>
             <td>Manual</td>
-            <td class="col-vibers">Yes — emits <code>drush cr &amp;&amp; drush cim</code> notes per PR</td>
+            <td class="col-vibers">Yes — emits <code>drush cr &amp;&amp; drush cim</code> notes per direct site fix</td>
           </tr>
           <tr>
-            <td>Opens a PR you can review</td>
+            <td>Opens a direct site fix you can review</td>
             <td>Sometimes (if they use Git, not direct SFTP)</td>
             <td class="col-vibers">Always</td>
           </tr>
@@ -546,7 +546,7 @@
         </div>
         <div class="case-card">
           <h3>.gov / .edu Drupal admins</h3>
-          <p>Public-sector and university sites stuck on D9/D10 with locked-down hosting — every PR is reviewable, auditable, and merged through your normal change process.</p>
+          <p>Public-sector and university sites stuck on D9/D10 with locked-down hosting — every direct site fix is reviewable, auditable, and merged through your normal change process.</p>
         </div>
         <div class="case-card">
           <h3>Freelance Drupal devs running multiple sites</h3>
@@ -554,7 +554,7 @@
         </div>
         <div class="case-card">
           <h3>Non-tech editors</h3>
-          <p>See the broken thing on the site, click it, describe it in plain English. Get a PR your maintainer can <code>drush cim</code> and ship.</p>
+          <p>See the broken thing on the site, click it, describe it in plain English. Get a direct site fix your maintainer can <code>drush cim</code> and ship.</p>
         </div>
       </div>
     </section>
@@ -563,7 +563,7 @@
       <h2>FAQ</h2>
       <div class="faq-item">
         <div class="faq-q">Can I edit my Drupal site without a developer?</div>
-        <div class="faq-a">For most cosmetic and structural edits — yes. Theme overrides in <code>web/themes/custom/[theme]/templates/</code>, <code>.theme</code> preprocess hooks, custom CSS/JS, Twig template overrides (<code>block--system-powered-by-block.html.twig</code>), translation overrides, block/view config in <code>config/sync/</code>. SimpleReview opens a PR for those in seconds. For schema migrations, security audits, multi-site config, and D7-to-D10 upgrades — pair with <a href="/vibers/">Vibers human review</a>.</div>
+        <div class="faq-a">For most cosmetic and structural edits — yes. Theme overrides in <code>web/themes/custom/[theme]/templates/</code>, <code>.theme</code> preprocess hooks, custom CSS/JS, Twig template overrides (<code>block--system-powered-by-block.html.twig</code>), translation overrides, block/view config in <code>config/sync/</code>. SimpleReview prepares a direct site fix for those in seconds. For schema migrations, security audits, multi-site config, and D7-to-D10 upgrades — pair with <a href="/vibers/">Vibers human review</a>.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">How does SimpleReview install on a Drupal site?</div>
@@ -579,17 +579,17 @@
       </div>
       <div class="faq-item">
         <div class="faq-q">Does SimpleReview need Composer access?</div>
-        <div class="faq-a">For theme overrides and content/config changes — no. SimpleReview edits files inside <code>web/themes/custom/</code>, <code>web/modules/custom/</code>, and <code>config/sync/</code>, then opens a PR. Composer is only needed when adding a new contrib module — at which point you (or your CI) run <code>composer require</code> on the merged PR. SimpleReview will not modify <code>composer.json</code> without an explicit instruction.</div>
+        <div class="faq-a">For theme overrides and content/config changes — no. SimpleReview edits files inside <code>web/themes/custom/</code>, <code>web/modules/custom/</code>, and <code>config/sync/</code>, then prepares a direct site fix. Composer is only needed when adding a new contrib module — at which point you (or your CI) run <code>composer require</code> on the merged direct site fix. SimpleReview will not modify <code>composer.json</code> without an explicit instruction.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">How is this cheaper than a $90/hr Acquia or senior Drupal dev?</div>
-        <div class="faq-a">Senior Drupal devs bill $80–150/hr, Acquia certified specialists $90–200/hr. About 70% of those paid hours is just locating the right file — Drupal's override cascade (core → contrib → custom theme → custom module) takes time even for experts. SimpleReview already knows the override paths, opens the PR in seconds, and you only pay pennies of API usage. For schema migrations, security audits, and complex Views handlers — you still want the human; that's what <a href="/vibers/">Vibers</a> is for.</div>
+        <div class="faq-a">Senior Drupal devs bill $80–150/hr, Acquia certified specialists $90–200/hr. About 70% of those paid hours is just locating the right file — Drupal's override cascade (core → contrib → custom theme → custom module) takes time even for experts. SimpleReview already knows the override paths, opens the site-ready fix in seconds, and you only pay pennies of API usage. For schema migrations, security audits, and complex Views handlers — you still want the human; that's what <a href="/vibers/">Vibers</a> is for.</div>
       </div>
     </section>
 
     <div class="cta-box">
       <h2>Stop paying $90/hr for one-file Drupal edits</h2>
-      <p>SimpleReview's Drupal-aware AI agent already knows the override system, Configuration Management, and the Twig template hierarchy. Click the element, type the change, get a Pull Request.</p>
+      <p>SimpleReview's Drupal-aware AI agent already knows the override system, Configuration Management, and the Twig template hierarchy. Click the element, type the change, get a direct site fix.</p>
       <a class="btn-white" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_drupal_hub&utm_medium=cta">Get SimpleReview for Chrome →</a>
       <p style="margin-top:14px;font-size:14px;opacity:0.85">D7→D10 migration, multi-site, custom Views handlers, security audit? → <a href="/vibers/" style="color:inherit;text-decoration:underline">Get a human review</a></p>
     </div>

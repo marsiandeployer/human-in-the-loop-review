@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>How to Fix and Customize 1С-Bitrix Sites Without Touching the Core (2026 Guide)</title>
-  <meta name="description" content="Как править сайт на 1С-Битрикс без правки ядра в /bitrix/. Пошаговый гид по /local/ overrides, частым ошибкам (500, критическая ошибка), reCAPTCHA, кастомизации шаблонов. + расширение SimpleReview для AI-PR.">
+  <meta name="description" content="Как править сайт на 1С-Битрикс без правки ядра в /bitrix/. Пошаговый гид по /local/ overrides, частым ошибкам (500, критическая ошибка), reCAPTCHA, кастомизации шаблонов. + расширение SimpleReview для AI-правка.">
   <link rel="canonical" href="https://onout.org/bitrix/how-to-fix-and-customize-bitrix-sites/">
   <link rel="icon" type="image/x-icon" href="../../favicon.ico">
   <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <meta property="og:type" content="article">
   <meta property="og:title" content="How to Fix and Customize 1С-Bitrix Sites Without Touching the Core">
-  <meta property="og:description" content="Bitrix's #1 rule: never edit /bitrix/ core. Use /local/ overrides. SimpleReview's Bitrix-aware agent already knows the convention — click → fix → PR.">
+  <meta property="og:description" content="Bitrix's #1 rule: never edit /bitrix/ core. Use /local/ overrides. SimpleReview's Bitrix-aware agent already knows the convention — click → fix → direct site fix.">
   <meta property="og:url" content="https://onout.org/bitrix/how-to-fix-and-customize-bitrix-sites/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -52,7 +52,7 @@
       {
         "@type": "Question",
         "name": "Можно ли править сайт на Битриксе без программиста?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Да — для большинства правок шаблонов, текстов кнопок, файлов компонентов в /local/. Главное правило Битрикса: никогда не трогать /bitrix/ — следующее обновление перетрёт ваши изменения. Все кастомизации делаются через /local/templates/, /local/components/ и /local/php_interface/init.php. SimpleReview Chrome-extension знает эту конвенцию и пишет правки сразу в нужный файл в /local/, открывая Pull Request."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Да — для большинства правок шаблонов, текстов кнопок, файлов компонентов в /local/. Главное правило Битрикса: никогда не трогать /bitrix/ — следующее обновление перетрёт ваши изменения. Все кастомизации делаются через /local/templates/, /local/components/ и /local/php_interface/init.php. SimpleReview Chrome-extension знает эту конвенцию и пишет правки сразу в нужный файл в /local/, подготавливая правку для сайта."}
       },
       {
         "@type": "Question",
@@ -67,12 +67,12 @@
       {
         "@type": "Question",
         "name": "Это безопасно для продакшен-сайта?",
-        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview никогда не пушит в продакшен ветку напрямую — каждое изменение это Pull Request, который вы проверяете и мержите. В худшем случае вы отклоняете PR. Рекомендуем держать staging-копию (Битрикс-хостинги обычно её предоставляют через Резервное копирование → Восстановить на тестовом домене) и тестировать там перед мержем в продакшен."}
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview никогда не пушит в продакшен ветку напрямую — каждое изменение это правка, которую вы проверяете и мержите. В худшем случае вы отклоняете direct site fix. Рекомендуем держать staging-копию (Битрикс-хостинги обычно её предоставляют через Резервное копирование → Восстановить на тестовом домене) и тестировать там перед мержем в продакшен."}
       },
       {
         "@type": "Question",
         "name": "Чем это отличается от заказа фрилансера за 2-3 тыс рублей за правку?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Скоростью и стоимостью повторной работы. Фрилансер тратит 1-2 часа просто чтобы развернуть окружение, найти нужный шаблон и понять структуру именно вашей редакции и темы — сама правка часто занимает 5 минут. SimpleReview уже знает структуру Битрикса (/bitrix/, /local/, .default/, шаблоны, компоненты), открывает PR за секунды, и стоит копейки API (или $0 на своём ключе Claude/Codex)."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Скоростью и стоимостью повторной работы. Фрилансер тратит 1-2 часа просто чтобы развернуть окружение, найти нужный шаблон и понять структуру именно вашей редакции и темы — сама правка часто занимает 5 минут. SimpleReview уже знает структуру Битрикса (/bitrix/, /local/, .default/, шаблоны, компоненты), готовит правку для сайта за секунды, и стоит копейки API (или $0 на своём ключе Claude/Codex)."}
       },
       {
         "@type": "Question",
@@ -167,7 +167,7 @@
 
     <h1>How to Fix and Customize 1С-Bitrix Sites Without Touching the Core</h1>
 
-    <p class="article-lead">Bitrix's #1 rule: <strong>never edit core files in <code>/bitrix/</code></strong>. All customization goes through <code>/local/</code>. But finding which file in <code>/local/templates/</code>, <code>/local/components/</code>, or <code>/local/php_interface/init.php</code> to touch — and not breaking the update path — is what separates a $40/hr freelancer hour from a 3-second SimpleReview PR. Our SimpleReview Chrome extension already knows the Bitrix file layout and the "<code>/local/</code> override" rule, so it edits the right file the first time and opens a PR you review.</p>
+    <p class="article-lead">Bitrix's #1 rule: <strong>never edit core files in <code>/bitrix/</code></strong>. All customization goes through <code>/local/</code>. But finding which file in <code>/local/templates/</code>, <code>/local/components/</code>, or <code>/local/php_interface/init.php</code> to touch — and not breaking the update path — is what separates a $40/hr freelancer hour from a 3-second SimpleReview direct site fix. Our SimpleReview Chrome extension already knows the Bitrix file layout and the "<code>/local/</code> override" rule, so it edits the right file the first time and prepares a direct site fix you review.</p>
 
     <style>
     /* ─────── Bitrix Banner (28s cycle) ─────── */
@@ -306,7 +306,7 @@
       .sc-bx-grid{grid-template-columns:repeat(3,1fr);max-width:380px}
     }
     </style>
-    <div id="sc-banner-fallback" class="sc-banner bitrix" aria-label="Animated demo: SimpleReview's Bitrix expert removes the Powered-by Bitrix copyright and opens a PR">
+    <div id="sc-banner-fallback" class="sc-banner bitrix" aria-label="Animated demo: SimpleReview's Bitrix expert removes the Powered-by Bitrix copyright and prepares a direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mystore.ru</div>
@@ -349,7 +349,7 @@
               </div>
               <div class="sc-rec-banner"><span class="sc-rec-pct">FREE</span>Бесплатная доставка от 3 000 ₽ — каждый день</div>
               <div class="sc-rec-content">
-                <span class="sc-rec-success">✓ Копирайт Битрикса убран · footer.php пропатчен · PR #42 готов</span>
+                <span class="sc-rec-success">✓ Копирайт Битрикса убран · footer.php пропатчен · Правка #42 готова</span>
                 <div class="sc-rec-h">Популярные товары</div>
                 <div class="sc-rec-line"></div>
                 <div class="sc-rec-line med"></div>
@@ -390,14 +390,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Брендинг Битрикса убран. Лицензия не нарушена (коммерческая редакция).</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-title">✓ Fix #42 ready</div>
               <div class="sc-pr-meta">fix(footer): drop 1С-Битрикс copyright<br>footer.php · -4 lines</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Кликни SimpleReview → выбери копирайт → <strong>Fix it</strong> → PR готов, без программиста</div>
+      <div class="sc-caption">Кликни SimpleReview → выбери копирайт → <strong>Fix it</strong> → правка готова, без программиста</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -406,7 +406,7 @@
     </div>
 
     <div class="ext-callout">
-      Есть правка по сайту на Битриксе, за которую фрилансер просит 2-3 тысячи? → <a href="https://onout.org/simple-review/">SimpleReview</a> найдёт нужный файл в <code>/local/</code>, откроет PR, не сломает обновление ядра.
+      Есть правка по сайту на Битриксе, за которую фрилансер просит 2-3 тысячи? → <a href="https://onout.org/simple-review/">SimpleReview</a> найдёт нужный файл в <code>/local/</code>, откроет direct site fix, не сломает обновление ядра.
     </div>
 
     <div class="key-takeaways">
@@ -416,7 +416,7 @@
         <li>Most Bitrix edits are template-level (<code>/local/templates/[theme]/</code>) or component-template-level (<code>/local/templates/[theme]/components/</code>) — SimpleReview's Bitrix-aware agent knows this layout.</li>
         <li>SimpleReview's agent knows the <code>/bitrix/</code> → <code>/local/</code> override convention and writes to the correct path — it never patches core files.</li>
         <li>Мы готовим модуль для <strong>1С-Битрикс: Маркетплейс</strong>, который встраивает SimpleReview прямо в Контрольную панель (раздел Marketplace → Решения партнёров) — кнопка «Edit with SimpleReview» рядом с любым шаблоном или компонентом.</li>
-        <li>For payment-module / «Мой кабинет» / API integration work — use <a href="/vibers/">Vibers human-in-the-loop review</a>: a real person checks the PR before you merge it to production.</li>
+        <li>For payment-module / «Мой кабинет» / API integration work — use <a href="/vibers/">Vibers human-in-the-loop review</a>: a real person checks the direct site fix before you merge it to production.</li>
       </ul>
     </div>
 
@@ -446,7 +446,7 @@
     <ol class="steps">
       <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. Free with your own AI key (Claude Code or Codex), и есть встроенный режим, если ключа нет.</li>
       <li><strong>Connect your Bitrix repo.</strong> Paste a GitHub / GitLab / самохост Gitea / Bitbucket URL. Если сайт ещё не на Git, выдайте SFTP-креды — SimpleReview сам сделает рабочую копию и будет коммитить в свою ветку.</li>
-      <li><strong>Open your storefront, click the SimpleReview icon, click the element you want to change.</strong> Type the change in plain Russian or English: «убери Powered by 1C-Bitrix из футера», «добавь reCAPTCHA в форму обратной связи», «переведи кнопку В корзину на Купить сейчас». Click <strong>Fix it</strong>. The agent finds the corresponding file in <code>/local/</code>, creates the override if needed, and opens a Pull Request.</li>
+      <li><strong>Open your storefront, click the SimpleReview icon, click the element you want to change.</strong> Type the change in plain Russian or English: «убери Powered by 1C-Bitrix из футера», «добавь reCAPTCHA в форму обратной связи», «переведи кнопку В корзину на Купить сейчас». Click <strong>Fix it</strong>. The agent finds the corresponding file in <code>/local/</code>, creates the override if needed, and prepares a direct site fix.</li>
     </ol>
 
     <h2>Common Bitrix Edits — and Where They Live</h2>
@@ -479,7 +479,7 @@
 # Override target (where SimpleReview writes):
 /local/templates/[theme]/components/bitrix/main.feedback/.default/template.php</code></pre>
 
-    <p>The agent inserts the reCAPTCHA snippet right before the submit button, registers the secret-key check in <code>/local/php_interface/init.php</code> via an <code>OnBeforeFormAdd</code> event handler, and adds the site-key constant to <code>/local/.settings_extra.php</code>. Three files, one PR.</p>
+    <p>The agent inserts the reCAPTCHA snippet right before the submit button, registers the secret-key check in <code>/local/php_interface/init.php</code> via an <code>OnBeforeFormAdd</code> event handler, and adds the site-key constant to <code>/local/.settings_extra.php</code>. Three files, one direct site fix.</p>
 
     <h3>Fix the "критическая ошибка" (500) after a module update</h3>
 
@@ -500,7 +500,7 @@ php -r "opcache_reset();"
 # 4. If still broken — enable error display temporarily
 # /bitrix/.settings.php → 'exception_handling' → 'debug' => true</code></pre>
 
-    <p>SimpleReview's agent reads your hosting logs (or asks for the error output), pinpoints which of the three causes hit you, and either submits a config-fix PR or — if the error is in a vendor module — flags it for a human Vibers reviewer instead of guessing.</p>
+    <p>SimpleReview's agent reads your hosting logs (or asks for the error output), pinpoints which of the three causes hit you, and either submits a config-fix direct site fix or — if the error is in a vendor module — flags it for a human Vibers reviewer instead of guessing.</p>
 
     <h3>Translate "Add to Cart" / "В корзину" button text</h3>
 
@@ -530,7 +530,7 @@ $MESS["CATALOG_BUY"] = "Заказать в один клик";</code></pre>
 
     <h2>Bitrix Marketplace — Our Module</h2>
 
-    <p>1С-Битрикс: Маркетплейс — №1 канал в РФ/СНГ для коммерческих модулей и шаблонов. Наш модуль (в работе) ставится через стандартный установщик: <strong>Marketplace → Каталог → найти "SimpleReview" → Установить</strong>. После активации в Битрикс-админке появляется кнопка "Edit with SimpleReview" рядом с любым шаблоном или компонентом — клик → правка → PR в репозиторий, который ваш разработчик ревьюит.</p>
+    <p>1С-Битрикс: Маркетплейс — №1 канал в РФ/СНГ для коммерческих модулей и шаблонов. Наш модуль (в работе) ставится через стандартный установщик: <strong>Marketplace → Каталог → найти "SimpleReview" → Установить</strong>. После активации в Битрикс-админке появляется кнопка "Edit with SimpleReview" рядом с любым шаблоном или компонентом — клик → правка → direct site fix в репозиторий, который ваш разработчик ревьюит.</p>
 
     <p>Если у вас сейчас сайт на Битрикс и есть GitHub/GitLab/самохост Bitbucket — наша Chrome-extension уже работает (без модуля): <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">установить SimpleReview из Chrome Web Store</a>.</p>
 
@@ -548,7 +548,7 @@ $MESS["CATALOG_BUY"] = "Заказать в один клик";</code></pre>
         <tr><td>Find the right file in <code>/local/</code> vs <code>/bitrix/</code></td><td>30-90 min (depends on theme + module mix)</td><td>Instant — knows the override convention</td></tr>
         <tr><td>Create override path if missing</td><td>Often skipped → patches <code>/bitrix/</code> by mistake</td><td>Auto-creates <code>/local/templates/...</code> mirror</td></tr>
         <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
-        <tr><td>Open a PR</td><td>Rare — usually FTP push</td><td>Always — review before merge</td></tr>
+        <tr><td>Prepare a direct fix</td><td>Rare — usually FTP push</td><td>Always — review before merge</td></tr>
         <tr><td>Cost for 1-line change</td><td>₽1500-3000 (1 hour minimum)</td><td>₽0 (BYO key) or pennies of API</td></tr>
         <tr><td>Risk of breaking next update</td><td>High if they touched <code>/bitrix/</code></td><td>Zero — only writes to <code>/local/</code></td></tr>
       </table>
@@ -566,11 +566,11 @@ $MESS["CATALOG_BUY"] = "Заказать в один клик";</code></pre>
       <li><strong>Security audit</strong>, особенно перед открытием админки в интернет или после установки стороннего модуля из Маркетплейса с низким рейтингом.</li>
     </ul>
 
-    <p>Это и есть та доля задач, для которой существует <a href="/vibers/">Vibers human-in-the-loop review</a>: реальный человек смотрит ваш PR, шлёт fix-up при необходимости, аппрувит до мержа. Используйте agent для 80%, человека — для 20% которые отрабатывают свою почасовую ставку.</p>
+    <p>Это и есть та доля задач, для которой существует <a href="/vibers/">Vibers human-in-the-loop review</a>: реальный человек смотрит ваш direct site fix, шлёт fix-up при необходимости, аппрувит до мержа. Используйте agent для 80%, человека — для 20% которые отрабатывают свою почасовую ставку.</p>
 
     <div class="cta-block">
       <h3>Перестаньте платить за «найти файл»</h3>
-      <p>SimpleReview's Bitrix-aware agent читает ваш репозиторий, знает <code>/bitrix/</code> → <code>/local/</code> конвенцию, и открывает PR за секунды.</p>
+      <p>SimpleReview's Bitrix-aware agent читает ваш репозиторий, знает <code>/bitrix/</code> → <code>/local/</code> конвенцию, и готовит правку для сайта за секунды.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Установить SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#ccc">Сложная задача — модуль оплаты, миграция, аудит? <a href="/vibers/" style="color:#ff7e00;font-weight:600">Получить human review →</a></p>
     </div>
@@ -579,7 +579,7 @@ $MESS["CATALOG_BUY"] = "Заказать в один клик";</code></pre>
 
     <div class="faq-item">
       <div class="faq-q">Можно ли править сайт на Битриксе без программиста?</div>
-      <div class="faq-a">Да — для большинства правок шаблонов, текстов кнопок, файлов компонентов в <code>/local/</code>. Главное правило Битрикса: никогда не трогать <code>/bitrix/</code> — следующее обновление перетрёт ваши изменения. Все кастомизации делаются через <code>/local/templates/</code>, <code>/local/components/</code> и <code>/local/php_interface/init.php</code>. SimpleReview Chrome-extension знает эту конвенцию и пишет правки сразу в нужный файл в <code>/local/</code>, открывая Pull Request.</div>
+      <div class="faq-a">Да — для большинства правок шаблонов, текстов кнопок, файлов компонентов в <code>/local/</code>. Главное правило Битрикса: никогда не трогать <code>/bitrix/</code> — следующее обновление перетрёт ваши изменения. Все кастомизации делаются через <code>/local/templates/</code>, <code>/local/components/</code> и <code>/local/php_interface/init.php</code>. SimpleReview Chrome-extension знает эту конвенцию и пишет правки сразу в нужный файл в <code>/local/</code>, подготавливая правку для сайта.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Как установить SimpleReview на Битрикс-сайт?</div>
@@ -591,11 +591,11 @@ $MESS["CATALOG_BUY"] = "Заказать в один клик";</code></pre>
     </div>
     <div class="faq-item">
       <div class="faq-q">Это безопасно для продакшен-сайта?</div>
-      <div class="faq-a">SimpleReview никогда не пушит в продакшен ветку напрямую — каждое изменение это Pull Request, который вы проверяете и мержите. В худшем случае вы отклоняете PR. Рекомендуем держать staging-копию (Битрикс-хостинги обычно её предоставляют через Резервное копирование → Восстановить на тестовом домене) и тестировать там перед мержем в продакшен.</div>
+      <div class="faq-a">SimpleReview никогда не пушит в продакшен ветку напрямую — каждое изменение это правка, которую вы проверяете и мержите. В худшем случае вы отклоняете direct site fix. Рекомендуем держать staging-копию (Битрикс-хостинги обычно её предоставляют через Резервное копирование → Восстановить на тестовом домене) и тестировать там перед мержем в продакшен.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Чем это отличается от заказа фрилансера за 2-3 тыс рублей за правку?</div>
-      <div class="faq-a">Скоростью и стоимостью повторной работы. Фрилансер тратит 1-2 часа просто чтобы развернуть окружение, найти нужный шаблон и понять структуру именно вашей редакции и темы — сама правка часто занимает 5 минут. SimpleReview уже знает структуру Битрикса (<code>/bitrix/</code>, <code>/local/</code>, <code>.default/</code>, шаблоны, компоненты), открывает PR за секунды, и стоит копейки API (или $0 на своём ключе Claude/Codex).</div>
+      <div class="faq-a">Скоростью и стоимостью повторной работы. Фрилансер тратит 1-2 часа просто чтобы развернуть окружение, найти нужный шаблон и понять структуру именно вашей редакции и темы — сама правка часто занимает 5 минут. SimpleReview уже знает структуру Битрикса (<code>/bitrix/</code>, <code>/local/</code>, <code>.default/</code>, шаблоны, компоненты), готовит правку для сайта за секунды, и стоит копейки API (или $0 на своём ключе Claude/Codex).</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Работает ли это для редакций «Малый бизнес»/«Бизнес»/«Веб-кластер»?</div>
@@ -607,15 +607,15 @@ $MESS["CATALOG_BUY"] = "Заказать в один клик";</code></pre>
       <div class="related-grid">
         <div class="related-card">
           <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
-          <p>Same agent pattern, applied to WP fatal-error recovery — read debug.log, patch deprecated function, open PR.</p>
+          <p>Same agent pattern, applied to WP fatal-error recovery — read debug.log, patch deprecated function, open direct site fix.</p>
         </div>
         <div class="related-card">
           <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
-          <p>Sibling CMS, same workflow — click element → describe change → get a Pull Request.</p>
+          <p>Sibling CMS, same workflow — click element → describe change → get a direct site fix.</p>
         </div>
         <div class="related-card">
           <a href="/simple-review/">SimpleReview — Chrome Extension</a>
-          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+          <p>Click any element on any site, leave a comment, get a direct site fix. Free with your own AI key.</p>
         </div>
       </div>
     </div>

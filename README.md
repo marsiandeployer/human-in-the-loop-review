@@ -12,7 +12,7 @@
   <a href="https://github.com/marsiandeployer/human-in-the-loop-review/stargazers"><img src="https://img.shields.io/github/stars/marsiandeployer/human-in-the-loop-review?style=flat-square&color=yellow" alt="GitHub Stars"></a>
   <a href="https://github.com/marsiandeployer/human-in-the-loop-review/blob/main/LICENSE"><img src="https://img.shields.io/github/license/marsiandeployer/human-in-the-loop-review?style=flat-square" alt="License"></a>
   <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues"><img src="https://img.shields.io/github/issues/marsiandeployer/human-in-the-loop-review?style=flat-square" alt="Issues"></a>
-  <a href="https://github.com/marsiandeployer/human-in-the-loop-review/pulls"><img src="https://img.shields.io/github/issues-pr/marsiandeployer/human-in-the-loop-review?style=flat-square" alt="PRs"></a>
+  <a href="https://github.com/marsiandeployer/human-in-the-loop-review/pulls"><img src="https://img.shields.io/github/issues-pr/marsiandeployer/human-in-the-loop-review?style=flat-square" alt="Open changes"></a>
   <a href="https://github.com/apps/vibers-review/installations/new"><img src="https://img.shields.io/badge/Install-GitHub%20App-blue?style=flat-square&logo=github" alt="Install GitHub App"></a>
 </p>
 
@@ -29,9 +29,9 @@
 
 You vibe code fast with Cursor, Copilot, or Claude Code. Then spend 3x longer debugging things you didn't write.
 
-**Vibers** puts a human in the loop. We review your AI-generated code, catch the bugs AI misses, fix them, and send you a PR. You merge and keep shipping.
+**Vibers** puts a human in the loop. We review your AI-generated code, catch the bugs AI misses, fix them, and ship a site-ready fix.
 
-> **Honest about what this is:** We're not a security firm. No OWASP pentests, no architecture deep-dives. We're regular devs who review your code with fresh eyes — catch obvious bugs, check that main flows work, write the fix. Think alpha tester who sends a PR instead of filing a ticket.
+> **Honest about what this is:** We're not a security firm. No OWASP pentests, no architecture deep-dives. We're regular devs who review your code with fresh eyes — catch obvious bugs, check that main flows work, write the fix. Think alpha tester who ships the fix instead of filing a ticket.
 
 ## Quick Start (30 seconds)
 
@@ -52,7 +52,7 @@ Works with Claude Code, Cursor, Windsurf, and Codex.
 1. Click the button above
 2. Select your repositories
 3. Push code with a "How to test" section in your commit message
-4. Get a PR with fixes within 24 hours
+4. Get a site-ready fix within 24 hours
 
 ### Option C: GitHub Action
 
@@ -83,7 +83,7 @@ jobs:
 ## How It Works
 
 ```
-You push code → Vibers notifies reviewer → Human reviews against your spec → PR with fixes → You merge
+You push code → Vibers notifies reviewer → Human reviews against your spec → Site-ready fix → You ship
 ```
 
 ```mermaid
@@ -91,19 +91,19 @@ graph LR
     A[You push code] --> B[Vibers picks it up]
     B --> C[Human reviewer<br/>reads your spec]
     C --> D[Reviews & fixes bugs]
-    D --> E[PR with actual fixes]
-    E --> F[You merge & ship]
+    D --> E[Site-ready fix]
+    E --> F[You ship]
 ```
 
 ## Real Review Example
 
-Here's a real PR we sent to [MethasMP/Paycif](https://github.com/MethasMP/Paycif) — a payment gateway from Thailand:
+Here's a real fix we sent to [MethasMP/Paycif](https://github.com/MethasMP/Paycif) — a payment gateway from Thailand:
 
-> **[PR #2: Bug fixes and improvements](https://github.com/MethasMP/Paycif/pull/2)** — Found 5 bugs including broken payment flow, missing error handling, and UI issues. All fixed with working code.
+> **[Fix #2: Bug fixes and improvements](https://github.com/MethasMP/Paycif/pull/2)** — Found 5 bugs including broken payment flow, missing error handling, and UI issues. All fixed with working code.
 
 Recent UI example from the landing page: on a mobile floor map, both the desktop slot label and the short mobile label rendered at once, causing unreadable overlap. Vibers turned that into a concrete fix prompt and a clean before/after result.
 
-This is what every review looks like: not just comments, but actual working fixes in a PR.
+This is what every review looks like: not just comments, but actual working fixes.
 
 ## Landing Page Examples
 
@@ -115,7 +115,7 @@ Each example should keep the same structure:
 - before screenshot
 - after screenshot
 - English prompt that could realistically produce the fix
-- optional proof link: PR, commit, issue, or live page
+- optional proof link: commit, issue, live page, or public fix record
 
 Current cases are the mobile floor map label fix, the Paycif mobile pricing card fix, a chat message wrapping fix for long conversation bubbles, a responsive poster preview loading fix, a floor map edge-slot alignment fix on mobile, and a Brand identity Screen 1/1 orientation fix in Stand settings.
 
@@ -196,10 +196,10 @@ Brand color is platform-specific (PrestaShop pink `#df0067`, Magento orange `#ee
 
 ## Vibers vs Alternatives
 
-| Feature | Vibers | CodeRabbit | SonarQube | PullRequest.com |
+| Feature | Vibers | CodeRabbit | SonarQube | Legacy review agency |
 |---------|--------|------------|-----------|-----------------|
 | Reads your spec | Yes | No | No | Partial |
-| Sends PRs with fixes | Yes | No (comments only) | No | No |
+| Sends site-ready fixes | Yes | No (comments only) | No | No |
 | Catches AI hallucinations | Yes | Partial | No | Yes |
 | Tests live app | Yes | No | No | No |
 | Setup time | 30 seconds | 5 min | Hours | Days |
@@ -209,7 +209,7 @@ Brand color is platform-specific (PrestaShop pink `#df0067`, Magento orange `#ee
 
 | Plan | Price | Details |
 |------|-------|---------|
-| **Promo** | Free | Star this repo + share feedback. We review, fix, send a PR. |
+| **Promo** | Free | Star this repo + share feedback. We review, fix, and send a site-ready change. |
 | **Standard** | $15/hour | Priority turnaround, full spec review. Pay only for hours spent. |
 
 No subscriptions. No contracts. No minimums.
@@ -219,7 +219,7 @@ No subscriptions. No contracts. No minimums.
 - **Solo founders** who vibecoded an MVP and want a sanity check before launch
 - **Non-technical founders** who have a spec but can't read the code themselves
 - **AI-first teams** where most code is AI-generated and nobody's reviewing it
-- **Open source maintainers** getting AI-generated PRs they can't fully trust
+- **Open source maintainers** getting AI-generated changes they can't fully trust
 
 ## Community
 
@@ -251,7 +251,7 @@ Within 24 hours. Standard plan gets priority.
 
 <details>
 <summary><b>What if I disagree with a fix?</b></summary>
-Comment on the PR. We discuss, adjust, or explain. It's a conversation, not a decree.
+Reply with what feels off. We discuss, adjust, or explain. It's a conversation, not a decree.
 </details>
 
 <details>

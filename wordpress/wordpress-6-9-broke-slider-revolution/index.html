@@ -271,7 +271,7 @@
 
     <p class="article-lead">You updated to WordPress 6.9 "Gene" and now every Slider Revolution module on your site is a ghost: the background video or image plays full-width, but all the rows, headlines, CTA buttons and text layers are gone. The browser console shows <code>Uncaught TypeError: Cannot read properties of undefined (reading 'getAllSliderAliases')</code>, wp-admin throws <em>"There has been a critical error on this website"</em>, and you got an email from WordPress titled <em>"Your Site is Experiencing a Technical Issue"</em>. Good news — there is exactly one fix that works, shipped April 22, 2026: Slider Revolution <strong>7.0.10</strong>. Below: why it broke, how to update, and what to do if your theme bundles SR or wp-admin is locked.</p>
 
-    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: WP 6.9 breaks Slider Revolution 7.0.8 (layers missing, getAllSliderAliases undefined), SimpleReview opens a PR bumping revslider to 7.0.10, slider renders again">
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: WP 6.9 breaks Slider Revolution 7.0.8 (layers missing, getAllSliderAliases undefined), SimpleReview prepares a direct site fix bumping revslider to 7.0.10, slider renders again">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com</div>
@@ -329,7 +329,7 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Layers render. wp-admin unlocked. WP 6.9 retained.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">chore: bump revslider 7.0.8 → 7.0.10<br>composer.json · +2 lines</div>
             </div>
           </div>
@@ -345,7 +345,7 @@
     </div>
 
     <div class="ext-callout">
-      Slider Revolution exploded after the WP 6.9 update? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>debug.log</code>, confirms the <code>getAllSliderAliases</code> fatal, and opens a one-file PR that bumps <code>revslider</code> 7.0.8 → 7.0.10 and purges the cache. No license renewal, no core downgrade.
+      Slider Revolution exploded after the WP 6.9 update? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>debug.log</code>, confirms the <code>getAllSliderAliases</code> fatal, and opens a one-file direct site fix that bumps <code>revslider</code> 7.0.8 → 7.0.10 and purges the cache. No license renewal, no core downgrade.
     </div>
 
     <div class="key-takeaways">
@@ -509,12 +509,12 @@ define( 'WP_DEBUG_DISPLAY', false );
       <li>Install the Chrome extension and open your broken page.</li>
       <li>Click the SimpleReview icon, then click the empty hero area.</li>
       <li>Type "Slider Revolution broken after WP 6.9 — only background video shows" and click <strong>Fix it</strong>.</li>
-      <li>SimpleReview reads <code>revslider.php</code> to confirm the installed version is 7.0.8, pulls <code>debug.log</code> over SFTP to confirm the <code>getAllSliderAliases</code> fatal, checks whether SR is standalone or theme-bundled, and opens a PR with the right action — <code>composer.json</code> version bump for standalone, or an FTP-replace plan + theme-vendor-tracking issue for bundled installs.</li>
+      <li>SimpleReview reads <code>revslider.php</code> to confirm the installed version is 7.0.8, pulls <code>debug.log</code> over SFTP to confirm the <code>getAllSliderAliases</code> fatal, checks whether SR is standalone or theme-bundled, and prepares a direct site fix with the right action — <code>composer.json</code> version bump for standalone, or an FTP-replace plan + theme-vendor-tracking issue for bundled installs.</li>
     </ol>
 
     <div class="cta-block">
-      <h3>Slider Revolution broken by WP 6.9? One Click → One PR</h3>
-      <p>SimpleReview identifies your exact revslider version, confirms the <code>getAllSliderAliases</code> fatal, and opens a PR that bumps to 7.0.10 and clears caches — or flags a theme-bundled install so you know to wait for the vendor.</p>
+      <h3>Slider Revolution broken by WP 6.9? One Click → One direct site fix</h3>
+      <p>SimpleReview identifies your exact revslider version, confirms the <code>getAllSliderAliases</code> fatal, and prepares a direct site fix that bumps to 7.0.10 and clears caches — or flags a theme-bundled install so you know to wait for the vendor.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="../../simple-review/" style="color:#5b44e8;font-weight:600">Download SimpleReview →</a> — installs in 30 seconds, no Chrome required.</p>
     </div>
@@ -555,7 +555,7 @@ define( 'WP_DEBUG_DISPLAY', false );
         </div>
         <div class="related-card">
           <a href="../../simple-review/">SimpleReview</a>
-          <p>One-click review + PR for WordPress errors — reads debug.log, generates the fix, opens the PR.</p>
+          <p>One-click review + direct site fix for WordPress errors — reads debug.log, generates the fix, opens the direct site fix.</p>
         </div>
       </div>
     </div>

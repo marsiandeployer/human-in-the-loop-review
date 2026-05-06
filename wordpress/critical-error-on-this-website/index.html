@@ -359,7 +359,7 @@
     </div>
 
     <div class="ext-callout">
-      Site is down right now? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your debug.log over SFTP, finds the broken plugin or theme line, and pushes a PR — even when wp-admin is unreachable.
+      Site is down right now? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your debug.log over SFTP, finds the broken plugin or theme line, and pushes a direct site fix — even when wp-admin is unreachable.
     </div>
 
     <div class="key-takeaways">
@@ -488,14 +488,14 @@ define( 'WP_MAX_MEMORY_LIMIT',   '512M' ); // for admin pages</code></pre>
     <ol>
       <li>Install the Chrome extension and open the broken site.</li>
       <li>Click the SimpleReview icon, then click the "There has been a critical error" message.</li>
-      <li>Type "Fix critical error on this site" and click <strong>Fix it</strong>. SimpleReview connects to your repo, reads the latest debug.log, identifies the file and line that crashed, and opens a PR that disables the offending plugin (or replaces the broken function).</li>
+      <li>Type "Fix critical error on this site" and click <strong>Fix it</strong>. SimpleReview connects to your repo, reads the latest debug.log, identifies the file and line that crashed, and prepares a direct site fix that disables the offending plugin (or replaces the broken function).</li>
     </ol>
 
     <p>This is particularly useful when wp-admin is unreachable, the recovery email never arrived, and you'd rather not spend 20 minutes renaming folders over SFTP.</p>
 
     <div class="cta-block">
       <h3>Recover Your WordPress Site Without FTP Spelunking</h3>
-      <p>Click on the error message — SimpleReview reads your repo, finds the broken plugin, and opens a PR.</p>
+      <p>Click on the error message — SimpleReview reads your repo, finds the broken plugin, and prepares a direct site fix.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="https://onout.org/simple-review-wordpress/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
     </div>

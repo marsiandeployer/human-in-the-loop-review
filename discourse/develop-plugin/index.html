@@ -188,7 +188,7 @@
     @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
     .sc-err-line{font-family:'SF Mono',Monaco,Consolas,monospace;font-size:9px;color:#b91c1c;padding:2px 8px 6px 8px;display:block;animation:errHide 28s infinite}
     @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
-    /* Recovered (PR merged → plugin loads) */
+    /* Recovered (fix deployed → plugin loads) */
     .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite}
     @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
     .sc-rec-header{background:#fff;border-bottom:1px solid #eee;padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
@@ -300,7 +300,7 @@
     <p class="article-lead">If you searched <em>"discourse develop plugin"</em> and landed on a 2022 tutorial telling you to call <code>Discourse.TopicController.reopen(...)</code>, close the tab — that pattern was deprecated three Ember versions ago and finally stripped out during the Ember 5 migration. Here's a working walkthrough, tested against Discourse <code>main</code> as of 2026-04, with <code>plugin.rb</code>, the current <code>api.modifyClass</code> pattern, the dev loop with <code>bin/ember-cli</code>, a server-side endpoint, settings, tests, and the actual rebuild incantation.</p>
 
     <!-- Animated banner -->
-    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview spots a broken Discourse plugin row, opens a one-line PR fix for the api.modifyClass call, plugin loads green">
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview spots a broken Discourse plugin row, prepares a one-line site fix for the api.modifyClass call, plugin loads green">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">discourse.example.com/admin/plugins</div>
@@ -391,14 +391,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Plugin compiles · admin shows Enabled · Ember 5 deprecation cleared.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">fix: wrap modifyClass in withPluginApi<br>badge.js · 4 lines</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">SimpleReview spots Discourse plugin errors and opens a <strong>Pull Request</strong> — no rebuild guesswork</div>
+      <div class="sc-caption">SimpleReview spots Discourse plugin errors and opens a <strong>site fix</strong> — no rebuild guesswork</div>
       <div class="sc-cursor">
         <span class="sc-cross"><svg viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
@@ -412,7 +412,7 @@
     </div>
 
     <div class="ext-callout">
-      Got a plugin that errors after a Discourse rebuild? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads the admin error trace, finds the deprecated API in your repo, and opens a one-line PR with the <code>withPluginApi</code> / <code>modifyClass</code> fix — no need to grep through Discourse's source for the new signature.
+      Got a plugin that errors after a Discourse rebuild? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads the admin error trace, finds the deprecated API in your repo, and opens a one-line site fix with the <code>withPluginApi</code> / <code>modifyClass</code> fix — no need to grep through Discourse's source for the new signature.
     </div>
 
     <div class="key-takeaways">
@@ -966,16 +966,16 @@ but the current version is 3.3.2. Plugin will not be loaded.</code></pre>
       <li>Install the SimpleReview Chrome extension. Open your dev or staging Discourse.</li>
       <li>If the admin shows the plugin in error state, click on the error row.</li>
       <li>Type <em>"fix the deprecated API calls"</em> and click <strong>Fix it</strong>.</li>
-      <li>SimpleReview reads the file referenced in the error trace, finds the deprecated <code>reopen</code> / <code>{{action}}</code> / un-pluginId-ed <code>modifyClass</code>, and opens a PR with the current-API replacement. You review the diff, merge, rebuild.</li>
+      <li>SimpleReview reads the file referenced in the error trace, finds the deprecated <code>reopen</code> / <code>{{action}}</code> / un-pluginId-ed <code>modifyClass</code>, and prepares a fix with the current-API replacement. You review the diff, merge, rebuild.</li>
     </ol>
 
     <p>Useful when you're porting an old plugin you didn't write, when a Discourse upgrade just broke five plugins at once, or when you don't want to spend an afternoon mapping every <code>{{action}}</code> in a 2 000-line template tree.</p>
 
     <div class="cta-block">
       <h3>Stop guessing which Discourse API got renamed this quarter</h3>
-      <p>SimpleReview reads your plugin error, finds the deprecated call, and opens a PR with the current-API fix.</p>
+      <p>SimpleReview reads your plugin error, finds the deprecated call, and prepares a fix with the current-API fix.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
-      <p style="margin-top:12px;font-size:14px;color:#666">Want it in your repo CI instead? <a href="https://onout.org/vibers/" style="color:#5b44e8;font-weight:600">Vibers — Human-in-the-loop Code Review →</a> looks at every PR before it lands.</p>
+      <p style="margin-top:12px;font-size:14px;color:#666">Want it in your repo CI instead? <a href="https://onout.org/vibers/" style="color:#5b44e8;font-weight:600">Vibers — Human-in-the-loop Code Review →</a> looks at every change before it lands.</p>
     </div>
 
     <h2>Frequently Asked Questions</h2>
@@ -1034,7 +1034,7 @@ but the current version is 3.3.2. Plugin will not be loaded.</code></pre>
         </div>
         <div class="related-card">
           <a href="../../simple-review/">SimpleReview</a>
-          <p>Click any plugin error → AI generates a PR with the one-line fix. Chrome + GitHub.</p>
+          <p>Click any plugin error → AI prepares a site fix with the one-line fix. Chrome + GitHub.</p>
         </div>
       </div>
     </div>

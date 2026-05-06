@@ -76,7 +76,7 @@
       {
         "@type": "Question",
         "name": "What is SimpleReview and how does it help in a WordPress emergency?",
-        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview is an AI-assisted one-click repair tool for WordPress. You click the broken element on your site (the error notice, a frozen page, a broken form) and SimpleReview reads your debug.log and source over SFTP, identifies the exact file and line that caused the fatal error, and generates a PR with the one-line fix. It works 24/7 — no ticket queue, no waiting for a developer to wake up."}
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview is an AI-assisted one-click repair tool for WordPress. You click the broken element on your site (the error notice, a frozen page, a broken form) and SimpleReview reads your debug.log and source over SFTP, identifies the exact file and line that caused the fatal error, and generates a site-ready fix with the one-line change. It works 24/7 — no ticket queue, no waiting for a developer to wake up."}
       }
     ]
   }
@@ -284,7 +284,7 @@
 
     <p class="article-lead">Your site is down. Your phone is buzzing. A customer is asking why checkout shows a white page. Breathe. This guide walks you through the five most common WordPress emergencies — site down, white screen, critical error, hacked, locked out — with a 30-second diagnostic and a 5-minute fix for each. Keep this page open in a tab; read only the section that matches your symptom.</p>
 
-    <div class="sc-banner" aria-label="Animated demo: SimpleReview identifies a WordPress fatal error and opens a one-click repair PR">
+    <div class="sc-banner" aria-label="Animated demo: SimpleReview identifies a WordPress fatal error and opens a one-click repair direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com</div>
@@ -340,7 +340,7 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Site online. Checkout works. No rollback needed.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">fix: raise memory limit, pin WC<br>wp-config.php · 2 lines</div>
             </div>
           </div>
@@ -361,7 +361,7 @@
     </div>
 
     <div class="ext-callout">
-      Need help right now, at 3am, with no developer on call? → <a href="https://onout.org/simple-review/">SimpleReview</a> is a 24/7 AI-assisted emergency option. Click the broken element on your site, and it generates a pull request with the fix — no waiting on a ticket queue.
+      Need help right now, at 3am, with no developer on call? → <a href="https://onout.org/simple-review/">SimpleReview</a> is a 24/7 AI-assisted emergency option. Click the broken element on your site, and it generates a direct site fix with the fix — no waiting on a ticket queue.
     </div>
 
     <div class="key-takeaways">
@@ -545,14 +545,14 @@ define('WP_SITEURL','https://yoursite.com');</code></pre>
       <li>Install the Chrome extension and open your broken site (any URL that loads, even the error page).</li>
       <li>Click the SimpleReview icon, then click the broken element — the red error box, a frozen button, the white page, a hacked banner.</li>
       <li>Type what you want to happen ("site is down — diagnose and fix") and click <strong>Fix it</strong>.</li>
-      <li>SimpleReview pulls your <code>debug.log</code> over SFTP, reads the last fatal error, identifies the file and line, and opens a pull request with the one-line fix. You review it, merge, and the site is back.</li>
+      <li>SimpleReview pulls your <code>debug.log</code> over SFTP, reads the last fatal error, identifies the file and line, and opens a direct site fix with the one-line fix. You review it, merge, and the site is back.</li>
     </ol>
 
     <p>It is not a replacement for a backup strategy or an experienced developer retainer — but when the site is down and nobody is answering the phone, it is the fastest way to get running again. See the <a href="../../simple-review/">product page</a> for the full workflow.</p>
 
     <div class="cta-block">
       <h3>Get Emergency Help — 24/7, AI-Assisted</h3>
-      <p>Click the broken element. SimpleReview diagnoses the fatal error and ships a PR. No ticket queue, no waiting.</p>
+      <p>Click the broken element. SimpleReview diagnoses the fatal error and ships a direct site fix. No ticket queue, no waiting.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="../../simple-review-wordpress/" style="color:#5b44e8;font-weight:600">SimpleReview for WordPress →</a> — 30-second install, no Chrome required.</p>
     </div>
@@ -605,7 +605,7 @@ define('WP_SITEURL','https://yoursite.com');</code></pre>
     </div>
     <div class="faq-item">
       <div class="faq-q">What is SimpleReview and how does it help in a WordPress emergency?</div>
-      <div class="faq-a">SimpleReview is an AI-assisted one-click repair tool for WordPress. Click the broken element on your site (error notice, frozen page, broken form) and SimpleReview reads your <code>debug.log</code> and source over SFTP, identifies the exact file and line of the fatal error, and generates a PR with the one-line fix. It works 24/7 — no ticket queue, no waiting for a developer to wake up.</div>
+      <div class="faq-a">SimpleReview is an AI-assisted one-click repair tool for WordPress. Click the broken element on your site (error notice, frozen page, broken form) and SimpleReview reads your <code>debug.log</code> and source over SFTP, identifies the exact file and line of the fatal error, and generates a site-ready fix with the one-line change. It works 24/7 — no ticket queue, no waiting for a developer to wake up.</div>
     </div>
 
     <h2>Related WordPress Emergency Guides</h2>

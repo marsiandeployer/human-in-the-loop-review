@@ -288,7 +288,7 @@
     <p class="article-lead">Outgoing email is easy. Incoming replies are where Discourse setups go to die. There are <strong>three completely different inbound modes</strong> — forwarded, polled POP3, and IMAP — and most online tutorials only cover one. This guide gives you a decision matrix, the DNS prerequisites every mode shares, working Mailgun and IMAP configs, and a log-line debug map that tells you which line in <code>app/services/email/processor.rb</code> rejected your reply and why.</p>
 
     <!-- Animated banner -->
-    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview inspects Discourse Email Settings, detects the broken IMAP poll, and opens a one-line PR fix">
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview inspects Discourse Email Settings, detects the broken IMAP poll, and prepares a one-line site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">forum.example.com/admin/site_settings/category/email</div>
@@ -355,7 +355,7 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">IMAP IDLE reconnected. 12 queued replies imported into group inbox.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">fix(email): rotate IMAP App Password<br>app.yml · 1 line</div>
             </div>
           </div>
@@ -376,7 +376,7 @@
     </div>
 
     <div class="ext-callout">
-      Replies silently disappearing? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>app.yml</code> and Discourse site settings, replays the last failed inbound email through <code>Email::Receiver</code>, and opens a PR with the missing DNS record, wrong reply pattern, or expired App Password — without you ever opening Sidekiq.
+      Replies silently disappearing? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>app.yml</code> and Discourse site settings, replays the last failed inbound email through <code>Email::Receiver</code>, and prepares a fix with the missing DNS record, wrong reply pattern, or expired App Password — without you ever opening Sidekiq.
     </div>
 
     <div class="key-takeaways">
@@ -658,14 +658,14 @@ sv status sidekiq         # should be "run"
       <li>Install the Chrome extension and open your Discourse admin email page.</li>
       <li>Click any of the broken settings — the IMAP toggle, the reply pattern, the Mailgun secret field.</li>
       <li>Type what you observe ("replies aren't getting through") and click <strong>Fix it</strong>.</li>
-      <li>SimpleReview reads <code>app.yml</code> over SFTP, queries Discourse's <code>/admin/email/rejected</code> for the last failures, replays the most recent rejected message through <code>Email::Receiver</code> in a sandbox, and opens a PR with the precise fix — usually a missing DNS record, a wrong reply pattern, or an expired App Password.</li>
+      <li>SimpleReview reads <code>app.yml</code> over SFTP, queries Discourse's <code>/admin/email/rejected</code> for the last failures, replays the most recent rejected message through <code>Email::Receiver</code> in a sandbox, and prepares a fix with the precise fix — usually a missing DNS record, a wrong reply pattern, or an expired App Password.</li>
     </ol>
 
     <p>Faster than reading <code>processor.rb</code> at 2 AM trying to figure out which exception you're hitting.</p>
 
     <div class="cta-block">
       <h3>Fix Discourse Email Without Reading the Source</h3>
-      <p>SimpleReview audits your DNS, app.yml, and site settings, replays failed inbound mail, and opens a PR with the one-line fix.</p>
+      <p>SimpleReview audits your DNS, app.yml, and site settings, replays failed inbound mail, and prepares a fix with the one-line fix.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Self-hosting Discourse? <a href="https://onout.org/simple-review/" style="color:#5b44e8;font-weight:600">SimpleReview reads your container config over SFTP →</a></p>
     </div>
@@ -726,7 +726,7 @@ sv status sidekiq         # should be "run"
         </div>
         <div class="related-card">
           <a href="../../simple-review/">SimpleReview</a>
-          <p>Click any broken element → AI generates a PR with the one-line fix.</p>
+          <p>Click any broken element → AI prepares a site fix with the one-line fix.</p>
         </div>
       </div>
     </div>

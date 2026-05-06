@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fix Any WordPress Site Without a Developer — SimpleReview for WordPress</title>
-  <meta name="description" content="Click any element on your WordPress site. SimpleReview reads `wp-content/themes/[theme]/`, knows hooks and Gutenberg blocks — and opens a Pull Request via Git or pushes via SFTP.">
+  <meta name="description" content="Click any element on your WordPress site. SimpleReview reads `wp-content/themes/[theme]/`, knows hooks and Gutenberg blocks — and uploads a site-ready fix via Git, SFTP, SSH, or your deploy flow.">
   <meta name="keywords" content="fix wordpress without developer, wordpress ai assistant, wordpress chrome extension simplereview, edit wordpress site, wordpress.org plugin directory simplereview">
   <link rel="canonical" href="https://onout.org/wordpress/">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
@@ -12,12 +12,12 @@
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Fix Any WordPress Site Without a Developer — SimpleReview for WordPress">
-  <meta property="og:description" content="Click any element on your WordPress site. SimpleReview reads wp-content/themes, knows hooks and Gutenberg blocks — and opens a Pull Request via Git or pushes via SFTP.">
+  <meta property="og:description" content="Click any element on your WordPress site. SimpleReview reads wp-content/themes, knows hooks and Gutenberg blocks — and uploads a site-ready fix via Git, SFTP, SSH, or your deploy flow.">
   <meta property="og:url" content="https://onout.org/wordpress/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fix Any WordPress Site Without a Developer — SimpleReview for WordPress">
-  <meta name="twitter:description" content="Click any element on your WordPress site. Get a Pull Request, not a ticket.">
+  <meta name="twitter:description" content="Click any element on your WordPress site. Get a direct site fix, not a ticket.">
   <meta name="twitter:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
@@ -30,7 +30,7 @@
     "@type": "BlogPosting",
     "inLanguage": "en",
     "headline": "Fix Any WordPress Site Without a Developer — SimpleReview for WordPress",
-    "description": "Click any element on your WordPress site. SimpleReview reads wp-content/themes/, knows hooks and Gutenberg blocks — and opens a Pull Request via Git or pushes via SFTP.",
+    "description": "Click any element on your WordPress site. SimpleReview reads wp-content/themes/, knows hooks and Gutenberg blocks — and uploads a site-ready fix via Git, SFTP, SSH, or your deploy flow.",
     "url": "https://onout.org/wordpress/",
     "datePublished": "2026-04-30",
     "dateModified": "2026-04-30",
@@ -51,10 +51,10 @@
     "@type": "FAQPage",
     "inLanguage": "en",
     "mainEntity": [
-      {"@type": "Question", "name": "Can I edit my WordPress site without a developer?", "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic and structural edits — yes. Theme files (wp-content/themes/[theme]/), child-theme overrides, theme.json, translations, hide nags via add_action — SimpleReview opens a PR for those in seconds. For payment plugins, complex Multisite, and large migrations — pair with Vibers human review."}},
+      {"@type": "Question", "name": "Can I edit my WordPress site without a developer?", "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic and structural edits — yes. Theme files (wp-content/themes/[theme]/), child-theme overrides, theme.json, translations, hide nags via add_action — SimpleReview prepares a direct site fix for those in seconds. For payment plugins, complex Multisite, and large migrations — pair with Vibers human review."}},
       {"@type": "Question", "name": "How does SimpleReview install on WordPress?", "acceptedAnswer": {"@type": "Answer", "text": "Today: install the Chrome Extension and connect your Git repo or give SFTP credentials to wp-content/. Tomorrow: native plugin on the WordPress.org Plugin Directory (in review — usual cycle 2-8 weeks). Once approved: Plugins → Add New → search SimpleReview → Activate."}},
       {"@type": "Question", "name": "Classic themes vs block themes — which are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Both. Classic themes (Astra, GeneratePress, Twenty Sixteen…) — header.php, footer.php, single.php, functions.php. Block themes (Twenty Twenty-Four, Twenty Twenty-Five) — theme.json + templates/*.html + parts/*.html. SimpleReview detects which engine your site uses and edits the right file."}},
-      {"@type": "Question", "name": "Does it work on managed WP hosts (WP Engine, Kinsta, Cloudways)?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Two paths: (1) connect the host's Git integration (WP Engine, Kinsta, and Cloudways all support it) and SimpleReview opens a PR; (2) connect SFTP/SSH to wp-content and SimpleReview pushes directly. SFTP is preferred where Git is locked behind a paid tier."}},
+      {"@type": "Question", "name": "Does it work on managed WP hosts (WP Engine, Kinsta, Cloudways)?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Two paths: (1) connect the host's Git integration (WP Engine, Kinsta, and Cloudways all support it) and SimpleReview prepares a direct site fix; (2) connect SFTP/SSH to wp-content and SimpleReview pushes directly. SFTP is preferred where Git is locked behind a paid tier."}},
       {"@type": "Question", "name": "What if my host doesn't expose Git?", "acceptedAnswer": {"@type": "Answer", "text": "Use SFTP. Give SimpleReview read/write access to wp-content/ only — never wp-config.php or wp-admin/. The agent edits theme/plugin overrides and writes a changelog so you can roll back if the live edit breaks something."}},
       {"@type": "Question", "name": "How is this cheaper than a freelancer for one-line tweaks?", "acceptedAnswer": {"@type": "Answer", "text": "Freelancer: $30-80/hour with a 1-hour minimum, plus 30-90 min just to find the right file in a theme they've never seen. SimpleReview: pennies in API costs (free if you bring your own key). The agent already knows wp-content/themes/, child themes, hooks, Gutenberg blocks, and theme.json — no onboarding tax per task."}}
     ]
@@ -307,15 +307,15 @@
 
     <header class="hero">
       <div class="hero-badge">SimpleReview · for WordPress · Chrome Extension</div>
-      <h1>Click any element on your WordPress site. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, pull request, or deployed via SFTP">code fix</abbr>.</h1>
-      <p class="hero-sub">WordPress runs 43% of the web, and 90% of "broken site" tickets come down to the same six failures. SimpleReview reads <code>wp-content/</code>, knows hooks and Gutenberg blocks, and ships a Pull Request — no developer needed.</p>
+      <h1>Click any element on your WordPress site. Get a <abbr title="The fix can be automatically pushed to GitHub as a commit, direct site fix, or deployed via SFTP">code fix</abbr>.</h1>
+      <p class="hero-sub">WordPress runs 43% of the web, and 90% of "broken site" tickets come down to the same six failures. SimpleReview reads <code>wp-content/</code>, knows hooks and Gutenberg blocks, and ships a direct site fix — no developer needed.</p>
       <div class="cta-group">
         <a class="btn-primary" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_wordpress_hub&utm_medium=hero">Download Extension</a>
         <a class="btn-secondary" href="/wordpress/how-to-fix-and-improve-wordpress-sites/">Read the WordPress fix guide →</a>
       </div>
     </header>
 
-    <div id="sc-banner-fallback" class="sc-banner wordpress" aria-label="Animated demo: SimpleReview's WordPress expert hides the update nag and removes the demo Hello-world post, then opens a PR">
+    <div id="sc-banner-fallback" class="sc-banner wordpress" aria-label="Animated demo: SimpleReview's WordPress expert hides the update nag and removes the demo Hello-world post, then prepares a direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com/wp-admin</div>
@@ -359,7 +359,7 @@
               </div>
               <div class="sc-rec-banner"><span class="sc-rec-pct">CLEAN</span>Update nag hidden · demo "Hello world!" removed</div>
               <div class="sc-rec-content">
-                <span class="sc-rec-success">✓ mu-plugin/dismiss-nags.php created · Hello-world deleted · PR #42 ready</span>
+                <span class="sc-rec-success">✓ mu-plugin/dismiss-nags.php created · Hello-world deleted · Fix #42 ready</span>
                 <div class="sc-rec-h">Posts</div>
                 <div class="sc-rec-line"></div>
                 <div class="sc-rec-line med"></div>
@@ -399,14 +399,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Update nag gone for editors. Demo Hello-world deleted. Core unchanged.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-title">✓ Fix #42 ready</div>
               <div class="sc-pr-meta">fix(nags): hide WP update nag<br>mu-plugins/dismiss-nags.php · +14</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click SimpleReview → select the nag → <strong>Fix it</strong> → PR opens, no developer involved</div>
+      <div class="sc-caption">Click SimpleReview → select the nag → <strong>Fix it</strong> → the fix is ready, no developer involved</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -458,8 +458,8 @@
         <div class="step">
           <div class="step-num">4</div>
           <div class="step-content">
-            <h3>Click element → PR</h3>
-            <p>Hover any element. Type "hide this nag" or "remove powered by Astra". The agent edits the right file and opens a PR with <code>wp-cli</code> cache flush notes if needed. You merge or decline.</p>
+            <h3>Click element → direct fix</h3>
+            <p>Hover any element. Type "hide this nag" or "remove powered by Astra". The agent edits the right file and prepares a direct site fix with <code>wp-cli</code> cache flush notes if needed. You merge or decline.</p>
           </div>
         </div>
       </div>
@@ -502,7 +502,7 @@
             <td class="col-vibers">Yes — child override first</td>
           </tr>
           <tr>
-            <td>Opens a PR you can review</td>
+            <td>Opens a direct site fix you can review</td>
             <td>Sometimes (if they use Git)</td>
             <td class="col-vibers">Always (or atomic SFTP push with rollback)</td>
           </tr>
@@ -537,7 +537,7 @@
         </div>
         <div class="case-card">
           <h3>Non-tech bloggers and editors</h3>
-          <p>See the broken thing on the post, click it, describe in plain English. Get a PR your hosting partner can merge.</p>
+          <p>See the broken thing on the post, click it, describe in plain English. Get a direct site fix your hosting partner can merge.</p>
         </div>
       </div>
     </section>
@@ -546,7 +546,7 @@
       <h2>FAQ</h2>
       <div class="faq-item">
         <div class="faq-q">Can I edit my WordPress site without a developer?</div>
-        <div class="faq-a">For most cosmetic and structural edits — yes. Theme files (<code>wp-content/themes/[theme]/</code>), child-theme overrides, <code>theme.json</code>, translations, hide nags via <code>add_action</code> — SimpleReview opens a PR for those in seconds. For payment plugins, complex Multisite, and large migrations — pair with <a href="/vibers/">Vibers human review</a>.</div>
+        <div class="faq-a">For most cosmetic and structural edits — yes. Theme files (<code>wp-content/themes/[theme]/</code>), child-theme overrides, <code>theme.json</code>, translations, hide nags via <code>add_action</code> — SimpleReview prepares a direct site fix for those in seconds. For payment plugins, complex Multisite, and large migrations — pair with <a href="/vibers/">Vibers human review</a>.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">How does SimpleReview install on WordPress?</div>
@@ -558,7 +558,7 @@
       </div>
       <div class="faq-item">
         <div class="faq-q">Does it work on managed WP hosts (WP Engine, Kinsta, Cloudways)?</div>
-        <div class="faq-a">Yes. Two paths: (1) connect the host's Git integration (WP Engine, Kinsta, and Cloudways all support it) and SimpleReview opens a PR; (2) connect SFTP/SSH to <code>wp-content/</code> and SimpleReview pushes directly. SFTP is preferred where Git is locked behind a paid tier.</div>
+        <div class="faq-a">Yes. Two paths: (1) connect the host's Git integration (WP Engine, Kinsta, and Cloudways all support it) and SimpleReview prepares a direct site fix; (2) connect SFTP/SSH to <code>wp-content/</code> and SimpleReview pushes directly. SFTP is preferred where Git is locked behind a paid tier.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">What if my host doesn't expose Git?</div>
@@ -572,7 +572,7 @@
 
     <div class="cta-box">
       <h2>Stop paying $40/hr for one-line WordPress tweaks</h2>
-      <p>SimpleReview's WordPress-aware AI agent already knows hooks, child themes, and Gutenberg. Click the element, type the change, get a Pull Request.</p>
+      <p>SimpleReview's WordPress-aware AI agent already knows hooks, child themes, and Gutenberg. Click the element, type the change, get a direct site fix.</p>
       <a class="btn-white" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm?utm_source=onout_wordpress_hub&utm_medium=cta">Get SimpleReview for Chrome →</a>
       <p style="margin-top:14px;font-size:14px;opacity:0.85">WooCommerce, Multisite, security audit? → <a href="/vibers/" style="color:inherit;text-decoration:underline">Get a human review</a></p>
     </div>

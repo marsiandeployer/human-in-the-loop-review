@@ -292,7 +292,7 @@
     <p class="article-lead">Migrating to Discourse is not a one-click affair. The import scripts live <em>inside</em> the Discourse Docker container, the source MySQL has to be reachable from that container, attachments need a path-mapping dance, usernames break on characters Discourse refuses, and once the import finishes you stare at a Sidekiq queue with hundreds of thousands of jobs that have to drain before users can log in. This guide is the end-to-end phpBB → Discourse run, with vBulletin notes at the bottom.</p>
 
     <!-- Animated banner: Discourse migration in progress with SimpleReview side-fix on attachment paths -->
-    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: Discourse phpbb3 import is running, SimpleReview detects missing attachments and proposes a path fix PR">
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: Discourse phpbb3 import is running, SimpleReview detects missing attachments and proposes a path fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">discourse.example.com/admin/migration</div>
@@ -357,7 +357,7 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">8,940 attachments imported · sidekiq draining 318k → 0</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">fix(import): mount phpBB files dir<br>containers/app.yml · 4 lines</div>
             </div>
           </div>
@@ -378,7 +378,7 @@
     </div>
 
     <div class="ext-callout">
-      Stuck on a half-imported forum with broken attachments or a Sidekiq queue that won't drain? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>containers/app.yml</code>, the import log, and the Sidekiq stats, then opens a PR with the right <code>ATTACHMENTS_BASE_DIR</code>, volume mount, and <code>UNICORN_SIDEKIQS</code> bump — faster than re-running a 12-hour import.
+      Stuck on a half-imported forum with broken attachments or a Sidekiq queue that won't drain? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>containers/app.yml</code>, the import log, and the Sidekiq stats, then prepares a fix with the right <code>ATTACHMENTS_BASE_DIR</code>, volume mount, and <code>UNICORN_SIDEKIQS</code> bump — faster than re-running a 12-hour import.
     </div>
 
     <div class="key-takeaways">
@@ -726,7 +726,7 @@ remap --regex "\\[spoiler\\](.*?)\\[/spoiler\\]" "[details=Spoiler]\\1[/details]
 
     <ul>
       <li>Read the import log and flag warnings you missed (<code>attachment file not found</code> buried 50,000 lines deep).</li>
-      <li>Inspect <code>containers/app.yml</code> and verify your volumes / env vars match the script settings — open a PR if they don't.</li>
+      <li>Inspect <code>containers/app.yml</code> and verify your volumes / env vars match the script settings — prepare a fix if they don't.</li>
       <li>Pull <code>Sidekiq::Stats.new</code> from a Rails console snippet, recommend <code>UNICORN_SIDEKIQS</code> bump if the queue isn't draining.</li>
       <li>Generate the nginx 301 map from your phpBB topic-ID → Discourse topic-ID dump.</li>
     </ul>
@@ -735,7 +735,7 @@ remap --regex "\\[spoiler\\](.*?)\\[/spoiler\\]" "[details=Spoiler]\\1[/details]
 
     <div class="cta-block">
       <h3>Don't Re-Run the 12-Hour Import — Patch the Config Instead</h3>
-      <p>Click on the failing import row, type the symptom, hit Fix it. SimpleReview reads your app.yml and import log, opens a PR with the corrected mount path, env var, or Sidekiq tuning.</p>
+      <p>Click on the failing import row, type the symptom, hit Fix it. SimpleReview reads your app.yml and import log, prepares a fix with the corrected mount path, env var, or Sidekiq tuning.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Running Discourse on your own infra? <a href="https://onout.org/simple-review/" style="color:#5b44e8;font-weight:600">SimpleReview also reads server logs over SSH →</a></p>
     </div>
@@ -796,7 +796,7 @@ remap --regex "\\[spoiler\\](.*?)\\[/spoiler\\]" "[details=Spoiler]\\1[/details]
         </div>
         <div class="related-card">
           <a href="../../simple-review/">SimpleReview</a>
-          <p>Click any broken element → AI generates a PR with the one-line fix. Chrome + WordPress.</p>
+          <p>Click any broken element → AI prepares a site fix with the one-line fix. Chrome + WordPress.</p>
         </div>
       </div>
     </div>

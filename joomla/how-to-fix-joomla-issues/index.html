@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <meta property="og:type" content="article">
   <meta property="og:title" content="How to Fix Joomla 5 Sites Without Wasting $40/hr on a Freelancer">
-  <meta property="og:description" content="White screen, J4→J5 upgrade error, reCAPTCHA, slow admin — SimpleReview's Joomla-aware agent finds the override file and opens a PR.">
+  <meta property="og:description" content="White screen, J4→J5 upgrade error, reCAPTCHA, slow admin — SimpleReview's Joomla-aware agent finds the override file and prepares a direct site fix.">
   <meta property="og:url" content="https://onout.org/joomla/how-to-fix-joomla-issues/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -51,12 +51,12 @@
       {
         "@type": "Question",
         "name": "Can I edit a Joomla site without a developer?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Yes for most cosmetic and structural edits. Joomla's admin handles articles, modules, menu items, and template params. For deeper changes — template overrides in templates/[template]/html/com_[component]/, language strings in language/[lang]/[lang].com_[component].ini, or footer edits in templates/[template]/index.php — you used to need a developer. SimpleReview's Joomla-aware agent now does these edits and opens a Pull Request."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes for most cosmetic and structural edits. Joomla's admin handles articles, modules, menu items, and template params. For deeper changes — template overrides in templates/[template]/html/com_[component]/, language strings in language/[lang]/[lang].com_[component].ini, or footer edits in templates/[template]/index.php — you used to need a developer. SimpleReview's Joomla-aware agent now does these edits and prepares a direct site fix."}
       },
       {
         "@type": "Question",
         "name": "Is this safe — Joomla has so many places that hold cache?",
-        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview never pushes to your live branch directly — every change is a PR you review. After merge, the agent also clears administrator/cache/, cache/, and (if Conservative Caching is enabled) tmp/ so the change actually shows up. We strongly recommend pairing it with a staging clone — the worst-case is a PR you decline."}
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview never pushes to your live branch directly — every change is a direct site fix you review. After merge, the agent also clears administrator/cache/, cache/, and (if Conservative Caching is enabled) tmp/ so the change actually shows up. We strongly recommend pairing it with a staging clone — the worst-case is a direct site fix you decline."}
       },
       {
         "@type": "Question",
@@ -71,7 +71,7 @@
       {
         "@type": "Question",
         "name": "What about Akeeba Backup / Admin Tools paid extensions?",
-        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview reads paid-extension language files and template overrides without issue — those are still on disk. License-key activation, paid update channel, and DB-level configuration of Akeeba Admin Tools (.htaccess maker, server config) we don't touch — these change every Joomla version and are best handled in the Akeeba UI. For one-line label or copy changes inside RSForm Pro, sh404SEF, or DJ-Catalog forms, SimpleReview opens a PR against the language file."}
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview reads paid-extension language files and template overrides without issue — those are still on disk. License-key activation, paid update channel, and DB-level configuration of Akeeba Admin Tools (.htaccess maker, server config) we don't touch — these change every Joomla version and are best handled in the Akeeba UI. For one-line label or copy changes inside RSForm Pro, sh404SEF, or DJ-Catalog forms, SimpleReview prepares a direct site fix against the language file."}
       },
       {
         "@type": "Question",
@@ -171,7 +171,7 @@
 
     <h1>How to Fix Joomla 5 Sites Without Wasting $40/hr on a Freelancer</h1>
 
-    <p class="article-lead">Joomla still runs ~2% of all CMS sites — and most of them are 8–12 year old installs that an old freelancer maintains for 1 hour/month. The fixes are usually the same: a stuck cache (<code>administrator/cache/</code>), a bad <code>configuration.php</code> value, an outdated extension after a 4→5 upgrade, or a template override in <code>templates/[template]/html/com_[component]/</code>. <strong>SimpleReview's Joomla-aware agent</strong> knows the override directory pattern and the J3→J4→J5 migration gotchas, so it patches the right file and opens a PR.</p>
+    <p class="article-lead">Joomla still runs ~2% of all CMS sites — and most of them are 8–12 year old installs that an old freelancer maintains for 1 hour/month. The fixes are usually the same: a stuck cache (<code>administrator/cache/</code>), a bad <code>configuration.php</code> value, an outdated extension after a 4→5 upgrade, or a template override in <code>templates/[template]/html/com_[component]/</code>. <strong>SimpleReview's Joomla-aware agent</strong> knows the override directory pattern and the J3→J4→J5 migration gotchas, so it patches the right file and prepares a direct site fix.</p>
 
     <style>
     /* ─────── Joomla 5 Banner (28s cycle) ─────── */
@@ -308,7 +308,7 @@
       .sc-jm-footer{padding:14px 140px 14px 14px}
     }
     </style>
-    <div id="sc-banner-fallback" class="sc-banner joomla" aria-label="Animated demo: SimpleReview's Joomla expert overrides the Powered-by Joomla footer block and opens a PR">
+    <div id="sc-banner-fallback" class="sc-banner joomla" aria-label="Animated demo: SimpleReview's Joomla expert overrides the Powered-by Joomla footer block and prepares a direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com</div>
@@ -351,7 +351,7 @@
               </div>
               <div class="sc-rec-banner"><span class="sc-rec-pct">NEW</span>Spring catalog now live — explore</div>
               <div class="sc-rec-content">
-                <span class="sc-rec-success">✓ Powered-by Joomla hidden via template override · index.php patched · PR #42</span>
+                <span class="sc-rec-success">✓ Powered-by Joomla hidden via template override · index.php patched · Fix #42</span>
                 <div class="sc-rec-h">Latest articles</div>
                 <div class="sc-rec-line"></div>
                 <div class="sc-rec-line med"></div>
@@ -392,14 +392,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Joomla branding hidden. Footer copyright preserved.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-title">✓ Fix #42 ready</div>
               <div class="sc-pr-meta">fix(footer): override Powered-by block<br>cassiopeia/index.php · -3 lines</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click SimpleReview → select the Powered-by block → <strong>Fix it</strong> → PR opens, no developer involved</div>
+      <div class="sc-caption">Click SimpleReview → select the Powered-by block → <strong>Fix it</strong> → the fix is ready, no developer involved</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -408,7 +408,7 @@
     </div>
 
     <div class="ext-callout">
-      Joomla site stuck on a single typo a freelancer keeps quoting at 1 hour? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads <code>templates/[template]/html/</code>, finds the override, opens a PR. No more waiting for the old maintainer to "have a free evening".
+      Joomla site stuck on a single typo a freelancer keeps quoting at 1 hour? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads <code>templates/[template]/html/</code>, finds the override, prepares a direct site fix. No more waiting for the old maintainer to "have a free evening".
     </div>
 
     <div class="key-takeaways">
@@ -447,7 +447,7 @@
     <ol class="steps">
       <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. It's free with your own AI key (Claude Code or Codex), and there's a built-in fallback if you don't have one.</li>
       <li><strong>Connect your Joomla repo or SFTP.</strong> Paste a GitHub / GitLab / Gitea URL, or hand over SFTP credentials — the extension pulls a working tree, parses <code>configuration.php</code> and the active template name, and caches a file index.</li>
-      <li><strong>Open your Joomla page, click the SimpleReview icon, click the element you want to change.</strong> Type in plain English: "hide Powered by Joomla", "add reCAPTCHA to contact form", "translate this label to French", "remove this stale featured-article block". Click <strong>Fix it</strong>. The agent finds the override path, makes the edit, opens a Pull Request, and clears the appropriate cache directories.</li>
+      <li><strong>Open your Joomla page, click the SimpleReview icon, click the element you want to change.</strong> Type in plain English: "hide Powered by Joomla", "add reCAPTCHA to contact form", "translate this label to French", "remove this stale featured-article block". Click <strong>Fix it</strong>. The agent finds the override path, makes the edit, prepares a direct site fix, and clears the appropriate cache directories.</li>
     </ol>
 
     <h2>Common Joomla Fixes</h2>
@@ -470,7 +470,7 @@ public $tmp_path = '/home/old-user/public_html/tmp';                  // ✘ doe
 public $log_path = '/home/new-user/public_html/administrator/logs';   // ✔
 public $tmp_path = '/home/new-user/public_html/tmp';                  // ✔</code></pre>
 
-    <p>SimpleReview's agent reads <code>configuration.php</code>, validates both paths against the live filesystem, and opens a PR with the correction — including a follow-up commit that clears <code>administrator/cache/</code>.</p>
+    <p>SimpleReview's agent reads <code>configuration.php</code>, validates both paths against the live filesystem, and prepares a direct site fix with the correction — including a follow-up commit that clears <code>administrator/cache/</code>.</p>
 
     <h3>Add reCAPTCHA to a Contact Form</h3>
 
@@ -535,7 +535,7 @@ public $tmp_path = '/home/new-user/public_html/tmp';                  // ✔</co
         <tr><td>Find override path</td><td>15-90 min depending on template familiarity</td><td>Instant — already indexed</td></tr>
         <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
         <tr><td>Clear cache</td><td>Sometimes forgotten → support ticket the next day</td><td>Automatic post-merge</td></tr>
-        <tr><td>Open a PR</td><td>If they use Git at all (most don't)</td><td>Always</td></tr>
+        <tr><td>Prepare a direct fix</td><td>If they use Git at all (most don't)</td><td>Always</td></tr>
         <tr><td>Cost for 1-line override</td><td>$30-50 (1-hour minimum)</td><td>$0 (BYO key) or pennies of API usage</td></tr>
       </table>
     </div>
@@ -552,11 +552,11 @@ public $tmp_path = '/home/new-user/public_html/tmp';                  // ✔</co
       <li><strong>Custom payment plugin</strong> — anything that touches checkout, refund, or subscription logic. Get a human review (Vibers does this) before going live.</li>
     </ul>
 
-    <p>That's exactly the slice <a href="/vibers/">Vibers</a> handles — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
+    <p>That's exactly the slice <a href="/vibers/">Vibers</a> handles — a real human reviews any direct site fix you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
 
     <div class="cta-block">
       <h3>Stop Paying $40/hr for One-Line Joomla Edits</h3>
-      <p>SimpleReview's Joomla-aware agent reads your override directory, knows the J4→J5 deprecation list, and opens a Pull Request you can merge in seconds.</p>
+      <p>SimpleReview's Joomla-aware agent reads your override directory, knows the J4→J5 deprecation list, and prepares a direct site fix you can merge in seconds.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#cdd9e3">Custom component, J3→J5 migration, custom payment? <a href="/vibers/" style="color:#fff;font-weight:600;text-decoration:underline">Get a human review →</a></p>
     </div>
@@ -565,11 +565,11 @@ public $tmp_path = '/home/new-user/public_html/tmp';                  // ✔</co
 
     <div class="faq-item">
       <div class="faq-q">Can I edit a Joomla site without a developer?</div>
-      <div class="faq-a">Yes for most cosmetic and structural edits. Joomla's admin handles articles, modules, menu items, and template params. For deeper changes — template overrides in <code>templates/[template]/html/com_[component]/</code>, language strings in <code>language/[lang]/[lang].com_[component].ini</code>, or footer edits in <code>templates/[template]/index.php</code> — you used to need a developer. SimpleReview's Joomla-aware agent now does these edits and opens a Pull Request.</div>
+      <div class="faq-a">Yes for most cosmetic and structural edits. Joomla's admin handles articles, modules, menu items, and template params. For deeper changes — template overrides in <code>templates/[template]/html/com_[component]/</code>, language strings in <code>language/[lang]/[lang].com_[component].ini</code>, or footer edits in <code>templates/[template]/index.php</code> — you used to need a developer. SimpleReview's Joomla-aware agent now does these edits and prepares a direct site fix.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Is this safe — Joomla has so many places that hold cache?</div>
-      <div class="faq-a">SimpleReview never pushes to your live branch directly — every change is a PR you review. After merge, the agent also clears <code>administrator/cache/</code>, <code>cache/</code>, and (if Conservative Caching is enabled) <code>tmp/</code> so the change actually shows up. We strongly recommend pairing it with a staging clone — the worst-case is a PR you decline.</div>
+      <div class="faq-a">SimpleReview never pushes to your live branch directly — every change is a direct site fix you review. After merge, the agent also clears <code>administrator/cache/</code>, <code>cache/</code>, and (if Conservative Caching is enabled) <code>tmp/</code> so the change actually shows up. We strongly recommend pairing it with a staging clone — the worst-case is a direct site fix you decline.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Which Joomla versions does SimpleReview support?</div>
@@ -581,7 +581,7 @@ public $tmp_path = '/home/new-user/public_html/tmp';                  // ✔</co
     </div>
     <div class="faq-item">
       <div class="faq-q">What about Akeeba Backup / Admin Tools paid extensions?</div>
-      <div class="faq-a">SimpleReview reads paid-extension language files and template overrides without issue — those are still on disk. License-key activation, paid update channel, and DB-level configuration of Akeeba Admin Tools (.htaccess maker, server config) we don't touch — these change every Joomla version and are best handled in the Akeeba UI. For one-line label or copy changes inside RSForm Pro, sh404SEF, or DJ-Catalog forms, SimpleReview opens a PR against the language file.</div>
+      <div class="faq-a">SimpleReview reads paid-extension language files and template overrides without issue — those are still on disk. License-key activation, paid update channel, and DB-level configuration of Akeeba Admin Tools (.htaccess maker, server config) we don't touch — these change every Joomla version and are best handled in the Akeeba UI. For one-line label or copy changes inside RSForm Pro, sh404SEF, or DJ-Catalog forms, SimpleReview prepares a direct site fix against the language file.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Cheaper than a Joomla freelancer (typical $30-50/hr)?</div>
@@ -593,7 +593,7 @@ public $tmp_path = '/home/new-user/public_html/tmp';                  // ✔</co
       <div class="related-grid">
         <div class="related-card">
           <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
-          <p>Same agent pattern, applied to WP fatal-error recovery — read <code>debug.log</code>, patch deprecated function, open PR.</p>
+          <p>Same agent pattern, applied to WP fatal-error recovery — read <code>debug.log</code>, patch deprecated function, open direct site fix.</p>
         </div>
         <div class="related-card">
           <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
@@ -601,7 +601,7 @@ public $tmp_path = '/home/new-user/public_html/tmp';                  // ✔</co
         </div>
         <div class="related-card">
           <a href="/simple-review/">SimpleReview — Chrome Extension</a>
-          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+          <p>Click any element on any site, leave a comment, get a direct site fix. Free with your own AI key.</p>
         </div>
       </div>
     </div>
@@ -612,7 +612,7 @@ public $tmp_path = '/home/new-user/public_html/tmp';                  // ✔</co
       <li><a href="https://extensions.joomla.org/">extensions.joomla.org (JED) — 6,000+ extensions; SimpleReview connector listing</a></li>
       <li><a href="https://github.com/joomla/joomla-cms">github.com/joomla/joomla-cms — Reference repository the agent indexes against</a></li>
       <li><a href="https://magazine.joomla.org/">magazine.joomla.org — Release notes &amp; deprecation guides for J4 → J5</a></li>
-      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get direct site fix</a></li>
     </ul>
   </article>
 

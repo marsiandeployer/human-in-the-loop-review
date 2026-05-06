@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Error Establishing a Database Connection WordPress — Fix Guide (2026)</title>
-  <meta name="description" content="'Error establishing a database connection' in WordPress? Step-by-step fix: verify wp-config credentials, repair MySQL, fix corrupted tables, check host limits, and let AI patch your wp-config via PR.">
+  <meta name="description" content="'Error establishing a database connection' in WordPress? Step-by-step fix: verify wp-config credentials, repair MySQL, fix corrupted tables, check host limits, and let AI patch your wp-config via direct site fix.">
   <link rel="canonical" href="https://onout.org/vibers/wordpress/error-establishing-a-database-connection-wordpress/">
   <link rel="icon" type="image/x-icon" href="../../favicon.ico">
   <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
@@ -281,7 +281,7 @@
     <p class="article-lead">A white screen with one sentence — <em>"Error establishing a database connection."</em> — and the whole site is gone: front-end, wp-admin, everything. Ninety percent of the time it's one of four things: wrong credentials in <code>wp-config.php</code>, a MySQL service that crashed, a corrupted <code>wp_options</code> table, or the host hit a resource limit. Here's how to diagnose which one in under 10 minutes, then fix it.</p>
 
     <!-- Animated banner (later screen-recorded into banner.mp4). -->
-    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview reads the WordPress DB connection error, detects wrong wp-config credentials, and opens a one-line PR fix">
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview reads the WordPress DB connection error, detects wrong wp-config credentials, and opens a one-line direct site fix fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com</div>
@@ -341,7 +341,7 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">mysqli_connect OK. Front-end and wp-admin restored.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">fix: update DB_PASSWORD in wp-config.php<br>wp-config.php · 1 line</div>
             </div>
           </div>
@@ -362,7 +362,7 @@
     </div>
 
     <div class="ext-callout">
-      Site is offline right now? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>wp-config.php</code> over SFTP, tests the DB credentials, compares them against your host dashboard, and opens a one-line PR — faster than SSHing in and editing by hand.
+      Site is offline right now? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your <code>wp-config.php</code> over SFTP, tests the DB credentials, compares them against your host dashboard, and opens a one-line direct site fix — faster than SSHing in and editing by hand.
     </div>
 
     <div class="key-takeaways">
@@ -560,14 +560,14 @@ mysql&gt; REPAIR TABLE wp_postmeta;</code></pre>
       <li>Install the extension and open the broken site. The DB-error screen loads — that's fine, SimpleReview doesn't need the site to work.</li>
       <li>Click the SimpleReview icon, then click the error text.</li>
       <li>Type <em>"Fix DB connection"</em> and click <strong>Fix it</strong>.</li>
-      <li>SimpleReview reads <code>wp-config.php</code> over SFTP, compares credentials against your hosting API (when available), tests <code>mysqli_connect</code>, inspects disk + max_connections, and opens a PR with the one-line fix — usually an updated <code>DB_PASSWORD</code> or a corrected <code>DB_HOST</code>.</li>
+      <li>SimpleReview reads <code>wp-config.php</code> over SFTP, compares credentials against your hosting API (when available), tests <code>mysqli_connect</code>, inspects disk + max_connections, and prepares a direct site fix with the one-line fix — usually an updated <code>DB_PASSWORD</code> or a corrected <code>DB_HOST</code>.</li>
     </ol>
 
     <p>Useful when you're on mobile, in a client meeting, or just don't feel like SSHing into a production server at 2 AM.</p>
 
     <div class="cta-block">
       <h3>Fix the DB Connection Without Touching the Terminal</h3>
-      <p>Click on the error — SimpleReview inspects your wp-config, tests MySQL, and opens a PR with the one-line fix.</p>
+      <p>Click on the error — SimpleReview inspects your wp-config, tests MySQL, and prepares a direct site fix with the one-line fix.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="https://onout.org/simple-review-wordpress/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
     </div>
@@ -612,7 +612,7 @@ mysql&gt; REPAIR TABLE wp_postmeta;</code></pre>
         </div>
         <div class="related-card">
           <a href="../../simple-review/">SimpleReview</a>
-          <p>Click any broken element → AI generates a PR with the one-line fix. Chrome + WordPress.</p>
+          <p>Click any broken element → AI generates a site-ready fix with the one-line change. Chrome + WordPress.</p>
         </div>
       </div>
     </div>

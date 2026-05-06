@@ -288,7 +288,7 @@
     <p class="article-lead">Discourse renamed "Discourse SSO" to <strong>DiscourseConnect</strong> in 2021, but every other blog post on the internet still calls it the old name — and the signing flow is delicate enough that a single base64 encoding mistake gives you the dreaded <em>"Bad signature for payload"</em> screen. This guide is a working reference: a Flask provider, an Express provider, an ASCII sequence diagram, and a field-by-field debug map for the four errors you will actually hit.</p>
 
     <!-- Animated banner -->
-    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview catches the DiscourseConnect 'Bad signature' error and opens a PR fixing the HMAC encoding">
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated demo: SimpleReview catches the DiscourseConnect 'Bad signature' error and prepares a fix for the HMAC encoding">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">forum.example.com/session/sso_login</div>
@@ -344,7 +344,7 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">HMAC matches. /session/sso_login redirect succeeds.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">fix: sign base64 payload in DiscourseConnect<br>sso_provider.py · 3 lines</div>
             </div>
           </div>
@@ -365,7 +365,7 @@
     </div>
 
     <div class="ext-callout">
-      Stuck on "Bad signature for payload"? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your provider code, compares the HMAC against a reference implementation, and opens a one-line PR — usually the fix is "sign the base64 string, not the decoded payload".
+      Stuck on "Bad signature for payload"? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads your provider code, compares the HMAC against a reference implementation, and opens a one-line site fix — usually the fix is "sign the base64 string, not the decoded payload".
     </div>
 
     <div class="key-takeaways">
@@ -845,11 +845,11 @@ payload = {
 
     <p>HMAC bugs are the worst kind: silent, deterministic, and the error message ("Bad signature for payload") only tells you the comparison failed, not <em>why</em>. Half the time it's a base64-vs-raw mistake; the other half it's a one-character secret diff between admin and env var.</p>
 
-    <p><a href="https://onout.org/simple-review/">SimpleReview</a> diffs your provider implementation against the canonical Ruby <code>SingleSignOn</code> class, runs an HMAC against a known-good fixture, and opens a PR with the fix. Useful when you're staring at the bad-signature screen and have already triple-checked the secret.</p>
+    <p><a href="https://onout.org/simple-review/">SimpleReview</a> diffs your provider implementation against the canonical Ruby <code>SingleSignOn</code> class, runs an HMAC against a known-good fixture, and prepares a fix with the fix. Useful when you're staring at the bad-signature screen and have already triple-checked the secret.</p>
 
     <div class="cta-block">
       <h3>Stop Debugging HMAC by Eyeball</h3>
-      <p>Click the "Bad signature for payload" error — SimpleReview reads your provider, finds the encoding mismatch, and opens a PR with the fix.</p>
+      <p>Click the "Bad signature for payload" error — SimpleReview reads your provider, finds the encoding mismatch, and prepares a fix with the fix.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Want a Discourse plugin with built-in SSO debugging? <a href="../develop-plugin/" style="color:#5b44e8;font-weight:600">See: Develop a Discourse plugin →</a></p>
     </div>
@@ -910,7 +910,7 @@ payload = {
         </div>
         <div class="related-card">
           <a href="../../simple-review/">SimpleReview</a>
-          <p>Click any error → AI generates a PR with the one-line fix. Discourse, Rails, Flask, Express.</p>
+          <p>Click any error → AI prepares a site fix with the one-line fix. Discourse, Rails, Flask, Express.</p>
         </div>
       </div>
     </div>

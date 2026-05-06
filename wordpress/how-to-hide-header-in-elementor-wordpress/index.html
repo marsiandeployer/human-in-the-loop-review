@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <meta property="og:type" content="article">
   <meta property="og:title" content="How to Hide Header in Elementor WordPress (2026) — 3 Methods">
-  <meta property="og:description" content="Hide the Elementor header on one page, a group, or conditionally. Page Settings, scoped CSS, Theme Builder conditional display — plus a one-click PR option.">
+  <meta property="og:description" content="Hide the Elementor header on one page, a group, or conditionally. Page Settings, scoped CSS, Theme Builder conditional display — plus a one-click direct site fix option.">
   <meta property="og:url" content="https://onout.org/vibers/wordpress/how-to-hide-header-in-elementor-wordpress/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -345,7 +345,7 @@
               <div style="font-size:9px;line-height:1.4">Flip <b>Page Attributes → Template → Elementor Canvas</b> (free, built-in, no code). Fallback: scoped CSS for themes that override Canvas.</div>
             </div>
             <div class="sc-sb-card sc-sb-c3">
-              <div class="sc-sb-hdr">PR diff</div>
+              <div class="sc-sb-hdr">direct site fix diff</div>
               <div class="sc-diff">
                 <div class="m">-  _wp_page_template: default</div>
                 <div class="p">+  _wp_page_template: elementor_canvas</div>
@@ -354,7 +354,7 @@
             </div>
 
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR opened</div>
+              <div class="sc-pr-title">✓ Fix ready</div>
               <div class="sc-pr-meta">flip _wp_page_template → elementor_canvas<br>child-theme safe · 1 meta key · page 421 only</div>
             </div>
           </div>
@@ -371,7 +371,7 @@
     </div>
 
     <div class="ext-callout">
-      Don't want to look up page IDs, selectors, and CSS syntax? → <a href="../../simple-review/">SimpleReview</a> lets you click the header element in your browser, type what you want, and get a PR with a scoped CSS override added to your child theme.
+      Don't want to look up page IDs, selectors, and CSS syntax? → <a href="../../simple-review/">SimpleReview</a> lets you click the header element in your browser, type what you want, and get a direct site fix with a scoped CSS override added to your child theme.
     </div>
 
     <div class="key-takeaways">
@@ -492,14 +492,14 @@ body.single-post header { display: none !important; }</code></pre>
     <ol>
       <li>Install the Chrome extension and open the page where you want the header gone.</li>
       <li>Click the SimpleReview icon, then click directly on the header element.</li>
-      <li>Type "Hide header on this page only" and click <strong>Fix it</strong>. SimpleReview inspects the DOM, picks the most specific selector, scopes it to the current <code>body.page-id-*</code> class, and opens a PR that adds the snippet to your child theme's <code>style.css</code>.</li>
+      <li>Type "Hide header on this page only" and click <strong>Fix it</strong>. SimpleReview inspects the DOM, picks the most specific selector, scopes it to the current <code>body.page-id-*</code> class, and prepares a direct site fix that adds the snippet to your child theme's <code>style.css</code>.</li>
     </ol>
 
-    <p>The result is the same as Method 2 — but you don't read DevTools, and the PR is reviewable before it hits production.</p>
+    <p>The result is the same as Method 2 — but you don't read DevTools, and the direct site fix is reviewable before it hits production.</p>
 
     <div class="cta-block">
       <h3>Hide the Elementor Header in One Click</h3>
-      <p>Click the header → SimpleReview picks the right selector, scopes it to the current page, and opens a PR against your child theme.</p>
+      <p>Click the header → SimpleReview picks the right selector, scopes it to the current page, and prepares a direct site fix against your child theme.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#666">Prefer a WordPress plugin? <a href="../../simple-review/" style="color:#5b44e8;font-weight:600">Download SimpleReview for WordPress →</a> — installs in 30 seconds, no Chrome required.</p>
     </div>
@@ -540,7 +540,7 @@ body.single-post header { display: none !important; }</code></pre>
         </div>
         <div class="related-card">
           <a href="../../simple-review/">What is SimpleReview?</a>
-          <p>Human + AI code review for WordPress — click an element, get a PR.</p>
+          <p>Human + AI code review for WordPress — click an element, get a direct site fix.</p>
         </div>
       </div>
     </div>

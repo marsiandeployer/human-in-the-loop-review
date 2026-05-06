@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <meta property="og:type" content="article">
   <meta property="og:title" content="How to Fix and Customize Shop-Script (Webasyst) Stores — Without a Russian Developer Quote">
-  <meta property="og:description" content="Webasyst-aware AI agent правит wa-apps/shop/themes/ и plugins/ за вас — pull request вместо счёта на 2 часа фрилансерской работы.">
+  <meta property="og:description" content="Webasyst-aware AI agent правит wa-apps/shop/themes/ и plugins/ за вас — direct site fix вместо счёта на 2 часа фрилансерской работы.">
   <meta property="og:url" content="https://onout.org/webasyst/how-to-fix-and-customize-shop-script/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -51,7 +51,7 @@
       {
         "@type": "Question",
         "name": "Можно ли править Shop-Script без программиста?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Да — для большинства правок темы (wa-apps/shop/themes/[theme]/), переводов (locale/ru_RU/) и небольших настроек плагинов. Webasyst-ориентированный агент SimpleReview знает структуру фреймворка: где живут Smarty-шаблоны, где actionExample, где hooks frontend_*/backend_*. Он находит нужный файл и открывает Pull Request — фрилансер не нужен."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Да — для большинства правок темы (wa-apps/shop/themes/[theme]/), переводов (locale/ru_RU/) и небольших настроек плагинов. Webasyst-ориентированный агент SimpleReview знает структуру фреймворка: где живут Smarty-шаблоны, где actionExample, где hooks frontend_*/backend_*. Он находит нужный файл и готовит правку для сайта — фрилансер не нужен."}
       },
       {
         "@type": "Question",
@@ -76,7 +76,7 @@
       {
         "@type": "Question",
         "name": "Дешевле ли это, чем фрилансер на webasyst.com по 1500-3000 руб/час?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Да, кратно. Фрилансер тратит 30-90 минут на брифинг + клонирование репозитория + поиск файла, а сама правка — 1 строка. SimpleReview уже знает структуру wa-apps/shop/, открывает PR за секунды. Расширение бесплатное — платите только за токены вашего AI-ключа (центы) либо используйте встроенный режим. Фрилансер берёт минимум 1 час (1500-3000 ₽) даже за 5-минутную правку."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Да, кратно. Фрилансер тратит 30-90 минут на брифинг + клонирование репозитория + поиск файла, а сама правка — 1 строка. SimpleReview уже знает структуру wa-apps/shop/, готовит правку для сайта за секунды. Расширение бесплатное — платите только за токены вашего AI-ключа (центы) либо используйте встроенный режим. Фрилансер берёт минимум 1 час (1500-3000 ₽) даже за 5-минутную правку."}
       }
     ]
   }
@@ -166,7 +166,7 @@
 
     <h1>How to Fix and Customize Shop-Script (Webasyst) Stores — Without a Russian Developer Quote</h1>
 
-    <p class="article-lead">Shop-Script is the e-commerce app on <strong>Webasyst</strong> — the most popular Russian/CIS open-source CMS framework after Bitrix. The "open source for developers, license for live deployments" model means you can read every line, but the customization surface (<code>themes/</code>, <code>plugins/</code>, dispatchers, hooks) requires platform-specific knowledge. SimpleReview's Webasyst-aware agent knows the framework conventions — <code>wa-apps/shop/themes/[theme]/</code>, <code>wa-apps/shop/plugins/[plugin]/</code>, <code>wa-config/</code> — so it edits the right file and opens a PR.</p>
+    <p class="article-lead">Shop-Script is the e-commerce app on <strong>Webasyst</strong> — the most popular Russian/CIS open-source CMS framework after Bitrix. The "open source for developers, license for live deployments" model means you can read every line, but the customization surface (<code>themes/</code>, <code>plugins/</code>, dispatchers, hooks) requires platform-specific knowledge. SimpleReview's Webasyst-aware agent knows the framework conventions — <code>wa-apps/shop/themes/[theme]/</code>, <code>wa-apps/shop/plugins/[plugin]/</code>, <code>wa-config/</code> — so it edits the right file and prepares a direct site fix.</p>
 
     <style>
     /* ─────── Webasyst Shop-Script Banner (28s cycle) ─────── */
@@ -297,7 +297,7 @@
       .sc-wa-error{margin:14px 140px 0 14px}
     }
     </style>
-    <div id="sc-banner-fallback" class="sc-banner webasyst" aria-label="Animated demo: SimpleReview's Webasyst expert fixes a 500 error on the category page and opens a PR">
+    <div id="sc-banner-fallback" class="sc-banner webasyst" aria-label="Animated demo: SimpleReview's Webasyst expert fixes a 500 error on the category page and prepares a direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mystore.ru/catalog</div>
@@ -336,7 +336,7 @@
               </div>
               <div class="sc-rec-banner"><span class="sc-rec-pct">FIXED</span>Категория Электроника снова открывается — ошибка устранена</div>
               <div class="sc-rec-content">
-                <span class="sc-rec-success">✓ category.html пропатчен · кеш Smarty очищен · PR #42 готов</span>
+                <span class="sc-rec-success">✓ category.html пропатчен · кеш Smarty очищен · Правка #42 готова</span>
                 <div class="sc-rec-h">Электроника</div>
                 <div class="sc-rec-line"></div>
                 <div class="sc-rec-line med"></div>
@@ -376,14 +376,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Категория отдаёт 200. Кеш Smarty чистится автоматически.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-title">✓ Fix #42 ready</div>
               <div class="sc-pr-meta">fix(category): handle missing field<br>category.html · +2 / -1</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Кликни SimpleReview → выбери блок ошибки → <strong>Fix it</strong> → PR готов, без программиста</div>
+      <div class="sc-caption">Кликни SimpleReview → выбери блок ошибки → <strong>Fix it</strong> → правка готова, без программиста</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -392,7 +392,7 @@
     </div>
 
     <div class="ext-callout">
-      Правка Shop-Script, которую фрилансер оценил в 2 часа? → <a href="https://onout.org/simple-review/">SimpleReview</a> найдёт нужный файл в <code>wa-apps/shop/themes/[theme]/</code>, откроет PR — правка ушла in production within the hour, без счёта по 2000 ₽/час.
+      Правка Shop-Script, которую фрилансер оценил в 2 часа? → <a href="https://onout.org/simple-review/">SimpleReview</a> найдёт нужный файл в <code>wa-apps/shop/themes/[theme]/</code>, откроет direct site fix — правка ушла in production within the hour, без счёта по 2000 ₽/час.
     </div>
 
     <div class="key-takeaways">
@@ -430,7 +430,7 @@
     <ol class="steps">
       <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. Free with your own AI key (Claude Code or Codex), built-in mode if you don't have one.</li>
       <li><strong>Connect your store's repo.</strong> Paste a GitHub / GitLab / Gitea URL. If your Shop-Script lives only on the production server, give SFTP credentials — SimpleReview creates a private working tree, commits from there. The Webasyst-aware agent reads <code>wa-config/apps.php</code> and <code>theme.xml</code> on first connect to learn your theme name and version.</li>
-      <li><strong>Open your storefront, click the SimpleReview icon, click the element to change.</strong> Type in plain Russian or English: «уберите этот баннер», "change phone in header", «переведите кнопку 'Купить' на 'Заказать'», «отключите ненужный плагин в админке». Click <strong>Fix it</strong>. The agent finds the right Smarty template or plugin file and opens a Pull Request.</li>
+      <li><strong>Open your storefront, click the SimpleReview icon, click the element to change.</strong> Type in plain Russian or English: «уберите этот баннер», "change phone in header", «переведите кнопку 'Купить' на 'Заказать'», «отключите ненужный плагин в админке». Click <strong>Fix it</strong>. The agent finds the right Smarty template or plugin file and prepares a direct site fix.</li>
     </ol>
 
     <h2>Common Shop-Script Fixes &amp; Customizations</h2>
@@ -529,7 +529,7 @@ php wa.php update
         <tr><td>Repo / SFTP setup</td><td>30-90 min, every project</td><td>Once, then cached per store</td></tr>
         <tr><td>Find theme / plugin file</td><td>30-90 min depending on theme familiarity</td><td>Instant — Webasyst layout pre-indexed</td></tr>
         <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
-        <tr><td>PR / version control</td><td>"Скиньте FTP, я залью" — обычно без git</td><td>Always a Pull Request you review</td></tr>
+        <tr><td>direct site fix / version control</td><td>"Скиньте FTP, я залью" — обычно без git</td><td>Always a direct site fix you review</td></tr>
         <tr><td>Cost for a 1-line change</td><td>1500-3000 ₽ (1-hour minimum)</td><td>0 ₽ (BYO key) or pennies of API usage</td></tr>
         <tr><td>Available 23:00 субботы</td><td>Завтра в 11:00</td><td>Right now</td></tr>
       </table>
@@ -547,20 +547,20 @@ php wa.php update
       <li><strong>Migration from Bitrix or 1C-Битрикс to Shop-Script.</strong> Catalog mapping, customers, orders, URLs (with redirects to keep SEO). Multi-week project, not an agent task.</li>
     </ul>
 
-    <p>That's exactly the slice <a href="/vibers/">Vibers</a> covers — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
+    <p>That's exactly the slice <a href="/vibers/">Vibers</a> covers — a real human reviews any direct site fix you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
 
     <div class="cta-block">
       <h3>Перестаньте платить 2000 ₽/час за правку 1 файла в Shop-Script</h3>
-      <p>SimpleReview's Webasyst-aware agent reads your repo, knows <code>wa-apps/shop/themes/</code> and <code>plugins/</code>, opens a Pull Request for the change you described — in Russian or English.</p>
+      <p>SimpleReview's Webasyst-aware agent reads your repo, knows <code>wa-apps/shop/themes/</code> and <code>plugins/</code>, prepares a direct site fix for the change you described — in Russian or English.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
-      <p style="margin-top:12px;font-size:14px;color:#ccc">Custom оплата, 1C интеграция, миграция? <a href="/vibers/" style="color:#fcb53b;font-weight:600">Get a human review →</a> Free first PR for a GitHub star.</p>
+      <p style="margin-top:12px;font-size:14px;color:#ccc">Custom оплата, 1C интеграция, миграция? <a href="/vibers/" style="color:#fcb53b;font-weight:600">Get a human review →</a> Free first direct site fix for a GitHub star.</p>
     </div>
 
     <h2>Frequently Asked Questions</h2>
 
     <div class="faq-item">
       <div class="faq-q">Можно ли править Shop-Script без программиста?</div>
-      <div class="faq-a">Да — для большинства правок темы (<code>wa-apps/shop/themes/[theme]/</code>), переводов (<code>locale/ru_RU/</code>) и небольших настроек плагинов. Webasyst-ориентированный агент SimpleReview знает структуру фреймворка: где живут Smarty-шаблоны, где <code>actionExample</code>, где hooks <code>frontend_*</code>/<code>backend_*</code>. Он находит нужный файл и открывает Pull Request — фрилансер не нужен.</div>
+      <div class="faq-a">Да — для большинства правок темы (<code>wa-apps/shop/themes/[theme]/</code>), переводов (<code>locale/ru_RU/</code>) и небольших настроек плагинов. Webasyst-ориентированный агент SimpleReview знает структуру фреймворка: где живут Smarty-шаблоны, где <code>actionExample</code>, где hooks <code>frontend_*</code>/<code>backend_*</code>. Он находит нужный файл и готовит правку для сайта — фрилансер не нужен.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Как установить SimpleReview на сайт на Shop-Script?</div>
@@ -580,7 +580,7 @@ php wa.php update
     </div>
     <div class="faq-item">
       <div class="faq-q">Дешевле ли это, чем фрилансер на webasyst.com по 1500-3000 ₽/час?</div>
-      <div class="faq-a">Да, кратно. Фрилансер тратит 30-90 минут на брифинг + клонирование репозитория + поиск файла, а сама правка — 1 строка. SimpleReview уже знает структуру <code>wa-apps/shop/</code>, открывает PR за секунды. Расширение бесплатное — платите только за токены вашего AI-ключа (центы) либо используйте встроенный режим. Фрилансер берёт минимум 1 час (1500-3000 ₽) даже за 5-минутную правку.</div>
+      <div class="faq-a">Да, кратно. Фрилансер тратит 30-90 минут на брифинг + клонирование репозитория + поиск файла, а сама правка — 1 строка. SimpleReview уже знает структуру <code>wa-apps/shop/</code>, готовит правку для сайта за секунды. Расширение бесплатное — платите только за токены вашего AI-ключа (центы) либо используйте встроенный режим. Фрилансер берёт минимум 1 час (1500-3000 ₽) даже за 5-минутную правку.</div>
     </div>
 
     <h2>Related</h2>
@@ -592,11 +592,11 @@ php wa.php update
         </div>
         <div class="related-card">
           <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
-          <p>Read <code>debug.log</code>, patch the deprecated function, get a PR — applied to WP fatal-error recovery.</p>
+          <p>Read <code>debug.log</code>, patch the deprecated function, get a direct site fix — applied to WP fatal-error recovery.</p>
         </div>
         <div class="related-card">
           <a href="/simple-review/">SimpleReview — Chrome Extension</a>
-          <p>Click any element on any site, leave a comment in plain Russian or English, get a Pull Request.</p>
+          <p>Click any element on any site, leave a comment in plain Russian or English, get a direct site fix.</p>
         </div>
       </div>
     </div>
@@ -608,7 +608,7 @@ php wa.php update
       <li><a href="https://www.webasyst.com/store/">www.webasyst.com/store/ — Webasyst Store marketplace (plugins, themes)</a></li>
       <li><a href="https://github.com/webasyst/">github.com/webasyst/ — official open-source repositories the agent indexes against</a></li>
       <li><a href="https://forum.webasyst.ru/">forum.webasyst.ru — Russian community forum (real-world fixes, plugin debugging)</a></li>
-      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get direct site fix</a></li>
     </ul>
   </article>
 

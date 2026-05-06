@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <meta property="og:type" content="article">
   <meta property="og:title" content="How to Fix Magento 2 Sites Without Hiring a $150/hr Developer">
-  <meta property="og:description" content="White-screen, indexer, cache, theme override, reCAPTCHA — common Magento 2 fixes file-by-file, plus how SimpleReview's M2-aware agent opens the PR for you.">
+  <meta property="og:description" content="White-screen, indexer, cache, theme override, reCAPTCHA — common Magento 2 fixes file-by-file, plus how SimpleReview's M2-aware agent opens the direct site fix for you.">
   <meta property="og:url" content="https://onout.org/magento/how-to-fix-magento-2-issues/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -51,12 +51,12 @@
       {
         "@type": "Question",
         "name": "Can I edit a Magento 2 store without a developer?",
-        "acceptedAnswer": {"@type": "Answer", "text": "For most theme, copy, and configuration edits — yes. The Magento admin handles content, translations, and many storefront settings. For layout XML, di.xml dependency injection, theme template (.phtml) overrides, or i18n CSV files you used to need a senior developer at $80–200/hr. SimpleReview's Magento-aware agent now does those edits — it knows the M2 module and theme conventions, runs the right bin/magento commands in its plan, and opens a Pull Request you merge."}
+        "acceptedAnswer": {"@type": "Answer", "text": "For most theme, copy, and configuration edits — yes. The Magento admin handles content, translations, and many storefront settings. For layout XML, di.xml dependency injection, theme template (.phtml) overrides, or i18n CSV files you used to need a senior developer at $80–200/hr. SimpleReview's Magento-aware agent now does those edits — it knows the M2 module and theme conventions, runs the right bin/magento commands in its plan, and prepares a direct site fix you merge."}
       },
       {
         "@type": "Question",
         "name": "How is this safe — Magento has so many caches?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Caches are exactly the kind of thing the agent knows about. Every PR includes the post-merge command list: bin/magento cache:flush, setup:upgrade if a module changed, setup:di:compile in production mode, indexer:reindex if a schema changed. SimpleReview never deploys to production — it opens a PR you merge, then your CI/CD or your hand runs the post-deploy commands on the right environment."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Caches are exactly the kind of thing the agent knows about. Every direct site fix includes the post-merge command list: bin/magento cache:flush, setup:upgrade if a module changed, setup:di:compile in production mode, indexer:reindex if a schema changed. SimpleReview never deploys to production — it prepares a direct site fix you merge, then your CI/CD or your hand runs the post-deploy commands on the right environment."}
       },
       {
         "@type": "Question",
@@ -71,12 +71,12 @@
       {
         "@type": "Question",
         "name": "Do I need composer access?",
-        "acceptedAnswer": {"@type": "Answer", "text": "For installing our extension via Composer — yes, that's the recommended path. For day-to-day edits the agent makes (theme overrides, translation CSVs, layout XML, custom modules under app/code/) you only need Git access. The agent commits to a branch and opens a PR; your existing deploy pipeline runs composer/bin/magento commands."}
+        "acceptedAnswer": {"@type": "Answer", "text": "For installing our extension via Composer — yes, that's the recommended path. For day-to-day edits the agent makes (theme overrides, translation CSVs, layout XML, custom modules under app/code/) you only need Git access. The agent commits to a branch and prepares a direct site fix; your existing deploy pipeline runs composer/bin/magento commands."}
       },
       {
         "@type": "Question",
         "name": "How is this different from a $150/hr Magento freelancer?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Speed and recurring cost. A senior Magento freelancer bills $80–200/hr with a one- or two-hour minimum, and most of that hour is spent setting up access, locating the right file in app/code or vendor/magento, and running cache flushes. SimpleReview's agent already knows the M2 layout, indexes your repo once, and produces the PR in seconds. You still want a human for payment-gateway, ERP, performance tuning, or migrations — that's where Vibers' human-in-the-loop review takes over."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Speed and recurring cost. A senior Magento freelancer bills $80–200/hr with a one- or two-hour minimum, and most of that hour is spent setting up access, locating the right file in app/code or vendor/magento, and running cache flushes. SimpleReview's agent already knows the M2 layout, indexes your repo once, and produces the site-ready fix in seconds. You still want a human for payment-gateway, ERP, performance tuning, or migrations — that's where Vibers' human-in-the-loop review takes over."}
       }
     ]
   }
@@ -166,7 +166,7 @@
 
     <h1>How to Fix Magento 2 Sites Without Hiring a $150/hr Developer</h1>
 
-    <p class="article-lead">Magento 2 (Adobe Commerce) is the most expensive CMS to maintain. A senior Magento dev bills <strong>$80–200/hr</strong>. Yet most "broken" stores need exactly the same fix: clear <code>var/cache/</code>, run <code>bin/magento setup:upgrade</code>, fix a permission issue in <code>pub/</code>, or correct an XML override in <code>app/code/[Vendor]/[Module]/view/</code>. SimpleReview's Magento-aware agent knows the M2 module conventions, when to run <code>setup:di:compile</code>, and which file in <code>Magento_Theme</code> overrides what — so it patches the right file and opens a PR.</p>
+    <p class="article-lead">Magento 2 (Adobe Commerce) is the most expensive CMS to maintain. A senior Magento dev bills <strong>$80–200/hr</strong>. Yet most "broken" stores need exactly the same fix: clear <code>var/cache/</code>, run <code>bin/magento setup:upgrade</code>, fix a permission issue in <code>pub/</code>, or correct an XML override in <code>app/code/[Vendor]/[Module]/view/</code>. SimpleReview's Magento-aware agent knows the M2 module conventions, when to run <code>setup:di:compile</code>, and which file in <code>Magento_Theme</code> overrides what — so it patches the right file and prepares a direct site fix.</p>
 
     <style>
     /* ─────── Magento 2 Banner (28s cycle) ─────── */
@@ -307,7 +307,7 @@
       .sc-mg-grid{grid-template-columns:repeat(3,1fr);max-width:380px}
     }
     </style>
-    <div id="sc-banner-fallback" class="sc-banner magento" aria-label="Animated demo: SimpleReview's Magento expert hides a broken mobile newsletter popup and opens a PR">
+    <div id="sc-banner-fallback" class="sc-banner magento" aria-label="Animated demo: SimpleReview's Magento expert hides a broken mobile newsletter popup and prepares a direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mystore.com</div>
@@ -356,7 +356,7 @@
               </div>
               <div class="sc-rec-banner"><span class="sc-rec-pct">FREE</span>Shipping on orders over $50 — every day</div>
               <div class="sc-rec-content">
-                <span class="sc-rec-success">✓ Mobile newsletter popup hidden · subscribe.phtml patched · PR #42 ready</span>
+                <span class="sc-rec-success">✓ Mobile newsletter popup hidden · subscribe.phtml patched · Fix #42 ready</span>
                 <div class="sc-rec-h">Hot Sellers</div>
                 <div class="sc-rec-line"></div>
                 <div class="sc-rec-line med"></div>
@@ -396,14 +396,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Mobile checkout no longer obscured. Desktop signup unchanged.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-title">✓ Fix #42 ready</div>
               <div class="sc-pr-meta">fix(newsletter): hide broken mobile popup<br>subscribe.phtml · +6 / -2</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click SimpleReview → select the broken popup → <strong>Fix it</strong> → PR opens, no $200/hr dev needed</div>
+      <div class="sc-caption">Click SimpleReview → select the broken popup → <strong>Fix it</strong> → the fix is ready, no $200/hr dev needed</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -412,7 +412,7 @@
     </div>
 
     <div class="ext-callout">
-      One-line Magento change a freelancer quoted at 4 hours? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads <code>app/design/frontend/</code>, knows the layout XML, opens a PR. Edit ships within the hour.
+      One-line Magento change a freelancer quoted at 4 hours? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads <code>app/design/frontend/</code>, knows the layout XML, prepares a direct site fix. Edit ships within the hour.
     </div>
 
     <div class="key-takeaways">
@@ -420,7 +420,7 @@
       <ul>
         <li><strong>M2 customization lives in <code>app/code/[Vendor]/[Module]/</code> and <code>app/design/frontend/[Vendor]/[Theme]/</code></strong> — never in <code>vendor/magento/</code>. Editing core is the #1 way Magento freelancers break upgrades.</li>
         <li><strong>Most "site is broken" issues</strong> come down to caches, indexers, deploy mode, or a missing <code>setup:upgrade</code> after a code change — not actual bugs.</li>
-        <li>SimpleReview knows M2 module XML conventions (<code>di.xml</code>, layout XML, <code>view.xml</code>) and emits the right post-merge <code>bin/magento</code> commands with the PR.</li>
+        <li>SimpleReview knows M2 module XML conventions (<code>di.xml</code>, layout XML, <code>view.xml</code>) and emits the right post-merge <code>bin/magento</code> commands with the direct site fix.</li>
         <li><strong>Adobe Commerce Marketplace</strong> — мы публикуем расширение SimpleReview Edit (в работе). Установка стандартная: <code>composer require simplereview/magento2 --dev</code> или из админки Marketplace → My Purchases.</li>
         <li><strong>Payment-method, ERP integration, multi-store, performance tuning</strong> — get a Vibers human review before you merge.</li>
       </ul>
@@ -463,7 +463,7 @@
     <ol class="steps">
       <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. It's free with your own AI key (Claude Code or Codex), with a built-in mode if you don't have one. The extension auto-detects M2 from the <code>Mage.Cookies</code> JS handle and the <code>&lt;meta name="generator" content="Magento 2.4..."&gt;</code> tag.</li>
       <li><strong>Connect your store's Git repo</strong> (GitHub, GitLab, Bitbucket, self-hosted Gitea). The agent indexes <code>app/code/</code>, <code>app/design/frontend/</code>, and your active theme on first connection — no manual configuration of paths or theme names.</li>
-      <li><strong>Open the storefront, click the SimpleReview icon, click the element you want to change.</strong> Type in plain English: "hide this Powered By line", "translate Add to Cart to Buy Now in German", "add a free-shipping notice above the cart". Click <strong>Fix it</strong>. The agent picks the right file (<code>.phtml</code> override, layout XML, or i18n CSV), makes the edit, and opens a PR with the post-merge <code>bin/magento</code> command list.</li>
+      <li><strong>Open the storefront, click the SimpleReview icon, click the element you want to change.</strong> Type in plain English: "hide this Powered By line", "translate Add to Cart to Buy Now in German", "add a free-shipping notice above the cart". Click <strong>Fix it</strong>. The agent picks the right file (<code>.phtml</code> override, layout XML, or i18n CSV), makes the edit, and prepares a direct site fix with the post-merge <code>bin/magento</code> command list.</li>
     </ol>
 
     <h2>Common Magento 2 Fixes — File-by-File</h2>
@@ -513,7 +513,7 @@ bin/magento cache:flush</code></pre>
     <p>Two correct paths, depending on whether you want a code change or an admin click:</p>
 
     <ul>
-      <li><strong>Admin (no PR):</strong> Content → Configuration → [Your store] → Footer → Copyright. Save, flush full_page cache. Done.</li>
+      <li><strong>Admin (no direct site fix):</strong> Content → Configuration → [Your store] → Footer → Copyright. Save, flush full_page cache. Done.</li>
       <li><strong>Theme override (versioned):</strong> Copy <code>vendor/magento/module-theme/view/frontend/templates/html/footer.phtml</code> to <code>app/design/frontend/[Vendor]/[Theme]/Magento_Theme/templates/html/footer.phtml</code> and edit it. The agent does this automatically — and never touches <code>vendor/</code>.</li>
     </ul>
 
@@ -589,8 +589,8 @@ bin/magento cache:flush</code></pre>
         <tr><td>Repo / SSH access</td><td>30–90 min (SSH keys, deploy keys, SFTP creds, every freelancer)</td><td>Once, then cached</td></tr>
         <tr><td>Find the right file</td><td>30–120 min — is it <code>vendor/</code>? theme override? layout XML? i18n CSV?</td><td>Instant — already indexed</td></tr>
         <tr><td>Make the edit</td><td>5–30 min</td><td>5–30 seconds</td></tr>
-        <tr><td>Remember the post-deploy commands</td><td>Sometimes — bugs ship without <code>cache:flush</code></td><td>Always emitted with the PR</td></tr>
-        <tr><td>Open a PR</td><td>If they use Git at all</td><td>Always</td></tr>
+        <tr><td>Remember the post-deploy commands</td><td>Sometimes — bugs ship without <code>cache:flush</code></td><td>Always emitted with the direct site fix</td></tr>
+        <tr><td>Prepare a direct fix</td><td>If they use Git at all</td><td>Always</td></tr>
         <tr><td>Cost for a 1-line change</td><td>$160–400 (2-hour minimum)</td><td>$0 (BYO key) or pennies of API usage</td></tr>
       </table>
     </div>
@@ -608,24 +608,24 @@ bin/magento cache:flush</code></pre>
       <li><strong>Mage One / migration off Magento.</strong> Whether to Shopify Plus, Hyvä replatform, or stay on Adobe Commerce — strategy first, code second.</li>
     </ul>
 
-    <p>That's the slice <a href="/vibers/">Vibers</a> handles — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns the hourly rate.</p>
+    <p>That's the slice <a href="/vibers/">Vibers</a> handles — a real human reviews any direct site fix you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns the hourly rate.</p>
 
     <div class="cta-block">
       <h3>Stop Paying $150/hr for Magento Touch-Ups</h3>
-      <p>SimpleReview's Magento agent reads your repo, knows the M2 module conventions, and opens a PR for the change you described — with the right <code>bin/magento</code> commands attached.</p>
+      <p>SimpleReview's Magento agent reads your repo, knows the M2 module conventions, and prepares a direct site fix for the change you described — with the right <code>bin/magento</code> commands attached.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
-      <p style="margin-top:12px;font-size:14px;color:#666">Migration, ERP, payment gateway? <a href="/vibers/" style="color:#ee672f;font-weight:600">Get a human review →</a> Free first PR for a GitHub star.</p>
+      <p style="margin-top:12px;font-size:14px;color:#666">Migration, ERP, payment gateway? <a href="/vibers/" style="color:#ee672f;font-weight:600">Get a human review →</a> Free first direct site fix for a GitHub star.</p>
     </div>
 
     <h2>Frequently Asked Questions</h2>
 
     <div class="faq-item">
       <div class="faq-q">Can I edit a Magento 2 store without a developer?</div>
-      <div class="faq-a">For most theme, copy, and configuration edits — yes. The Magento admin handles content, translations, and many storefront settings. For layout XML, <code>di.xml</code> dependency injection, theme template (<code>.phtml</code>) overrides, or i18n CSV files you used to need a senior developer at $80–200/hr. SimpleReview's Magento-aware agent now does those edits — it knows the M2 module and theme conventions, runs the right <code>bin/magento</code> commands in its plan, and opens a Pull Request you merge.</div>
+      <div class="faq-a">For most theme, copy, and configuration edits — yes. The Magento admin handles content, translations, and many storefront settings. For layout XML, <code>di.xml</code> dependency injection, theme template (<code>.phtml</code>) overrides, or i18n CSV files you used to need a senior developer at $80–200/hr. SimpleReview's Magento-aware agent now does those edits — it knows the M2 module and theme conventions, runs the right <code>bin/magento</code> commands in its plan, and prepares a direct site fix you merge.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">How is this safe — Magento has so many caches?</div>
-      <div class="faq-a">Caches are exactly the kind of thing the agent knows about. Every PR includes the post-merge command list: <code>bin/magento cache:flush</code>, <code>setup:upgrade</code> if a module changed, <code>setup:di:compile</code> in production mode, <code>indexer:reindex</code> if a schema changed. SimpleReview never deploys to production — it opens a PR you merge, then your CI/CD or your hand runs the post-deploy commands on the right environment.</div>
+      <div class="faq-a">Caches are exactly the kind of thing the agent knows about. Every direct site fix includes the post-merge command list: <code>bin/magento cache:flush</code>, <code>setup:upgrade</code> if a module changed, <code>setup:di:compile</code> in production mode, <code>indexer:reindex</code> if a schema changed. SimpleReview never deploys to production — it prepares a direct site fix you merge, then your CI/CD or your hand runs the post-deploy commands on the right environment.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Which Magento versions does SimpleReview support?</div>
@@ -637,11 +637,11 @@ bin/magento cache:flush</code></pre>
     </div>
     <div class="faq-item">
       <div class="faq-q">Do I need composer access?</div>
-      <div class="faq-a">For installing our extension via Composer — yes, that's the recommended path. For day-to-day edits the agent makes (theme overrides, translation CSVs, layout XML, custom modules under <code>app/code/</code>) you only need Git access. The agent commits to a branch and opens a PR; your existing deploy pipeline runs composer/<code>bin/magento</code> commands.</div>
+      <div class="faq-a">For installing our extension via Composer — yes, that's the recommended path. For day-to-day edits the agent makes (theme overrides, translation CSVs, layout XML, custom modules under <code>app/code/</code>) you only need Git access. The agent commits to a branch and prepares a direct site fix; your existing deploy pipeline runs composer/<code>bin/magento</code> commands.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">How is this different from a $150/hr Magento freelancer?</div>
-      <div class="faq-a">Speed and recurring cost. A senior Magento freelancer bills $80–200/hr with a one- or two-hour minimum, and most of that hour is spent setting up access, locating the right file in <code>app/code</code> or <code>vendor/magento</code>, and running cache flushes. SimpleReview's agent already knows the M2 layout, indexes your repo once, and produces the PR in seconds. You still want a human for payment-gateway, ERP, performance tuning, or migrations — that's where Vibers' human-in-the-loop review takes over.</div>
+      <div class="faq-a">Speed and recurring cost. A senior Magento freelancer bills $80–200/hr with a one- or two-hour minimum, and most of that hour is spent setting up access, locating the right file in <code>app/code</code> or <code>vendor/magento</code>, and running cache flushes. SimpleReview's agent already knows the M2 layout, indexes your repo once, and produces the site-ready fix in seconds. You still want a human for payment-gateway, ERP, performance tuning, or migrations — that's where Vibers' human-in-the-loop review takes over.</div>
     </div>
 
     <h2>Related</h2>
@@ -649,15 +649,15 @@ bin/magento cache:flush</code></pre>
       <div class="related-grid">
         <div class="related-card">
           <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
-          <p>Same agent pattern applied to OpenCart — click an element, type the change, get a PR. Includes the OC file-layout map.</p>
+          <p>Same agent pattern applied to OpenCart — click an element, type the change, get a direct site fix. Includes the OC file-layout map.</p>
         </div>
         <div class="related-card">
           <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">Fix WooCommerce Slow Checkout</a>
-          <p>Click the slow part of checkout, get a PR with the fix — applies to Magento checkout performance the same way.</p>
+          <p>Click the slow part of checkout, get a direct site fix with the fix — applies to Magento checkout performance the same way.</p>
         </div>
         <div class="related-card">
           <a href="/simple-review/">SimpleReview — Chrome Extension</a>
-          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+          <p>Click any element on any site, leave a comment, get a direct site fix. Free with your own AI key.</p>
         </div>
       </div>
     </div>
@@ -668,7 +668,7 @@ bin/magento cache:flush</code></pre>
       <li><a href="https://commercemarketplace.adobe.com/">commercemarketplace.adobe.com — Official extension marketplace (where SimpleReview_Edit is listed)</a></li>
       <li><a href="https://github.com/magento/magento2">github.com/magento/magento2 — Reference repository the agent indexes against</a></li>
       <li><a href="https://alankent.me/">alankent.me — Long-running blog by an ex-Magento architect; canonical source on M2 internals</a></li>
-      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get direct site fix</a></li>
     </ul>
   </article>
 

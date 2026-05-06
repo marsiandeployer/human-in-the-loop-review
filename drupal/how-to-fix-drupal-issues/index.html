@@ -51,7 +51,7 @@
       {
         "@type": "Question",
         "name": "Can I edit a Drupal site without a developer?",
-        "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic edits, content tweaks, and routine fixes — yes. The Drupal admin handles content, blocks, menus, and Views. For Twig template overrides, custom module bug fixes, and config sync errors, you used to need a $90/hr Drupal specialist. SimpleReview's Drupal-aware AI agent reads web/modules/custom/ and web/themes/custom/[theme]/, edits the right file, and opens a pull request you can merge."}
+        "acceptedAnswer": {"@type": "Answer", "text": "For most cosmetic edits, content tweaks, and routine fixes — yes. The Drupal admin handles content, blocks, menus, and Views. For Twig template overrides, custom module bug fixes, and config sync errors, you used to need a $90/hr Drupal specialist. SimpleReview's Drupal-aware AI agent reads web/modules/custom/ and web/themes/custom/[theme]/, edits the right file, and opens a direct site fix you can merge."}
       },
       {
         "@type": "Question",
@@ -71,7 +71,7 @@
       {
         "@type": "Question",
         "name": "Does SimpleReview require Composer access?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Only when adding or updating contrib modules. For Twig, CSS, JS, language string, and config edits — no Composer needed; the agent commits files directly. When a fix needs a new module (e.g., captcha + recaptcha), the PR includes the composer require command in the description so you (or your CI) can run it before merge."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Only when adding or updating contrib modules. For Twig, CSS, JS, language string, and config edits — no Composer needed; the agent commits files directly. When a fix needs a new module (e.g., captcha + recaptcha), the direct site fix includes the composer require command in the description so you (or your CI) can run it before merge."}
       },
       {
         "@type": "Question",
@@ -166,7 +166,7 @@
 
     <h1>How to Fix Drupal 10 / 11 Sites Without a $90/hr Acquia Specialist</h1>
 
-    <p class="article-lead">Drupal is the most architecturally serious open-source CMS — it's also the most expensive to maintain. A senior Drupal dev bills <strong>$80–150/hr</strong>. Yet most "Drupal site is broken" tickets fall into a few buckets: a stuck <code>cache_*</code> table, a missing config import after deploy, a dead module after a security update, or a <strong>WSOD</strong> (white screen of death) from a contrib module. SimpleReview's Drupal-aware agent knows the module/theme override system (<code>themes/custom/[theme]/</code>, <code>modules/custom/[module]/</code>, config sync) and can edit the right file the first time and open a PR.</p>
+    <p class="article-lead">Drupal is the most architecturally serious open-source CMS — it's also the most expensive to maintain. A senior Drupal dev bills <strong>$80–150/hr</strong>. Yet most "Drupal site is broken" tickets fall into a few buckets: a stuck <code>cache_*</code> table, a missing config import after deploy, a dead module after a security update, or a <strong>WSOD</strong> (white screen of death) from a contrib module. SimpleReview's Drupal-aware agent knows the module/theme override system (<code>themes/custom/[theme]/</code>, <code>modules/custom/[module]/</code>, config sync) and can edit the right file the first time and prepare a direct site fix.</p>
 
     <style>
     /* ─────── Drupal 11 Banner (28s cycle) ─────── */
@@ -309,7 +309,7 @@
       .sc-dr-footer{padding:14px 140px 14px 14px}
     }
     </style>
-    <div id="sc-banner-fallback" class="sc-banner drupal" aria-label="Animated demo: SimpleReview's Drupal expert hides Powered-by Drupal and clears the WSOD warning, then opens a PR">
+    <div id="sc-banner-fallback" class="sc-banner drupal" aria-label="Animated demo: SimpleReview's Drupal expert hides Powered-by Drupal and clears the WSOD warning, then prepares a direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mysite.com</div>
@@ -361,7 +361,7 @@
               </div>
               <div class="sc-rec-banner"><span class="sc-rec-pct">CLEAN</span>Powered-by hidden via theme override · WSOD warning resolved</div>
               <div class="sc-rec-content">
-                <span class="sc-rec-success">✓ block--system-powered-by-block.html.twig added · drupal cache rebuild · PR #42</span>
+                <span class="sc-rec-success">✓ block--system-powered-by-block.html.twig added · drupal cache rebuild · Fix #42</span>
                 <div class="sc-rec-h">Latest articles</div>
                 <div class="sc-rec-line"></div>
                 <div class="sc-rec-line med"></div>
@@ -402,14 +402,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">Drupal branding hidden. WSOD log resolved. Cache rebuilt cleanly.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-title">✓ Fix #42 ready</div>
               <div class="sc-pr-meta">fix(footer): override Powered-by block<br>powered-by.twig · -2 lines</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click SimpleReview → select the Powered-by block → <strong>Fix it</strong> → PR opens, no senior Drupal dev needed</div>
+      <div class="sc-caption">Click SimpleReview → select the Powered-by block → <strong>Fix it</strong> → the fix is ready, no senior Drupal dev needed</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -418,7 +418,7 @@
     </div>
 
     <div class="ext-callout">
-      Drupal site quoted at 4 hours for a one-line fix? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads <code>web/modules/custom/</code>, finds the file, opens a PR. Fix ships within an hour.
+      Drupal site quoted at 4 hours for a one-line fix? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads <code>web/modules/custom/</code>, finds the file, prepares a direct site fix. Fix ships within an hour.
     </div>
 
     <div class="key-takeaways">
@@ -454,7 +454,7 @@
     <ol class="steps">
       <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. Free with your own AI key (Claude Code or Codex), built-in mode otherwise.</li>
       <li><strong>Connect your Drupal repo.</strong> Paste a GitHub / GitLab / Gitea URL. If your site isn't on Git yet, give SFTP credentials and the agent will work from a private working tree. Composer-managed sites are auto-detected via <code>composer.json</code> at the project root.</li>
-      <li><strong>Open your Drupal site, click the SimpleReview icon, click the broken element or the area to change.</strong> Type plain English: "remove Powered by Drupal", "fix WSOD on /node/42", "add reCAPTCHA to the contact webform". Click <strong>Fix it</strong>. The agent reads the right override file (or opens the right config YAML) and ships a PR.</li>
+      <li><strong>Open your Drupal site, click the SimpleReview icon, click the broken element or the area to change.</strong> Type plain English: "remove Powered by Drupal", "fix WSOD on /node/42", "add reCAPTCHA to the contact webform". Click <strong>Fix it</strong>. The agent reads the right override file (or opens the right config YAML) and ships a direct site fix.</li>
     </ol>
 
     <h2>Common Drupal Fixes</h2>
@@ -478,7 +478,7 @@ drupal_set_message(t('Saved.'));
 // after
 \Drupal::messenger()->addMessage(t('Saved.'));</code></pre>
 
-    <p>The agent finds the call site in <code>web/modules/custom/[name]/[name].module</code>, swaps it, runs <code>drush cr</code> in the PR description, and ships the patch.</p>
+    <p>The agent finds the call site in <code>web/modules/custom/[name]/[name].module</code>, swaps it, runs <code>drush cr</code> in the direct site fix description, and ships the patch.</p>
 
     <h3>Add reCAPTCHA to a webform / user register</h3>
 
@@ -488,7 +488,7 @@ drupal_set_message(t('Saved.'));
 drush en captcha recaptcha -y
 drush cr</code></pre>
 
-    <p>Configure: admin → Configuration → People → CAPTCHA → reCAPTCHA → enter site key + secret. Then admin → Configuration → People → CAPTCHA settings, set the form ID (e.g., <code>user_register_form</code>) and challenge type to <em>reCAPTCHA</em>. The agent generates the PR with the <code>composer require</code> command and the corresponding <code>config/sync/captcha.settings.yml</code> diff.</p>
+    <p>Configure: admin → Configuration → People → CAPTCHA → reCAPTCHA → enter site key + secret. Then admin → Configuration → People → CAPTCHA settings, set the form ID (e.g., <code>user_register_form</code>) and challenge type to <em>reCAPTCHA</em>. The agent generates the direct site fix with the <code>composer require</code> command and the corresponding <code>config/sync/captcha.settings.yml</code> diff.</p>
 
     <h3>Hide "Powered by Drupal" from footer</h3>
 
@@ -514,7 +514,7 @@ drush cr</code></pre>
     <pre><code># web/modules/contrib/[module]/[module].info.yml
 core_version_requirement: ^10 || ^11</code></pre>
 
-    <p>A module pinned to <code>^9</code> won't load on Drupal 10. Either bump the constraint upstream (PR to drupal.org) or pick a maintained fork.</p>
+    <p>A module pinned to <code>^9</code> won't load on Drupal 10. Either bump the constraint upstream (direct site fix to drupal.org) or pick a maintained fork.</p>
 
     <h3>Slow admin / storefront after Drupal 10 upgrade</h3>
 
@@ -563,8 +563,8 @@ drush cr</code></pre>
         <tr><td>DDEV/Lando setup</td><td>30–60 min per environment</td><td>Once, then cached</td></tr>
         <tr><td>Locate the override file</td><td>15–90 min depending on theme/module familiarity</td><td>Instant — already indexed</td></tr>
         <tr><td>Make the edit</td><td>5–30 min</td><td>5–30 seconds</td></tr>
-        <tr><td>Run <code>drush cim / cr / updb</code></td><td>Manual + verify</td><td>Included in PR description</td></tr>
-        <tr><td>Open a PR</td><td>If they use Git</td><td>Always</td></tr>
+        <tr><td>Run <code>drush cim / cr / updb</code></td><td>Manual + verify</td><td>Included in direct site fix description</td></tr>
+        <tr><td>Prepare a direct fix</td><td>If they use Git</td><td>Always</td></tr>
         <tr><td>Cost for a 1-line WSOD fix</td><td>$80–300 (1–2 hour minimum)</td><td>$0 (BYO key) or pennies of API usage</td></tr>
       </table>
     </div>
@@ -582,11 +582,11 @@ drush cr</code></pre>
       <li><strong>Performance audit</strong> — Apache Solr / Search API tuning, Redis sharding, Varnish vs Nginx FastCGI cache, MySQL slow query log.</li>
     </ul>
 
-    <p><a href="/vibers/">Vibers</a> handles exactly this slice — a real human reviews any PR you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
+    <p><a href="/vibers/">Vibers</a> handles exactly this slice — a real human reviews any direct site fix you flag, sends a fix-up if needed, and approves before merge. Use the agent for the 80%, use a human for the 20% that earns its hourly rate.</p>
 
     <div class="cta-block">
       <h3>Stop Paying $90/hr for One-File Drupal Edits</h3>
-      <p>SimpleReview's Drupal-aware agent reads <code>web/modules/custom/</code>, finds the override file, and opens a PR for the fix you described.</p>
+      <p>SimpleReview's Drupal-aware agent reads <code>web/modules/custom/</code>, finds the override file, and prepares a direct site fix for the fix you described.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
       <p style="margin-top:12px;font-size:14px;color:#ccc">D7→D10 migration, multi-site, custom Views handlers? <a href="/vibers/" style="color:#0678be;font-weight:600">Get a human review →</a></p>
     </div>
@@ -595,7 +595,7 @@ drush cr</code></pre>
 
     <div class="faq-item">
       <div class="faq-q">Can I edit a Drupal site without a developer?</div>
-      <div class="faq-a">For most cosmetic edits, content tweaks, and routine fixes — yes. Admin handles content, blocks, menus, and Views. For Twig template overrides, custom module bug fixes, and config sync errors, SimpleReview's Drupal-aware AI agent reads <code>web/modules/custom/</code> and <code>web/themes/custom/[theme]/</code>, edits the right file, and opens a pull request you can merge.</div>
+      <div class="faq-a">For most cosmetic edits, content tweaks, and routine fixes — yes. Admin handles content, blocks, menus, and Views. For Twig template overrides, custom module bug fixes, and config sync errors, SimpleReview's Drupal-aware AI agent reads <code>web/modules/custom/</code> and <code>web/themes/custom/[theme]/</code>, edits the right file, and opens a direct site fix you can merge.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">How do I fix WSOD?</div>
@@ -611,7 +611,7 @@ drush cr</code></pre>
     </div>
     <div class="faq-item">
       <div class="faq-q">Does it require Composer access?</div>
-      <div class="faq-a">Only when adding or updating contrib modules. For Twig, CSS, JS, language string, and config edits — no Composer needed; the agent commits files directly. When a fix needs a new module (e.g., <code>captcha + recaptcha</code>), the PR includes the <code>composer require</code> command in the description so you (or your CI) can run it before merge.</div>
+      <div class="faq-a">Only when adding or updating contrib modules. For Twig, CSS, JS, language string, and config edits — no Composer needed; the agent commits files directly. When a fix needs a new module (e.g., <code>captcha + recaptcha</code>), the direct site fix includes the <code>composer require</code> command in the description so you (or your CI) can run it before merge.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Cheaper than a Drupal specialist (typical $80-150/hr)?</div>
@@ -623,15 +623,15 @@ drush cr</code></pre>
       <div class="related-grid">
         <div class="related-card">
           <a href="/vibers/wordpress/wordpress-6-9-broke-my-site/">WordPress 6.9 Broke My Site</a>
-          <p>Same agent pattern, applied to WP fatal-error recovery — read debug.log, patch deprecated function, open PR.</p>
+          <p>Same agent pattern, applied to WP fatal-error recovery — read debug.log, patch deprecated function, open direct site fix.</p>
         </div>
         <div class="related-card">
           <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
-          <p>Click any element on your storefront, type the change, get a PR — for OpenCart 3.x and 4.x.</p>
+          <p>Click any element on your storefront, type the change, get a direct site fix — for OpenCart 3.x and 4.x.</p>
         </div>
         <div class="related-card">
           <a href="/simple-review/">SimpleReview — Chrome Extension</a>
-          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+          <p>Click any element on any site, leave a comment, get a direct site fix. Free with your own AI key.</p>
         </div>
       </div>
     </div>
@@ -642,7 +642,7 @@ drush cr</code></pre>
       <li><a href="https://www.drupal.org/docs">drupal.org/docs — Module, theme, config management, and migration guides</a></li>
       <li><a href="https://www.drupal.org/project/project_module">drupal.org/project/ — 16,000+ contrib modules &amp; themes</a></li>
       <li><a href="https://api.drupal.org/">api.drupal.org — Authoritative API reference (deprecation notices, replacements)</a></li>
-      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get direct site fix</a></li>
     </ul>
   </article>
 

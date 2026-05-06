@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <meta property="og:type" content="article">
   <meta property="og:title" content="How to Fix Shopware 6 Stores Without Paying €80/hr to a Symfony Developer">
-  <meta property="og:description" content="Most Shopware 6 fixes are a single Twig override or a forgotten cache:clear. SimpleReview's Shopware-aware agent finds the file, patches it, opens a PR.">
+  <meta property="og:description" content="Most Shopware 6 fixes are a single Twig override or a forgotten cache:clear. SimpleReview's Shopware-aware agent finds the file, patches it, prepares a direct site fix.">
   <meta property="og:url" content="https://onout.org/shopware/how-to-fix-shopware-6-issues/">
   <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -51,12 +51,12 @@
       {
         "@type": "Question",
         "name": "Can I edit a Shopware 6 store without a developer?",
-        "acceptedAnswer": {"@type": "Answer", "text": "For most storefront edits — yes. Shopware 6 uses Twig templates and SCSS in custom/plugins/[YourPlugin]/src/Resources/views/storefront/ and Resources/app/storefront/src/scss/. SimpleReview's Shopware-aware agent reads your plugin, finds the right override file, runs the right console commands (theme:refresh → theme:compile → cache:clear), and opens a Pull Request. Custom payment apps, complex entity decorators and headless integrations still want a senior Shopware developer review."}
+        "acceptedAnswer": {"@type": "Answer", "text": "For most storefront edits — yes. Shopware 6 uses Twig templates and SCSS in custom/plugins/[YourPlugin]/src/Resources/views/storefront/ and Resources/app/storefront/src/scss/. SimpleReview's Shopware-aware agent reads your plugin, finds the right override file, runs the right console commands (theme:refresh → theme:compile → cache:clear), and prepares a direct site fix. Custom payment apps, complex entity decorators and headless integrations still want a senior Shopware developer review."}
       },
       {
         "@type": "Question",
         "name": "Is SimpleReview safe for a live Shopware shop?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Yes. SimpleReview never pushes to your live branch — every change is a Pull Request you review and merge, and we never touch core/vendor/shopware/. Pair it with a staging clone (most managed Shopware hosts include one) and the worst case is a PR you decline. The agent also flags whenever a fix would touch core, payment, or sales-channel code, so you get a heads-up before merge."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. SimpleReview never pushes to your live branch — every change is a direct site fix you review and merge, and we never touch core/vendor/shopware/. Pair it with a staging clone (most managed Shopware hosts include one) and the worst case is a direct site fix you decline. The agent also flags whenever a fix would touch core, payment, or sales-channel code, so you get a heads-up before merge."}
       },
       {
         "@type": "Question",
@@ -166,7 +166,7 @@
 
     <h1>How to Fix Shopware 6 Stores Without Paying €80/hr to a Symfony Developer</h1>
 
-    <p class="article-lead">Shopware 6 is the modern Symfony/Vue.js rewrite of the old Shopware 5 — but every customization needs a Symfony-fluent developer billing €60–120/hr. Yet most fixes come down to: a stale Twig template in <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code>, a missing entity decorator, or a broken <code>theme.json</code> after <code>bin/console theme:compile</code>. <strong>SimpleReview's Shopware-aware agent</strong> knows the plugin convention and the storefront override system, so it patches the right Twig/SCSS and opens a PR.</p>
+    <p class="article-lead">Shopware 6 is the modern Symfony/Vue.js rewrite of the old Shopware 5 — but every customization needs a Symfony-fluent developer billing €60–120/hr. Yet most fixes come down to: a stale Twig template in <code>custom/plugins/[Plugin]/src/Resources/views/storefront/</code>, a missing entity decorator, or a broken <code>theme.json</code> after <code>bin/console theme:compile</code>. <strong>SimpleReview's Shopware-aware agent</strong> knows the plugin convention and the storefront override system, so it patches the right Twig/SCSS and prepares a direct site fix.</p>
 
     <style>
     /* ─────── Shopware 6 Banner (28s cycle) ─────── */
@@ -308,7 +308,7 @@
       .sc-sw-grid{grid-template-columns:repeat(3,1fr);max-width:380px}
     }
     </style>
-    <div id="sc-banner-fallback" class="sc-banner shopware" aria-label="Animated demo: SimpleReview's Shopware expert repairs the broken cookie banner dismiss button and opens a PR">
+    <div id="sc-banner-fallback" class="sc-banner shopware" aria-label="Animated demo: SimpleReview's Shopware expert repairs the broken cookie banner dismiss button and prepares a direct site fix">
       <div class="sc-chrome">
         <div class="sc-dots"><span></span><span></span><span></span></div>
         <div class="sc-url">mystore.de</div>
@@ -360,7 +360,7 @@
               </div>
               <div class="sc-rec-banner"><span class="sc-rec-pct">FREI</span>Versand ab 50 € · Frühlings-Sale läuft jetzt</div>
               <div class="sc-rec-content">
-                <span class="sc-rec-success">✓ Cookie-Banner schließbar · cookie-permission.html.twig pропатчен · PR #42</span>
+                <span class="sc-rec-success">✓ Cookie-Banner schließbar · cookie-permission.html.twig pропатчен · Fix #42</span>
                 <div class="sc-rec-h">Beliebte Produkte</div>
                 <div class="sc-rec-line"></div>
                 <div class="sc-rec-line med"></div>
@@ -400,14 +400,14 @@
               <div style="font-size:9px;color:#166534;line-height:1.4">× button works again. GDPR consent stored, banner stays closed.</div>
             </div>
             <div class="sc-pr">
-              <div class="sc-pr-title">✓ PR #42 opened</div>
+              <div class="sc-pr-title">✓ Fix #42 ready</div>
               <div class="sc-pr-meta">fix(cookie): repair dismiss button<br>cookie-permission.twig · +6 / -1</div>
             </div>
           </div>
         </div>
       </div>
       <div class="sc-progress"><div class="sc-progress-fill"></div></div>
-      <div class="sc-caption">Click SimpleReview → select the stuck cookie banner → <strong>Fix it</strong> → PR opens, no Symfony dev needed</div>
+      <div class="sc-caption">Click SimpleReview → select the stuck cookie banner → <strong>Fix it</strong> → the fix is ready, no Symfony dev needed</div>
       <div class="sc-cursor">
         <span class="sc-arrow"><svg viewBox="0 0 24 24">
           <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
@@ -416,7 +416,7 @@
     </div>
 
     <div class="ext-callout">
-      Shopware tweak quoted at 2 hours by your agency? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads <code>custom/plugins/</code>, finds the storefront override path, opens a PR. Most edits ship the same hour.
+      Shopware tweak quoted at 2 hours by your agency? → <a href="https://onout.org/simple-review/">SimpleReview</a> reads <code>custom/plugins/</code>, finds the storefront override path, prepares a direct site fix. Most edits ship the same hour.
     </div>
 
     <div class="key-takeaways">
@@ -466,7 +466,7 @@
     <ol class="steps">
       <li><strong>Install the SimpleReview Chrome extension</strong> from the <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Chrome Web Store</a>. It's free with your own AI key (Claude Code or Codex). The extension auto-detects Shopware 6 from <code>&lt;meta name="application-name" content="Shopware"&gt;</code> + the <code>data-storefront-config</code> JS handle in the storefront source.</li>
       <li><strong>Connect your store's Git repo</strong> (GitHub, GitLab, Gitea) or grant SFTP credentials. SimpleReview indexes <code>custom/plugins/</code>, reads <code>composer.json</code> for each plugin, and parses your theme inheritance graph from <code>theme.json</code>.</li>
-      <li><strong>Open your storefront, click the SimpleReview icon, click the element you want to change.</strong> Type the change in plain English: "remove this banner", "add reCAPTCHA to contact form", "hide Powered by Shopware in footer". Click <strong>Fix it</strong>. The agent finds the right override path, writes the Twig/SCSS, runs <code>plugin:refresh</code> + <code>theme:compile</code> + <code>cache:clear</code> on staging, and opens a Pull Request.</li>
+      <li><strong>Open your storefront, click the SimpleReview icon, click the element you want to change.</strong> Type the change in plain English: "remove this banner", "add reCAPTCHA to contact form", "hide Powered by Shopware in footer". Click <strong>Fix it</strong>. The agent finds the right override path, writes the Twig/SCSS, runs <code>plugin:refresh</code> + <code>theme:compile</code> + <code>cache:clear</code> on staging, and prepares a direct site fix.</li>
     </ol>
 
     <h2>Common Shopware 6 Fixes</h2>
@@ -482,7 +482,7 @@ bin/console theme:compile
 bin/console cache:clear --env=prod
 composer dump-autoload -o</code></pre>
 
-    <p>Also check <code>var/log/prod-*.log</code> (or <code>dev-*.log</code>) for the exact missing template path. SimpleReview reads the log, identifies the missing template, and proposes the right <code>{% sw_extends %}</code> directive in a PR.</p>
+    <p>Also check <code>var/log/prod-*.log</code> (or <code>dev-*.log</code>) for the exact missing template path. SimpleReview reads the log, identifies the missing template, and proposes the right <code>{% sw_extends %}</code> directive in a direct site fix.</p>
 
     <h3>Add reCAPTCHA to a custom form</h3>
 
@@ -503,7 +503,7 @@ composer dump-autoload -o</code></pre>
   &lt;/card&gt;
 &lt;/config&gt;</code></pre>
 
-    <p>Then enable in Admin → Settings → System → Storefront → Captcha. SimpleReview generates the full scaffold — <code>config.xml</code>, the form Twig override (<code>{% sw_include '@Storefront/storefront/component/captcha/base.html.twig' %}</code>), and snippets — in one PR.</p>
+    <p>Then enable in Admin → Settings → System → Storefront → Captcha. SimpleReview generates the full scaffold — <code>config.xml</code>, the form Twig override (<code>{% sw_include '@Storefront/storefront/component/captcha/base.html.twig' %}</code>), and snippets — in one direct site fix.</p>
 
     <h3>Hide "Shopware" / "Powered by" from footer</h3>
 
@@ -568,7 +568,7 @@ REDIS_DSN=redis://127.0.0.1:6379</code></pre>
         <tr><td>Find the override path</td><td>30-90 min reading <code>vendor/shopware/storefront/</code> to mirror it</td><td>Instant — plugin convention is indexed</td></tr>
         <tr><td>Make the edit</td><td>5-30 min</td><td>5-30 seconds</td></tr>
         <tr><td>Run cache / theme commands</td><td>5-15 min (often forgets <code>theme:refresh</code>)</td><td>Automated on staging</td></tr>
-        <tr><td>Open a Pull Request</td><td>If they use Git at all</td><td>Always</td></tr>
+        <tr><td>Open a direct site fix</td><td>If they use Git at all</td><td>Always</td></tr>
         <tr><td>Cost for a 1-line change</td><td>€60-150 (1-hour minimum)</td><td>€0 (BYO key) or pennies of API usage</td></tr>
       </table>
     </div>
@@ -585,24 +585,24 @@ REDIS_DSN=redis://127.0.0.1:6379</code></pre>
       <li><strong>Migration Shopware 5 → 6.</strong> SW5 (Smarty + Enlight) and SW6 (Twig + Symfony) are different architectures. The <code>SwagMigrationAssistant</code> handles data migration, not theme/plugin migration. That's senior-engineer work.</li>
     </ul>
 
-    <p><a href="/vibers/">Vibers</a> takes those PRs — a real human reviews them, sends a fix-up if needed, and approves before merge. Use SimpleReview for the 80%, use a human for the 20% that earns the €100/hr.</p>
+    <p><a href="/vibers/">Vibers</a> takes those site fixes — a real human reviews them, sends a fix-up if needed, and approves before merge. Use SimpleReview for the 80%, use a human for the 20% that earns the €100/hr.</p>
 
     <div class="cta-block">
       <h3>Stop Paying €80/hr for One-Twig-File Shopware Edits</h3>
-      <p>SimpleReview's Shopware agent reads <code>custom/plugins/</code>, knows the storefront override system, runs <code>theme:compile</code> + <code>cache:clear</code> for you, and opens a Pull Request.</p>
+      <p>SimpleReview's Shopware agent reads <code>custom/plugins/</code>, knows the storefront override system, runs <code>theme:compile</code> + <code>cache:clear</code> for you, and prepares a direct site fix.</p>
       <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview Chrome Extension →</a>
-      <p style="margin-top:12px;font-size:14px;color:#666">Custom payment app, headless, SW5 migration? <a href="/vibers/" style="color:#189eff;font-weight:600">Get a human review →</a> Free first PR for a GitHub star.</p>
+      <p style="margin-top:12px;font-size:14px;color:#666">Custom payment app, headless, SW5 migration? <a href="/vibers/" style="color:#189eff;font-weight:600">Get a human review →</a> Free first direct site fix for a GitHub star.</p>
     </div>
 
     <h2>Frequently Asked Questions</h2>
 
     <div class="faq-item">
       <div class="faq-q">Can I edit a Shopware 6 store without a developer?</div>
-      <div class="faq-a">For most storefront edits — yes. Shopware 6 uses Twig templates and SCSS in <code>custom/plugins/[YourPlugin]/src/Resources/views/storefront/</code> and <code>Resources/app/storefront/src/scss/</code>. SimpleReview's Shopware-aware agent reads your plugin, finds the right override file, runs the right console commands (<code>theme:refresh</code> → <code>theme:compile</code> → <code>cache:clear</code>), and opens a Pull Request. Custom payment apps, complex entity decorators and headless integrations still want a senior Shopware developer review.</div>
+      <div class="faq-a">For most storefront edits — yes. Shopware 6 uses Twig templates and SCSS in <code>custom/plugins/[YourPlugin]/src/Resources/views/storefront/</code> and <code>Resources/app/storefront/src/scss/</code>. SimpleReview's Shopware-aware agent reads your plugin, finds the right override file, runs the right console commands (<code>theme:refresh</code> → <code>theme:compile</code> → <code>cache:clear</code>), and prepares a direct site fix. Custom payment apps, complex entity decorators and headless integrations still want a senior Shopware developer review.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Is SimpleReview safe for a live Shopware shop?</div>
-      <div class="faq-a">Yes. SimpleReview never pushes to your live branch — every change is a Pull Request you review and merge, and we never touch <code>core/</code> or <code>vendor/shopware/</code>. Pair it with a staging clone (most managed Shopware hosts include one) and the worst case is a PR you decline. The agent also flags whenever a fix would touch core, payment, or sales-channel code, so you get a heads-up before merge.</div>
+      <div class="faq-a">Yes. SimpleReview never pushes to your live branch — every change is a direct site fix you review and merge, and we never touch <code>core/</code> or <code>vendor/shopware/</code>. Pair it with a staging clone (most managed Shopware hosts include one) and the worst case is a direct site fix you decline. The agent also flags whenever a fix would touch core, payment, or sales-channel code, so you get a heads-up before merge.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Which Shopware versions are supported?</div>
@@ -626,15 +626,15 @@ REDIS_DSN=redis://127.0.0.1:6379</code></pre>
       <div class="related-grid">
         <div class="related-card">
           <a href="/vibers/opencart/edit-opencart-without-developer/">Edit OpenCart Without a Developer</a>
-          <p>Same agent pattern, applied to OpenCart 3.x and 4.x — click element, type change, get a PR.</p>
+          <p>Same agent pattern, applied to OpenCart 3.x and 4.x — click element, type change, get a direct site fix.</p>
         </div>
         <div class="related-card">
           <a href="/vibers/woocommerce/fix-woocommerce-checkout-slow/">Fix WooCommerce Slow Checkout</a>
-          <p>Click the slow part of checkout, get a PR with the fix — same approach as Shopware theme/Twig edits.</p>
+          <p>Click the slow part of checkout, get a direct site fix with the fix — same approach as Shopware theme/Twig edits.</p>
         </div>
         <div class="related-card">
           <a href="/simple-review/">SimpleReview — Chrome Extension</a>
-          <p>Click any element on any site, leave a comment, get a Pull Request. Free with your own AI key.</p>
+          <p>Click any element on any site, leave a comment, get a direct site fix. Free with your own AI key.</p>
         </div>
       </div>
     </div>
@@ -644,7 +644,7 @@ REDIS_DSN=redis://127.0.0.1:6379</code></pre>
       <li><a href="https://developer.shopware.com/docs/">developer.shopware.com — Official Shopware 6 plugin and storefront documentation</a></li>
       <li><a href="https://store.shopware.com/">store.shopware.com — Shopware Store (formerly Shopware Community Store)</a></li>
       <li><a href="https://github.com/shopware/platform">github.com/shopware/platform — Reference repository the agent indexes against</a></li>
-      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get PR</a></li>
+      <li><a href="https://onout.org/simple-review/">SimpleReview — Click element → leave comment → get direct site fix</a></li>
     </ul>
   </article>
 
