@@ -139,11 +139,11 @@ Marketplace/Kwork cover variants for CMS-fix services are documented separately:
 
 | Asset | Public URL | Use |
 |-------|------------|-----|
-| Demo: comment → PR (1) | https://i.wpmix.net/image/photo/image_2026-04-19_18-15-44_1776611748531.png | screenshot: popup on landing |
-| Demo: PR opened (2) | https://i.wpmix.net/image/photo/image_2026-04-19_18-16-17_1776611778828.png | screenshot: GitHub PR view |
-| Demo: WordPress/WooCommerce use case | https://i.wpmix.net/image/photo/image_2026-04-20_10-07-11_1776668832499.png | screenshot: "Unavailable despite in stock" |
-| Demo: Feature request flow | https://i.wpmix.net/image/photo/image_2026-04-20_10-10-53_1776669053918.png | screenshot: dashboard use case |
-| Demo: Search transactions | https://i.wpmix.net/image/photo/image_2026-04-20_10-11-02_1776669063234.png | screenshot: feature tag |
+| Demo: comment → PR (1) | https://onout.org/simple-review/images/listings/demo-comment-to-pr.png | screenshot: popup on landing |
+| Demo: PR opened (2) | https://onout.org/simple-review/images/listings/demo-pr-opened.png | screenshot: GitHub PR view |
+| Demo: WordPress/WooCommerce use case | https://onout.org/simple-review/images/listings/demo-woocommerce-usecase.png | screenshot: "Unavailable despite in stock" |
+| Demo: Feature request flow | https://onout.org/simple-review/images/listings/demo-feature-request.png | screenshot: dashboard use case |
+| Demo: Search transactions | https://onout.org/simple-review/images/listings/demo-search-transactions.png | screenshot: feature tag |
 
 Рекомендуемый порядок скриншотов в Chrome Web Store / галерее каталога:
 1. Extension icon + popup on a live page (click any element)
