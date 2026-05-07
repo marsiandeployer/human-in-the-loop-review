@@ -1,0 +1,36 @@
+=== posthog hobby script — first 30 lines ===
+#!/usr/bin/env bash
+
+set -e
+
+export DEBIAN_FRONTEND=noninteractive
+
+# Automatically restart without asking.
+# this gets around needrestart command halting for user input
+export RESTART_MODE=l
+export POSTHOG_APP_TAG="${POSTHOG_APP_TAG:-latest}"
+
+POSTHOG_SECRET=$(head -c 28 /dev/urandom | sha224sum -b | head -c 56)
+export POSTHOG_SECRET
+
+ENCRYPTION_SALT_KEYS=$(openssl rand -hex 16)
+export ENCRYPTION_SALT_KEYS
+
+# Talk to the user
+echo "Welcome to the single instance PostHog installer 🦔"
+echo ""
+echo "⚠️  You REALLY need 8GB or more of memory to run this stack ⚠️"
+echo ""
+echo "Power user or aspiring power user?"
+echo "Check out our docs on deploying PostHog! https://posthog.com/docs/self-host/deploy/hobby"
+echo ""
+
+if [ -n "$1" ]
+then
+    export POSTHOG_APP_TAG=$1
+else
+
+=== compose pull without env vars (real terminal output 2026-05-07) ===
+time="2026-05-07T16:33:31+03:00" level=warning msg="The \"REGISTRY_URL\" variable is not set. Defaulting to a blank string."
+unable to get image '-node:latest': Error response from daemon: invalid reference format
+exit 1, took 1s

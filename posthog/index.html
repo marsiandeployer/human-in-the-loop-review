@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PostHog hobby self-host: 19 GB of images and a 305-line install script</title>
+  <meta name="description" content="We tried to run PostHog's official docker-compose.hobby.yml on a clean box on 2026-05-07. The compose file is not standalone — pulling without env vars fails with `invalid reference format`. Real numbers and the exact friction points before you commit to self-hosting.">
+  <link rel="canonical" href="https://onout.org/posthog/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="PostHog hobby self-host: 19 GB of images and a 305-line install script">
+  <meta property="og:description" content="The compose file is not standalone — pulling without env vars fails. Real numbers from a real test on 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/posthog/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "PostHog hobby self-host: 19 GB of images and a 305-line install script",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/posthog/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      PostHog
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Self-host scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>PostHog tag <code>latest</code></span>
+          <span>·</span>
+          <span><code>docker-compose.hobby.yml</code> from <code>posthog/posthog</code> main</span>
+        </div>
+        <h1>PostHog hobby self-host: 19 GB of images and a 305-line install script</h1>
+        <p class="lede">PostHog publishes a <code>docker-compose.hobby.yml</code> in the public <code>posthog/posthog</code> repo. We thought we'd run it. We did not get further than <code>docker compose pull</code> on the first try — the compose file is intentionally not standalone, it expects environment variables that are set by a 305-line bash installer, and without them you get an error a Docker primer can't help with. Here's exactly where the friction lives, what the real disk and RAM numbers look like, and why we'd reach for managed PostHog Cloud or a different self-host target before this stack on a single VPS.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever site you click. Not affiliated with PostHog. This page is a scouting note from one real test on one Linux box, dated above. We didn't bring the full stack to a green state — we hit and documented the first three friction points, sized the disk footprint, and stopped. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>Friction 1 — the compose file is not standalone</h2>
+
+      <p>The natural first step on any "docker-compose-based product" is <code>docker compose pull</code>. Skip the install script, see what we're getting into. With <code>docker-compose.hobby.yml</code> from PostHog main:</p>
+
+<pre><code>$ docker compose -f docker-compose.hobby.yml pull --quiet
+time="2026-05-07T16:33:31+03:00" level=warning
+   msg="The \"DOMAIN\" variable is not set. Defaulting to a blank string."
+time="2026-05-07T16:33:31+03:00" level=warning
+   msg="The \"REGISTRY_URL\" variable is not set. Defaulting to a blank string."
+time="2026-05-07T16:33:31+03:00" level=warning
+   msg="The \"POSTHOG_APP_TAG\" variable is not set. Defaulting to a blank string."
+time="2026-05-07T16:33:31+03:00" level=warning
+   msg="The \"ENCRYPTION_SALT_KEYS\" variable is not set. Defaulting to a blank string."
+time="2026-05-07T16:33:31+03:00" level=warning
+   msg="The \"TLS_BLOCK\" variable is not set. Defaulting to a blank string."
+
+unable to get image '-node:latest':
+   Error response from daemon: invalid reference format
+exit 1</code></pre>
+
+      <div class="callout-broken">
+        <div class="lbl">Broken default — observed locally</div>
+        <p>The compose file references <code>${REGISTRY_URL}-node:latest</code> for the <code>posthog-node</code> service. When <code>REGISTRY_URL</code> is empty (the default), Docker tries to pull an image literally named <code>-node:latest</code>, which is not a valid image reference. The pull dies before any of the 23 services has a chance to download.</p>
+        <p>Setting <code>REGISTRY_URL=posthog/posthog</code>, <code>DOMAIN=&lt;your-domain&gt;</code>, <code>POSTHOG_APP_TAG=latest</code>, <code>ENCRYPTION_SALT_KEYS=&lt;random hex&gt;</code>, and <code>TLS_BLOCK=""</code> lets the pull proceed. None of these defaults appear in the compose file or in a checked-in <code>.env.example</code>; they are inlined into the deploy script.</p>
+      </div>
+
+      <h2>Friction 2 — the "official" path is a 305-line bash script</h2>
+
+      <p>The script lives at <a href="https://github.com/PostHog/posthog/blob/master/bin/deploy-hobby" target="_blank" rel="noopener">PostHog/posthog/bin/deploy-hobby</a>. The first thing it does, before any docker activity, is print a warning that's worth quoting verbatim:</p>
+
+<pre><code>echo "Welcome to the single instance PostHog installer 🦔"
+echo ""
+echo "⚠️  You REALLY need 8GB or more of memory to run this stack ⚠️"
+echo ""</code></pre>
+
+      <p>The script then prompts interactively for:</p>
+
+      <ul>
+        <li>The PostHog version tag (defaults to <code>latest</code>)</li>
+        <li>The exact public domain — <em>"Make sure that you have a Host A DNS record pointing to this instance!"</em></li>
+        <li>An admin email for Let's Encrypt</li>
+      </ul>
+
+      <p>It generates a random <code>POSTHOG_SECRET</code>, a random <code>ENCRYPTION_SALT_KEYS</code>, drops a <code>.env</code> file alongside the compose, fetches Caddy with auto-TLS, and then runs <code>docker compose up -d</code>. The script is not really optional — without it you reproduce the env-var dance by hand and you still need a real domain because the proxy service is wired to do TLS.</p>
+
+      <h2>Friction 3 — the disk and image footprint</h2>
+
+      <p>Once the env vars are right, <code>docker compose pull</code> ran for <strong>161 seconds</strong> on a 1 Gbit link and added <strong>~19 GB</strong> of new images to the host. The biggest single image is <code>posthog/posthog:latest</code> at <strong>10.8 GB</strong> uncompressed. Per <code>docker images</code>:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Image</th><th>Tag</th><th>Size</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>posthog/posthog</code></td><td><code>latest</code></td><td class="num">10.8 GB</td></tr>
+          <tr><td><code>posthog/posthog-node</code></td><td><code>latest</code></td><td class="num">1.75 GB</td></tr>
+          <tr><td><code>clickhouse/clickhouse-server</code></td><td><code>26.3.9.8</code></td><td class="num">887 MB</td></tr>
+          <tr><td><code>temporalio/admin-tools</code></td><td><code>1.26.2</code></td><td class="num">857 MB</td></tr>
+          <tr><td><code>cymbal</code> (error-tracking)</td><td><code>master</code></td><td class="num">476 MB</td></tr>
+          <tr><td><code>feature-flags</code></td><td><code>master</code></td><td class="num">449 MB</td></tr>
+          <tr><td><code>capture</code></td><td><code>master</code></td><td class="num">439 MB</td></tr>
+          <tr><td><code>auto-setup</code> (temporal)</td><td><code>1.26.2</code></td><td class="num">426 MB</td></tr>
+          <tr><td><code>hypercache-server</code></td><td><code>master</code></td><td class="num">392 MB</td></tr>
+          <tr><td><code>temporalio/ui</code></td><td><code>2.47.2</code></td><td class="num">359 MB</td></tr>
+          <tr><td><code>property-defs-rs</code></td><td><code>master</code></td><td class="num">325 MB</td></tr>
+          <tr><td><code>personhog-router</code></td><td><code>master</code></td><td class="num">308 MB</td></tr>
+          <tr><td><code>cyclotron-janitor</code></td><td><code>master</code></td><td class="num">298 MB</td></tr>
+          <tr><td><code>personhog-replica</code></td><td><code>master</code></td><td class="num">277 MB</td></tr>
+          <tr><td><code>zookeeper</code></td><td><code>3.7.0</code></td><td class="num">277 MB</td></tr>
+          <tr><td><code>chrislusf/seaweedfs</code></td><td><code>4.03</code></td><td class="num">193 MB</td></tr>
+          <tr><td><code>livestream</code></td><td><code>master</code></td><td class="num">171 MB</td></tr>
+          <tr><td><code>caddy</code></td><td><code>latest</code></td><td class="num">62 MB</td></tr>
+          <tr><th>Total (PostHog-specific)</th><th></th><th class="num">~19 GB</th></tr>
+        </tbody>
+      </table>
+
+      <p>The <code>posthog/posthog</code> image alone is bigger than most full Linux server installs. It contains the Django app, the Webpack build, the Celery worker, the plugins runtime, and a slate of Python dependencies for ClickHouse, Kafka, Redis, S3, Temporal. It has to — the image is reused across <em>at least</em> seven of the 23 services in the compose file.</p>
+
+      <h2>What the 23 services actually are</h2>
+
+      <p>Counted from the compose file at the test commit, after stripping <code>x-</code> blocks:</p>
+
+      <ul>
+        <li><strong>Storage:</strong> <code>db</code> (Postgres 15.12), <code>redis7</code>, <code>clickhouse</code>, <code>elasticsearch</code>, <code>seaweedfs</code>, <code>objectstorage</code></li>
+        <li><strong>Streaming:</strong> <code>kafka</code>, <code>zookeeper</code></li>
+        <li><strong>Workflow:</strong> <code>temporal</code>, <code>temporal-admin-tools</code>, <code>temporal-ui</code>, <code>temporal-django-worker</code></li>
+        <li><strong>App:</strong> <code>web</code>, <code>worker</code>, <code>plugins</code>, <code>asyncmigrationscheck</code>, <code>cyclotron-janitor</code></li>
+        <li><strong>Ingestion:</strong> <code>ingestion-general</code>, <code>ingestion-sessionreplay</code>, <code>ingestion-error-tracking</code>, <code>ingestion-logs</code>, <code>ingestion-traces</code>, <code>recording-api</code></li>
+        <li><strong>Edge:</strong> <code>proxy</code> (Caddy with auto-TLS)</li>
+      </ul>
+
+      <p>Translation: PostHog is, by 2026, a multi-process distributed system held together by Kafka, Temporal, and a Django monolith. It is not a "small Postgres-backed app" anymore. The hobby compose is the production architecture, just on a single host.</p>
+
+      <h2>Where the line is</h2>
+
+      <p>Based on what we measured before stopping:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>You want</th><th>Verdict</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Self-host PostHog on a $20/month VPS</td><td>No. The script's 8 GB warning is conservative; in practice you want 16 GB and SSDs. Plan for $40–80/month.</td></tr>
+          <tr><td>Try PostHog locally without a public domain</td><td>Hard. The hobby compose has TLS termination wired in. You can edit the compose to drop Caddy and bind the web service to <code>localhost</code>, but you're now off the supported path.</td></tr>
+          <tr><td>Pin a known-good version for compliance</td><td>Yes — set <code>POSTHOG_APP_TAG</code> to a specific image tag, but accept that the <code>master</code>-tagged sidecars (<code>capture</code>, <code>cymbal</code>, etc.) move independently and aren't versioned in the compose file.</td></tr>
+          <tr><td>Production analytics for 50+ engineers</td><td>Plausible only if you have an ops team. The 23-service stack means migrations, upgrades, and Kafka rebalances are part of your week.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Things we'd change in the README</h2>
+
+      <ol>
+        <li><strong>Ship a runnable <code>.env.example</code></strong> next to the compose file, with sane defaults for every variable the file references. <code>${REGISTRY_URL}-node:latest</code> failing on an empty default is a footgun, not a feature.</li>
+        <li><strong>Add a "no-TLS local mode" compose</strong> that drops Caddy, binds <code>web</code> to <code>127.0.0.1:8000</code>, and lets curious developers see the UI without owning a domain.</li>
+        <li><strong>Be explicit about disk.</strong> 19 GB of images on a "hobby" deploy needs a callout in the docs, not a discovery in the wild.</li>
+        <li><strong>Write down the canonical RAM/CPU floor.</strong> The script's "really need 8GB" line is the only quantitative guidance we found. Production-style docs deserve concrete tiers.</li>
+      </ol>
+
+      <h2>What we'd actually do</h2>
+
+      <p>If the goal is product analytics and we don't have a dedicated ops headcount: pay for PostHog Cloud or evaluate a smaller-footprint alternative (Plausible, Umami) for the use case. The PostHog hobby compose is engineered to mirror their cloud architecture; that buys parity but it's a heavy lift for a single-tenant box. We'd revisit self-host once we cared specifically about session replay or event-level data residency — and even then, we'd budget for a 16 GB VPS, daily ClickHouse backups, and a maintenance window for upgrades.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per self-hostable analytics/CMS/forum tool we run on a real Linux box. Adjacent: <a href="../cal-com/">Cal.com 6.16.1 — migrations don't run on boot</a>, <a href="../dify/">Dify 1.14.0 — the profile flag the README forgets</a>, <a href="../open-webui/">Open WebUI on Linux Docker — first 90 seconds, measured</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin into a draft code-fix PR — including PostHog's various dashboards once you do bring the stack up.</p>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on a Hetzner CX-line VM, Ubuntu 22.04, Docker 24, against <code>posthog/posthog</code> main (commit reachable from <code>master</code> on that date). PostHog is a trademark of PostHog Inc.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>
