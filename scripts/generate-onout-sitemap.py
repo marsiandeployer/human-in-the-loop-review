@@ -53,7 +53,12 @@ SKIP_NAMES = {
     "googleb0ef9bfd96887057.html",
     "index_static.html",
 }
-SKIP_PARTS = {"chicken_files"}
+SKIP_PARTS = {
+    "chicken_files",
+    ".claude",       # private skill files leaked into /var/www/onout.org/.claude/
+    ".git",
+    "node_modules",  # never expose dependency trees
+}
 
 
 @dataclass(frozen=True)
