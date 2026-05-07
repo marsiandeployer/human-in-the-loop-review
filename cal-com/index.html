@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cal.com 6.16.1 self-host: the migrations don't run on boot</title>
+  <meta name="description" content="We pulled calcom/cal.com:latest on 2026-05-07 and watched it crash-loop with `Table public.users does not exist` because the official image does not run prisma migrate deploy on startup. Real container, real fix, real numbers.">
+  <link rel="canonical" href="https://onout.org/cal-com/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Cal.com 6.16.1 self-host: the migrations don't run on boot">
+  <meta property="og:description" content="One container, one Postgres, one missing migrate command. Here's the exact log line and the two-line fix.">
+  <meta property="og:url" content="https://onout.org/cal-com/">
+  <meta property="og:image" content="https://onout.org/cal-com/assets/01-setup-step1.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Cal.com 6.16.1 self-host: the migrations don't run on boot",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "image": "https://onout.org/cal-com/assets/01-setup-step1.jpg",
+    "mainEntityOfPage": "https://onout.org/cal-com/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { width: 100%; border: 1px solid #e0e7ee; border-radius: 8px; display: block; background: #fafafa; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    .banner-placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0f172a, #1e3a8a); border-radius: 10px; margin: 8px 0 22px; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 13px; padding: 24px; text-align: center; }
+    .banner-placeholder strong { color: #fff; display: block; font-size: 16px; margin-bottom: 6px; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Cal.com
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Self-host notes</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Cal.com <code>6.16.1</code></span>
+          <span>·</span>
+          <span>Image <code>calcom/cal.com:latest</code></span>
+        </div>
+        <h1>Cal.com 6.16.1 self-host: the migrations don't run on boot</h1>
+        <p class="lede">The official <code>calcom/cal.com:latest</code> image starts a Next.js app, listens on port 3000, and dutifully redirects you from <code>/</code> to <code>/auth/login</code>. What it does <em>not</em> do is run <code>prisma migrate deploy</code> against the Postgres you wired up. The container ends up in a fast crash loop with the same Prisma error in every log line, and the only signal in the browser is a generic Next.js 500. Here's the exact log, the two-step fix, and the resource numbers from a real install.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever site you click. Not affiliated with Cal.com. This page is a deployment note from one real install on one Linux box, dated above. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>The exact docker run we used</h2>
+
+<pre><code># 1. Postgres sidecar
+docker run -d --name calpg \
+  -e POSTGRES_USER=cal \
+  -e POSTGRES_PASSWORD=cal \
+  -e POSTGRES_DB=calendso \
+  postgres:15-alpine
+
+# 2. The app — what the README more or less suggests
+docker run -d --name caltest -p 18081:3000 \
+  --link calpg:db \
+  -e DATABASE_URL="postgresql://cal:cal@db:5432/calendso" \
+  -e NEXTAUTH_URL="http://localhost:18081" \
+  -e NEXT_PUBLIC_WEBAPP_URL="http://localhost:18081" \
+  -e NEXTAUTH_SECRET="$(openssl rand -base64 32)" \
+  -e CALENDSO_ENCRYPTION_KEY="$(openssl rand -base64 24)" \
+  calcom/cal.com:latest</code></pre>
+
+      <p>The container starts, listens on 3000, and HTTP-307 redirects <code>/</code> to <code>/auth/login</code>. So far so good — except that Postgres is a fresh DB with no schema, and the image never ran a migration.</p>
+
+      <h2>What "/" does when there's no schema</h2>
+
+      <p>Hitting any page produces this log spam in the container:</p>
+
+<pre><code>@calcom/web:start: Invalid `prisma.user.findFirst()` invocation:
+@calcom/web:start:
+@calcom/web:start: The table `public.users` does not exist in the current database.
+@calcom/web:start:     at async m (.next/server/chunks/ssr/...)
+@calcom/web:start: Error [PrismaClientKnownRequestError]:
+@calcom/web:start:   code: 'P2021',
+@calcom/web:start:   meta: [Object],
+@calcom/web:start:   clientVersion: '6.16.1',</code></pre>
+
+      <div class="callout-broken">
+        <div class="lbl">Broken state — observed locally</div>
+        <p>The <code>calcom/cal.com:latest</code> image (digest <code>sha256:ace3bb1219fb…</code> as of 2026-05-07) does <strong>not</strong> include a startup hook that runs <code>prisma migrate deploy</code>. It boots the Next.js production server immediately. Every page-load that tries to look up a user (which is to say, every page that isn't a static asset) hits Prisma error <code>P2021 — Table 'public.users' does not exist</code>.</p>
+        <p>The browser sees a generic Next.js 500. The container is technically "Up" and the docker-level healthcheck (if you wired one) reports green. The actual bug is invisible unless you tail the container logs.</p>
+      </div>
+
+      <h3>Step 1 — run the migrations manually</h3>
+
+      <p>Prisma 6 wants both <code>DATABASE_URL</code> (pooled) and <code>DATABASE_DIRECT_URL</code> (unpooled, for migrations). The Cal.com schema sets <code>directUrl = env("DATABASE_DIRECT_URL")</code>, so omitting it makes <code>prisma migrate deploy</code> fail validation:</p>
+
+<pre><code>Error: Prisma schema validation
+error: Environment variable not found: DATABASE_DIRECT_URL.
+  --> packages/prisma/schema.prisma:7
+   |
+ 6 |   url       = env("DATABASE_URL")
+ 7 |   directUrl = env("DATABASE_DIRECT_URL")</code></pre>
+
+      <p>Set it (the same connection string is fine for a single-Postgres self-host) and run the migration from inside the running container:</p>
+
+<pre><code>docker exec \
+  -e DATABASE_DIRECT_URL="postgresql://cal:cal@db:5432/calendso" \
+  caltest \
+  sh -c "cd /calcom && npx -y prisma migrate deploy --schema=packages/prisma/schema.prisma"</code></pre>
+
+      <p>This applied just over <strong>three hundred migrations</strong> end-to-end on the empty database — every schema change Cal.com has shipped from 2022 to mid-2026. Took about <strong>60 seconds</strong> on a fast NVMe Postgres. The final line is a clean <code>All migrations have been successfully applied.</code></p>
+
+      <h3>Step 2 — restart the app</h3>
+
+      <p>Prisma's client caches the introspected schema at process start. Even after the migration, the running Next.js server keeps throwing <code>P2022 — column does not exist</code> until you restart it:</p>
+
+<pre><code>docker restart caltest</code></pre>
+
+      <div class="callout-fix">
+        <div class="lbl">Fix summary</div>
+        <p><strong>1.</strong> Run the migration with both <code>DATABASE_URL</code> <em>and</em> <code>DATABASE_DIRECT_URL</code> set.</p>
+        <p><strong>2.</strong> Restart the app container so Prisma re-introspects the new schema.</p>
+        <p>For unattended deploys, wrap these into your image's <code>ENTRYPOINT</code> with something like <code>npx prisma migrate deploy && npm run start</code>, or use a sidecar init container.</p>
+      </div>
+
+      <p>After the restart, <code>/auth/setup?step=1</code> renders the three-step Administrator user wizard:</p>
+
+      <figure>
+        <img src="assets/01-setup-step1.jpg" alt="Cal.com Administrator user setup — Step 1 of 3 — username, full name, email, password fields">
+        <figcaption>Cal.com 6.16.1 first-run wizard, step 1 of 3, after migrations were applied. The username field's placeholder shows your <code>NEXT_PUBLIC_WEBAPP_URL</code> as a slug prefix — quick way to verify that env var is right.</figcaption>
+      </figure>
+
+      <h2>Resource numbers</h2>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Phase</th><th>Wall clock</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>docker run</code> → first 307</td><td class="num">~30 s</td><td>Image already pulled, Postgres already healthy</td></tr>
+          <tr><td><code>prisma migrate deploy</code></td><td class="num">~60 s</td><td>Empty DB → ~300 migrations applied</td></tr>
+          <tr><td>Container restart → wizard</td><td class="num">~25 s</td><td>Next.js cold start once schema is current</td></tr>
+          <tr><td>App RAM at idle</td><td class="num">1.13 GiB</td><td>After wizard renders, no users created yet</td></tr>
+          <tr><td>Postgres RAM at idle</td><td class="num">50 MiB</td><td>Fresh schema, no traffic</td></tr>
+          <tr><td>Container disk write</td><td class="num">~350 MB</td><td>Mostly Next.js trace cache + node modules in <code>.next</code></td></tr>
+        </tbody>
+      </table>
+
+      <p>So the true cold-start time on a clean machine is around <strong>two minutes</strong> end-to-end, dominated by the migration step. Plan for it in your deploy pipeline; it's not a thirty-second job.</p>
+
+      <h2>Quiet warnings worth knowing about</h2>
+
+      <p>Even after the wizard renders, the container log throws three warnings on every restart that don't surface in the UI:</p>
+
+      <ul>
+        <li><code>EMAIL_FROM environment variable is not set, this may indicate mailing is currently disabled.</code> — true, and it means password-reset, booking confirmation, and invites all silently no-op. Set <code>EMAIL_FROM</code> + an SMTP provider before sharing the URL with anyone who'll book a meeting.</li>
+        <li><code>[Phase: phase-production-server] Skipping rewrite config for organizations because ORGANIZATIONS_ENABLED is not set</code> — fine if you don't need teams, but the multi-tenant feature is a hidden flag.</li>
+        <li><code>[WebPush] Missing VAPID keys. Web push notifications are disabled.</code> — Cal.com supports browser push reminders; without VAPID keys you won't get them. <code>npx web-push generate-vapid-keys</code>, then set the public/private pair in env.</li>
+      </ul>
+
+      <h2>Things we'd change in the docker README</h2>
+
+      <ol>
+        <li><strong>Bake migrate-on-boot into the image.</strong> An <code>entrypoint.sh</code> that runs <code>prisma migrate deploy</code> on first start — and is a no-op when there's nothing to migrate — would eliminate the most common self-host failure mode.</li>
+        <li><strong>Document <code>DATABASE_DIRECT_URL</code>.</strong> The schema requires it; the README sample <code>.env</code> only shows <code>DATABASE_URL</code>. Most users find out the hard way.</li>
+        <li><strong>Surface env warnings on the login screen.</strong> A small "running with degraded features (mail disabled, push disabled)" banner during initial setup would catch the silent footguns above.</li>
+        <li><strong>Provide a one-shot Compose example with both containers, network, and volume.</strong> The current docs link to a separate <code>calcom/docker</code> repo whose state lags <code>cal.com</code> main; a self-contained <code>compose.yaml</code> in the main repo would beat any external example.</li>
+      </ol>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per self-hostable booking/scheduling/CMS tool we actually run on a real Linux box. Adjacent: <a href="../dify/">Dify 1.14.0 — the profile flag the README forgets</a>, <a href="../open-webui/">Open WebUI on Linux Docker — first 90 seconds, measured</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin into a draft code-fix PR — Cal.com setup wizards included.</p>
+
+      <h2>Demo: SimpleReview on the Cal.com setup wizard</h2>
+
+      <div class="banner-placeholder" aria-label="Banner placeholder — SimpleReview demoing a fix on the Cal.com setup wizard">
+        <div>
+          <strong>Banner: SimpleReview drafting a fix on the Cal.com setup wizard</strong>
+          Animated mp4 to be recorded via the <code>animated-banner</code> skill — drop into <code>assets/banner.mp4</code> when ready.
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on Hetzner CX-line, Ubuntu 22.04, Docker 24, Cal.com <code>6.16.1</code> (image <code>calcom/cal.com:latest</code>, sha256 <code>ace3bb1219fb…</code>), Postgres <code>15-alpine</code>. Cal.com is a trademark of Cal.com, Inc.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

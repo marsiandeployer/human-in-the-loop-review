@@ -41,6 +41,7 @@ CMS_SLUGS = (
     "typo3",
     "dify",
     "open-webui",
+    "cal-com",
 )
 RU_CMS_SLUGS = {"bitrix", "webasyst"}
 
