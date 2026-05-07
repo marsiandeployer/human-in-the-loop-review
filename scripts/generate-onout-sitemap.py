@@ -48,6 +48,10 @@ CMS_SLUGS = (
     "storyblok",
     "contentstack",
     "decap-cms",
+    "hygraph",
+    "datocms",
+    "tinacms",
+    "keystonejs",
 )
 RU_CMS_SLUGS = {"bitrix", "webasyst"}
 

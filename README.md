@@ -231,6 +231,7 @@ No subscriptions. No contracts. No minimums.
 
 - [AI Chat Promotion Playbook](docs/ai-chat-promotion-playbook.md) — how to get Vibers and SimpleReview discovered in ChatGPT, Perplexity, Gemini, Grok, Claude, Copilot, and other AI answer engines.
 - [Platform-specific forums](docs/WIKI.md#platform-specific-forums-for-community-placement-2026-04-30) — where to answer Shopify, Webflow, Bubble, WordPress, WooCommerce, Magento, OpenCart, PrestaShop, and similar platform threads without spam.
+- [Freelance reply automation](docs/WIKI.md#freelance-reply-automation) — internal Kwork/FL.ru reply workflow: proposal skill writes the text, platform skills only fill/submit after dry-run screenshots and explicit approval.
 
 ## FAQ
 

@@ -1,0 +1,29 @@
+HTTP/2 401 
+date: Thu, 07 May 2026 16:39:19 GMT
+content-type: application/json; charset=utf-8
+cf-ray: 9f81a8f9ce7b9b1b-FRA
+cf-cache-status: BYPASS
+access-control-allow-origin: *
+cache-control: private
+server: cloudflare
+strict-transport-security: max-age=15552000; includeSubDomains; preload
+vary: Accept-Encoding
+access-control-allow-credentials: true
+access-control-allow-headers: authorization, content-type, x-environment, x-organization, x-site-domain, x-api-version, user-agent, x-session-id, x-include-drafts, x-exclude-invalid, x-visual-editing, x-base-editing-url, x-cache-tags, x-datocms-trace
+access-control-allow-methods: GET, POST, PUT, OPTIONS, DELETE
+access-control-expose-headers: x-ratelimit-limit, x-ratelimit-remaining, x-ratelimit-reset, x-complexity, x-max-complexity, x-cache-tags
+access-control-max-age: 1728000
+referrer-policy: strict-origin-when-cross-origin
+x-cacheable-on-cdn: true
+x-cacheable-on-cdn-query-length-limit: 176/12000
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-permitted-cross-domain-policies: none
+x-queue-time: 0ms
+x-ratelimit-limit: 40
+x-ratelimit-remaining: 39
+x-request-id: 2edea8a0-6768-4f07-b8b6-50cff9bf8c65
+x-runtime: 0.008207
+x-xss-protection: 0
+
+{"data":[{"id":"5413bc","type":"api_error","attributes":{"code":"INVALID_AUTHORIZATION_HEADER","details":{},"doc_url":"https://www.datocms.com/docs/content-management-api/errors#INVALID_AUTHORIZATION_HEADER"}}]}

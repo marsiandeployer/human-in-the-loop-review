@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keystone 6.5.2 first boot: a missing static file, a phantom --port, and a session-secret footgun</title>
+  <meta name="description" content="We scaffolded a Keystone 6 starter on 2026-05-07 with `npm create keystone-app`, ran it on a Linux box, and hit three real frictions before the admin UI finished compiling. Real screenshots, real numbers, real fix.">
+  <link rel="canonical" href="https://onout.org/keystonejs/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Keystone 6.5.2 first boot: a missing static file, a phantom --port, and a session-secret footgun">
+  <meta property="og:description" content="One scaffold, one Linux box, three frictions in the first 10 minutes of a Keystone 6 self-host.">
+  <meta property="og:url" content="https://onout.org/keystonejs/">
+  <meta property="og:image" content="https://onout.org/keystonejs/assets/01-init-firstuser.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Keystone 6.5.2 first boot: a missing static file, a phantom --port, and a session-secret footgun",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "image": "https://onout.org/keystonejs/assets/01-init-firstuser.jpg",
+    "mainEntityOfPage": "https://onout.org/keystonejs/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { width: 100%; border: 1px solid #e0e7ee; border-radius: 8px; display: block; background: #fafafa; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#fafafa}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:16px 22px;color:#1a1a1a}
+    .sc-keystone-h{font-size:14px;font-weight:700;color:#111;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+    .sc-keystone-h::before{content:"";width:18px;height:18px;border-radius:4px;background:linear-gradient(135deg,#3b82f6,#1e40af);display:inline-block}
+    .sc-keystone-sub{font-size:11px;color:#666;margin-bottom:14px}
+    .sc-keystone-form{display:flex;flex-direction:column;gap:8px;max-width:300px}
+    .sc-keystone-label{font-size:10.5px;color:#444;font-weight:600}
+    .sc-keystone-input{background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:7px 10px;font-size:11px;color:#111;font-family:ui-monospace,monospace}
+    .sc-keystone-input.placeholder{color:#aaa}
+    .sc-keystone-error{color:#d63638;font-size:9.5px;margin-top:2px;font-weight:600}
+    .sc-error-box{background:#1a1a1a;border:1px solid #333;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5;font-family:ui-monospace,monospace}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f87171;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9px;line-height:1.5;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fafafa;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:16px 22px;color:#1a1a1a}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:10px;border:1px solid #86efac}
+    .sc-rec-cmd{background:#1a1a1a;border-radius:5px;padding:7px 10px;font-size:9.5px;color:#7ee787;font-family:ui-monospace,monospace;margin-bottom:6px;line-height:1.5}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#3b82f6;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#3b82f6;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#3b82f6;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:340px;top:240px;opacity:1}22%{left:340px;top:240px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222}
+    .sc-caption strong{color:#3b82f6}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#3b82f6;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Keystone 6
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Self-host notes</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Keystone <code>6.5.2</code></span>
+          <span>·</span>
+          <span>Node <code>22.21.1</code> · Linux</span>
+        </div>
+        <h1>Keystone 6.5.2 first boot: a missing static file, a phantom <code>--port</code>, and a session-secret footgun</h1>
+        <p class="lede">Keystone is the kind of TypeScript-first headless CMS that looks great on the README — schema-as-code, GraphQL out of the box, MIT-licensed, Prisma underneath, and a one-command scaffold via <code>npm create keystone-app</code>. We ran exactly that on a clean Linux box on 2026-05-07. The starter does boot. It also throws a non-fatal <code>ENOENT</code> on the dev-loading splash, silently ignores <code>--port</code>, and lets you ship a config that rotates your session secret on every restart. Here's the unedited startup log, the screenshots, and the three things we'd change before we put this in front of a content team.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever site you click. Not affiliated with KeystoneJS or Thinkmill. This is a deployment note from one real <code>npm create keystone-app</code> session on one Linux box, dated above. We picked Keystone because it's the closest-feeling competitor to <a href="../cal-com/">Cal.com</a> and <a href="../ghost/">Ghost</a> in the "TypeScript + Prisma + admin UI" niche we've been auditing. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>The exact commands we ran</h2>
+
+<pre><code># Node 22 LTS already on the box
+node --version    # v22.21.1
+npm --version     # 10.9.4
+
+mkdir -p /tmp/keystone-test &amp;&amp; cd /tmp/keystone-test
+npm create keystone-app@latest
+# When prompted: "What directory should create-keystone-app generate your app into?"
+#   answer: my-app
+
+cd my-app
+npm run dev       # this is the friction surface</code></pre>
+
+      <p>The scaffolder pulls <code>create-keystone-app@10.0.3</code>, drops four source files (<code>keystone.ts</code>, <code>auth.ts</code>, <code>schema.ts</code>, <code>tsconfig.json</code>) and resolves a fairly large tree: 598&nbsp;MB of <code>node_modules</code> for what is, at this point, two empty lists with one relationship. (Prisma's CLI plus the Apollo server plus the AWS S3 client they ship by default is most of it.) Total scaffold time on a fast NVMe with a warm npm cache: <strong>about 80&nbsp;seconds</strong>. The four source files together are 340&nbsp;KB.</p>
+
+      <p>The starter resolves <code>@keystone-6/core@6.5.2</code> and <code>@keystone-6/auth@8.1.0</code> through the carets in <code>package.json</code>. Those are the versions every number below refers to.</p>
+
+      <h2>Friction #1 — <code>--port</code> is silently ignored</h2>
+
+      <p>Our box already had something on port 3000 and we didn't want to fight it, so the first thing we tried was the obvious incantation:</p>
+
+<pre><code>npx keystone dev --port 18095</code></pre>
+
+      <p>Keystone happily printed:</p>
+
+<pre><code>✨ Starting Keystone
+⭐️ Server listening on :3000 (http://localhost:3000/)
+⭐️ GraphQL API available at /api/graphql</code></pre>
+
+      <p>Note the <strong>3000</strong>. The <code>--port</code> flag was eaten by <code>npx</code> and the keystone CLI never sees a port option — its <code>--help</code> doesn't list one either. The only way to change it is the <code>config.server</code> field in <code>keystone.ts</code>, or the <code>PORT</code> env var. The relevant code path is in <code>scripts/cli/dist/keystone-6-core-scripts-cli.cjs.dev.js</code> around line 1259:</p>
+
+<pre><code>const httpOptions = { port: 3000 };
+if (config?.server &amp;&amp; 'port' in config.server) {
+  httpOptions.port = config.server.port;
+}
+// preference env.PORT if supplied
+if ('PORT' in process.env) {
+  httpOptions.port = parseInt(process.env.PORT || '');
+}</code></pre>
+
+      <p>So we re-ran with <code>PORT=18095 npx keystone dev</code>. That worked. Two minutes wasted, no error message, just the wrong port in the log. This is the same shape of footgun as Cal.com's <a href="../cal-com/">silent <code>DATABASE_DIRECT_URL</code></a> — a thing the README never mentions and the runtime never warns about.</p>
+
+      <div class="callout-broken">
+        <div class="lbl">Broken state — observed locally</div>
+        <p>The Keystone CLI accepts unknown arguments without warning. <code>--port</code>, <code>--host</code>, <code>--bind</code> — all silently dropped. The server starts on its hardcoded default of 3000 unless you set <code>PORT</code> in the environment or add a <code>server.port</code> field to <code>keystone.ts</code>. <code>npx keystone --help</code> does not list <code>--port</code> as a flag, but it doesn't <em>reject</em> it either, which is the actual bug.</p>
+      </div>
+
+      <h2>Friction #2 — <code>ENOENT</code> on every dev boot</h2>
+
+      <p>Once we used <code>PORT=18095</code>, Keystone got past the listen step and started compiling the Admin UI. But the log immediately had this in it, three times:</p>
+
+<pre><code>Error: ENOENT: no such file or directory, stat
+  '/tmp/keystone-test/my-app/node_modules/@keystone-6/core/scripts/cli/static/dev-loading.html'</code></pre>
+
+      <p>Nothing in the docs prepares you for this. The error is non-fatal — Keystone keeps booting, the admin UI eventually compiles, the GraphQL endpoint comes up — but it's the only red text in the log and a first-time user is going to think their install is corrupt. We dug into <code>scripts/cli/dist/keystone-6-core-scripts-cli.cjs.dev.js</code> to figure out what was happening:</p>
+
+<pre><code>// line 926
+const devLoadingHTMLFilepath = path__default["default"].join(
+  pkgDir, 'static', 'dev-loading.html'
+);
+// ...
+// pkgDir is dirname(__dirname), which resolves to .../scripts/
+// so it looks for: .../scripts/static/dev-loading.html
+// but the file actually ships at:
+//   .../static/dev-loading.html  (one level up)</code></pre>
+
+      <p>Verified by listing the package directly:</p>
+
+<pre><code>$ ls node_modules/@keystone-6/core/static/
+admin-error.html
+dev-loading.html
+favicon.ico
+tsconfig.json
+
+$ ls node_modules/@keystone-6/core/scripts/static/
+ls: cannot access '.../scripts/static/': No such file or directory</code></pre>
+
+      <p>The file exists, the code looks for it one directory deeper than where it lives. <code>dev-loading.html</code> is the splash page Keystone serves while Next.js is still compiling routes (you'd see "Loading Admin UI…" while waiting), so when it 404s the request just gets dropped silently and the user-facing impact is "the page is blank for 9 seconds." The bug appears to be a path-resolution regression in <code>@keystone-6/core@6.5.2</code> — the published tarball didn't ship a <code>scripts/static/</code> directory.</p>
+
+      <div class="callout-fix">
+        <div class="lbl">Workaround</div>
+        <p>If the noise bothers you in dev: <code>mkdir -p node_modules/@keystone-6/core/scripts/static &amp;&amp; cp node_modules/@keystone-6/core/static/dev-loading.html node_modules/@keystone-6/core/scripts/static/</code>. We are <em>not</em> recommending this as a fix — it's a one-line patch you re-do every <code>npm install</code>. Better path: pin <code>@keystone-6/core</code> to a version that ships <code>scripts/static/</code> correctly, or wait for the upstream patch.</p>
+      </div>
+
+      <h2>Friction #3 — <code>SESSION_SECRET</code> rotates on every boot</h2>
+
+      <p>The starter's <code>auth.ts</code> ends like this:</p>
+
+<pre><code>const session = statelessSessions({
+  maxAge: sessionMaxAge,
+  secret: process.env.SESSION_SECRET,
+})</code></pre>
+
+      <p>If you don't set <code>SESSION_SECRET</code>, that's <code>undefined</code>. <code>statelessSessions</code> in <code>@keystone-6/core/session</code> handles this by quietly defaulting to <code>randomBytes(32).toString('base64url')</code> — a fresh secret per process start:</p>
+
+<pre><code>// node_modules/@keystone-6/core/session/dist/keystone-6-core-session.cjs.dev.js
+function statelessSessions({
+  secret = node_crypto.randomBytes(32).toString('base64url'),
+  maxAge = 60 * 60 * 8,
+  cookieName = 'keystonejs-session',
+  // ...
+} = {}) {</code></pre>
+
+      <p>What this means in practice: every time you restart <code>keystone dev</code>, every existing session cookie is invalidated. Users get bounced to <code>/signin</code> with no error, no log line, no hint that "we just rolled the secret on you." If you forget to set <code>SESSION_SECRET</code> in production and your container restarts (auto-scaler, healthcheck flap, deploy) — every signed-in admin gets logged out. Then log back in. Then logged out again on the next restart.</p>
+
+      <p>The fix is one env var, but the <em>silence</em> of the default is the friction. <a href="../cal-com/">Cal.com refuses to boot</a> without <code>NEXTAUTH_SECRET</code>; Ghost refuses to boot without a database password. Keystone happily boots and just rolls the secret behind your back. We'd want a startup warning here at the very least.</p>
+
+      <h2>What the starter actually gives you, screenshotted</h2>
+
+      <p>Once <code>PORT=18095 npm run dev</code> finished compiling, hitting <code>/</code> 302-redirected to <code>/init</code> — the first-run wizard. This is what it looks like on a fresh SQLite database:</p>
+
+      <figure>
+        <img src="assets/01-init-firstuser.jpg" alt="Keystone 6 /init screen — Welcome to KeystoneJS, Create your first user to get started, with a Name field already showing 'Name must not be empty' in red before the user has typed anything">
+        <figcaption>Keystone 6.5.2 first-run wizard at <code>/init</code>. Note that the "Name must not be empty" error is rendered <em>before</em> the user types — Keystone validates required fields on initial render. Cosmetic but jarring; almost every starter we've reviewed waits for blur or submit before flagging.</figcaption>
+      </figure>
+
+      <p>We posted the <code>createInitialUser</code> mutation directly to the GraphQL endpoint to skip the form (the same mutation the form posts when you click "Create user"):</p>
+
+<pre><code>curl -s -X POST http://localhost:18095/api/graphql \
+  -H "Content-Type: application/json" \
+  -d '{"query":"mutation { createInitialUser(data: { name: \"Admin\", email: \"admin@example.com\", password: \"password123\" }) { item { id email name } sessionToken } }"}'</code></pre>
+
+      <p>Response includes a <code>sessionToken</code> (an iron-sealed cookie payload), which we set as <code>keystonejs-session</code> and got into the dashboard:</p>
+
+      <figure>
+        <img src="assets/03-admin-home.jpg" alt="Keystone 6 dashboard, signed in as Admin, showing Users (1 item) and Posts (0 items) cards in the main panel and Dashboard, Users, Posts in the left sidebar">
+        <figcaption>The Keystone 6 admin dashboard with one user and zero posts. Notice that <code>Tag</code> — which is in <code>schema.ts</code> as a real list with a back-relationship to <code>Post.tags</code> — is <em>not</em> in the sidebar. The starter ships it with <code>ui: { isHidden: true }</code> so it only appears via GraphQL. Worth knowing if you're surprised your relationships work but the list "doesn't exist."</figcaption>
+      </figure>
+
+      <p>And the GraphQL Apollo Sandbox at <code>/api/graphql</code>, which is mounted by default in dev:</p>
+
+      <figure>
+        <img src="assets/02-graphql-playground.jpg" alt="Apollo Sandbox at /api/graphql showing the auto-generated Keystone schema with authenticatedItem, keystone meta, post, posts, postsCount, tag, tags queries">
+        <figcaption>The auto-generated GraphQL schema includes <code>authenticatedItem</code>, <code>keystone</code> meta, plus <code>post</code> / <code>posts</code> / <code>postsCount</code> and (despite being hidden in the admin UI) <code>tag</code> / <code>tags</code> queries. Schema-as-code in <code>schema.ts</code>, GraphQL surface in your face the moment you boot.</figcaption>
+      </figure>
+
+      <h2>Resource numbers from the actual run</h2>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Phase</th><th>Wall clock</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>npm create keystone-app</code></td><td class="num">~80 s</td><td>Warm npm cache, NVMe disk. <code>node_modules</code> = 598 MB</td></tr>
+          <tr><td><code>npm run dev</code> → HTTP listening</td><td class="num">4.1 s</td><td>Server bound, but <code>/init</code> still compiling</td></tr>
+          <tr><td><code>/init</code> first request → 200</td><td class="num">9.6 s</td><td>Next.js dev compile of 2,455 modules</td></tr>
+          <tr><td><code>/init</code> second request</td><td class="num">~10 ms</td><td>From cache, well under a frame</td></tr>
+          <tr><td>Admin home <code>/</code> first compile</td><td class="num">509 ms</td><td>2,461 modules. Way faster than <code>/init</code> — they share most</td></tr>
+          <tr><td>Total cold-start to interactive</td><td class="num">~14 s</td><td>HTTP up + first route compiled</td></tr>
+          <tr><td>Process RAM (RSS) at idle</td><td class="num">77 MiB</td><td>One npm-spawned node process, peak <code>VmHWM</code> 86 MiB</td></tr>
+          <tr><td>Generated <code>.keystone</code> dir</td><td class="num">75 MB</td><td>Prisma client + Next.js build artifacts</td></tr>
+          <tr><td>SQLite <code>keystone.db</code> after 1 user</td><td class="num">52 KiB</td><td>Schema + one row</td></tr>
+        </tbody>
+      </table>
+
+      <p>So Keystone is genuinely lightweight at runtime — <strong>77 MB RSS</strong> for a working admin + GraphQL + SQLite is in the same neighborhood as a small Express app, far below a typical Next.js production server. The cold-start is dominated by Next.js dev-mode compile (~9.6 s for the first route), which evaporates on the second request. <code>keystone build &amp;&amp; keystone start</code> would skip that, but we didn't measure prod-mode here.</p>
+
+      <h2>What we wish the README had said up front</h2>
+
+      <ol>
+        <li><strong>Use the <code>PORT</code> env var, not <code>--port</code>.</strong> The CLI's <code>--help</code> doesn't mention port at all and silently eats unknown flags. We'd at least want a warning when an unrecognized flag is passed.</li>
+        <li><strong>Set <code>SESSION_SECRET</code> before you put this in front of anyone.</strong> The starter's <code>auth.ts</code> reads it from env, the env var is unset, and the runtime defaults to "regenerate per boot." This is a real footgun in production.</li>
+        <li><strong>SQLite is the default and that's wired into the starter.</strong> Fine for a tutorial, fine for one-person tooling. Switching to Postgres is a single line change in <code>keystone.ts</code> (<code>provider: 'postgresql'</code>) plus a fresh <code>DATABASE_URL</code>, but you have to remember to do it before you have rows you care about — Keystone won't auto-migrate SQLite data into Postgres.</li>
+        <li><strong>The Tag list is hidden by default.</strong> If you copy the starter <code>schema.ts</code> verbatim and wonder why "Tag" doesn't show up in the admin sidebar, look for <code>ui: { isHidden: true }</code>. Same applies to any list with that flag — they exist in GraphQL, not in the UI.</li>
+        <li><strong>The <code>ENOENT: dev-loading.html</code> log line is non-fatal.</strong> It's a missing static file in the published tarball, not a corrupt install. You can ignore it; the cost is a blank page during the 9-second first-route compile instead of a "loading…" splash.</li>
+      </ol>
+
+      <h2>What's actually nice about Keystone</h2>
+
+      <p>Tone here matters: the three frictions above are real, but they're the kind of thing every CMS has on day one. The good parts are real too, and they're why we'd consider Keystone for a small content site:</p>
+
+      <ul>
+        <li><strong>Schema-as-code, in TypeScript.</strong> <code>schema.ts</code> is the single source of truth for both your Prisma model and your GraphQL surface. Adding a field is one line, no migrations dance, no admin-UI clicking. <code>keystone dev</code> picks it up on save.</li>
+        <li><strong>The GraphQL sandbox is on by default.</strong> No "enable the playground" config dance — Apollo Sandbox is just there at <code>/api/graphql</code> with the auto-generated schema docs.</li>
+        <li><strong>The relationship field is honest.</strong> <code>relationship({ ref: 'Post.author', many: true })</code> on User and <code>relationship({ ref: 'User.posts' })</code> on Post — both ends, declared explicitly, no surprise foreign keys, no orphaned columns.</li>
+        <li><strong>The auth package is opt-in.</strong> The starter wraps the config in <code>withAuth(...)</code>; you can rip that out and run anonymous in two lines if you're building a public-data API.</li>
+        <li><strong>SQLite default is genuinely fast for dev.</strong> No external database to provision, no compose file, no port-forwarding. A "boot, click around, blow away the file, start over" cycle takes seconds.</li>
+      </ul>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per self-hostable headless CMS we actually run on a real Linux box. Adjacent: <a href="../cal-com/">Cal.com 6.16.1 — the migrations don't run on boot</a> (also Prisma+TypeScript, also an entrypoint footgun), <a href="../ghost/">Ghost on Linux Docker — first 90 seconds, measured</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin into a draft code-fix PR — Keystone's <code>ENOENT</code> log noise included.</p>
+
+      <h2>Demo: SimpleReview on a Keystone admin issue</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/nMN36Q4SNUM?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots Keystone init wizard's empty Name validation error and proposes the cosmetic fix">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">localhost:18095/init</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-keystone-h">Welcome to KeystoneJS</div>
+              <div class="sc-keystone-sub">Create your first user.</div>
+              <div class="sc-keystone-form">
+                <div>
+                  <div class="sc-keystone-label">Name</div>
+                  <div class="sc-keystone-input" style="border-color:#d63638"></div>
+                  <div class="sc-keystone-error">Name must not be empty</div>
+                </div>
+                <div>
+                  <div class="sc-keystone-label">Email</div>
+                  <div class="sc-keystone-input placeholder">you@example.com</div>
+                </div>
+              </div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⚠ Validation fires before user typed anything</div>
+                <div class="sc-err-msg">"Name must not be empty" shows on first paint.<br>+ <span class="sc-rcount">ENOENT</span> spam in container log:<br>scripts/cli/static/<span class="sc-rcount">dev-loading.html</span> not found<br># actual file lives at static/, not scripts/static/</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ Boot 4.1 s · RSS 77 MiB · admin renders</span>
+                <div class="sc-rec-cmd"># keystone-6/core/scripts/cli source verified:<br>resolves to wrong relative path</div>
+                <div class="sc-rec-cmd">$ curl localhost:18095/api/graphql<br><span style="color:#9ca3af"># Apollo Sandbox loads · auto-generated schema</span><br><span style="color:#7ee787"># authenticatedItem, post, posts, tag, tags</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">premature validation + ENOENT</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Bug</span><span class="sc-sb-v">touched=true</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Plus</span><span class="sc-sb-v">ENOENT path</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Defer error display until field is touched. Fix <code style="font-size:8px">scripts/cli</code> path.</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">Boot 4.1 s, RSS 77 MiB, GraphQL Sandbox renders.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(admin): defer empty-field validation<br>2 files · admin-ui</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select <strong>premature error</strong> → <strong>Fix it</strong> → cleaner first-run wizard</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on a 32 GB Linux VM, Node <code>v22.21.1</code>, npm <code>10.9.4</code>, Keystone <code>@keystone-6/core@6.5.2</code> + <code>@keystone-6/auth@8.1.0</code>, scaffolder <code>create-keystone-app@10.0.3</code>, Prisma <code>5.22.0</code>, SQLite default. KeystoneJS is a trademark of Thinkmill Pty Ltd.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

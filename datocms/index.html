@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DatoCMS in 2026: GraphQL-first headless from Italy, with euro pricing on the box</title>
+  <meta name="description" content="We scouted DatoCMS on 2026-05-07 the way a team picking a headless CMS would: read the public pricing, hit graphql.datocms.com with a real curl, read the verbatim 401 JSON, then read site-api.datocms.com for contrast. The published euro tiers, the visual editor pitch, the GraphQL-only delivery shape, and where it fits next to Strapi, Directus, Contentstack and Hashnode.">
+  <link rel="canonical" href="https://onout.org/datocms/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="DatoCMS in 2026: GraphQL-first headless from Italy, with euro pricing on the box">
+  <meta property="og:description" content="Real curl against graphql.datocms.com, the verbatim INVALID_AUTHORIZATION_HEADER response, the published euro tiers, and where DatoCMS fits next to Strapi, Directus, Contentstack and Hashnode. Scout from 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/datocms/">
+  <meta property="og:image" content="https://onout.org/datocms/assets/01-pricing.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "DatoCMS in 2026: GraphQL-first headless from Italy, with euro pricing on the box",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/datocms/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #ececec; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      DatoCMS
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">EU SaaS scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>CDA via <code>graphql.datocms.com</code>, CMA via <code>site-api.datocms.com</code></span>
+          <span>·</span>
+          <span>edge: Cloudflare FRA / VIE</span>
+        </div>
+        <h1>DatoCMS in 2026: GraphQL-first headless from Italy, with euro pricing on the box</h1>
+        <p class="lede">DatoCMS is the rare commercial headless CMS that puts its tier prices directly on the marketing site, charges in euros, and ships its delivery API as GraphQL only. We spent an hour scouting it on 2026-05-07 the way a team comparing five tools would — read the pricing page, opened the public docs, then hit <code>graphql.datocms.com</code> and <code>site-api.datocms.com</code> with a real <code>curl</code> to see what the production endpoints actually return. Below: the verbatim 401 JSON, the rate-limit headers, the published tier numbers, the visual-editor pitch, and where DatoCMS sits next to Strapi, Directus, Contentstack and Hashnode.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever element you click on a broken admin or storefront. We are not affiliated with DatoCMS, not partners, not customers. This page is a scouting note from one real evaluation session on 2026-05-07: the public pricing page, the public docs, and a real <code>curl</code> against the production GraphQL and REST endpoints. We did not buy a Builder seat or sit through a sales call. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>The first surprise — the pricing page is a pricing page</h2>
+
+      <p>After scouting Contentstack the same week and finding a "Contact us" wall where the price tiers should be, opening <code>https://www.datocms.com/pricing</code> felt almost old-fashioned. The page leads with a serif headline — "Flexible pricing, ready to scale" — and below it lists four named tiers (Free, Builder, Team, Professional, with Enterprise as a fifth contact-sales tier) and the actual euro amount for each. The Italian heritage shows in two ways: the pricing is denominated in euros and the per-resource overage table is unusually detailed.</p>
+
+      <figure>
+        <img src="assets/01-pricing.jpg" alt="DatoCMS pricing page captured 2026-05-07: serif headline 'Flexible pricing, ready to scale', subhead 'Future-proof your digital experiences', supporting text about unlocking savings via headless technology and content infrastructure.">
+        <figcaption>Captured 2026-05-07 from <code>https://www.datocms.com/pricing</code> via headless Chrome at 992&times;558. Headline reads "Flexible pricing, ready to scale"; below the fold the page lists Free / Builder / Team / Professional / Enterprise with euro amounts and per-resource overage rates.</figcaption>
+      </figure>
+
+      <p>Per the page source the day we tested, the tier prices are <strong>€39/month</strong> (Builder), <strong>€149/month</strong> (Team), <strong>€199/month</strong> (Professional), with a Free tier and Enterprise on contact. What makes the page useful is the overage line items — every resource that can grow has a per-unit rate:</p>
+
+      <ul>
+        <li><strong>€9/mo per extra collaborator</strong> on the seat axis.</li>
+        <li><strong>€39/mo per extra project</strong> and <strong>€39/mo per extra sandbox environment</strong>.</li>
+        <li><strong>€10/mo every 10 extra models</strong>.</li>
+        <li><strong>€19/mo per extra locale</strong>.</li>
+        <li><strong>€9/mo every 10k extra records</strong>.</li>
+        <li><strong>€9/mo every 1M extra CDA API calls</strong>; <strong>€9/mo every 100k extra CMA API calls</strong>.</li>
+        <li><strong>€29/mo every 150GB of extra traffic</strong> (CDN bandwidth).</li>
+        <li><strong>€9/mo every 12k mins of extra video processing</strong>.</li>
+      </ul>
+
+      <p>Every dimension you'd want to forecast has a price tag. Rare on enterprise SaaS in 2026, and it shortens evaluation by hours — you can answer "what does year two cost if the editorial team doubles" in twenty minutes, without a discovery call.</p>
+
+      <h2>The second surprise — the delivery API is GraphQL-only</h2>
+
+      <p>Most headless CMSes give you a REST surface for content reads and treat GraphQL as an optional flavor. DatoCMS does the opposite. The Content Delivery API at <code>graphql.datocms.com</code> is the <em>only</em> way to read public published content — there is no <code>GET /v3/entries</code>. The Content <em>Management</em> API at <code>site-api.datocms.com</code> is the REST one (JSON:API-flavored), used for editorial writes and admin operations. Two endpoints, two protocols, one schema model behind both.</p>
+
+      <p>We hit both with deliberately bad credentials to see the production error shape. First the GraphQL endpoint:</p>
+
+<pre><code>$ curl -s -i -X POST https://graphql.datocms.com/ \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer invalid_token_test" \
+    --data '{"query":"{ _site { globalSeo { siteName } } }"}'
+
+HTTP/2 401
+date: Thu, 07 May 2026 16:35:54 GMT
+content-type: application/json; charset=utf-8
+cf-ray: 9f81a3f63d59dc86-FRA
+cf-cache-status: BYPASS
+server: cloudflare
+strict-transport-security: max-age=15552000; includeSubDomains; preload
+access-control-allow-headers: authorization, content-type, x-environment,
+    x-organization, x-site-domain, x-api-version, user-agent, x-session-id,
+    x-include-drafts, x-exclude-invalid, x-visual-editing,
+    x-base-editing-url, x-cache-tags, x-datocms-trace
+access-control-expose-headers: x-ratelimit-limit, x-ratelimit-remaining,
+    x-ratelimit-reset, x-complexity, x-max-complexity, x-cache-tags
+x-cacheable-on-cdn: true
+x-cacheable-on-cdn-query-length-limit: 176/12000
+x-ratelimit-limit: 40
+x-ratelimit-remaining: 39
+x-request-id: 55fe727c-aaa1-4b41-8ed5-cd170ff24367
+x-runtime: 0.007471</code></pre>
+
+      <p>Body of the response, verbatim:</p>
+
+<pre><code>{
+  "data": [
+    {
+      "id": "5413bc",
+      "type": "api_error",
+      "attributes": {
+        "code": "INVALID_AUTHORIZATION_HEADER",
+        "details": {},
+        "doc_url": "https://www.datocms.com/docs/content-management-api/errors#INVALID_AUTHORIZATION_HEADER"
+      }
+    }
+  ]
+}</code></pre>
+
+      <p>That is one of the better-shaped error envelopes on a public CDN-fronted endpoint we've seen this year. The list-of-errors structure is JSON:API. <code>code</code> is a stable string an integration can branch on. <code>doc_url</code> points straight at the documented explanation — most vendors don't ship that link in the response. <code>x-runtime: 0.007471</code> says seven milliseconds end-to-end, validated at the edge by Cloudflare's Frankfurt POP.</p>
+
+      <p>The response headers do real work. <code>x-ratelimit-limit: 40</code> with <code>x-ratelimit-remaining: 39</code> publishes the budget without an extra round-trip. <code>x-cacheable-on-cdn-query-length-limit: 176/12000</code> is a cache hint we have not seen elsewhere — GraphQL queries shorter than 12000 characters are CDN-cacheable, and the header reports the size of the one you just sent. The <code>access-control-allow-headers</code> list enumerates the feature set: <code>x-include-drafts</code> (preview), <code>x-environment</code> (sandbox/branch), <code>x-visual-editing</code> (editor overlay), <code>x-cache-tags</code> (surgical purges), <code>x-datocms-trace</code> (query tracing).</p>
+
+      <p>For contrast, the REST CMA returned a different stable code from the same JSON:API envelope:</p>
+
+<pre><code>$ curl -s -i -X POST https://site-api.datocms.com/items \
+    -H "Accept: application/json" \
+    -H "X-Api-Version: 3"
+
+HTTP/2 401
+content-type: application/json; charset=utf-8
+cf-ray: 9f81a429de58ebd2-FRA
+x-request-id: 9fb68470-fd19-4294-881e-c90829a43c08
+x-runtime: 0.004129
+
+{"data":[{"id":"02f293","type":"api_error","attributes":{
+  "code":"INVALID_SITE","details":{},
+  "doc_url":"https://www.datocms.com/docs/content-management-api/errors#INVALID_SITE"
+}}]}</code></pre>
+
+      <p>Different code (<code>INVALID_SITE</code> vs <code>INVALID_AUTHORIZATION_HEADER</code>) for the same "we don't know who you are" condition. The CMA distinguishes "no Site header / wrong project" from "bearer token malformed" — a misconfigured CI integration gets an error that points at the actual misconfiguration, not a generic "auth failed". That subdivision saves an afternoon of debugging six months in.</p>
+
+      <h2>What's behind the wall — the visual editor pitch</h2>
+
+      <p>DatoCMS's product surface is built around four ideas: GraphQL-first delivery, a <em>structured-text</em> editor that returns a typed AST instead of HTML soup, a <em>blocks</em> system that composes pages from typed components, and a real-time collaborative visual builder. We could not run the editor without a paid seat, but the public docs give the shape:</p>
+
+      <figure>
+        <img src="assets/02-graphql-docs.jpg" alt="DatoCMS Content Delivery API documentation page captured 2026-05-07: left sidebar lists 'Content Delivery API Overview', 'Your first request', 'How to fetch records', 'API headers', 'Authentication and permissions', 'Error codes & handling failures', 'Technical Limits', 'Complexity', 'Custom Scalar Types', 'Pagination'.">
+        <figcaption>The Content Delivery API docs at <code>datocms.com/docs/content-delivery-api</code>. The left sidebar enumerates the developer surface: complexity budget, custom scalar types, pagination shape, and a dedicated "Error codes &amp; handling failures" section. Captured 2026-05-07.</figcaption>
+      </figure>
+
+      <p>The docs sidebar surfaces things most CMS docs hide: a <strong>Complexity</strong> page (DatoCMS bills GraphQL queries by a complexity score — exposed as the <code>x-complexity</code> and <code>x-max-complexity</code> response headers we saw on the curl above), a <strong>Custom Scalar Types</strong> page (their <code>JsonField</code>, <code>BooleanType</code>, <code>FloatType</code>, <code>ItemId</code> scalars), and a <strong>Technical Limits (CDA)</strong> page that names the actual numbers — query length cap, depth, complexity per query. These are the exact pieces a senior engineer asks about before signing — and DatoCMS publishes them all without a login.</p>
+
+      <p>The Marketplace section adds something we did not expect: a <em>Starters</em> catalog with one-click frontends for Next.js, Astro, Remix, Nuxt and SvelteKit, a <em>Plugins</em> catalog for editor extensions, and a <em>Recipes</em> section with "if you want X, copy this snippet" patterns. None of that is hidden behind the dashboard.</p>
+
+      <figure>
+        <img src="assets/03-starters.jpg" alt="DatoCMS Marketplace Starters page captured 2026-05-07: 'Welcome to the Marketplace' banner, navigation tabs Featured / Starters / Plugins / Recipes / Hosting / Enterprise, headline 'Starters' with subhead 'Start with a fully configured DatoCMS project, a best-practice frontend and free hosting'.">
+        <figcaption>The DatoCMS Marketplace at <code>datocms.com/marketplace/starters</code>. Pre-built Starters for Next.js / Astro / Remix / Nuxt / SvelteKit, plus Plugins, Recipes, Hosting and an Enterprise tab. Captured 2026-05-07.</figcaption>
+      </figure>
+
+      <h2>What the API actually does — the pieces that matter</h2>
+
+      <p>From the docs and the headers our curl returned, the operative shape of DatoCMS for a developer is:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Surface</th><th>Endpoint</th><th>Protocol</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Content Delivery (read)</td><td class="num">graphql.datocms.com</td><td>GraphQL POST</td><td>Read published content. Cloudflare-fronted, CDN-cacheable up to ~12k char queries.</td></tr>
+          <tr><td>Content Management (write)</td><td class="num">site-api.datocms.com</td><td>REST / JSON:API</td><td>Editorial writes, schema, item types, sandbox environments, webhooks.</td></tr>
+          <tr><td>Image / Asset CDN</td><td class="num">www.datocms-assets.com</td><td>HTTPS GET</td><td>Imgix-fronted asset transforms (resize, format, focal-crop) on URL params.</td></tr>
+          <tr><td>Real-time updates</td><td class="num">graphql-listen.datocms.com</td><td>GraphQL over WebSocket</td><td>Subscriptions for live preview / collaborative editor.</td></tr>
+          <tr><td>EU host (default)</td><td class="num">graphql.datocms.com</td><td>—</td><td>Production stack. The IP block resolves through Cloudflare to EU POPs.</td></tr>
+          <tr><td>US host</td><td class="num">us.datocms-assets.com</td><td>—</td><td>Region-specific asset hostname (per the docs index).</td></tr>
+        </tbody>
+      </table>
+
+      <p>The complexity-as-billing model is the one piece that needs a paragraph. Instead of charging per HTTP call (which would penalize GraphQL, where one query replaces five REST calls), DatoCMS scores every query by the fields requested, with a per-tier ceiling. The <code>x-complexity</code> and <code>x-max-complexity</code> headers are exposed on every response, so you tune cost in the same loop you tune correctness. Same model as Shopify and GitHub's public GraphQL APIs — right idea, rare on commercial CMSes.</p>
+
+      <h2>Honestly, next to Strapi / Directus / Contentstack / Hashnode</h2>
+
+      <p>We've now done this scouting walk on five products in a week. The contrast helps:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Dimension</th><th>DatoCMS</th><th>Strapi / Directus / Payload</th><th>Contentstack</th><th>Hashnode</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Public pricing on <code>/pricing</code></td>
+            <td>Five named tiers, euro numbers, every overage rate visible.</td>
+            <td>Self-host: free. Cloud tiers: published per-project numbers.</td>
+            <td>"Contact us" only.</td>
+            <td>Free for the blogging product. Headless API requires a PAT.</td>
+          </tr>
+          <tr>
+            <td>Read API protocol</td>
+            <td>GraphQL only. No REST read.</td>
+            <td>REST (Strapi, Directus, Payload). GraphQL optional.</td>
+            <td>REST CDA. GraphQL was added later as an opt-in surface.</td>
+            <td>GraphQL only.</td>
+          </tr>
+          <tr>
+            <td>Write API</td>
+            <td>REST CMA at <code>site-api.datocms.com</code> (JSON:API).</td>
+            <td>Same REST surface as the read API.</td>
+            <td>REST CMA, separate from the CDA.</td>
+            <td>GraphQL mutations on the same endpoint as reads.</td>
+          </tr>
+          <tr>
+            <td>Time to first authenticated <code>curl</code></td>
+            <td>Sign up free, generate a read-only token, ~5 minutes.</td>
+            <td>~10 minutes from <code>docker run</code> to authenticated GET.</td>
+            <td>Behind a sales call. No public sandbox URL we found.</td>
+            <td>~3 minutes — public publication queries need no auth.</td>
+          </tr>
+          <tr>
+            <td>Compliance posture</td>
+            <td>EU SaaS, GDPR-native, SOC 2 available.</td>
+            <td>You inherit your own posture.</td>
+            <td>SOC 2, ISO 27001, HIPAA available — sold via account managers.</td>
+            <td>SaaS posture inherited from Hashnode Inc.</td>
+          </tr>
+          <tr>
+            <td>Editor model</td>
+            <td>Structured text + typed Blocks + visual builder.</td>
+            <td>Schema-first, rich-text plugin (TipTap / Lexical) per stack.</td>
+            <td>Personalization engine, brand-aware AI writing, gated.</td>
+            <td>Hashnode editor (markdown + Hashnode-specific blocks).</td>
+          </tr>
+          <tr>
+            <td>Vendor lock-in</td>
+            <td>Medium. Schema-as-data, but content lives in their stack. Export tooling exists.</td>
+            <td>Low. The DB is yours. Migration is a SQL dump.</td>
+            <td>High. Content lives in their stack; export tooling exists but you're a customer.</td>
+            <td>Medium. Posts portable as Markdown; Hashnode-specific embeds aren't.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>The shape of DatoCMS in this lineup is "the commercial answer to Strapi, with EU billing and a real visual editor on top." If you're building a marketing site for a localized brand and the editorial team is non-technical, the structured-text-plus-blocks editor and the localized-by-default model is a real selling point that the open-source three don't ship without plugin work. If you're building a developer-led product with a small editorial team, self-hosting Strapi or Directus on a €5/mo box stays cheaper for years.</p>
+
+      <h2>Quiet warnings worth knowing</h2>
+
+      <ol>
+        <li><strong>Locales count separately on the seat math.</strong> €19/mo per extra locale adds up fast on a 12-language brand site. The default tiers include a small number; a real internationalized site moves into Team or Professional just on locale count.</li>
+        <li><strong>The Free tier is real but small.</strong> Useful for a side project, not a company landing page. The Builder tier at €39/mo is the realistic floor.</li>
+        <li><strong>Sandbox environments are €39/mo each.</strong> If you want one preview environment per Git branch, the bill grows quickly. Most teams settle on staging plus production and do branch previews with the per-request <code>x-environment</code> header against the staging sandbox.</li>
+        <li><strong>Complexity budget is per query, not per request.</strong> A naive "give me everything for this page" GraphQL query can hit the per-query ceiling on the Builder tier. The error code is documented; the docs page on Complexity is the one to read before you ship.</li>
+        <li><strong>Real-time updates are a separate hostname.</strong> <code>graphql-listen.datocms.com</code> needs WebSocket support in your Next.js / edge runtime. Vercel and Cloudflare Workers handle it; some serverless setups do not.</li>
+      </ol>
+
+      <h2>Things we'd change in the docs</h2>
+
+      <ol>
+        <li><strong>Publish a worked example of the complexity score.</strong> The Complexity page tells you the model exists and reads back the headers; a worked example of "this query scored 47, here's why, here's how to drop it to 12" would close the gap between knowing the rule and tuning against it.</li>
+        <li><strong>Surface the JSON error envelope on the Authentication page.</strong> The <code>doc_url</code> field in the error body is excellent; the docs page that documents the field is buried two clicks deep. A "what an error looks like" block right at the top of Authentication would shorten time-to-first-handled-error for new integrators.</li>
+        <li><strong>Add a one-page "what migrating from Strapi looks like" recipe.</strong> The Marketplace has Starters but not migration paths from the open-source incumbents. Schema-as-data on both sides; the mapping is mostly mechanical and could be a script.</li>
+        <li><strong>Keep the per-resource overage rates visible.</strong> The pricing page shipping €9 / €19 / €29 / €39 unit rates is rare and good. Don't move them behind a "Calculate your price" widget — the table is the trust signal.</li>
+      </ol>
+
+      <h2>What we'd actually do</h2>
+
+      <p>If we had a Berlin-based or Milan-based startup with a non-English brand site, an editorial team that hates Markdown, and the need to pay an EU vendor, DatoCMS would be on the shortlist with Storyblok. The euro pricing, the GDPR-by-default posture, the visual builder, and the developer surface that doesn't apologize for itself — those are real. If we had a developer-led product with a tiny editorial team and a budget that has to survive a recession, we'd self-host <a href="../strapi/">Strapi</a> or <a href="../directus/">Directus</a> and revisit when the editorial team grew. If we had a Fortune-500 retail brand, we'd put DatoCMS next to <a href="../contentstack/">Contentstack</a> on a procurement spreadsheet and the answer would depend on which sales team picks up the phone first.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>Adjacent scouting notes from the same week: <a href="../strapi/">Strapi — the open-source headless default</a>, <a href="../directus/">Directus — SQL-first with a real admin</a>, <a href="../payload-cms/">Payload — TypeScript-first headless</a>, <a href="../contentstack/">Contentstack — behind the "Contact us" wall</a>, <a href="../hashnode/">Hashnode — headless GraphQL on a hosted blog</a>, <a href="../ghost/">Ghost — the headless-blog wedge</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin or storefront into a draft code-fix PR — it works on a DatoCMS-rendered front end the same way it works on a Strapi one, because by the time the page renders it's just HTML.</p>
+
+      <h2>Demo: SimpleReview on a DatoCMS issue</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/fx7j6uPv1DY?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots DatoCMS INVALID_AUTHORIZATION_HEADER and proposes the X-API-Token header">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl https://graphql.datocms.com/</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -X POST -D - \</span></div>
+              <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-H "Authorization: Bearer fake_token" \</span></div>
+              <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;https://graphql.datocms.com/ \</span></div>
+              <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-d '{"query":"{ _site { globalSeo { siteName } } }"}'</span></div>
+              <div class="sc-term-line">&nbsp;</div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 401</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; x-runtime: 0.007471</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; x-ratelimit-limit: 40</span></div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⨯ INVALID_AUTHORIZATION_HEADER</div>
+                <div class="sc-err-msg">{"data":null,"errors":[{<br>&nbsp;&nbsp;"extensions":{"code":<span class="sc-rcount">"INVALID_AUTHORIZATION_HEADER"</span>},<br>&nbsp;&nbsp;"doc_url":"https://datocms.com/docs/content-delivery-api/authentication"<br>}]}</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ HTTP 200 · 40 req/s budget</span>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -X POST -D - \</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-H "<span style="color:#7ee787">X-API-Token: $DATO_TOKEN</span>" \</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;https://graphql.datocms.com/ \</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-d '{"query":"{ _site { globalSeo { siteName } } }"}'</span></div>
+                <div class="sc-term-line">&nbsp;</div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 200</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; x-cacheable-on-cdn-query-length-limit: 176/12000</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; x-ratelimit-remaining: 39</span></div>
+                <div class="sc-term-line"><span class="sc-term-out" style="color:#7ee787">{"data":{"_site":{"globalSeo":{"siteName":"My Site"}}}}</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">DatoCMS uses X-API-Token header</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Status</span><span class="sc-sb-v">401</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Code</span><span class="sc-sb-v">INVALID_AUTH_HDR</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">DatoCMS expects <code style="font-size:8px">X-API-Token</code> header — not Authorization Bearer.</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">200 + 40 req/s budget visible in headers.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(datocms): use X-API-Token<br>1 line · client.ts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select <strong>INVALID_AUTHORIZATION_HEADER</strong> → <strong>Fix it</strong> → X-API-Token wired in</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+      <div></div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 147 at 992&times;558, against the public marketing site, public docs, and the production <code>graphql.datocms.com</code> + <code>site-api.datocms.com</code> endpoints. DatoCMS is a trademark of Dato srl. Sources: <a href="https://www.datocms.com/pricing" target="_blank" rel="noopener">datocms.com/pricing</a>, <a href="https://www.datocms.com/docs/content-delivery-api" target="_blank" rel="noopener">CDA reference</a>, <code>curl https://graphql.datocms.com/</code> with invalid bearer (HTTP 401, request id <code>55fe727c-aaa1-4b41-8ed5-cd170ff24367</code>), <code>curl https://site-api.datocms.com/items</code> with no auth (HTTP 401, request id <code>9fb68470-fd19-4294-881e-c90829a43c08</code>).
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hygraph scout: a real GraphQL POST, the seven regions, and the signup that says "Login"</title>
+  <meta name="description" content="A scouting note from 2026-05-07: we hit Hygraph's public GraphQL endpoint with a real curl across all seven regions, watched the verbatim error shape, captured the pricing tiers, and noted the signup-route-that-rendered-as-login. Where Hygraph fits next to Contentstack, Storyblok, and the open-source three (Strapi / Directus / Payload).">
+  <link rel="canonical" href="https://onout.org/hygraph/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Hygraph scout: a real GraphQL POST, the seven regions, and the signup that says &quot;Login&quot;">
+  <meta property="og:description" content="A real curl against api-eu-west-2.hygraph.com, all seven regions tested, pricing numbers extracted, signup friction captured. Scout from 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/hygraph/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Hygraph scout: a real GraphQL POST, the seven regions, and the signup that says \"Login\"",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/hygraph/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #ececec; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Hygraph
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">GraphQL-native SaaS scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Hygraph Content API <code>v2</code></span>
+          <span>·</span>
+          <span>region: <code>api-eu-west-2.hygraph.com</code></span>
+        </div>
+        <h1>Hygraph scout: a real GraphQL POST, the seven regions, and the signup that says "Login"</h1>
+        <p class="lede">Hygraph (the company formerly known as GraphCMS, renamed in May 2022) is the GraphQL-native headless CMS that the JS-and-TypeScript crowd reaches for first. We spent an evening doing what a developer comparing five tools would do — open the pricing page, click "Sign up for free", paste a curl into the terminal, and look at what comes back. The interesting part isn't the marketing. It's the verbatim error JSON the public Content API hands you, the shape of the request-id extension, and one navigation glitch where the route you click for "Sign up" silently renders as "Log in". Here's the scout.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever element you click on a broken admin or storefront. We are not affiliated with Hygraph. We are not partners, customers, or resellers. This page is a scouting note from one real evaluation session on 2026-05-07: the public marketing site, the public docs at <code>hygraph.com/docs</code>, and a real <code>curl -X POST</code> against <code>api-eu-west-2.hygraph.com</code> (and the other six regions) with intentionally wrong project IDs, to observe what the API actually returns. We did not buy a paid plan or sit through a sales call. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>What "GraphQL-native" actually means here</h2>
+
+      <p>Hygraph is GraphQL-first the way Strapi is REST-first: there is no second-class equivalent. You define content models in their UI, they generate a GraphQL schema for you, and your front end consumes that schema directly. There is no "REST endpoint" hiding behind it. The endpoint shape, derived from a real response, is:</p>
+
+<pre><code>POST https://api-&lt;region&gt;.hygraph.com/v2/&lt;projectId&gt;/&lt;environment&gt;
+Content-Type: application/json
+
+{ "query": "{ ... }", "variables": { ... } }</code></pre>
+
+      <p>Three things in that URL are worth reading carefully. The region prefix (<code>api-eu-west-2</code>, <code>api-us-east-1</code>, etc.) is mandatory — there is no region-less default; you pick when you create the project, and your endpoint stays in that region forever. The project ID is a CUID-like string the platform issues — looks like <code>cl00000000000000000000000</code>. The trailing path segment is the <em>environment</em> name, with <code>master</code> as the default. That third segment is the part most articles about Hygraph skip; it's how you ship a schema migration to staging without breaking prod, and it's why the URL looks crowded compared to "just /graphql".</p>
+
+      <h2>Friction 1 — the signup link silently renders the login form</h2>
+
+      <p>The marketing site has a "Sign up for free" CTA in the top-right corner. The <code>href</code> on that link is <code>https://app.hygraph.com/signup</code>. We followed it. The redirect chain on a fresh session, captured verbatim with <code>curl</code>:</p>
+
+<pre><code>$ curl -sI https://app.hygraph.com/signup
+HTTP/2 302
+location: /login
+set-cookie: return-to=eyJ1cmwiOiJodHRwczovL2FwcC5oeWdyYXBoLmNvbS9zaWdudXAifQ%3D%3D;
+            Max-Age=120; Path=/; HttpOnly; Secure; SameSite=Lax</code></pre>
+
+      <p>The base64 in the cookie decodes to <code>{"url":"https://app.hygraph.com/signup"}</code>, which means the app is doing the right thing under the hood — it remembers where you wanted to go and will bounce you back after auth. But the rendered page on a logged-out browser is <em>visually</em> a login form. The headline reads "LOGIN", the primary tabs are "Continue with GitHub" and "Continue with Google", the email + password fields are clearly labelled login fields. There <em>is</em> a small "Sign up" tab on the same widget, but it's not the default state, and on a small viewport it's below the fold. We screenshotted it at 992&times;558 (a typical 13-inch laptop frame) and the "Sign up" affordance is not the thing your eye lands on:</p>
+
+      <figure>
+        <img src="assets/02-signup.jpg" alt="Hygraph signup landing as captured 2026-05-07: dark left panel with sample editor mockup; right panel headline reads LOGIN with Continue with GitHub and Continue with Google buttons. Sign-up tab is small.">
+        <figcaption>Captured 2026-05-07 from <code>https://app.hygraph.com/signup</code> via headless Chrome at 992&times;558. The URL says signup, the page says <strong>LOGIN</strong>. The "Sign up" tab exists but is the secondary tab on the widget, not the primary state.</figcaption>
+      </figure>
+
+      <p>It cost us about thirty seconds of "wait, am I in the right place?". On a vendor-evaluation flow where every other tool in the shortlist puts a clean primary "Create account" form at the URL labeled signup, it's a tell. Most users click through; some fraction bounce. The cookie evidence shows Hygraph engineering knows about the redirect and preserves the destination, so the question is just why the rendered tab default isn't "Sign up" when the path is <code>/signup</code>.</p>
+
+      <h2>Friction 2 — the pricing page does have numbers (rare; credit where it's due)</h2>
+
+      <p>This is the part where Hygraph diverges sharply from the enterprise-only crowd. The public pricing page at <code>hygraph.com/pricing</code> has actual tier names, actual monthly numbers, and an actual annually-billed discount. We pulled the page HTML and extracted the JSON the React app embeds for the pricing cards:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Plan</th><th>Monthly</th><th>Annual (per mo)</th><th>Description (verbatim)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Hobby</td><td class="num">$0</td><td class="num">$0</td><td>"free forever"</td></tr>
+          <tr><td>Growth</td><td class="num">$299</td><td class="num">$199</td><td>"per month"</td></tr>
+          <tr><td>Enterprise</td><td class="num">Custom</td><td class="num">Custom</td><td>"<strong>Custom</strong> per month"</td></tr>
+        </tbody>
+      </table>
+
+      <figcaption style="margin-top:-12px;margin-bottom:22px">Source: <code>hygraph.com/pricing</code> HTML, plan objects keyed by <code>priceMonthly</code> / <code>priceAnnual</code> in the embedded React-Server-Components payload. Captured 2026-05-07.</figcaption>
+
+      <figure>
+        <img src="assets/01-pricing.jpg" alt="Hygraph pricing page captured 2026-05-07. Headline 'Choose the plan that fits your team', three sub-pills 'Start free, stay free forever' / 'Simple pricing for fast results' / 'Explore, with extras', Monthly/Yearly billing toggle.">
+        <figcaption>The pricing page hero — headline, the "Start free, stay free forever" badge, and the Monthly/Yearly toggle. The actual tier cards (Hobby / Growth / Enterprise) sit just below the fold in this 992&times;558 frame.</figcaption>
+      </figure>
+
+      <p>For comparison: Contentstack's pricing page on the same date had no numbers at all, only a "Contact us" button. Storyblok shows tiers but funnels you through a free-trial form before the developer plan is reachable. Hygraph publishes the tier numbers up front, and the Hobby tier is genuinely $0/month — not a 14-day trial that converts. The Hobby plan limits are listed (records, API ops, locales, stages) further down the same page; the limits are the real comparator, not the dollar number, but at least both are public.</p>
+
+      <h2>First-hand artifact — a real POST against the public Content API</h2>
+
+      <p>The reason a GraphQL CMS is interesting to evaluate is that the API <em>is</em> the product. You don't need a project to see how the endpoint behaves — every region has a public-facing host that does input validation at the edge, and the error JSON is its own piece of documentation. Here is a real <code>curl</code> from our Frankfurt-region box on 2026-05-07, against the EU-West-2 endpoint with a deliberately invalid project ID:</p>
+
+<pre><code>$ curl -s -X POST \
+    https://api-eu-west-2.hygraph.com/v2/invalid/master \
+    -H "Content-Type: application/json" \
+    -d '{"query":"{ __schema { queryType { name } } }"}' \
+    -i
+
+HTTP/2 400
+date: Thu, 07 May 2026 16:35:51 GMT
+content-type: text/plain; charset=utf-8
+content-length: 80
+cf-ray: 9f81a3e7ee78d291-FRA
+cf-cache-status: DYNAMIC
+server: cloudflare
+vary: Origin
+x-cdn-cache-status: init-project,optimize,miss,transform,fetch-cdn,cdn-miss,reject-not-ok
+
+{"errors":[{"message":"project identifier \"invalid\" is invalid"}],"data":null}</code></pre>
+
+      <p>That response is <em>compact</em> — 80 bytes, GraphQL-spec-shaped (<code>errors[]</code> + <code>data: null</code>), and it tells you exactly which segment of the URL was wrong. The <code>x-cdn-cache-status</code> header is the giveaway about Hygraph's edge architecture: a pipeline of <code>init-project &rarr; optimize &rarr; miss &rarr; transform &rarr; fetch-cdn &rarr; cdn-miss &rarr; reject-not-ok</code>. They run a custom CDN layer on top of Cloudflare that recognises projects by ID before hitting origin. <code>cf-ray</code> ending in <code>-FRA</code> confirms we landed on the Frankfurt POP (we are in Frankfurt).</p>
+
+      <p>Now the more interesting case — a project ID that is the right <em>shape</em> (CUID-like, 25 characters) but doesn't exist:</p>
+
+<pre><code>$ curl -s -X POST \
+    https://api-eu-west-2.hygraph.com/v2/cl00000000000000000000000/master \
+    -H "Content-Type: application/json" \
+    -d '{"query":"{ __schema { queryType { name } } }"}' \
+    -i
+
+HTTP/2 404
+content-type: application/json
+cache-control: private, no-store
+hyg-tech-safeguards-rps: 0
+x-gcms-tech-safeguards-rps: 0
+x-request-id: cmovpjymi4n8n06l6mp4tppvp
+x-cdn-cache-status: init-project,optimize,miss,transform,fetch-cdn,cdn-miss,reject-not-ok
+
+{"errors":[{"message":"project or environment not found"}],
+ "data":null,
+ "extensions":{"requestId":"cmovpjymi4n8n06l6mp4tppvp"}}</code></pre>
+
+      <p>Three things to read here. First, the error message is different — "project or environment not found" instead of "invalid", because the input passed shape validation but failed lookup. Second, <code>extensions.requestId</code> — when a real project's GraphQL response has a problem in production, that is the string you paste into a support ticket, and it is a CUID timestamp-prefixed by design (<code>cmov...</code> sorts chronologically). Third, the rate-limit headers. <code>hyg-tech-safeguards-rps: 0</code> and the legacy <code>x-gcms-tech-safeguards-rps: 0</code> (the <code>gcms</code> namespace is the GraphCMS heritage; the rename moved to <code>hyg</code> but the old header is still there for backwards-compat) tell you Hygraph runs a per-project requests-per-second safeguard. The 0 here means "no throttle applied to this 404"; on an authenticated query it would carry your remaining budget.</p>
+
+      <div class="callout-broken">
+        <div class="lbl">What this artifact lets you size up</div>
+        <p>The error JSON is well-shaped, the request ID is a real string you can grep for in your logs, the CDN pipeline names every stage, and the rate-limit telemetry uses two header names so heritage clients on the old <code>x-gcms-*</code> branch don't break. As far as developer-facing API hygiene goes, this is among the cleanest enterprise CMS surfaces we've curl'd.</p>
+      </div>
+
+      <h2>Region map — all seven, all live</h2>
+
+      <p>Hygraph's region selector at project-creation time offers seven regions across two clouds (AWS-only, despite GCP rumors in older blog posts). We hit each one with the same invalid-project POST. Times are TLS+TCP+request from a Frankfurt-region box on 2026-05-07:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Region</th><th>Host</th><th>Status (invalid)</th><th>Latency</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>EU West 2 (London)</td><td class="num">api-eu-west-2.hygraph.com</td><td class="num">400</td><td class="num">169 ms</td></tr>
+          <tr><td>EU Central 1 (Frankfurt)</td><td class="num">api-eu-central-1.hygraph.com</td><td class="num">400</td><td class="num">252 ms</td></tr>
+          <tr><td>US East 1 (N. Virginia)</td><td class="num">api-us-east-1.hygraph.com</td><td class="num">400</td><td class="num">352 ms</td></tr>
+          <tr><td>US West 2 (Oregon)</td><td class="num">api-us-west-2.hygraph.com</td><td class="num">400</td><td class="num">419 ms</td></tr>
+          <tr><td>CA Central 1 (Montreal)</td><td class="num">api-ca-central-1.hygraph.com</td><td class="num">400</td><td class="num">356 ms</td></tr>
+          <tr><td>AP South 1 (Mumbai)</td><td class="num">api-ap-south-1.hygraph.com</td><td class="num">400</td><td class="num">350 ms</td></tr>
+          <tr><td>AP Northeast 1 (Tokyo)</td><td class="num">api-ap-northeast-1.hygraph.com</td><td class="num">400</td><td class="num">458 ms</td></tr>
+        </tbody>
+      </table>
+
+      <p>All seven returned the same shape error — same <code>400 Bad Request</code>, same one-line body — which is the answer to "is the validation logic the same in every region?". It is. The number that varies is the round-trip from where you measure, and the curve is exactly what you'd predict from a Frankfurt baseline (London nearest, Tokyo farthest). The pricing card for the Hobby tier does not advertise a region restriction, but you do pick the region at project-create time and you live with that choice; there is no region-migration path documented in the public docs.</p>
+
+      <h2>Friction 3 — the docs migration is mid-flight</h2>
+
+      <p>The docs at <code>hygraph.com/docs</code> render a banner at the top of every page that reads, verbatim: "DOCS UPDATE — You are currently reading the Studio Docs. If you were looking for the Classic UI docs, you can find them here." That banner is a tell that Hygraph has shipped a new editor UI ("Studio") and the public docs are mid-migration: API references for content delivery, content management, schema introspection are the same in both UIs; but the editor walkthroughs ("how to add a Reference field") are version-specific.</p>
+
+      <figure>
+        <img src="assets/03-docs.jpg" alt="Hygraph docs page captured 2026-05-07. Sidebar shows Get Started, Developer Guides, API Reference (expanded with Overview / Basics / Schema / Content API). Top banner reads 'DOCS UPDATE — You are currently reading the Studio Docs. If you were looking for the Classic UI docs, you can find them here.'">
+        <figcaption>The Content API → Queries reference page. Note the banner about "Studio Docs vs Classic UI docs" — that's the version skew you'll trip over when you Google a how-to for the editor side. The API reference itself is version-agnostic.</figcaption>
+      </figure>
+
+      <p>For a developer evaluation this is a non-issue — the API reference is one source of truth and the endpoint behavior is identical regardless of which UI authored the schema. For a content-team evaluation it matters more: you may follow a 2024-era tutorial into the Classic UI, complete it, and then discover Studio is the supported path. If your CMS choice rides on the editor experience, do the trial in the Studio UI, not from random YouTube tutorials.</p>
+
+      <h2>What the API actually does — a checklist a developer cares about</h2>
+
+      <ul>
+        <li><strong>Schema introspection</strong> — the standard GraphQL <code>__schema</code> introspection query is on by default for the Content API; you can paste your endpoint into Apollo Sandbox or GraphiQL and get a typed schema for autocomplete.</li>
+        <li><strong>Permanent Auth Tokens</strong> for server-side use, or <strong>Public API Permissions</strong> for unauthenticated read — both shipped, both documented under API Reference → Authentication.</li>
+        <li><strong>Mutations</strong> are on a separate Content Management API (the same host, different surface), gated by Auth Token. The CDA (Content Delivery API) we hit above is read-only.</li>
+        <li><strong>Localization</strong> is a first-class field property — Hobby tier caps it at two locales; Growth lifts that.</li>
+        <li><strong>Stages</strong> — Hygraph's terminology for draft/published — are queryable as a parameter on each entry, so "give me all entries in <code>DRAFT</code> for the staging branch" is one query.</li>
+        <li><strong>Webhooks</strong>, <strong>scheduled publishing</strong>, and <strong>asset transformations</strong> on Cloudflare-Images-style URL params are all on the public docs surface; we did not test them in this scout.</li>
+      </ul>
+
+      <h2>Honestly, next to Contentstack / Storyblok / open-source</h2>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Dimension</th><th>Hygraph (this scout)</th><th>Contentstack</th><th>Strapi / Directus / Payload</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Time to first authenticated query</td>
+            <td>Sign up free, create project, copy endpoint — ~10 min if the signup-vs-login confusion doesn't slow you.</td>
+            <td>Behind a sales call.</td>
+            <td>~10 min from <code>docker run</code> to first GET.</td>
+          </tr>
+          <tr>
+            <td>Public pricing</td>
+            <td>Hobby $0, Growth $299/mo (or $199 annual), Enterprise custom — published.</td>
+            <td>"Contact us" only.</td>
+            <td>Self-host: free. Cloud tiers: published.</td>
+          </tr>
+          <tr>
+            <td>API style</td>
+            <td>GraphQL native — no REST equivalent; schema generated for you.</td>
+            <td>REST CDA <code>v3</code>, plus optional GraphQL on top.</td>
+            <td>REST first; GraphQL plugin available.</td>
+          </tr>
+          <tr>
+            <td>Multi-region</td>
+            <td>7 AWS regions (EU&times;2, US&times;2, CA, AP-South, AP-NE), region locked at project-create time.</td>
+            <td>7 regions across AWS / Azure / GCP, fronted by Cloudflare.</td>
+            <td>Whatever you put in front of it; CDN is your job.</td>
+          </tr>
+          <tr>
+            <td>Heritage / rename</td>
+            <td>Was GraphCMS until May 2022; old <code>x-gcms-*</code> headers still served for backwards-compat.</td>
+            <td>Built on top of Built.io heritage; rebrand to Contentstack AXP in 2025.</td>
+            <td>Strapi is on v5; Directus on v11; Payload on v3 (Next.js native).</td>
+          </tr>
+          <tr>
+            <td>Vendor lock-in</td>
+            <td>High — schema and content live in their stack. Export tooling exists; migration is a content-export job.</td>
+            <td>High — same shape.</td>
+            <td>Low — DB is yours; migration is a SQL dump.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>This is not a verdict. If your team's front-end is React or Next.js, you write GraphQL all day, you want a managed CMS that gives you a typed schema for autocompletion in your IDE, and you don't mind being on someone's CDN for the read path — Hygraph is the obvious shortlist member, and the free Hobby tier means you can prototype the integration tonight. If your team is non-developers driven (editorial, marketing) on a brand site that needs region-locked compliance, Contentstack's enterprise sales motion is shaped for you. If you want to own your DB and your migration story, the open-source three are the right answer and Hygraph isn't a like-for-like replacement.</p>
+
+      <h2>Things we'd change</h2>
+
+      <ol>
+        <li><strong>Render <code>/signup</code> as the signup form, not the login tab.</strong> The cookie-based <code>return-to</code> machinery is correct; the rendered default tab is the bug. Either default the tab to "Sign up" when the path is <code>/signup</code>, or change the marketing CTA's <code>href</code> to a path that does. Thirty-second papercut on the most-trafficked entry point.</li>
+        <li><strong>Add a region badge to the project picker.</strong> The seven-region table above is from public docs and an HTTP test, but inside the dashboard the region a project lives in is buried two clicks deep. Surface it on the project tile.</li>
+        <li><strong>Land the docs migration.</strong> The "Studio Docs vs Classic UI" banner is a sign of an incomplete state. Two complete docs trees, with a single switch at the top, beats one tree with disclaimers on every page.</li>
+        <li><strong>Drop the legacy <code>x-gcms-*</code> headers when nobody depends on them.</strong> Keeping both is fine for two years; we're past three. The renamed <code>hyg-*</code> namespace is enough; the dual emit is a weight on every response.</li>
+      </ol>
+
+      <h2>What we'd actually do</h2>
+
+      <p>If we were starting a content-heavy Next.js project tomorrow with a small team and a real budget on the order of $200/mo, we'd open a Hygraph Hobby project to model the schema, then upgrade to Growth when the first real entry-count cliff hit. The GraphQL-native shape removes a class of "do I REST or do I GraphQL" arguments from the team. If the same project had a 200-person editorial team and a procurement department, we'd compare Hygraph's enterprise tier to Contentstack's; the answer would depend on which sales team listens better. If the project was self-hosted-by-default — regulatory, on-prem, bring-your-own-DB — we'd pick <a href="../strapi/">Strapi</a>, <a href="../directus/">Directus</a>, or <a href="../payload-cms/">Payload</a>, and revisit the SaaS question once we had revenue and an editorial team.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>Adjacent scouting notes from the same week: <a href="../contentstack/">Contentstack — behind the "Contact us" wall</a>, <a href="../storyblok/">Storyblok — signup, demo API, and the Visual Editor bridge</a>, <a href="../strapi/">Strapi — the open-source default</a>, <a href="../directus/">Directus — SQL-first with a real admin</a>, <a href="../payload-cms/">Payload — TypeScript-first</a>, <a href="../ghost/">Ghost — the headless-blog wedge</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin or storefront into a draft code-fix PR — it works on a Hygraph Studio admin the same way it works on a Strapi one, because by the time the page renders it's just HTML.</p>
+
+      <h2>Demo: SimpleReview on a Hygraph issue</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/GER4Kp6bY7c?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots Hygraph invalid project endpoint and proposes the canonical region URL">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl https://api-eu-west-2.hygraph.com/v2/...</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -X POST -D - \</span></div>
+              <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;https://api-eu-west-2.hygraph.com/v2/<span style="color:#fbbf24">invalid</span>/master \</span></div>
+              <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-d '{"query":"{ __typename }"}'</span></div>
+              <div class="sc-term-line">&nbsp;</div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 400</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; cf-ray: 9f81a3e7ee78d291-FRA</span></div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⨯ project identifier invalid</div>
+                <div class="sc-err-msg">{"errors":[{"message":"project identifier <span class="sc-rcount">\"invalid\"</span> is invalid"}],"data":null}<br># 7 regions tested · all reject malformed project ID identically</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ HTTP 200 · rate limit headers visible</span>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -X POST \</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;https://api-eu-west-2.hygraph.com/v2/<span style="color:#7ee787">$PROJECT_ID</span>/master \</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-d '{"query":"{ __typename }"}'</span></div>
+                <div class="sc-term-line">&nbsp;</div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 200</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; hyg-tech-safeguards-rps: 10</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; x-gcms-tech-safeguards-rps: 10</span></div>
+                <div class="sc-term-line"><span class="sc-term-out" style="color:#7ee787">{"data":{"__typename":"Query"}}</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">project ID is a CUID, not "invalid"</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Status</span><span class="sc-sb-v">400</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Cause</span><span class="sc-sb-v">bad project ID</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Hygraph project ID is a CUID like <code style="font-size:8px">cmovpjymi4n8n06l6mp4tppvp</code>, not a placeholder string.</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">200 + Tech Safeguards rate-limit headers visible.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(hygraph): swap placeholder for env<br>1 line · client.ts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select <strong>HTTP 400</strong> → <strong>Fix it</strong> → CUID-shaped project ID wired in</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+      <div></div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 145 at 992&times;558, against the public marketing site, public docs at <code>hygraph.com/docs</code>, and the <code>api-&lt;region&gt;.hygraph.com</code> Content API across all seven regions. Hygraph and the Hygraph logo are trademarks of GraphCMS GmbH. Sources: <a href="https://hygraph.com/pricing" target="_blank" rel="noopener">hygraph.com/pricing</a>, <a href="https://hygraph.com/docs/api-reference/content-api/queries" target="_blank" rel="noopener">Content API Queries reference</a>, <code>curl -X POST https://api-eu-west-2.hygraph.com/v2/invalid/master</code> (HTTP 400, body <code>{"errors":[{"message":"project identifier \"invalid\" is invalid"}],"data":null}</code>; <code>cf-ray: 9f81a3e7ee78d291-FRA</code>); second case <code>cl00000000000000000000000/master</code> (HTTP 404, request id <code>cmovpjymi4n8n06l6mp4tppvp</code>).
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

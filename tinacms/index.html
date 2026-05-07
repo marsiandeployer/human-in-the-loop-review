@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TinaCMS 3.7 in local mode: an 8.7&nbsp;MB admin, a free GraphQL backend, and one fork in the road</title>
+  <meta name="description" content="We scaffolded the TinaCMS Next.js starter on 2026-05-07, ran the local GraphQL backend, screenshotted the real /admin route, and measured what the bundle actually weighs. The friction nobody warns you about: TinaCloud is the default, and 'local mode' is a foot-gun the docs hide.">
+  <link rel="canonical" href="https://onout.org/tinacms/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="TinaCMS 3.7 in local mode: an 8.7 MB admin, a free GraphQL backend, and one fork in the road">
+  <meta property="og:description" content="A real local TinaCMS admin in 30 minutes. The fork: TinaCloud's hosted backend vs. running tinacms dev yourself. Real container, real screenshots, real bundle numbers.">
+  <meta property="og:url" content="https://onout.org/tinacms/">
+  <meta property="og:image" content="https://onout.org/tinacms/assets/02-admin-posts-list.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "TinaCMS 3.7 in local mode: an 8.7 MB admin, a free GraphQL backend, and one fork in the road",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "image": "https://onout.org/tinacms/assets/02-admin-posts-list.jpg",
+    "mainEntityOfPage": "https://onout.org/tinacms/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { width: 100%; border: 1px solid #e0e7ee; border-radius: 8px; display: block; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) { h1 { font-size: 28px; } h2 { font-size: 22px; } .content-wrap { padding: 0 4px; } }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f5f7fa}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#1a1a1a}
+    .sc-tina-h{font-size:13px;font-weight:700;color:#111;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    .sc-tina-h::before{content:"";width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#f472b6);display:inline-block}
+    .sc-tina-tab{font-size:10px;color:#444;border-bottom:1px solid #e0e0e0;padding-bottom:6px;display:flex;gap:14px;margin-bottom:6px}
+    .sc-tina-tab span.active{color:#ec4899;border-bottom:2px solid #ec4899;padding-bottom:6px;margin-bottom:-7px;font-weight:600}
+    .sc-tina-badge{display:inline-block;background:#fef3c7;color:#92400e;font-size:9px;font-weight:700;padding:2px 7px;border-radius:11px;margin-bottom:8px}
+    .sc-tina-entry{padding:5px 0;border-bottom:1px solid #eee;font-size:11px;color:#222;display:flex;justify-content:space-between}
+    .sc-tina-entry .meta{color:#9ca3af;font-size:10px}
+    .sc-error-box{background:#fff;border:1px solid #ddd;border-left:4px solid #d63638;border-radius:5px;padding:9px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:11px;color:#b91c1c;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#444;font-size:10px;line-height:1.5;animation:errHide 28s infinite;font-family:ui-monospace,monospace}
+    .sc-err-msg .sc-rcount{color:#b91c1c;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#f5f7fa;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:10px;border:1px solid #86efac}
+    .sc-rec-cmd{background:#1a1a1a;border-radius:5px;padding:7px 10px;font-size:9.5px;color:#7ee787;font-family:ui-monospace,monospace;margin-bottom:6px;line-height:1.5}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#ec4899;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#ec4899;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#ec4899;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:340px;top:230px;opacity:1}22%{left:340px;top:230px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222}
+    .sc-caption strong{color:#ec4899}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#ec4899;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      TinaCMS
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Self-host notes</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>tinacms <code>3.7.5</code></span>
+          <span>·</span>
+          <span>@tinacms/cli <code>2.2.5</code></span>
+          <span>·</span>
+          <span>Next.js <code>15.3.8</code></span>
+        </div>
+        <h1>TinaCMS 3.7 in local mode: an 8.7&nbsp;MB admin, a free GraphQL backend, and one fork in the road</h1>
+        <p class="lede">TinaCMS is the open-source headless CMS that compiles into your Next.js / Hugo / Astro site as a React app at <code>/admin</code>. The pitch &mdash; "Git-based, no database, Apache 2.0, edit markdown in a real WYSIWYG" &mdash; is mostly true. What the homepage doesn't say loudly: the default starter assumes you'll sign up for TinaCloud, and the local-only path needs an extra GraphQL daemon kept alive in dev. Here's what we actually ran, with the bundle numbers and the real <code>/admin</code> screenshot.</p>
+      </header>
+
+      <h2>Demo: SimpleReview on a TinaCMS issue</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/JxvSRBhXmE4?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots TinaCMS local-mode confusion and proposes the visual editor route">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">localhost:3000/admin/index.html#/collections/post</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-tina-h">TinaCMS &middot; my-tina-nextjs-starter</div>
+              <div class="sc-tina-tab"><span class="active">Blog Posts</span><span>Pages</span><span>Authors</span></div>
+              <div class="sc-tina-badge">⚠ You are in local mode</div>
+              <div class="sc-tina-entry"><span>Learning about Markdown</span><span class="meta">posts/learning-about-markdown.mdx</span></div>
+              <div class="sc-tina-entry"><span>What is TinaCMS</span><span class="meta">posts/what-is-tina.mdx</span></div>
+              <div class="sc-tina-entry"><span>The Wonderful World of Atom</span><span class="meta">posts/atom.mdx</span></div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⚠ tinacms build --local crashes Next.js</div>
+                <div class="sc-err-msg">Error: connect <span class="sc-rcount">ECONNREFUSED 127.0.0.1:4001</span><br>at TCPConnectWrap.afterConnect [as oncomplete]<br># GraphQL backend killed before page-data collection</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ Bundle built · admin/ 12 MiB · 104 chunks</span>
+                <div class="sc-rec-cmd"># Run prod build with backend kept alive:<br>$ <span style="color:#fbbf24">tinacms dev --noWatch &amp;</span><br>$ next build &amp;&amp; next export</div>
+                <div class="sc-rec-cmd">$ ls public/admin/ | wc -l<br><span style="color:#9ca3af"># 104 chunks · main 8.7 MB / 2.5 MB gzip</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">build kills GraphQL backend first</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Errno</span><span class="sc-sb-v">ECONNREFUSED</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Port</span><span class="sc-sb-v">4001</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Keep <code style="font-size:8px">tinacms dev --noWatch</code> running while <code style="font-size:8px">next build</code> collects page data.</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">12 MiB admin bundle · 104 chunks · 2.5 MB gzip.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(build): keep tina backend alive<br>1 line · package.json scripts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select <strong>ECONNREFUSED</strong> → <strong>Fix it</strong> → Tina backend kept alive during next build</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that turns the element you click on a broken admin into a draft code-fix PR. We're not affiliated with the TinaCMS project or Tina Inc. (the company behind TinaCloud). This is a deployment note from one real local install on one Linux box (kernel 5.15, Node 22.21.1, npm scaffold of <code>create-tina-app@2.1.4</code> with the official <code>tina-nextjs-starter</code> template) on the date above. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix the page.</p>
+      </div>
+
+      <h2>The 30-minute local install</h2>
+
+      <p>The docs lead with <code>npx create-tina-app@latest</code>. The wizard rejects the canonical <code>tina-cloud-starter</code> from the docs and tells you the real list:</p>
+
+<pre><code>$ npx --yes create-tina-app@latest my-tina --template tina-cloud-starter --pkg-manager npm
+🦙 TinaCMS
+Create Tina App v2.1.4
+✖ The provided template 'tina-cloud-starter' is invalid.
+  Please provide one of the following:
+  tina-nextjs-starter, tina-docs, tina-astro-starter,
+  tina-hugo-starter, tina-remix-starter, tinasaurus, basic</code></pre>
+
+      <p>The README's recommended starter doesn't exist under that name any more. The replacement is <code>tina-nextjs-starter</code>:</p>
+
+<pre><code>$ npx --yes create-tina-app@latest my-tina \
+    --template tina-nextjs-starter --pkg-manager npm
+✔ Downloading files from repo tinacms/tina-nextjs-starter
+✔ Installing packages.
+✔ Initializing git repository.
+✔ Created my-tina</code></pre>
+
+      <p>Install size: 1.5&nbsp;GB of <code>node_modules</code>. The interesting folder is <code>tina/</code>:</p>
+
+<pre><code>$ ls my-tina/tina
+collection/    config.tsx     fields/    queries/
+__generated__/                # GraphQL schema + types Tina writes itself
+tina-lock.json                # 132 KB schema snapshot</code></pre>
+
+      <p>Configuration is one file, <code>tina/config.tsx</code>. The default ships fully cloud-coupled:</p>
+
+<pre><code>const config = defineConfig({
+  clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID!,    // TinaCloud project id
+  branch:   process.env.NEXT_PUBLIC_TINA_BRANCH! || ...,
+  token:    process.env.TINA_TOKEN!,                    // TinaCloud read token
+  media: { tina: { publicFolder: "public", mediaRoot: "uploads" } },
+  build:  { publicFolder: "public", outputFolder: "admin", basePath: "" },
+  schema: { collections: [Page, Post, Author, Tag, Global] },
+});</code></pre>
+
+      <p>Three env vars (<code>clientId</code>, <code>branch</code>, <code>token</code>) point at TinaCloud. There's no comment explaining that you can leave them empty and run locally &mdash; you just have to know <code>tinacms dev</code> ignores them and substitutes a local datalayer.</p>
+
+      <h2>Booting it</h2>
+
+      <p>The starter's <code>npm run dev</code> wraps two daemons in one command:</p>
+
+<pre><code>"scripts": {
+  "dev": "tinacms dev -c \"next dev --turbopack\"",
+  ...
+}</code></pre>
+
+      <p><code>tinacms dev</code> starts a local GraphQL server (Vite+Express) on <code>4001</code>, indexes the <code>content/</code> tree, generates <code>tina/__generated__/types.ts</code>, then spawns the <code>next dev</code> process you supplied with <code>-c</code>:</p>
+
+<pre><code>$ NEXT_PUBLIC_TINA_CLIENT_ID="" TINA_TOKEN="" \
+    npx tinacms dev -c "next dev --turbopack -p 18094"
+
+🦙 TinaCMS Dev Server is initializing...
+   Indexing local files ⠋
+
+✅ 🦙 TinaCMS Dev Server is active:
+   CMS:                http://localhost:18094/admin/index.html
+   API playground:     http://localhost:18094/admin/index.html#/graphql
+   API url:            http://localhost:4001/graphql
+
+Running web application with command: next dev --turbopack -p 18094
+   ▲ Next.js 15.3.8 (Turbopack)
+   - Local:        http://localhost:18094
+   ✓ Ready in 1271ms</code></pre>
+
+      <p>So <em>two</em> processes &mdash; Tina on <code>4001</code>, Next.js on <code>18094</code>. The admin HTML is served by Next.js; its JS module URLs include hard-coded <code>http://localhost:4001/@vite/client</code> &mdash; fine on a single dev box, but bites the moment you open the admin from another machine on your LAN. We hit the "Failed loading TinaCMS assets" error page once because of exactly this, until we switched the screenshot URL back to <code>localhost</code> on the same host.</p>
+
+      <h2>What's in <code>content/</code></h2>
+
+      <p>The starter ships 16 demo files across <code>posts/</code> (six <code>.mdx</code>, one nested in <code>posts/june/</code> to demo folder collections), <code>authors/</code>, <code>pages/</code>, <code>tags/</code>, and a <code>global/index.json</code>. The schema doesn't restrict where files live within a collection's root path &mdash; a meaningful improvement over Decap's flat folders. The Next.js front:</p>
+
+      <figure>
+        <img src="assets/01-frontend.jpg" alt="Tina Starter homepage with a llama logo, top button reading 'Support for live editing and editorial workflow', large headline 'Welcome to the TinaCloud Starter', subheading 'Build 10x Faster with TinaCMS', and Get Started / Read Blog buttons">
+        <figcaption>The default <code>tina-nextjs-starter</code> on first paint at <code>/</code>. Llama logo, "TinaCloud Starter" headline (the template's name still says TinaCloud even though local mode works), and a top banner advertising "live editing and editorial workflow" &mdash; that link goes to TinaCloud's docs, not a self-host guide.</figcaption>
+      </figure>
+
+      <h2>The <code>/admin</code> route, in real life</h2>
+
+      <p>Open <code>http://localhost:18094/admin/index.html</code> and you get a modal that's trying to be helpful and is actually the most important UX detail in the whole product:</p>
+
+<pre><code>┌─ Enter into edit mode ───────────────────────────────┐
+│  When you save, changes will be saved to the local   │
+│  filesystem.                                         │
+│                                                      │
+│         [ Enter Edit Mode ]                          │
+└──────────────────────────────────────────────────────┘</code></pre>
+
+      <p>This modal has to be dismissed every time you open <code>/admin</code> in a new tab &mdash; no "remember my choice". If you came here expecting a TinaCloud login screen, the modal is the only signal that local mode is what you're in. Click through and you land in the collection list:</p>
+
+      <figure>
+        <img src="assets/02-admin-posts-list.jpg" alt="TinaCMS admin showing Blog Posts collection with 6 .mdx entries listed — Learning about Markdown, Mermaid, TinaCMS, TinaCloud, components, and 'Learning to blog' — each with full filename path under content/posts/. Top of page shows a yellow 'You are in local mode' badge, an info banner reads 'You have not configured search. Read the docs', and Add Folder / Add File buttons sit on the right.">
+        <figcaption>Real Blog Posts collection list under <code>tinacms 3.7.5</code> on local mode. The <code>You are in local mode</code> banner top-left is permanent &mdash; click it and a tooltip explains saves go to disk, not to a Git host. The <code>Read the docs</code> info banner is the search story: full-text search inside content is a TinaCloud feature, not bundled in the local datalayer. The .mdx column on the right is the actual file extension being read.</figcaption>
+      </figure>
+
+      <p>Click into any row and the editor opens with a real two-pane layout &mdash; form fields on the left, live preview of the rendered MDX on the right:</p>
+
+      <figure>
+        <img src="assets/03-admin-editor.jpg" alt="TinaCMS visual editor with left sidebar showing Title input set to 'Learning about Markdown', Hero Image with a llama drawing, Excerpt rich-text field with markdown content, Reset and Save buttons greyed out, and right pane showing the live-rendered article with hero image, byline, and 'What is Markdown?' heading.">
+        <figcaption>The actual editor at <code>/admin/index.html#/collections/post/learning-about-markdown</code>. Sidebar fields are generated from <code>tina/collection/post.tsx</code>. Right pane is the same Next.js page (<code>app/posts/[...urlSegments]/page.tsx</code>) with Tina's <code>useTina</code> hook subscribed to live form changes &mdash; type in the Title field and the heading on the right updates with no reload. Save / Reset are disabled until something dirty actually exists.</figcaption>
+      </figure>
+
+      <p>This is the moment Tina earns its existence. Decap CMS gives you a form on the left and nothing on the right. Strapi has a separate "preview" tab. Tina puts your real production page on the right and rebinds it to your draft data &mdash; the only setup is a <code>useTina()</code> hook in your route. For teams where editors are also the people writing the design, that round-trip is shorter than every other Git-based CMS we've run.</p>
+
+      <h2>The fork in the road: local datalayer vs TinaCloud</h2>
+
+      <p>Tina's not a single product. It's two things sharing a name:</p>
+
+      <ul>
+        <li><strong>The OSS package</strong> (<code>tinacms</code> + <code>@tinacms/cli</code>, Apache 2.0, on GitHub at <code>tinacms/tinacms</code>). This is what runs <code>tinacms dev</code>, the local datalayer, and the <code>/admin</code> React app. You can ship a static Next.js export with the admin baked in and never touch a paid service.</li>
+        <li><strong>TinaCloud</strong> (proprietary, hosted by Tina Inc.). This is the production GraphQL backend that signs in editors via OAuth, serves the schema, indexes content, runs full-text search, and wraps Git commits behind a per-user ACL. Free tier, paid tiers above.</li>
+      </ul>
+
+      <p>The OSS readme treats these as a continuum &mdash; "use TinaCloud or self-host the backend". In practice the friction is not symmetric:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Feature</th><th>Local datalayer (<code>tinacms dev</code>)</th><th>TinaCloud</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Edit content in browser</td><td class="num">yes</td><td class="num">yes</td></tr>
+          <tr><td>Save to disk on dev box</td><td class="num">yes</td><td class="num">no &mdash; commits to Git</td></tr>
+          <tr><td>Multi-user editing</td><td class="num">no auth</td><td class="num">OAuth + roles</td></tr>
+          <tr><td>Full-text search</td><td class="num">missing</td><td class="num">indexed</td></tr>
+          <tr><td>Editorial workflow / drafts</td><td class="num">filesystem only</td><td class="num">PR-based</td></tr>
+          <tr><td>Cost</td><td class="num">free, Apache 2.0</td><td class="num">free tier &rarr; paid</td></tr>
+        </tbody>
+      </table>
+
+      <p>You <em>can</em> deploy the static Tina admin (from <code>tinacms build --local</code>) against a GraphQL backend you run yourself &mdash; the daemon code is in <code>packages/datalayer</code>. But it's not packaged as "drop in this Docker container" the way Strapi or Directus is. Most articles titled "self-hosting TinaCMS" stop at "point at TinaCloud, it's free for one user". That's not self-hosting; that's a hosted backend with a free tier.</p>
+
+      <div class="callout-broken">
+        <div class="lbl">What we observed</div>
+        <p>"Local mode" is not the same thing as "self-hosted production". Local mode is what runs on a dev laptop with the GraphQL daemon as a sibling process, writing edits straight to the working tree. To go to production without TinaCloud you need to operate the GraphQL backend somewhere reachable by your editors' browsers, plus solve auth yourself, plus pick how the index gets rebuilt on commits.</p>
+        <p>This isn't documented as a fork in the road. It's documented as "step 1: scaffold app, step 2: deploy to Vercel, step 3: <strong>connect to TinaCloud</strong>". Anyone planning to skip step 3 has a non-trivial amount of plumbing left.</p>
+      </div>
+
+      <h2>What the bundle actually weighs</h2>
+
+      <p>We ran <code>npm run build-local</code> (which is <code>tinacms build --local --skip-indexing --skip-cloud-checks</code>) to compile the production admin bundle into <code>public/admin</code>. Then we measured the output:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Total <code>public/admin/</code></td><td class="num">12 MiB</td><td>One <code>index.html</code> + 104 JS chunks + 1 CSS file + svgs</td></tr>
+          <tr><td>Main entry JS (uncompressed)</td><td class="num">8.30 MiB</td><td><code>assets/index-7719c402.js</code> &mdash; React + Tina runtime + form lib + GraphQL client</td></tr>
+          <tr><td>Main entry JS (gzip)</td><td class="num">2.40 MiB</td><td>What a real browser pulls on cold load</td></tr>
+          <tr><td>All JS, total</td><td class="num">10.99 MiB / 3.21 MiB</td><td>Uncompressed / gzip across 104 chunks</td></tr>
+          <tr><td>Main CSS</td><td class="num">510 KB / 287 KB</td><td>Tina admin stylesheet (Tailwind + custom)</td></tr>
+          <tr><td><code>node_modules</code> at install time</td><td class="num">1.5 GiB</td><td>Includes Next 15, React 18, Mermaid, react-icons, etc.</td></tr>
+          <tr><td>Tina lock file</td><td class="num">132 KB</td><td>Snapshot of generated schema, committed to git</td></tr>
+          <tr><td>Cold first paint of admin</td><td class="num">~3.5 s</td><td>Local network. ~2 s of that is the explicit "if no #root children after 2s, show error" timeout the loader uses</td></tr>
+        </tbody>
+      </table>
+
+      <p>For context: the equivalent Decap CMS bundle we measured the same day was 5.66&nbsp;MiB uncompressed / 1.65&nbsp;MiB on the wire. Tina ships roughly twice the JS. The trade is real: you get side-by-side live preview, custom field components in React, and a Mermaid renderer baked in. Mermaid alone is ~1&nbsp;MiB of that delta &mdash; the diagram chunks lazy-load, but the main bundle still imports the parser shell. If you don't render Mermaid you can drop it (remove the import from <code>tina/config.tsx</code> and the rich-text plugin) and shave ~800&nbsp;KB.</p>
+
+      <h2>Quiet warnings worth knowing about</h2>
+
+      <ul>
+        <li><strong>Two daemons, two ports.</strong> <code>tinacms dev</code> binds <code>4001</code> (GraphQL) <em>and</em> <code>9000</code> (datalayer / search index). If either is busy you get a confusing <em>"Tina Dev server is already in use. Datalayer server is busy on port 9000"</em>. Killing only <code>next dev</code> isn't enough &mdash; the Tina daemon survives independently. Run <code>pkill -f "tinacms dev"</code> when in doubt.</li>
+        <li><strong>Hard-coded <code>localhost:4001</code> in dev.</strong> The dev admin HTML inlines a Vite preamble that loads <code>http://localhost:4001/@vite/client</code>. Open the admin from another machine on your LAN (e.g. from a phone for mobile QA), the vite client fails to connect, the React app never mounts, and after 2 seconds the static fallback reads <em>"Failed loading TinaCMS assets"</em>. The config is fine; the URL is wrong. Not in the docs.</li>
+        <li><strong>Build-local can break Next.js page-data collection.</strong> If <code>tinacms build --local</code> shuts down the GraphQL backend before <code>next build</code> tries to fetch from it, the Next build fails with <code>TypeError: fetch failed ECONNREFUSED</code>. The starter's <code>build-local</code> script does this. You're effectively expected to use TinaCloud in production, where the race doesn't happen.</li>
+        <li><strong>The starter still says "TinaCloud" everywhere.</strong> The homepage headline is "Welcome to the TinaCloud Starter". The "Get Started" link points at TinaCloud signup. If you didn't read <code>config.tsx</code> you'd not know local mode existed.</li>
+        <li><strong>Search is a TinaCloud feature.</strong> The "You have not configured search" banner in the collection list is permanent in local mode. The OSS datalayer doesn't ship a search index; that's a billable feature.</li>
+        <li><strong>1.5&nbsp;GB of node_modules.</strong> Next 15 and the Tailwind / motion / mermaid / radix stack are not small. CI cache strategy matters more than for a Decap-style "one bundle from CDN" install.</li>
+      </ul>
+
+      <h2>Things we'd change in the README</h2>
+
+      <ol>
+        <li><strong>Lead with the fork.</strong> The first decision is local-only vs TinaCloud, not "scaffold an app". A 200-word section near the top with an explicit feature-difference table would save people picking the wrong path twice.</li>
+        <li><strong>Fix the wizard's starter list.</strong> The docs still reference <code>tina-cloud-starter</code>; that template is gone. <code>tina-nextjs-starter</code> is the default now.</li>
+        <li><strong>Surface "Local mode" before the modal.</strong> The "Enter Edit Mode" modal could read: <em>"Local mode &mdash; writes to <code>./content/</code> on the dev box. For production with auth, use TinaCloud or self-host the backend."</em></li>
+        <li><strong>Ship a self-host-the-backend recipe.</strong> A Dockerfile + docker-compose snippet for the GraphQL daemon with OAuth wiring would replace a half-dozen forum posts.</li>
+        <li><strong>Decouple Mermaid.</strong> Projects that don't render diagrams in the editor shouldn't ship the parser. A <code>defineConfig</code> opt-out would shrink the bundle by ~1&nbsp;MiB.</li>
+      </ol>
+
+      <h2>Where TinaCMS fits in 2026</h2>
+
+      <p>Tina is the right pick when you want a real visual editor on top of Git-tracked markdown, your editors will write in a CMS form rather than directly in <code>.md</code>, and either (a) you'll pay for TinaCloud's hosted backend, or (b) you have engineering capacity to run the GraphQL daemon yourself. Local-only is genuinely usable for solo blogs, docs sites, and small marketing sites where one developer is the editor.</p>
+
+      <p>It's the wrong pick when "no backend service in production" is a hard requirement &mdash; Decap is straighter for that case, even with its <code>test-repo</code> footgun. It's also wrong for teams of ten with media-heavy uploads and role-based ACLs who haven't budgeted for TinaCloud &mdash; Strapi, Directus, or Payload will be cheaper-and-happier. Local mode is powerful enough to fool you into thinking you've solved production, light on warnings about what comes next.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per self-hostable CMS / LLM / booking tool we run on a real Linux box. Adjacent articles in the same series: <a href="../decap-cms/">Decap CMS 3.12 in 30 lines</a> (closest sibling &mdash; also Git-based, also MIT, simpler architecture), <a href="../ghost/">Ghost 5 on Docker SQLite</a>, <a href="../open-webui/">Open WebUI on Linux Docker</a>, <a href="../dify/">Dify 1.14.0 docker-compose</a>, <a href="../cal-com/">Cal.com 6.16.1 self-host</a>, <a href="../posthog/">PostHog hobby self-host</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin &mdash; including a Tina collection editor that won't save &mdash; into a draft code-fix PR you can ship without leaving the page.</p>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on a Hetzner CX-line VM, Ubuntu 22.04, kernel Linux 5.15, Node 22.21.1. Scaffolded with <code>create-tina-app@2.1.4</code>, template <code>tina-nextjs-starter</code> (commit fetched from <code>github.com/tinacms/tina-nextjs-starter</code> on the test date). Versions resolved: <code>tinacms@3.7.5</code>, <code>@tinacms/cli@2.2.5</code>, <code>next@15.3.8</code>, React 18.3.1, Tailwind 4.1.15. Local datalayer GraphQL on <code>:4001</code>, datalayer index on <code>:9000</code>, Next.js dev on <code>:18094</code>. Production admin bundle (<code>tinacms build --local</code>): 12&nbsp;MiB across <code>public/admin/</code>, main entry <code>index-7719c402.js</code> 8&nbsp;702&nbsp;533 bytes uncompressed / 2&nbsp;513&nbsp;861 bytes gzip. TinaCMS is a trademark-free open-source project under the Apache 2.0 licence (<code>tinacms/tinacms</code> on GitHub); TinaCloud is the proprietary hosted offering by Tina Inc.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

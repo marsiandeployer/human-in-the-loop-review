@@ -13,6 +13,43 @@ Internal knowledge base. For the public README see [../README.md](../README.md).
 | [../CLAUDE.md](../CLAUDE.md) | Claude Code project instructions |
 | [../simple-review/index.html](../simple-review/index.html) | **SimpleReview** — Chrome Extension "Website Feedback & Fix Tool". Click element → Fix It → code fix that can be uploaded to the site. Beta, free first fix. Landing at `/simple-review/` |
 
+## Freelance Reply Automation
+
+Internal workflow for preparing and publishing replies to Kwork and FL.ru projects.
+
+### Canonical rule
+
+Reply text is always written by the agent manually through `/root/.claude/skills/write-proposal-or-cover-letter/SKILL.md`. The browser scripts are not copywriters: they only read a finished `--message-file`, fill the marketplace form, save screenshots, and optionally submit.
+
+### Skill registry
+
+| Skill | Path | Purpose |
+|---|---|---|
+| `write-proposal-or-cover-letter` | `/root/.claude/skills/write-proposal-or-cover-letter/SKILL.md` | Single source of truth for proposal copy, SimpleReview angle, portfolio links, Kwork safety copy, and post-draft publishing links. |
+| `reply-project-kwork` | `/root/.claude/skills/reply-project-kwork/SKILL.md` -> `/root/vibers/.agents/skills/reply-project-kwork/SKILL.md` | Safe Kwork dry-run/submit workflow using `/root/kwork/reply-project.js`. |
+| `reply-project-flru` | `/root/.claude/skills/reply-project-flru/SKILL.md` -> `/root/vibers/.agents/skills/reply-project-flru/SKILL.md` | Safe FL.ru dry-run/submit workflow using `/root/flru/reply-project.js` and saved cookies. |
+| `tz-estimation-audit` | `/root/.claude/skills/tz-estimation-audit/SKILL.md` | Must be used by the proposal skill when a reply includes estimate, stages, or custom development scope. |
+
+### Platform scripts
+
+| Platform | Script | Runtime docs | Drafts | Screenshots |
+|---|---|---|---|---|
+| Kwork | `/root/kwork/reply-project.js` | `/root/kwork/README.md`, `/root/kwork/docs/wiki.md` | `/root/kwork/replies/` | `/root/kwork/screenshots/` |
+| FL.ru | `/root/flru/reply-project.js` | `/root/flru/README.md`, `/root/flru/docs/wiki.md` | `/root/flru/replies/` | `/root/flru/screenshots/` |
+
+### Safety rules
+
+- Dry-run first on both platforms; inspect the generated screenshot before submit.
+- Submit only after explicit user approval with `--submit --confirm-spend`.
+- Kwork minimum price is `5000` RUB and Kwork replies must not include external links, Telegram, email, phone, or calls to leave Kwork.
+- FL.ru may include links where appropriate; SimpleReview URL is `https://onout.org/#ru`.
+- For SimpleReview positioning, say `я`, not `мы`: the client checks the result, and I help if there is a blocker. Subscription/setup is `5000` RUB/month.
+- Keep cookies outside git repos; FL.ru cookies live at `/root/flru/cookies.json` with private permissions.
+
+### Last verified flow
+
+On 2026-05-07 the FL.ru workflow was tested and submitted on project `5503877`: reply file `/root/flru/replies/project_5503877_manual_2026-05-07.txt`, price `35000` RUB, term `7` days, final screenshot `/root/flru/screenshots/flru_reply_after_submit_2026-05-07T16-02-44-612Z.png`.
+
 ### SimpleReview — Visual Feedback & Fix Chrome Extension
 
 **Positioning:** "Website Feedback & Fix Tool" — отличие от конкурентов: не просто репортит баг, а чинит и даёт фикс, который можно залить на сайт.
@@ -337,7 +374,7 @@ Source of truth for **currently shipped CMS hubs** is code, not memory:
 - `README.md` → public project-level summary table.
 - This wiki section → operational checklist for forum links, content planning, and future CMS phases.
 
-Live indexed CMS hubs (27):
+Live indexed CMS hubs (35):
 
 | Phase | CMS / platform | Slug | Public URL | RU sibling |
 |-------|----------------|------|------------|------------|
@@ -368,6 +405,14 @@ Live indexed CMS hubs (27):
 | 1.5 | Cal.com (booking) | `cal-com` | https://onout.org/cal-com/ | — |
 | 1.5 | PostHog (analytics) | `posthog` | https://onout.org/posthog/ | — |
 | 1.5 | Ghost (CMS / blog) | `ghost` | https://onout.org/ghost/ | — |
+| 1.5 | Hashnode (hosted blog API) | `hashnode` | https://onout.org/hashnode/ | — |
+| 1.5 | Storyblok (SaaS visual editor) | `storyblok` | https://onout.org/storyblok/ | — |
+| 1.5 | Contentstack (enterprise SaaS) | `contentstack` | https://onout.org/contentstack/ | — |
+| 1.5 | Decap CMS (git-based) | `decap-cms` | https://onout.org/decap-cms/ | — |
+| 1.5 | Hygraph (GraphQL SaaS, 7 regions) | `hygraph` | https://onout.org/hygraph/ | — |
+| 1.5 | DatoCMS (visual SaaS) | `datocms` | https://onout.org/datocms/ | — |
+| 1.5 | TinaCMS (git-based local) | `tinacms` | https://onout.org/tinacms/ | — |
+| 1.5 | KeystoneJS (TypeScript+Prisma) | `keystonejs` | https://onout.org/keystonejs/ | — |
 
 Separate platform cluster, not part of `CMS_SLUGS` yet:
 
