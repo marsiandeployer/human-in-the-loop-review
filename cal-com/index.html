@@ -80,8 +80,93 @@
     .callout-fix p:last-child { margin-bottom: 0; }
     .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
     .footer a { color: #888; border-bottom: 1px solid #ddd; }
-    .banner-placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0f172a, #1e3a8a); border-radius: 10px; margin: 8px 0 22px; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 13px; padding: 24px; text-align: center; }
-    .banner-placeholder strong { color: #fff; display: block; font-size: 16px; margin-bottom: 6px; }
+    /* SimpleReview banner */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#fafafa}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:16px 22px;color:#1a1a1a}
+    .sc-cal-h{font-size:14px;font-weight:700;color:#111;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+    .sc-cal-h::before{content:"";width:18px;height:18px;border-radius:50%;background:#111;display:inline-block;flex-shrink:0}
+    .sc-cal-sub{font-size:11px;color:#666;margin-bottom:14px}
+    .sc-cal-step{font-size:10px;color:#888;margin-bottom:8px}
+    .sc-cal-step strong{color:#111;font-weight:700}
+    .sc-cal-form{display:flex;flex-direction:column;gap:8px;max-width:300px}
+    .sc-cal-label{font-size:10.5px;color:#444;font-weight:600}
+    .sc-cal-input{background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:7px 10px;font-size:11px;color:#111;font-family:ui-monospace,monospace}
+    .sc-cal-input.placeholder{color:#aaa}
+    /* The "console" overlay where the Prisma error spams */
+    .sc-error-box{background:#1a1a1a;border:1px solid #333;border-left:4px solid #d63638;border-radius:6px;padding:9px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5;font-family:ui-monospace,monospace}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f87171;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9px;line-height:1.4;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#fafafa;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:16px 22px;color:#1a1a1a}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:10px;border:1px solid #86efac}
+    .sc-rec-cmd{background:#1a1a1a;border-radius:5px;padding:7px 10px;font-size:9.5px;color:#4ade80;font-family:ui-monospace,monospace;margin-bottom:8px;line-height:1.5}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#111;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#111;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#111;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:340px;top:260px;opacity:1}22%{left:340px;top:260px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222}
+    .sc-caption strong{color:#fff}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#fff;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
     @media (max-width: 720px) {
       h1 { font-size: 28px; }
       h2 { font-size: 22px; }
@@ -240,10 +325,80 @@ error: Environment variable not found: DATABASE_DIRECT_URL.
 
       <h2>Demo: SimpleReview on the Cal.com setup wizard</h2>
 
-      <div class="banner-placeholder" aria-label="Banner placeholder — SimpleReview demoing a fix on the Cal.com setup wizard">
-        <div>
-          <strong>Banner: SimpleReview drafting a fix on the Cal.com setup wizard</strong>
-          Animated mp4 to be recorded via the <code>animated-banner</code> skill — drop into <code>assets/banner.mp4</code> when ready.
+      <video src="banner_voiced.mp4" width="100%" autoplay muted loop playsinline controls
+        style="border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block;margin:0 0 16px"
+        onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
+      </video>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview detects Cal.com Prisma migration error and drafts the migrate-on-boot fix">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">localhost:18081/auth/setup</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-cal-h">Cal.com · Administrator user</div>
+              <div class="sc-cal-sub">Let's create the first administrator user.</div>
+              <div class="sc-cal-step"><strong>Step 1 of 3</strong></div>
+              <div class="sc-cal-form">
+                <div>
+                  <div class="sc-cal-label">Username</div>
+                  <div class="sc-cal-input placeholder">http://localhost:18081/</div>
+                </div>
+                <div>
+                  <div class="sc-cal-label">Email address</div>
+                  <div class="sc-cal-input placeholder">you@example.com</div>
+                </div>
+              </div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⨯ Error [PrismaClientKnownRequestError]</div>
+                <div class="sc-err-msg">Invalid `prisma.user.findFirst()` invocation:<br>The table `<span class="sc-rcount">public.users</span>` does not exist<br>code: <span class="sc-rcount">'P2021'</span> · clientVersion: '6.16.1'</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ Migrations applied · 312 of 312</span>
+                <div class="sc-rec-cmd">$ docker exec -e DATABASE_DIRECT_URL=$DB caltest \\<br>&nbsp;&nbsp;&nbsp;npx prisma migrate deploy<br><span style="color:#9ca3af">All migrations have been successfully applied.</span></div>
+                <div class="sc-rec-cmd">$ docker restart caltest<br><span style="color:#9ca3af">→ /auth/setup?step=1 · 200 OK · wizard rendered</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">migrate not run on boot</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Prisma code</span><span class="sc-sb-v">P2021</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Cause</span><span class="sc-sb-v">no migrate</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Run <code style="font-size:8px">prisma migrate deploy</code> with <code style="font-size:8px">DATABASE_DIRECT_URL</code>, then restart</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">312 migrations applied. /auth/setup wizard renders.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">feat(docker): migrate-on-boot ENTRYPOINT<br>1 file · entrypoint.sh</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select the P2021 error → <strong>Fix it</strong> → migrations applied + restart</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
         </div>
       </div>
 

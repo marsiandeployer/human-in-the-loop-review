@@ -81,6 +81,88 @@
       h2 { font-size: 22px; }
       .content-wrap { padding: 0 4px; }
     }
+    /* SimpleReview banner */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#000;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.5}
+    .sc-term-prompt{color:#7ee787;display:inline}
+    .sc-term-cmd{color:#fff}
+    .sc-term-out{color:#9ca3af;margin-left:0;display:block}
+    .sc-term-err{color:#f85149}
+    .sc-term-warn{color:#fbbf24}
+    .sc-term-line{margin-bottom:2px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.5}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:340px;top:240px;opacity:1}22%{left:340px;top:240px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
   </style>
 </head>
 <body>
@@ -236,6 +318,81 @@ echo ""</code></pre>
       <h2>Where this fits</h2>
 
       <p>One short, honest write-up per self-hostable analytics/CMS/forum tool we run on a real Linux box. Adjacent: <a href="../cal-com/">Cal.com 6.16.1 — migrations don't run on boot</a>, <a href="../dify/">Dify 1.14.0 — the profile flag the README forgets</a>, <a href="../open-webui/">Open WebUI on Linux Docker — first 90 seconds, measured</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin into a draft code-fix PR — including PostHog's various dashboards once you do bring the stack up.</p>
+
+      <h2>Demo: SimpleReview on the empty-env-var trap</h2>
+
+      <video src="banner_voiced.mp4" width="100%" autoplay muted loop playsinline controls
+        style="border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block;margin:0 0 16px"
+        onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
+      </video>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview detects the empty REGISTRY_URL trap in PostHog hobby compose">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/posthog/docker$ docker compose pull</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">docker compose -f docker-compose.hobby.yml pull --quiet</span></div>
+              <div class="sc-term-line"><span class="sc-term-warn">warning</span> <span class="sc-term-out">The "DOMAIN" variable is not set. Defaulting to a blank string.</span></div>
+              <div class="sc-term-line"><span class="sc-term-warn">warning</span> <span class="sc-term-out">The "REGISTRY_URL" variable is not set. Defaulting to a blank string.</span></div>
+              <div class="sc-term-line"><span class="sc-term-warn">warning</span> <span class="sc-term-out">The "POSTHOG_APP_TAG" variable is not set.</span></div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⨯ unable to get image '-node:latest'</div>
+                <div class="sc-err-msg">Error response from daemon: invalid reference format<br>cause: <span class="sc-rcount">${REGISTRY_URL}-node:latest</span> with empty REGISTRY_URL → <span class="sc-rcount">-node:latest</span></div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ 18 images pulled · 19 GB · 161 s</span>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">export REGISTRY_URL=posthog/posthog</span></div>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">export POSTHOG_APP_TAG=latest</span></div>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">docker compose pull --quiet</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">posthog Pulled · clickhouse Pulled · kafka Pulled</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">temporal Pulled · zookeeper Pulled · seaweedfs Pulled</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">capture Pulled · feature-flags Pulled · cymbal Pulled</span></div>
+                <div class="sc-term-line"><span class="sc-term-out" style="color:#7ee787">→ pull complete</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">REGISTRY_URL not set</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Compose ref</span><span class="sc-sb-v">-node:latest</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Cause</span><span class="sc-sb-v">empty env</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Add <code style="font-size:8px">.env.example</code> with sane defaults for REGISTRY_URL, DOMAIN, POSTHOG_APP_TAG</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">Pull works without the 305-line bash installer.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">docs(deploy): ship .env.example for hobby<br>1 file · docker/.env.example</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select the <strong>invalid reference format</strong> error → <strong>Fix it</strong> → env defaults shipped</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
 
       <footer class="footer">
         <p>

@@ -89,9 +89,111 @@
     .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
     .footer a { color: #888; border-bottom: 1px solid #ddd; }
 
-    /* SimpleReview banner — placeholder until /open-webui/assets/banner.mp4 exists */
-    .banner-placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0f172a, #1e3a8a); border-radius: 10px; margin: 8px 0 22px; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 13px; padding: 24px; text-align: center; }
-    .banner-placeholder strong { color: #fff; display: block; font-size: 16px; margin-bottom: 6px; }
+    /* ─────── SimpleReview banner (28s cycle) ─────── */
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}
+    .sc-dots span:nth-child(2){background:#ffbd2e}
+    .sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:inherit}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;position:relative;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%{box-shadow:none}100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#1a1a1a}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#e5e5e5}
+    .sc-owui-h{font-size:13px;font-weight:600;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .sc-owui-h::before{content:"";width:18px;height:18px;border-radius:4px;background:linear-gradient(135deg,#1ca0e2,#1a4480);display:inline-block}
+    .sc-owui-tab{font-size:11px;color:#9ca3af;margin-bottom:10px;border-bottom:1px solid #303030;padding-bottom:7px;display:flex;gap:14px}
+    .sc-owui-tab span.active{color:#1ca0e2;border-bottom:2px solid #1ca0e2;padding-bottom:7px;margin-bottom:-7px}
+    .sc-owui-label{font-size:11px;color:#bbb;margin:8px 0 4px}
+    .sc-owui-input{background:#1f1f1f;border:1px solid #404040;border-radius:5px;padding:7px 10px;font-size:11px;color:#e5e5e5;font-family:ui-monospace,monospace}
+    .sc-owui-status{font-size:9px;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:0.4px;display:inline-block;margin-left:8px}
+    /* Target — Ollama URL field with broken state */
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:10px 12px;margin:8px 0;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:11px;color:#f87171;margin-bottom:5px;animation:errHide 28s infinite}
+    .sc-err-url{font-family:ui-monospace,monospace;font-size:10.5px;color:#fbbf24;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.5;animation:errHide 28s infinite}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    /* Recovered state (after fix) */
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#1a1a1a;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#e5e5e5}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-h{font-size:13px;font-weight:600;color:#fff;margin-bottom:10px}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#4ade80;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:10px;border:1px solid rgba(34,197,94,.3)}
+    .sc-rec-input{background:#1f1f1f;border:1px solid #4ade80;border-radius:5px;padding:7px 10px;font-size:11px;color:#4ade80;font-family:ui-monospace,monospace;margin-bottom:8px}
+    .sc-rec-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .sc-rec-tag{background:#1f1f1f;border:1px solid #4ade80;color:#4ade80;font-size:9px;padding:3px 8px;border-radius:11px}
+    /* Sidebar */
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}
+    .sc-sb-c2{animation:sbC2 28s infinite}
+    .sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}
+    .sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    /* Popup */
+    .sc-popup{position:absolute;right:230px;top:170px;width:210px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;vertical-align:bottom;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:190px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;font-weight:100;animation:scBlink .8s step-end infinite;margin-left:1px}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}
+    .sc-fsp{animation:fxSpin 28s infinite}
+    .sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    /* Cursor coords (measured via CDP getBoundingClientRect on this banner) */
+    @keyframes scCur{
+      0%   {left:360px;top:223px;opacity:0}
+      2%   {left:360px;top:223px;opacity:1}
+      10%  {left:698px;top:23px;opacity:1}
+      14%  {left:698px;top:23px;opacity:1}
+      20%  {left:360px;top:213px;opacity:1}
+      22%  {left:360px;top:213px;opacity:1}
+      26%  {left:391px;top:264px;opacity:1}
+      47%  {left:391px;top:264px;opacity:1}
+      49%  {left:391px;top:297px;opacity:1}
+      58%  {left:391px;top:297px;opacity:1}
+      74%  {left:620px;top:130px;opacity:1}
+      93%  {left:620px;top:130px;opacity:1}
+      96%  {opacity:0} 100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;letter-spacing:.2px}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
 
     @media (max-width: 720px) {
       h1 { font-size: 28px; }
@@ -235,10 +337,76 @@ nc: connect to 172.17.0.1 port 11434 (tcp) failed: Connection refused</code></pr
 
       <h2>Demo: SimpleReview on an Open WebUI admin error</h2>
 
-      <div class="banner-placeholder" aria-label="Banner placeholder — animated demo of SimpleReview on Open WebUI">
-        <div>
-          <strong>Banner: SimpleReview spotting an Open WebUI config issue</strong>
-          Animated mp4 to be recorded via the animated-banner skill — drop into <code>assets/banner.mp4</code> when ready.
+      <video src="banner_voiced.mp4" width="100%" autoplay muted loop playsinline controls
+        style="border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block;margin:0 0 16px"
+        onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'">
+      </video>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots the broken host.docker.internal Ollama URL in Open WebUI admin">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">localhost:18080/admin/settings/connections</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-owui-h">Open WebUI · Admin Panel</div>
+              <div class="sc-owui-tab"><span class="active">Connections</span><span>Models</span><span>Documents</span><span>Pipelines</span></div>
+              <div class="sc-owui-label">Ollama API <span class="sc-owui-status">⚠ no models found</span></div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⚠ Ollama discovery returns 0 models</div>
+                <div class="sc-err-url">OLLAMA_BASE_URLS = http://host.docker.internal:11434</div>
+                <div class="sc-err-msg">getent hosts host.docker.internal → exit 2 (not resolvable on Linux Docker). GET /ollama/api/tags returns {"models":[]} silently.</div>
+              </div>
+              <div class="sc-recovered">
+                <div class="sc-rec-h">Open WebUI · Admin Panel</div>
+                <span class="sc-rec-success">✓ Ollama reachable · 3 models discovered</span>
+                <div class="sc-rec-input">OLLAMA_BASE_URLS = http://172.17.0.1:11434</div>
+                <div class="sc-rec-tags">
+                  <span class="sc-rec-tag">llama3:8b</span>
+                  <span class="sc-rec-tag">mistral:7b</span>
+                  <span class="sc-rec-tag">qwen2.5:14b</span>
+                </div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">host.docker.internal not resolving</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Host</span><span class="sc-sb-v">unresolvable</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Platform</span><span class="sc-sb-v">linux/docker</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Replace <code style="font-size:8px">host.docker.internal</code> with the docker0 bridge gateway <code style="font-size:8px">172.17.0.1</code></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">Ollama reachable. Models discovered. No <code style="font-size:8px">--add-host</code> needed.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(env): use docker0 bridge for OLLAMA_BASE_URLS<br>1 line · docker-compose.yml</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select the broken Ollama URL → <strong>Fix it</strong> → docker0 bridge wired in</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
         </div>
       </div>
 
