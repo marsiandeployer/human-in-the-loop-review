@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Storyblok scout: signup, demo API, and the bridge that fights localStorage</title>
+  <meta name="description" content="Storyblok is SaaS-only — you can't self-host it. We tried the signup, hit the public Content Delivery API, and read the GitHub issues new users actually file. Real numbers from a 2026-05-07 scout.">
+  <link rel="canonical" href="https://onout.org/storyblok/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Storyblok scout: signup, demo API, and the bridge that fights localStorage">
+  <meta property="og:description" content="SaaS-only headless CMS — scout-mode test. Public CDN API, region routing, Visual Editor friction. Dated 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/storyblok/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Storyblok scout: signup, demo API, and the bridge that fights localStorage",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/storyblok/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #e5e7eb; }
+    figcaption { font-size: 13px; color: #666; margin-top: 8px; text-align: center; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}
+    .sc-term-cmd{color:#fff}
+    .sc-term-out{color:#9ca3af}
+    .sc-term-info{color:#79c0ff}
+    .sc-term-warn{color:#fbbf24}
+    .sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Storyblok
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">SaaS scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>API <code>v2/cdn</code> · <code>sb-be-version 5.822.3</code></span>
+          <span>·</span>
+          <span>No self-host path</span>
+        </div>
+        <h1>Storyblok scout: signup, demo API, and the bridge that fights localStorage</h1>
+        <p class="lede">Storyblok is a hosted headless CMS. There is no self-host build, no community Docker image, no on-premise SKU outside an enterprise contract — if you want it, you sign up and use their cloud. We did the next-best scouting test: we walked through the signup page, hit the public Content Delivery API with the token Storyblok publishes in their own docs, read the response headers, and pulled the GitHub issues new users actually file on their first day. This is what we found, with screenshots taken on the date stamped above.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever site you click. <strong>We are not affiliated with Storyblok</strong>, we're not a partner, we don't get paid to recommend anything. This page is a scout's notebook from one Linux box on one date. Because Storyblok is SaaS-only, we did not deploy a stack — we tested the parts you can test from outside: the public website, the public API, and the public issue tracker. If we got a number wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open an issue</a> and we'll correct it.</p>
+      </div>
+
+      <h2>What "SaaS-only" means here</h2>
+
+      <p>You will see Storyblok compared with Strapi, Directus, Payload, and other open-source headless CMSes. The shape is similar — a content tree, a delivery API, a Visual Editor, a webhook system — but the operating model is not. Storyblok runs on AWS in five regions, the source is closed, and the only artifacts you can self-manage are the SDKs and the field-type plugin code on GitHub. Self-hosting Storyblok is not a question of "find the right Helm chart"; it isn't an option. If that's a hard constraint for your project (data sovereignty, air-gapped networks, no third-party DPAs), stop here and look at <a href="../strapi/" rel="noopener">Strapi</a> or <a href="../directus/" rel="noopener">Directus</a>.</p>
+
+      <h2>Friction 1 — the signup is gated by company name</h2>
+
+      <p>The signup page asks for the things you'd expect (first name, last name, email, password) plus one that surprises a solo developer: <strong>Company Name *</strong>, with the placeholder "Where do you work?". The field is required. There is a "Sign Up With GitHub" button next to the email form, but the company-name field still loads in the email form below it. Below the fold there are role and use-case dropdowns.</p>
+
+      <figure>
+        <img src="assets/02-signup.jpg" alt="Storyblok signup page captured 2026-05-07 — Sign Up With GitHub, then First name, Last name, and a required Company Name field">
+        <figcaption>Storyblok signup page, app.storyblok.com — captured 2026-05-07. The company-name field is marked required.</figcaption>
+      </figure>
+
+      <p>This is a small thing, but it telegraphs the audience. Storyblok's free tier exists, but the funnel is built for people who can answer "Where do you work?" without inventing something. Indie devs and weekend-project builders type a placeholder and move on; teams skim past it. Worth knowing before you reach the page expecting Sanity-style instant onboarding.</p>
+
+      <h2>Friction 2 — the pricing page leads with the trial, not the free plan</h2>
+
+      <figure>
+        <img src="assets/01-pricing.jpg" alt="Storyblok pricing page captured 2026-05-07 — headline says 'Free to go live. Then pay for the features you want.' with a 'Start 45-Day Free Trial' button">
+        <figcaption><code>storyblok.com/pricing</code> — 2026-05-07. The big yellow CTA starts the Growth Plus trial, not the free Starter plan.</figcaption>
+      </figure>
+
+      <p>The hero says "Free to go live. Then pay for the features you want." The button below it is "Start 45-Day Free Trial" — that trial is the Growth Plus plan, not the free tier. To actually land on Starter you scroll past the hero, click "Compare All Plans", and pick Starter from the comparison grid. The free plan is real, just not where the funnel points first.</p>
+
+      <p>Plan limits per the public pricing page on the test date (we don't restate these for SEO; we restate them because the comparison row below makes more sense with them in front of you):</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Plan</th><th>Listed price</th><th>Seats incl.</th><th>Traffic / mo</th><th>API requests / mo</th><th>Locales</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Starter</td><td class="num">$0</td><td>1 (max 2)</td><td>100 GB</td><td>100k</td><td>2</td></tr>
+          <tr><td>Growth</td><td class="num">$99/mo</td><td>5 (max 10)</td><td>400 GB → 1 TB</td><td>1M → 5M</td><td>2 → unlimited</td></tr>
+          <tr><td>Growth Plus</td><td class="num">$349/mo</td><td>15 (max 20)</td><td>1 TB → 2 TB</td><td>4M → 15M</td><td>10 → unlimited</td></tr>
+          <tr><td>Premium / Elite</td><td>Custom</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+
+      <p>Two numbers worth flagging. <strong>The Starter plan caps you at 2 locales</strong> — meaning your free CMS supports two languages, full stop. If you need EN + DE + FR you're paying $99/mo (Growth) plus $20 per extra locale on top. <strong>The 100k API requests / month cap on Starter</strong> works out to roughly 3,300 requests/day, which is fine for a brochure site behind aggressive caching but is the first thing that will trip a JAMstack build that revalidates every commit.</p>
+
+      <h2>First-hand artifact — the public Content Delivery API</h2>
+
+      <p>Storyblok publishes a working demo space token in their own docs (<code>wANpEQEsMYGOwLxwXQ76Ggtt</code>). It's a real space, it really responds, and you can test the API shape without signing up. Here is what we got back at <strong>15:22 UTC on 2026-05-07</strong> from a Hetzner box:</p>
+
+<pre><code>$ curl -sSL -D - -o /dev/null \
+    "https://api.storyblok.com/v2/cdn/stories?token=wANpEQEsMYGOwLxwXQ76Ggtt&per_page=1"
+
+HTTP/2 301
+location: https://api.storyblok.com/v2/cdn/stories?cv=1540140368&per_page=1&token=...
+sb-be-version: 5.822.3
+x-cache: Miss from cloudfront
+x-amz-cf-pop: HEL51-P7
+
+HTTP/2 200
+content-type: application/json; charset=utf-8
+content-length: 774
+cache-control: max-age=0, public, s-maxage=604800, stale-if-error=3600
+total: 5
+per-page: 1
+etag: W/"e48d26077d2a2f30514426f0426c70c9"
+sb-be-version: 5.822.3
+x-runtime: 0.046216</code></pre>
+
+      <p>Three observations from the wire:</p>
+
+      <ul>
+        <li><strong>Every first request 301-redirects</strong> to a URL with a <code>cv=&lt;version&gt;</code> query parameter appended. <code>cv</code> is Storyblok's cache-version stamp; the redirect is how they invalidate edge caches when content changes. If your HTTP client doesn't follow redirects by default, your first call to a fresh space looks broken. Set <code>--location</code> on curl, <code>redirect: 'follow'</code> on fetch.</li>
+        <li><strong>The CDN is CloudFront, edge POP is Helsinki</strong> for our test box. Storyblok's "EU" endpoint is geo-routed; your latency depends on the nearest CloudFront PoP, not on where the origin sits.</li>
+        <li><strong><code>s-maxage=604800</code></strong> — a week. Edge cache is aggressive, which is the right default for content that changes via webhook-driven invalidations but matters if you expect "publish" to be instant.</li>
+      </ul>
+
+      <p>The body itself is a small but real payload — 774 bytes, two stories, both authored years ago:</p>
+
+<pre><code>{
+  "stories": [
+    {"name":"health","slug":"health","created_at":"2018-10-21T08:41:21.044Z", ...},
+    {"name":"demo","slug":"demo","content":{"body":[{"text":"This content is coming from Storyblok","component":"headline"}], ...}}
+  ],
+  "cv": 1540140368, "rels": [], "links": []
+}</code></pre>
+
+      <p>And the space metadata, fetched via the same token, deserves to be quoted verbatim because it's accidentally honest:</p>
+
+<pre><code>$ curl -sSL "https://api.storyblok.com/v2/cdn/spaces/me?token=wANpEQEsMYGOwLxwXQ76Ggtt"
+{"space":{"id":39985,"name":"Demos (DONT DELETE)","domain":"http://localhost:4000/", ...}}</code></pre>
+
+      <p>Yes, the public demo space is named <em>"Demos (DONT DELETE)"</em>. Someone put that note in the name field years ago and it ships in every quickstart. We promise we did not edit the response.</p>
+
+      <h2>Friction 3 — region routing fails closed, and that's the right behavior</h2>
+
+      <p>Storyblok runs five regional clusters: EU (<code>api.storyblok.com</code>), US (<code>api-us.storyblok.com</code>), CA (<code>api-ca.storyblok.com</code>), AP (<code>api-ap.storyblok.com</code>), and a separate China deployment at <code>app.storyblokchina.cn</code>. The token belongs to one cluster. Hit the wrong one and:</p>
+
+<pre><code>$ curl -sSL -D - -o /dev/null \
+    "https://api-us.storyblok.com/v2/cdn/stories?token=wANpEQEsMYGOwLxwXQ76Ggtt&per_page=1"
+
+HTTP/2 401
+content-length: 24
+sb-be-version: 5.822.3</code></pre>
+
+      <div class="callout-fix">
+        <div class="lbl">Right call by Storyblok</div>
+        <p>An invalid-region token returns 401, not a cross-region proxy. That means data residency is enforced at the cluster boundary — if you tell Storyblok your space is EU, your delivery requests to the US endpoint are rejected, period. Good for GDPR posture, slightly annoying when you copy-paste a quickstart and forget to switch the SDK base URL.</p>
+      </div>
+
+      <p>The official SDKs (<code>@storyblok/js</code>, <code>storyblok-nuxt</code>, <code>@storyblok/react</code>) accept a <code>region</code> option that maps to the right hostname. Most copy-paste tutorials don't show it, because most copy-paste tutorials assume EU. If you signed up after picking US in the region selector and your <code>storyblok-nuxt</code> config doesn't set <code>region: 'us'</code>, you'll get the 401 above and "wrong token" is the wrong diagnosis.</p>
+
+      <h2>Friction 4 — the Visual Editor's iframe needs a localStorage that exists</h2>
+
+      <p>The Visual Editor is the feature Storyblok markets hardest, and it's a real differentiator: you point it at your site's URL, the page loads inside their CMS in an iframe, and clicking on a heading in the iframe selects it in the side panel. To make it work, you set <em>Location (default environment)</em> in the space settings to a URL your site is reachable on, then load it.</p>
+
+      <p>This is where a new user's day-1 hits the rocks, and the GitHub issue <a href="https://github.com/storyblok/storyblok/issues/646" target="_blank" rel="noopener">storyblok/storyblok#646</a> documents the exact failure mode. Quoting the reporter:</p>
+
+      <div class="callout-broken">
+        <div class="lbl">Real user report — issue #646</div>
+        <p>"I went into the Settings and in the General tab to change the value of the Location (default environment) to <code>http://localhost:3000/</code>. After that, when I click 'home' content I get the nuxt page error which disappears quickly and the browser open a blank page with a chrome debug console error: <code>bridge:24 Uncaught DOMException: Failed to read the 'localStorage' property from 'Window': Access is denied for this document.</code>"</p>
+      </div>
+
+      <p>Translation: the Storyblok preview <code>bridge.js</code> reads <code>localStorage</code> from inside the iframe; modern browsers block third-party-context <code>localStorage</code> when the iframe origin doesn't match the top-frame cookie policy. With strict cookie blocking enabled (Chrome with third-party cookies blocked, Safari, Brave at default), the bridge throws and the editor goes blank. The issue is closed because the cause is browser policy, not Storyblok bug — but the answer is "configure your browser" or "use a proper HTTPS preview URL, not localhost", which is the kind of friction that bounces a free-tier user back to Sanity Studio.</p>
+
+      <p>Other real day-1 reports on the same tracker before it was archived: autosave breaking undo (<a href="https://github.com/storyblok/storyblok/issues/520" target="_blank" rel="noopener">#520</a>), the input event missing the field name (<a href="https://github.com/storyblok/storyblok/issues/429" target="_blank" rel="noopener">#429</a>), preview toolbar resizing on mousewheel scroll (<a href="https://github.com/storyblok/storyblok/issues/486" target="_blank" rel="noopener">#486</a>). None of these are deal-breakers; they're the texture of a Visual Editor that does a lot and therefore has surface area.</p>
+
+      <h2>Honest comparison — one row each</h2>
+
+      <p>We are not going to write a 4,000-word "Storyblok vs everyone" page. One row, picked for the dimension that actually moves the decision:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Tool</th><th>Free tier headline</th><th>The thing it's better at</th><th>The thing it's worse at</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Storyblok</strong></td>
+            <td>1 seat, 100k API req, 2 locales</td>
+            <td>Visual Editor — clicking on the live page to edit it is genuinely smooth when it works</td>
+            <td>Schema/component editing happens in the dashboard, not in your repo. No git-as-source-of-truth.</td>
+          </tr>
+          <tr>
+            <td><a href="../sanity/" rel="noopener"><strong>Sanity</strong></a></td>
+            <td>3 users, 10k docs, generous bandwidth</td>
+            <td>Studio is a React app that lives in your repo — schema is code, version-controlled.</td>
+            <td>No native Visual Editor. Their <em>Presentation</em> tool exists but you wire it up.</td>
+          </tr>
+          <tr>
+            <td><strong>Contentful</strong></td>
+            <td>5 users, 25k records, 2M API calls</td>
+            <td>Battle-tested at enterprise scale, broadest SDK coverage.</td>
+            <td>Pricing scales hard above the free tier — content types and locales are billed.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>If your team has a designer who hates dashboards and wants to click on a paragraph to edit it, Storyblok wins. If your team is engineer-heavy and wants the schema in a PR, Sanity wins. If you're the IT department of a Fortune 500 picking on procurement criteria, Contentful's incumbency is a feature.</p>
+
+      <h2>Things we'd change in the docs</h2>
+
+      <ol>
+        <li><strong>Document the 301 on first request</strong> in the quickstart, not just in the API reference. New users on fetch-without-redirects panic at "broken" responses.</li>
+        <li><strong>Put the region selector in the SDK quickstart's first code block.</strong> "Forgot to set <code>region</code>" is a 401 we shouldn't have to debug.</li>
+        <li><strong>Add a "Visual Editor in a private-browsing context" troubleshooter.</strong> The localStorage failure mode is browser policy, but the docs can say so up front instead of leaving it to a closed GitHub issue.</li>
+        <li><strong>Surface the 2-locale Starter cap on the marketing pages</strong>, not just the comparison grid. It's the first wall a multilingual project hits on the free tier.</li>
+      </ol>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per CMS we evaluate. Adjacent: <a href="../ghost/">Ghost 5.x first-deploy notes</a>, <a href="../strapi/">Strapi 5 self-host scout</a>, <a href="../directus/">Directus on a single VPS</a>, <a href="../sanity/">Sanity Studio on day one</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin into a draft code-fix PR — including the schema/blok views inside Storyblok's dashboard, once you're past signup.</p>
+
+      <h2>Demo: SimpleReview on a Storyblok issue</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/u3DM3dWJJOY?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots Storyblok region-mismatch 401 and proposes the EU endpoint fix">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl https://api-us.storyblok.com/v2/cdn/stories</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -D - "https://api-us.storyblok.com/v2/cdn/stories?token=$EU_TOKEN"</span></div>
+              <div class="sc-term-line">&nbsp;</div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 401</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; sb-be-version: 5.822.3</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; via: 1.1 cloudfront</span></div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⨯ HTTP 401 Unauthorized</div>
+                <div class="sc-err-msg">{"error":"Unauthorized"}<br>cause: token issued in EU space, hitting <span class="sc-rcount">api-us</span> endpoint<br>region-boundary enforced — same token works against <span class="sc-rcount">api.storyblok.com</span></div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ HTTP 200 · 1 story · CDN edge HEL51-P7</span>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -D - "https://api.storyblok.com/v2/cdn/stories?token=$EU_TOKEN"</span></div>
+                <div class="sc-term-line">&nbsp;</div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 301 → /v2/cdn/stories?token=...</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 200</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; sb-be-version: 5.822.3</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; x-amz-cf-pop: HEL51-P7</span></div>
+                <div class="sc-term-line"><span class="sc-term-out" style="color:#7ee787">{"stories":[{"name":"Demos (DONT DELETE)","slug":"home"}]}</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">EU token, US endpoint</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Status</span><span class="sc-sb-v">401</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Cause</span><span class="sc-sb-v">region mismatch</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">EU tokens hit <code style="font-size:8px">api.storyblok.com</code>; US tokens hit <code style="font-size:8px">api-us.storyblok.com</code>. Match host to space region.</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">200 with story payload. Edge cache via CloudFront.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(storyblok): pick host by region<br>1 line · client.ts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select the <strong>401</strong> response → <strong>Fix it</strong> → host matches space region</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 from a Hetzner CX-line VM, Ubuntu 22.04, against <code>api.storyblok.com</code> running <code>sb-be-version 5.822.3</code>. Public demo token <code>wANpEQEsMYGOwLxwXQ76Ggtt</code> is published in Storyblok's own quickstart docs and is not a secret. Storyblok is a trademark of Storyblok GmbH.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

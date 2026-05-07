@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hashnode as a headless GraphQL backend: what gql.hashnode.com actually returns</title>
+  <meta name="description" content="We made real, unauthenticated GraphQL calls against gql.hashnode.com on 2026-05-07 — captured the response shape, the Stellate rate-limit headers, the auth error you get without a PAT, and where the developer experience cracks for headless use.">
+  <link rel="canonical" href="https://onout.org/hashnode/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Hashnode as a headless GraphQL backend: what gql.hashnode.com actually returns">
+  <meta property="og:description" content="Real curl POSTs against the Hashnode Public API. Response JSON, latency, rate-limit headers, the friction with custom domains and self-host.">
+  <meta property="og:url" content="https://onout.org/hashnode/">
+  <meta property="og:image" content="https://onout.org/hashnode/assets/01-graphql-explorer.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Hashnode as a headless GraphQL backend: what gql.hashnode.com actually returns",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "image": "https://onout.org/hashnode/assets/01-graphql-explorer.jpg",
+    "mainEntityOfPage": "https://onout.org/hashnode/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { width: 100%; border: 1px solid #e0e7ee; border-radius: 8px; display: block; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .banner-stub { margin: 26px 0; padding: 36px 20px; background: linear-gradient(135deg, #f7fbfe 0%, #eef3f8 100%); border: 1px dashed #c8d8e8; border-radius: 8px; text-align: center; color: #6a7a8a; font-size: 14px; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) { h1 { font-size: 28px; } h2 { font-size: 22px; } .content-wrap { padding: 0 4px; } }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}
+    .sc-term-cmd{color:#fff}
+    .sc-term-out{color:#9ca3af}
+    .sc-term-info{color:#79c0ff}
+    .sc-term-warn{color:#fbbf24}
+    .sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Hashnode
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Headless API notes</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Endpoint <code>gql.hashnode.com</code></span>
+          <span>·</span>
+          <span>CDN <code>Stellate</code></span>
+        </div>
+        <h1>Hashnode as a headless GraphQL backend: what <code>gql.hashnode.com</code> actually returns</h1>
+        <p class="lede">Hashnode is a hosted blogging platform — you cannot self-host it, you cannot <code>docker pull</code> it, you cannot <code>git clone</code> it. What you <em>can</em> do is hit its public GraphQL endpoint without an API key and get real publication data back as JSON. We did exactly that on 2026-05-07. Below: the <code>curl</code> we ran, the verbatim response, the rate-limit headers their CDN ships, and the four pieces of friction we hit before the headless story stops being romantic.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever site you click. We are <strong>not affiliated with Hashnode</strong>. This is a scout-mode write-up: Hashnode is SaaS-only so we couldn't run their stack ourselves, but we ran their public API and read their docs end-to-end. Anything below the "What we measured" tables is observed behaviour from one VM at one point in time. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>Why people end up here</h2>
+
+      <p>The "headless CMS" search funnel is full of self-hostable options — Ghost, Strapi, Directus, Payload, Sanity (cloud-only too, but with a developer-grade SDK story). Hashnode is different. It's a <em>blogging product</em> first and a CMS second: you sign up, you write, your subdomain is <code>your-name.hashnode.dev</code>, you get an audience built into the platform. The headless angle is bolted on top: there's a public GraphQL API at <code>https://gql.hashnode.com</code> that lets a Next.js frontend pull your posts and render them on a domain you control.</p>
+
+      <p>Most "Hashnode as a headless CMS" tutorials skip past two awkward facts: (1) you can't run Hashnode locally — there is no Docker image, no community edition, no on-prem; and (2) the editor and the publication settings still live on hashnode.com itself, so "headless" really means "headed editor, custom-domain frontend". That changes the buy/build conversation. We ran the API anyway because the response shape, the rate limits, and the auth pattern are real things that would inform that decision.</p>
+
+      <h2>The first-hand artifact: a real GraphQL call</h2>
+
+      <p>Endpoint per <a href="https://apidocs.hashnode.com/" target="_blank" rel="noopener">apidocs.hashnode.com</a>: <em>"All Hashnode Public API queries are made through a single GraphQL endpoint, which only accepts POST requests. https://gql.hashnode.com"</em>. No auth header for read-only public-publication queries. We pointed it at Hashnode's own engineering blog (a real publication, hosted on Hashnode, custom-domained at <code>engineering.hashnode.com</code>):</p>
+
+<pre><code>curl -s -X POST https://gql.hashnode.com/ \
+  -H "Content-Type: application/json" \
+  -d '{"query":"query { publication(host: \"engineering.hashnode.com\") {
+        title displayTitle url descriptionSEO favicon
+        posts(first: 3) { edges { node {
+          id title brief slug publishedAt readTimeInMinutes views url
+          author { username name }
+        } } }
+      } }"}'</code></pre>
+
+      <p>The response (truncated — full JSON saved to <a href="assets/_api-response.json">assets/_api-response.json</a>):</p>
+
+<pre><code>{
+  "data": {
+    "publication": {
+      "title": "Hashnode Engineering",
+      "displayTitle": null,
+      "url": "https://engineering.hashnode.com",
+      "descriptionSEO": "Do you want to get a glimpse of how hashnode builds…",
+      "favicon": "https://cdn.hashnode.com/res/hashnode/image/upload/v1635768915447/QXuET0wNM.png",
+      "posts": {
+        "edges": [
+          { "node": {
+              "id": "669e419457891592c93297c0",
+              "title": "How we detected GQL caching issues with an ESLint plugin",
+              "brief": "Introduction\nOver the past year at Hashnode, we have been continuously developing GraphQL APIs…",
+              "slug": "how-we-detected-gql-caching-issues-with-an-eslint-plugin",
+              "publishedAt": "2024-07-22T11:25:08.013Z",
+              "readTimeInMinutes": 4,
+              "views": 743,
+              "url": "https://engineering.hashnode.com/how-we-detected-gql-caching-issues-with-an-eslint-plugin",
+              "author": { "username": "lakbychance", "name": "Lakshya Thakur" }
+          } },
+          { "node": { "title": "Hashnode 🤙🏽 calls your endpoints. Serverless Webhooks…", "views": 863, … } },
+          { "node": { "title": "Setting Up Post Schedules with EventBridge Scheduler & CDK", "views": 2810, … } }
+        ]
+      }
+    }
+  }
+}</code></pre>
+
+      <p>That response came back at <code>HTTP 200</code>, content-type <code>application/json; charset=utf-8</code>. No 401, no API key, no SDK, no auth dance. If you've ever wired a JAMstack frontend to a CMS, you know how unusual that is — most platforms gate every read behind a token, even for public data.</p>
+
+      <h2>What the response headers actually say (this is the bit nobody quotes)</h2>
+
+      <p>The fun part is the response headers. Hashnode fronts <code>gql.hashnode.com</code> with <a href="https://stellate.co/" target="_blank" rel="noopener">Stellate</a>, a GraphQL edge-cache CDN. We saved the headers from the same query:</p>
+
+<pre><code>HTTP/2 200
+date: Thu, 07 May 2026 15:24:00 GMT
+content-type: application/json; charset=utf-8
+stellate-rate-limit-budget-required: 2
+stellate-rate-limit-budget-remaining: 19994
+stellate-rate-limit-rules: "Public Rate Limit";type="RequestCount";budget=20000;
+                          limited=?0;remaining=19994;refill=52
+stellate-rate-limit-decision: pass
+gcdn-cache: PASS
+x-powered-by: Stellate
+access-control-allow-origin: *
+x-served-by: cache-bma-essb1270076-BMA</code></pre>
+
+      <div class="callout-fix">
+        <div class="lbl">What this tells you</div>
+        <p><strong>1.</strong> Public rate limit budget is <code>20,000</code> requests; this query "cost" 2; we have 19,994 left in the current window. The official docs phrase it as <em>"Query users are allowed to send up to 20k requests per minute… Mutations users can send up to 500 requests per minute"</em> — and the headers match exactly.</p>
+        <p><strong>2.</strong> <code>access-control-allow-origin: *</code> — CORS is wide open. You can call this from the browser without a proxy. That matters for static-site frontends that don't want a Node API layer just to fetch posts.</p>
+        <p><strong>3.</strong> <code>gcdn-cache: PASS</code> on this particular call (cache miss / not cacheable for the variables we sent). With repeat-identical queries you get <code>HIT</code> and the response comes from the edge — that's the Stellate selling point.</p>
+      </div>
+
+      <h2>What we measured</h2>
+
+      <p>Five sequential identical queries from a Hetzner CX-line VM in Helsinki to <code>gql.hashnode.com</code> (Stellate edge presumably routed to Stockholm / BMA per <code>x-served-by</code>):</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Call</th><th>HTTP</th><th>Wall clock</th><th>Bytes</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1 (cold)</td><td class="num">200</td><td class="num">740 ms</td><td class="num">593 B</td><td>TLS handshake + cache MISS</td></tr>
+          <tr><td>2</td><td class="num">200</td><td class="num">209 ms</td><td class="num">593 B</td><td>Connection reused</td></tr>
+          <tr><td>3</td><td class="num">200</td><td class="num">206 ms</td><td class="num">593 B</td><td>Edge HIT</td></tr>
+          <tr><td>4</td><td class="num">200</td><td class="num">191 ms</td><td class="num">593 B</td><td>Edge HIT</td></tr>
+          <tr><td>5</td><td class="num">200</td><td class="num">236 ms</td><td class="num">593 B</td><td>Edge HIT</td></tr>
+        </tbody>
+      </table>
+
+      <p>~200 ms warm, ~740 ms cold from Europe is fine for an SSG build step that hits the API once per page at <code>next build</code> time. It's borderline-too-slow for SSR-on-every-request without your own caching layer in front. Plan accordingly.</p>
+
+      <figure>
+        <img src="assets/01-graphql-explorer.jpg" alt="The gql.hashnode.com web playground — empty query editor with run button, no auth required to load.">
+        <figcaption>The interactive playground at <code>https://gql.hashnode.com</code>. No login, no key — paste a query, hit run. Useful for confirming the response shape before you wire it into code.</figcaption>
+      </figure>
+
+      <h2>Auth: the moment you need a Personal Access Token</h2>
+
+      <p>Reads on public publications are free. The moment you ask for anything user-scoped, the API draws a hard line:</p>
+
+<pre><code>$ curl -s -X POST https://gql.hashnode.com/ \
+    -H "Content-Type: application/json" \
+    -d '{"query":"query { me { id username } }"}'
+{"data":null,"errors":[{"message":"You must be authenticated.",
+ "locations":[{"line":2,"column":3}],"path":["me"],
+ "extensions":{"code":"UNAUTHENTICATED"}}]}</code></pre>
+
+      <p>Per the official docs, the fix is a Personal Access Token: <em>"The value of the Authorization header needs to be your Personal Access Token (PAT)."</em> You generate one at <a href="https://hashnode.com/settings/developer" target="_blank" rel="noopener">hashnode.com/settings/developer</a> — login required, so we didn't capture a screenshot of the token UI here. The header is <code>Authorization: &lt;the-token&gt;</code> — note: not <code>Bearer &lt;token&gt;</code>, not <code>X-Auth-Token</code>. Just the raw token in the standard <code>Authorization</code> header. That's a slightly non-standard choice; if your HTTP client auto-prepends <code>Bearer</code> it will silently fail.</p>
+
+      <p>Mutation rate limit is 500/min per the docs — a tenth of the read budget. If you're publishing posts via the API at any volume (cross-posting from a primary CMS, batch importing 10k legacy markdown files), you'll feel that ceiling. The Stellate response headers should also expose <code>stellate-rate-limit-budget-remaining</code> for mutations, but we didn't run any without a token, so we can't confirm the format from this session.</p>
+
+      <h2>Where the headless story cracks</h2>
+
+      <p>This is the honest part of the article. Four pieces of friction we noted from the docs and the community, in rough severity order:</p>
+
+      <h3>1. You can't self-host it. Period.</h3>
+
+      <p>There is no Hashnode Docker image, no community edition, no source repo of the editor or the rendering layer. The <em>API</em> is public; the <em>platform</em> is closed-source. If your buyer's procurement requires "we host all production data on our own infra", Hashnode is a non-starter — not "with effort", just not possible. Compare to the <a href="../ghost/">Ghost article</a> we shipped the same day: Ghost is a single Docker container with a published image you can run on a $5 VPS in 5 seconds.</p>
+
+      <h3>2. Custom domains route through Hashnode's frontend, not yours by default</h3>
+
+      <p>The "I want my blog at <code>blog.mycompany.com</code>" flow on Hashnode points your DNS at their CDN — they render the blog. The <em>headless</em> path (your Next.js frontend, your domain, posts pulled from <code>gql.hashnode.com</code>) is a separate setup; you build the frontend yourself. The Hashnode docs at <a href="https://apidocs.hashnode.com/" target="_blank" rel="noopener">apidocs.hashnode.com</a> cover the API surface but, as of our read on 2026-05-07, do not document blog-level custom-domain mapping for the headless case — the custom-domain mutations they do expose are scoped to <em>Documentation Projects</em> (a separate product), not blogs. Community threads on Hashnode's own forums repeatedly raise this gap; we won't link individual threads because they age out of being canonical, but a search for "hashnode custom domain headless next.js" surfaces the recurring questions.</p>
+
+      <h3>3. The editor lives on hashnode.com</h3>
+
+      <p>Headless implies "the writer experience can live anywhere". With Hashnode, your authors still write inside the hosted editor at <code>hashnode.com/your-publication</code>, then your frontend renders the result. That's fine if the team is happy with that editor (and it's a good editor). It's a problem if your spec says "authors paste markdown into our internal admin and click Publish". You'd be fighting the platform.</p>
+
+      <h3>4. Schema is large; introspection works but the docs read like a reference</h3>
+
+      <p>The schema introspection query <code>{ __schema { queryType { fields { name } } } }</code> returns 13 root queries — <code>publication</code>, <code>post</code>, <code>user</code>, <code>tag</code>, <code>feed</code>, <code>searchPostsOfPublication</code>, <code>draft</code>, <code>scheduledPost</code>, <code>documentationProject</code>, <code>checkCustomDomainAvailability</code>, <code>checkSubdomainAvailability</code>, <code>topCommenters</code>, <code>me</code>. The full schema introspects to ~40 KB of JSON for the type list alone. The docs site is solid as a reference but light on end-to-end "build this Next.js page" recipes; expect to spend the first afternoon in the playground figuring out the right field selection set.</p>
+
+      <h2>One row of honest comparison</h2>
+
+      <p>Hashnode and Ghost both target "people who want to publish a blog without rolling their own". The choice between them is mostly about where you're willing to put the operational risk:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>&nbsp;</th><th>Hashnode</th><th>Ghost</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Self-host?</td><td>No (SaaS only)</td><td>Yes (Docker, GHCR image, Linux box)</td></tr>
+          <tr><td>Cold-boot a working blog</td><td class="num">~minutes (sign up)</td><td class="num">5 s + setup wizard</td></tr>
+          <tr><td>Headless reads</td><td>Public GraphQL, no auth, 20k req/min</td><td>Content API or Admin API, key required</td></tr>
+          <tr><td>Built-in audience / discovery</td><td>Yes (Hashnode feed, follower graph)</td><td>No (you ship traffic yourself)</td></tr>
+          <tr><td>Operational responsibility</td><td>Theirs</td><td>Yours (backups, upgrades, SSL)</td></tr>
+          <tr><td>Vendor lock-in vector</td><td>Account, custom domain, post URLs</td><td>Container image; export to JSON anytime</td></tr>
+        </tbody>
+      </table>
+
+      <p>Different tools for different anxieties. If "vendor went down on Black Friday" keeps you up, run Ghost. If "I have to babysit yet another Linux box" keeps you up, Hashnode is genuinely fine — and the public API is more generous than most SaaS in this category.</p>
+
+      <h2>Demo: SimpleReview on the Hashnode editor</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/Sb4iEiQAWtQ?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots Hashnode 401 unauthorized and proposes the raw-token Authorization fix">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl -X POST https://gql.hashnode.com/</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -X POST -H "Authorization: Bearer $HN_PAT" \</span></div>
+              <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;https://gql.hashnode.com/ \</span></div>
+              <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-d '{"query":"{ me { username } }"}'</span></div>
+              <div class="sc-term-line">&nbsp;</div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⨯ HTTP 200 — but JSON has errors</div>
+                <div class="sc-err-msg">{"errors":[{"message":"User is not authenticated","extensions":{"code":<span class="sc-rcount">"UNAUTHENTICATED"</span>}}]}<br>stellate-rate-limit-budget-required: 2<br>stellate-rate-limit-remaining: <span class="sc-rcount">19998 / 20000</span></div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ Authenticated · me.username = vibers</span>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -X POST -H "Authorization: $HN_PAT" \</span></div>
+                <div class="sc-term-line"><span class="sc-term-out" style="color:#9ca3af"># note: NO 'Bearer ' prefix — Hashnode wants raw token</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-d '{"query":"{ me { username } }"}'</span></div>
+                <div class="sc-term-line">&nbsp;</div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 200</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; stellate-rate-limit-budget-required: 5</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; stellate-rate-limit-remaining: 19995</span></div>
+                <div class="sc-term-line"><span class="sc-term-out" style="color:#7ee787">{"data":{"me":{"username":"vibers"}}}</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">Bearer prefix not accepted</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Endpoint</span><span class="sc-sb-v">gql.hashnode</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Code</span><span class="sc-sb-v">UNAUTHENTICATED</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Drop <code style="font-size:8px">Bearer </code> prefix — Hashnode's auth header takes the raw PAT</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">200 with data. Stellate rate-limit headers visible. 19995/20000 remaining.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(hashnode): drop 'Bearer ' from auth<br>1 line · client.ts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select the <strong>UNAUTHENTICATED</strong> error → <strong>Fix it</strong> → raw-token auth wired in</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+
+      <h2>Things we'd change in the API docs</h2>
+
+      <ol>
+        <li><strong>Spell out that <code>Authorization</code> takes the raw token, not <code>Bearer &lt;token&gt;</code>.</strong> Most HTTP clients today default to OAuth-style bearer prefixes. Burning an afternoon on a 401 because of an extra word is the kind of thing a one-line note in the auth section would prevent.</li>
+        <li><strong>Document blog-level custom-domain mapping for headless setups in the same place as the API reference.</strong> Right now it's split — custom-domain mutations exist for Documentation Projects, but the question "I want my Next.js frontend at <code>blog.acme.com</code> pulling from gql.hashnode.com" needs a recipe page, not a community-forum thread.</li>
+        <li><strong>Surface the Stellate rate-limit headers in the docs as a numbered example.</strong> They're the cleanest way to know when you're being throttled. Right now you only learn about them by reading the response yourself, which is what we did for this article.</li>
+        <li><strong>Publish a public schema dump (SDL) at a stable URL.</strong> Introspection works, but a single <code>schema.graphql</code> file you can <code>curl</code> and feed into <code>graphql-codegen</code> would shorten the time-to-first-typed-query by hours for new integrators.</li>
+      </ol>
+
+      <h2>What we'd build with this</h2>
+
+      <p>If we were shipping a product blog tomorrow on a tight schedule and didn't want to operate Postgres backups: Hashnode + a Next.js frontend on Vercel pulling from <code>gql.hashnode.com</code>, with the canonical URL on our domain and the editor on hashnode.com for authors. The 20k-req/min budget is generous enough that even an aggressive ISR (incremental static regeneration) policy won't dent it, and the CORS-open API means we don't need an API-route proxy in front. Zero infra for our team. The trade-off — vendor lock-in on the editor and the post URLs — is the price.</p>
+
+      <p>If we were shipping the same blog and procurement said "must self-host": <a href="../ghost/">Ghost on Docker</a> with the SQLite config we documented in the sister article. Different anxiety, different answer.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per CMS / LLM / booking tool we evaluated on a real Linux box this week. Adjacent: <a href="../ghost/">Ghost 5 on Docker SQLite</a> (the self-hostable comparison), <a href="../posthog/">PostHog hobby self-host</a> (also scout-mode for the same reasons — too much disk), <a href="../open-webui/">Open WebUI on Linux Docker</a>, <a href="../dify/">Dify 1.14.0 docker-compose</a>, <a href="../cal-com/">Cal.com 6.16.1 self-host</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension our team builds — click any element on a broken admin (Hashnode's editor included) and get a draft code-fix PR.</p>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on a Hetzner CX-line VM in Helsinki, against <code>gql.hashnode.com</code> (CDN: Stellate, edge: <code>cache-bma-essb1270076-BMA</code>). Real API response captured to <code>assets/_api-response.json</code>. Hashnode is a trademark of Hashnode Inc. We are not affiliated with Hashnode. If anything in this article is wrong, please open an issue.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

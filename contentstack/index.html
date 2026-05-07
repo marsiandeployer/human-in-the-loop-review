@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contentstack: behind the "Contact us" wall on a 2026 enterprise headless CMS</title>
+  <meta name="description" content="We tried to evaluate Contentstack on 2026-05-07 the way a team scouting a headless CMS would: pricing page, free-trial signup, API docs, a real curl. The pricing wall, the signup-that-isn't, the actual Content Delivery API behaviour, and where Contentstack fits next to Strapi, Directus and Payload.">
+  <link rel="canonical" href="https://onout.org/contentstack/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Contentstack: behind the &quot;Contact us&quot; wall on a 2026 enterprise headless CMS">
+  <meta property="og:description" content="The pricing wall, the free-trial-that-isn't, and a real curl against the Content Delivery API. Scouting note from 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/contentstack/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Contentstack: behind the \"Contact us\" wall on a 2026 enterprise headless CMS",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/contentstack/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #ececec; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Contentstack
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Enterprise SaaS scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Contentstack AXP, CDA <code>v3.0.0</code></span>
+          <span>·</span>
+          <span>region: AWS-NA <code>cdn.contentstack.io</code></span>
+        </div>
+        <h1>Contentstack: behind the "Contact us" wall on a 2026 enterprise headless CMS</h1>
+        <p class="lede">Contentstack is the kind of headless CMS where a team scouting it can't actually scout it without being routed to a salesperson. We spent an hour trying to do the basic things — find the price, start a trial, hit the API — the way a developer comparing five tools would. The interesting part isn't a bug: it's that almost every signal a developer uses to size up a tool has been replaced with a sales funnel. Here's the friction we hit, the verbatim error JSON we pulled out of the real Content Delivery API, and where the product fits next to the open-source headless CMSes we already self-host.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever element you click on a broken admin or storefront. We are not affiliated with Contentstack, not partners, not customers. This page is a scouting note from one real evaluation session on 2026-05-07: public pricing page, public docs, the actual <code>cdn.contentstack.io</code> endpoint with a real <code>curl</code>. We did not buy a seat or sit through a demo call. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>Friction 1 — the pricing page is not a pricing page</h2>
+
+      <p>The first move on any vendor evaluation is to open <code>/pricing</code>. With most enterprise SaaS the page is at minimum a tiered table with two visible numbers and a third "Enterprise: contact us" column. With Contentstack the URL <code>https://www.contentstack.com/pricing</code> resolves, but the entire page below the header is one product pitch and one button:</p>
+
+      <figure>
+        <img src="assets/01-pricing.jpg" alt="Contentstack pricing page on 2026-05-07: dark background, headline 'We have the right solution for you', single 'Contact us' button, no numbers anywhere">
+        <figcaption>Captured 2026-05-07 from <code>https://www.contentstack.com/pricing</code> via headless Chrome at 992&times;558. Headline reads "We have the right solution for you"; the only call-to-action visible above the fold is "Contact us". No tier names, no monthly amount, no seat count.</figcaption>
+      </figure>
+
+      <p>Below the fold the page lists capabilities of the "Contentstack AXP" bundle — Headless CMS, personalization engine, real-time data activation, no-code agents and automations, brand-aware AI, AI writing assistant, visual builder, granular permissions, custom workflows, integrated app and front-end hosting. None of those features carry a price tag, a usage limit, or a tier badge. The CTAs that replace numbers are <em>Request demo</em>, <em>Start free</em>, and <em>Contact us</em>.</p>
+
+      <div class="callout-broken">
+        <div class="lbl">What gets hidden</div>
+        <p>If you're trying to put Contentstack into a five-tool comparison spreadsheet on a Tuesday afternoon, you cannot. There is no "Starter $X / Growth $Y" table. There is no per-API-call cost. There is no per-seat cost. The only number-shaped artifact on the public side is a 14-day-or-so free trial that the marketing site implies but doesn't actually let you self-start (more on that below).</p>
+      </div>
+
+      <h2>Friction 2 — "Start free" routes to a login, not a signup</h2>
+
+      <p>The marketing nav has a "Start free" link. We followed it. The destination — <code>https://app.contentstack.com/#!/signup</code> — returns HTTP 200, but the rendered page is a login form with a "Log in to Contentstack" headline, an email field, a password field, and a banner advertising ContentCon 2026. There is no visible "Create account" form on the path the marketing site sends you down. Switching to <code>/start-free</code> on the marketing domain returns a 404.</p>
+
+<pre><code>$ curl -sI -L -o /dev/null \
+    -w "%{http_code} %{url_effective}\n" \
+    https://www.contentstack.com/start-free
+404 https://www.contentstack.com/start-free
+
+$ curl -sI -L -o /dev/null \
+    -w "%{http_code} %{url_effective}\n" \
+    "https://app.contentstack.com/#!/signup"
+200 https://app.contentstack.com/#!/signup</code></pre>
+
+      <p>The 200 above is the login page; the URL fragment <code>#!/signup</code> is client-side, and on this date the SPA does not surface a self-serve registration step from a logged-out state. The path that does work in practice is the demo-request form, which collects company name, role, country, phone, and use case before anyone gets near a sandbox. That's a deliberate choice — Contentstack's go-to-market is enterprise-sales-led — but it's worth knowing before you tell your team "I'll spin one up tonight and report back."</p>
+
+      <h2>Friction 3 — the AI push, decoded</h2>
+
+      <p>"Contentstack AI" is the loudest line on the marketing site as of May 2026. Their pitch surfaces three things: brand-aware AI (a writing assistant that respects your tone-of-voice settings), no-code agents and automations (workflows that can call LLMs without writing code), and the freshly-launched ContentCon 2026 banner about an "agentic foundation." A persistent ribbon at the top of every public page reads "Building your agentic foundation | Save your spot!" — pointing at the conference, not at a feature page. Behind that, the substance we could verify in public docs is:</p>
+
+      <ul>
+        <li>An <strong>"Ask AI"</strong> widget on the docs site itself (visible in the top-right of every developer page) — a RAG-over-docs chat assistant.</li>
+        <li>A <strong>"Copy for LLM"</strong> and <strong>"View as Markdown"</strong> button on every API-reference page, which is a quietly useful change because it means you can paste their docs straight into your IDE assistant or Claude/ChatGPT without scraping HTML.</li>
+        <li>An "AI writing assistant" inside the editor — extant but gated behind the same "Request demo" wall as the rest of the product.</li>
+      </ul>
+
+      <figure>
+        <img src="assets/03-cda-docs.jpg" alt="Contentstack Content Delivery API reference page captured 2026-05-07. Shows API VERSION 3.0.0, 'Run in Postman' button, 'Copy for LLM' and 'View as Markdown' buttons, and an 'Ask AI' button in the top-right.">
+        <figcaption>The CDA reference at <code>contentstack.com/docs/developers/apis/content-delivery-api</code>, captured 2026-05-07. Note the "Copy for LLM" / "View as Markdown" affordances next to the breadcrumbs — concrete, useful, and rare on enterprise docs sites.</figcaption>
+      </figure>
+
+      <p>Net: if you strip the conference marketing, the developer-facing AI surface is a chat-over-docs and an LLM-friendly export. Both are genuinely good ideas other vendors should copy. The "agentic" framing on the marketing site is selling something further out — an event, plus a roadmap — and the gap between the conference language and what's shippable today is a thing to watch for, not against.</p>
+
+      <h2>What the API actually does — one real call</h2>
+
+      <p>The pricing page can hide numbers; the production API cannot. The Content Delivery API at <code>cdn.contentstack.io</code> is public-facing CDN; you can hit it without an account and observe its real behaviour (you'll just get an error, but that's the point — the error itself is documentation).</p>
+
+<pre><code>$ curl -sI \
+    "https://cdn.contentstack.io/v3/content_types/page/entries" \
+    -H "api_key: invalid" \
+    -H "access_token: invalid"
+
+HTTP/2 412
+date: Thu, 07 May 2026 15:23:40 GMT
+content-type: application/json
+x-runtime: 2ms
+cf-ray: 9f813a26682ad2c6-FRA
+server: cloudflare
+strict-transport-security: max-age=31557600
+vary: x-cs-variant-uid, branch, api_key, access_token
+x-served-by: FRA
+x-request-id: cb9cc2ca-17c6-411d-a18b-9940a24fc1d9</code></pre>
+
+      <p>Body of the response, verbatim:</p>
+
+<pre><code>{
+  "error_message": "We can't find that Stack. Please try again.",
+  "error_code": 109,
+  "errors": {
+    "api_key": ["is not valid."]
+  }
+}</code></pre>
+
+      <p>That is a clean, well-shaped error. <code>error_code: 109</code> is documented, the human message names the right entity ("Stack"), the field-level <code>errors</code> object tells you which header was rejected. The <code>x-runtime: 2ms</code> means the validation happened at the edge — Cloudflare-fronted, served from the FRA POP (we're on a Frankfurt-region box), with proper <code>strict-transport-security</code>. The <code>vary</code> header is correctly listing every key that affects the cached representation, including <code>api_key</code> and <code>branch</code>. As CDNs go, this one is wired with care.</p>
+
+      <p>The CDA region map is also fully public — you can pick a stack region and the CDN host follows:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Region</th><th>CDN host</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AWS North America (default)</td><td class="num">cdn.contentstack.io</td></tr>
+          <tr><td>AWS EU</td><td class="num">eu-cdn.contentstack.com</td></tr>
+          <tr><td>AWS AU</td><td class="num">au-cdn.contentstack.com</td></tr>
+          <tr><td>Azure NA</td><td class="num">azure-na-cdn.contentstack.com</td></tr>
+          <tr><td>Azure EU</td><td class="num">azure-eu-cdn.contentstack.com</td></tr>
+          <tr><td>GCP NA</td><td class="num">gcp-na-cdn.contentstack.com</td></tr>
+          <tr><td>GCP EU</td><td class="num">gcp-eu-cdn.contentstack.com</td></tr>
+        </tbody>
+      </table>
+
+      <p>Per the public docs the CDA is on API version 3.0.0; origin-server requests are rate-limited at <em>"80 requests per second per organization"</em> and CDN-cached responses are uncapped. Authentication is two headers — the stack <code>api_key</code> plus an environment-bound <code>access_token</code>. The endpoint surface a developer actually uses is small and predictable: <code>GET /v3/content_types</code>, <code>GET /v3/content_types/{uid}/entries</code>, <code>GET /v3/content_types/{uid}/entries/{entry_uid}</code>, <code>GET /v3/assets</code>, <code>GET /v3/assets/{asset_uid}</code>. None of that is groundbreaking — it's the canonical headless-CMS shape — but it's clean.</p>
+
+      <h2>Honestly, next to Strapi / Directus / Payload</h2>
+
+      <p>We've done the same scouting walk on the open-source side — <a href="../strapi/">Strapi</a>, <a href="../directus/">Directus</a>, <a href="../payload-cms/">Payload</a> — and the contrast is the article. With each of those three, in under ten minutes you can <code>docker run</code> the stack, log in with a default admin account, define a content type, and curl an entry. The first ten minutes of Contentstack are a sales form. That is the trade.</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Dimension</th><th>Contentstack (this scout)</th><th>Strapi / Directus / Payload</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Time to first <code>curl</code> against your own data</td>
+            <td>Behind a sales call. No public sandbox URL we found.</td>
+            <td>~10 minutes from <code>docker run</code> to authenticated GET.</td>
+          </tr>
+          <tr>
+            <td>Public pricing</td>
+            <td>"Contact us" only. No tier table, no per-call number.</td>
+            <td>Self-host: free. Cloud tiers: published numbers per project/seat.</td>
+          </tr>
+          <tr>
+            <td>Multi-region delivery</td>
+            <td>7 region URLs across AWS / Azure / GCP, fronted by Cloudflare.</td>
+            <td>Whatever you put in front of the container. CDN is your job.</td>
+          </tr>
+          <tr>
+            <td>Compliance posture</td>
+            <td>SOC 2, ISO 27001, HIPAA available — sold via account managers.</td>
+            <td>You inherit your own posture. Audit reports require legal work.</td>
+          </tr>
+          <tr>
+            <td>AI-in-the-editor</td>
+            <td>Brand-aware writing assistant, agent workflows — gated.</td>
+            <td>BYO LLM via plugins / hooks. Friction higher, control complete.</td>
+          </tr>
+          <tr>
+            <td>"Copy for LLM" on docs</td>
+            <td>Yes — every API-reference page exposes Markdown export.</td>
+            <td>Strapi / Directus / Payload: docs are MDX in their repos. <code>git clone</code> = same outcome.</td>
+          </tr>
+          <tr>
+            <td>Vendor lock-in</td>
+            <td>High. Content lives in their stack; export tooling exists but you're a customer.</td>
+            <td>Low. The DB is yours. Migration is a SQL dump.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>None of this is a verdict on which is "better." If you're a Fortune-500 retail brand that needs a SOC 2 / ISO 27001 vendor with eight regional POPs and a personalization engine that the legal team will let near customer data, the open-source three are not a like-for-like replacement and Contentstack's wall isn't the wall — the wall is the procurement wall, which would exist regardless. If you're a six-person startup picking the headless CMS your engineers will own end-to-end, the inability to <code>docker run</code> Contentstack on Tuesday night is a real problem and the open-source three are a better fit. The honest take is: Contentstack is sold to a buyer who isn't a developer, and its public surface is shaped accordingly.</p>
+
+      <h2>Things we'd change</h2>
+
+      <ol>
+        <li><strong>Publish at least one number on <code>/pricing</code>.</strong> "Starts at $X / month for Y entries / Z requests" is enough to land on a comparison shortlist. The current page won't make a shortlist a developer is filling out.</li>
+        <li><strong>Make "Start free" actually self-serve.</strong> A scoped sandbox stack that survives 14 days, with no demo-request gate, would let evaluators write a real integration before any phone call. Most enterprise headless CMSes (incl. Hygraph, Sanity) already do this.</li>
+        <li><strong>Land the "agentic" page before the conference.</strong> The top-of-page banner promises a future state; a current-state page enumerating what the AI features do today (with an example workflow JSON, not just video) would close the gap.</li>
+        <li><strong>Keep "Copy for LLM" on every doc page.</strong> Genuinely good. Steal-able. Other vendors should ship this.</li>
+      </ol>
+
+      <h2>What we'd actually do</h2>
+
+      <p>If we had a customer with a 50-person editorial team and a localized brand site across 8 markets, we'd budget a Contentstack demo call. The infrastructure is real, the regions are real, the API is clean, and the editor-side AI bets are credible. If we had a startup picking a CMS for the next two years of product, we'd self-host one of <a href="../strapi/">Strapi</a>, <a href="../directus/">Directus</a>, or <a href="../payload-cms/">Payload</a> and revisit the question once we had revenue and an editorial team. The mismatch between Contentstack's wall and a developer's evaluation flow isn't a flaw — it's the segmentation. Worth knowing which side of it you're on before you book the call.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>Adjacent scouting notes from the same week: <a href="../strapi/">Strapi — the open-source headless default</a>, <a href="../directus/">Directus — SQL-first with a real admin</a>, <a href="../payload-cms/">Payload — TypeScript-first headless</a>, <a href="../ghost/">Ghost — the headless-blog wedge</a>, <a href="../posthog/">PostHog hobby self-host</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin or storefront into a draft code-fix PR — it works on a Contentstack-rendered front end the same way it works on a Strapi one, because by the time the page renders it's just HTML.</p>
+
+      <h2>Demo: SimpleReview on the Contentstack pricing wall</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/iCge1C4_RWo?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots Contentstack invalid Stack credentials response and proposes the api_key + access_token header pattern">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl https://cdn.contentstack.io/v3/content_types</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -X GET https://cdn.contentstack.io/v3/content_types/page/entries</span></div>
+              <div class="sc-term-line">&nbsp;</div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 412 Precondition Failed</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; x-request-id: 1f2a3b4c-...</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; cf-ray: 9f8147...-FRA</span></div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⨯ HTTP 412 · error_code: 109</div>
+                <div class="sc-err-msg">{"error_message":"We can't find that Stack...","error_code":<span class="sc-rcount">109</span>,"errors":{<br>&nbsp;&nbsp;"api_key":"is required",<br>&nbsp;&nbsp;"access_token":"is required"<br>}}</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ HTTP 200 · 4 entries · 80 req/sec budget</span>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -X GET https://cdn.contentstack.io/v3/content_types/page/entries \</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-H "api_key: $CS_API_KEY" \</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-H "access_token: $CS_DELIVERY_TOKEN"</span></div>
+                <div class="sc-term-line">&nbsp;</div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 200</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; X-RateLimit-Limit: 80</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; X-RateLimit-Remaining: 79</span></div>
+                <div class="sc-term-line"><span class="sc-term-out" style="color:#7ee787">{"entries":[{"uid":"blt...","title":"Home","url":"/"},...]}</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">api_key &amp; access_token missing</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Status</span><span class="sc-sb-v">412</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Code</span><span class="sc-sb-v">109</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">CDA wants <code style="font-size:8px">api_key</code> + <code style="font-size:8px">access_token</code> headers — not Authorization Bearer.</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">200 with entries. Rate-limit headers visible. 80 req/s budget.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(contentstack): use header auth<br>1 line · client.ts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select <strong>error_code 109</strong> → <strong>Fix it</strong> → header auth wired in</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+      <div></div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 145 at 992&times;558, against the public marketing site, public docs, and <code>cdn.contentstack.io</code> CDN endpoint. Contentstack and Contentstack AXP are trademarks of Contentstack Inc. Sources: <a href="https://www.contentstack.com/pricing" target="_blank" rel="noopener">contentstack.com/pricing</a>, <a href="https://www.contentstack.com/docs/developers/apis/content-delivery-api" target="_blank" rel="noopener">CDA reference</a>, <code>curl https://cdn.contentstack.io/v3/content_types/page/entries</code> with invalid headers (HTTP 412, request id <code>cb9cc2ca-17c6-411d-a18b-9940a24fc1d9</code>).
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

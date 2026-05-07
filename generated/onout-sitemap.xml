@@ -296,6 +296,10 @@
     <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
+    <loc>https://onout.org/contentstack/</loc>
+    <lastmod>2026-05-07T15:27:03+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://onout.org/craft-cms/</loc>
     <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
@@ -338,6 +342,10 @@
   <url>
     <loc>https://onout.org/dashsource/</loc>
     <lastmod>2026-04-30T15:19:07+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://onout.org/decap-cms/</loc>
+    <lastmod>2026-05-07T15:31:34+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/dex/</loc>
@@ -449,7 +457,11 @@
   </url>
   <url>
     <loc>https://onout.org/ghost/</loc>
-    <lastmod>2026-05-07T14:43:40+00:00</lastmod>
+    <lastmod>2026-05-07T15:23:01+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://onout.org/hashnode/</loc>
+    <lastmod>2026-05-07T15:26:51+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/joomla/</loc>
@@ -690,6 +702,10 @@
   <url>
     <loc>https://onout.org/statamic/</loc>
     <lastmod>2026-05-05T15:47:30+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://onout.org/storyblok/</loc>
+    <lastmod>2026-05-07T15:27:22+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/strapi/</loc>

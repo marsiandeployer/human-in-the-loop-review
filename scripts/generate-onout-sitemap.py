@@ -44,6 +44,10 @@ CMS_SLUGS = (
     "cal-com",
     "posthog",
     "ghost",
+    "hashnode",
+    "storyblok",
+    "contentstack",
+    "decap-cms",
 )
 RU_CMS_SLUGS = {"bitrix", "webasyst"}
 

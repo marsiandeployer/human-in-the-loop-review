@@ -1,0 +1,63 @@
+{
+    "data": {
+        "publication": {
+            "title": "Hashnode Engineering",
+            "displayTitle": null,
+            "url": "https://engineering.hashnode.com",
+            "descriptionSEO": "Do you want to get a glimpse of how hashnode builds an amazing platform for the incredible number of writers &amp; readers? This blog gives you insight into the engineering side of Hashnode.",
+            "favicon": "https://cdn.hashnode.com/res/hashnode/image/upload/v1635768915447/QXuET0wNM.png",
+            "posts": {
+                "edges": [
+                    {
+                        "node": {
+                            "id": "669e419457891592c93297c0",
+                            "title": "How  we detected GQL caching issues with an ESLint plugin",
+                            "brief": "Introduction\nOver the past year at Hashnode, we have been continuously developing GraphQL APIs to enable users to interact with their data and perform various operations. We utilize Stellate as the GQL CDN and take advantage of its Edge Caching capab...",
+                            "slug": "how-we-detected-gql-caching-issues-with-an-eslint-plugin",
+                            "publishedAt": "2024-07-22T11:25:08.013Z",
+                            "readTimeInMinutes": 4,
+                            "views": 743,
+                            "url": "https://engineering.hashnode.com/how-we-detected-gql-caching-issues-with-an-eslint-plugin",
+                            "author": {
+                                "username": "lakbychance",
+                                "name": "Lakshya Thakur"
+                            }
+                        }
+                    },
+                    {
+                        "node": {
+                            "id": "665dd5edb5e9903c995b8645",
+                            "title": "Hashnode \ud83e\udd19\ud83c\udffd calls your endpoints. Serverless Webhooks with AWS Step Functions",
+                            "brief": "In our last internal hackathon, Jannik Wempe and Sandro Volpicella built one of the most requested enterprise features - Webhooks.\nThe problem.\nImagine you host your headless blog on Hashnode. Your frontend consists of statically generated HTML pages...",
+                            "slug": "hashnode-calls-your-endpoints-serverless-webhooks-with-aws-step-functions",
+                            "publishedAt": "2024-06-03T14:40:45.447Z",
+                            "readTimeInMinutes": 5,
+                            "views": 863,
+                            "url": "https://engineering.hashnode.com/hashnode-calls-your-endpoints-serverless-webhooks-with-aws-step-functions",
+                            "author": {
+                                "username": "SandroVolpicella",
+                                "name": "Sandro Volpicella"
+                            }
+                        }
+                    },
+                    {
+                        "node": {
+                            "id": "65a68126b7de1c44080a3881",
+                            "title": "Setting Up Post Schedules with EventBridge Scheduler & CDK",
+                            "brief": "One key feature of any blogging platform is the ability to schedule posts for future publication. Hashnode introduced this functionality in June 2022.\nAt that time, the entire feature was based on a CRON job. This CRON job managed all various states ...",
+                            "slug": "setting-up-post-schedules-with-eventbridge-scheduler-cdk",
+                            "publishedAt": "2024-01-16T13:14:14.744Z",
+                            "readTimeInMinutes": 6,
+                            "views": 2810,
+                            "url": "https://engineering.hashnode.com/setting-up-post-schedules-with-eventbridge-scheduler-cdk",
+                            "author": {
+                                "username": "SandroVolpicella",
+                                "name": "Sandro Volpicella"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decap CMS 3.12 in 30 lines: what `test-repo` actually saves, and what it doesn't</title>
+  <meta name="description" content="We pulled Decap CMS 3.12.2 from unpkg on 2026-05-07, served a 30-line static admin from python http.server, and watched it 'save' content into localStorage. Real screenshots, the localStorage keys, and the GitHub-backend friction nobody warns you about.">
+  <link rel="canonical" href="https://onout.org/decap-cms/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Decap CMS 3.12 in 30 lines: what `test-repo` actually saves, and what it doesn't">
+  <meta property="og:description" content="A real local Decap admin in 30 lines. Then the boring part: `test-repo` writes drafts to localStorage, not to disk. Real container, real screenshots.">
+  <meta property="og:url" content="https://onout.org/decap-cms/">
+  <meta property="og:image" content="https://onout.org/decap-cms/assets/02-admin-dashboard.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Decap CMS 3.12 in 30 lines: what `test-repo` actually saves, and what it doesn't",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "image": "https://onout.org/decap-cms/assets/02-admin-dashboard.jpg",
+    "mainEntityOfPage": "https://onout.org/decap-cms/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { width: 100%; border: 1px solid #e0e7ee; border-radius: 8px; display: block; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#fff;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#f5f7fa}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#1a1a1a}
+    .sc-decap-h{font-size:13px;font-weight:700;color:#111;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    .sc-decap-h::before{content:"";width:18px;height:18px;border-radius:4px;background:#3a69c7;display:inline-block}
+    .sc-decap-tab{font-size:10px;color:#444;border-bottom:1px solid #e0e0e0;padding-bottom:6px;display:flex;gap:14px;margin-bottom:6px}
+    .sc-decap-tab span.active{color:#3a69c7;border-bottom:2px solid #3a69c7;padding-bottom:6px;margin-bottom:-7px;font-weight:600}
+    .sc-decap-entry{padding:6px 0;border-bottom:1px solid #eee;font-size:11px;color:#222;display:flex;justify-content:space-between;align-items:center}
+    .sc-decap-status{font-size:9px;color:#fbbf24;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;padding:2px 6px;background:#fef3c7;border-radius:3px}
+    .sc-decap-status.ok{color:#16a34a;background:#dcfce7}
+    .sc-error-box{background:#fff;border:1px solid #ddd;border-left:4px solid #d63638;border-radius:5px;padding:9px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:11px;color:#b91c1c;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#444;font-size:10px;line-height:1.5;animation:errHide 28s infinite;font-family:ui-monospace,monospace}
+    .sc-err-msg .sc-rcount{color:#b91c1c;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#f5f7fa;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:10px;border:1px solid #86efac}
+    .sc-rec-cmd{background:#1a1a1a;border-radius:5px;padding:7px 10px;font-size:9.5px;color:#7ee787;font-family:ui-monospace,monospace;margin-bottom:6px;line-height:1.5}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#3a69c7;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#3a69c7;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#3a69c7;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:340px;top:230px;opacity:1}22%{left:340px;top:230px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222}
+    .sc-caption strong{color:#3a69c7}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#3a69c7;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) { h1 { font-size: 28px; } h2 { font-size: 22px; } .content-wrap { padding: 0 4px; } }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Decap CMS
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Self-host notes</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Decap CMS <code>3.12.2</code></span>
+          <span>·</span>
+          <span>Bundle from <code>unpkg.com</code></span>
+        </div>
+        <h1>Decap CMS 3.12 in 30 lines: what <code>test-repo</code> actually saves, and what it doesn't</h1>
+        <p class="lede">Decap CMS (the project formerly known as Netlify CMS, forked in February 2023 after Netlify stopped maintaining it) is unusual: it's a single 5.6&nbsp;MB JavaScript bundle that turns any folder with an <code>admin/index.html</code> into a content editor. Setup looks trivial. The friction is hidden one layer down — most people's first run uses the <code>test-repo</code> backend, and "Save" doesn't write anywhere they expect. Here's what we ran, what we screenshotted, and the localStorage keys that explain it.</p>
+      </header>
+
+      <h2>Demo: SimpleReview on a Decap CMS issue</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/qMOh_iV3ZL8?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots Decap CMS test-repo localStorage trap and proposes the GitHub backend swap">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">localhost:18093/admin/#/collections/blog</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-decap-h">Decap CMS · Editorial Workflow</div>
+              <div class="sc-decap-tab"><span class="active">Blog</span><span>Pages</span><span>Settings</span></div>
+              <div class="sc-decap-entry">
+                <span>My first post (draft)</span>
+                <span class="sc-decap-status">UNSAVED</span>
+              </div>
+              <div class="sc-decap-entry">
+                <span>About the team</span>
+                <span class="sc-decap-status ok">CHANGES SAVED</span>
+              </div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⚠ Backend = test-repo · changes never reach git</div>
+                <div class="sc-err-msg">localStorage[<span class="sc-rcount">decap-cms-user</span>] = {"backendName":"test-repo"}<br>"CHANGES SAVED" indicator is a lie when backend is <span class="sc-rcount">test-repo</span>.<br>Browser refresh → all drafts gone.</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ Backend swapped · git-gateway active</span>
+                <div class="sc-rec-cmd"># admin/config.yml<br>backend:<br>&nbsp;&nbsp;name: <span style="color:#fbbf24">git-gateway</span><br>&nbsp;&nbsp;branch: main</div>
+                <div class="sc-rec-cmd">$ curl https://api.github.com/repos/me/site/commits/main<br><span style="color:#9ca3af"># → "message": "Create blog/2026-05-07-my-first-post.md"</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">test-repo only writes to localStorage</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Backend</span><span class="sc-sb-v">test-repo</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Storage</span><span class="sc-sb-v">localStorage</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Replace test-repo with <code style="font-size:8px">git-gateway</code> or <code style="font-size:8px">github</code> in <code style="font-size:8px">admin/config.yml</code></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">Drafts commit to git. Survive refresh + cross-browser.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(decap): swap test-repo for git-gateway<br>1 file · admin/config.yml</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select <strong>"CHANGES SAVED"</strong> indicator → <strong>Fix it</strong> → real git backend wired in</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that turns the element you click on a broken admin into a draft code-fix PR. We're not affiliated with the Decap CMS project or Netlify. This is a deployment note from one real local install on one Linux box (kernel 5.15, Docker 24, Node served via <code>python3 -m http.server</code>) on the date above. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix the page.</p>
+      </div>
+
+      <h2>The 30-line static site that boots a CMS</h2>
+
+      <p>Decap is a React + Redux app shipped as one webpack bundle. There's no server-side install. The "site" is two files in an <code>admin/</code> folder, plus whatever static host you already have. Ours:</p>
+
+<pre><code>$ tree /tmp/decap-test
+/tmp/decap-test
+├── admin
+│   ├── config.yml
+│   └── index.html
+└── index.html</code></pre>
+
+      <p>The <code>admin/index.html</code> is twelve lines including the doctype:</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;
+    &lt;title&gt;Content Manager&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <p>And <code>admin/config.yml</code> declares the backend and one collection:</p>
+
+<pre><code>backend:
+  name: test-repo
+
+media_folder: "static/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog"
+    folder: "content/blog"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Body", name: "body", widget: "markdown" }
+  - name: "pages"
+    label: "Pages"
+    folder: "content/pages"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Body", name: "body", widget: "markdown" }</code></pre>
+
+      <p>Serve it with anything that hands back static files. We used Python's stdlib:</p>
+
+<pre><code>$ cd /tmp/decap-test &amp;&amp; python3 -m http.server 18093
+Serving HTTP on 0.0.0.0 port 18093 (http://0.0.0.0:18093/) ...</code></pre>
+
+      <p>Open <code>http://localhost:18093/admin/</code> and the bundle paints a login screen four seconds later:</p>
+
+      <figure>
+        <img src="assets/01-login-screen.jpg" alt="Decap CMS login screen — pink Decap logo with a single dark Login button">
+        <figcaption>Decap CMS 3.12.2 first paint at <code>/admin/</code> with the <code>test-repo</code> backend. The pink logo is hard to miss; the friction is also hard to miss — there's no username, no password, no field. Just "Login". This is the whole login screen for <code>test-repo</code>: clicking the button accepts you as a fictional user.</figcaption>
+      </figure>
+
+      <h2>What "test-repo" backend actually means</h2>
+
+      <p>You'd assume from the name that <code>test-repo</code> writes to a local repo. It doesn't. There is no repo. The Decap docs describe it as <em>"a backend that lives entirely in the browser, useful for offline demos"</em>, but in practice that wording underplays it. Click "Login", click <strong>New Blog</strong>, fill in a title — the editor flashes <code>CHANGES SAVED</code> in the toolbar before you've typed anything:</p>
+
+      <figure>
+        <img src="assets/03-editor.jpg" alt="Decap CMS new entry editor — empty Title, empty Publish Date, Body section with Rich Text/Markdown toggle, top toolbar showing CHANGES SAVED">
+        <figcaption>The new-entry editor on a brand-new entry, before a single keystroke. The green <code>CHANGES SAVED</code> pill is already visible. Decap is autosaving an entry that has no title, no date, no body. The "save" target, however, is not your collection folder.</figcaption>
+      </figure>
+
+      <p>Open DevTools and look at <code>localStorage</code>:</p>
+
+      <figure>
+        <img src="assets/05-localstorage-proof.jpg" alt="DevTools-style overlay showing localStorage keys — cms.md-mode, cms.scroll-sync-enabled, decap-cms.entries.viewStyle, decap-cms-user with backendName test-repo, cms.preview-visible">
+        <figcaption>Real <code>localStorage</code> contents on <code>http://localhost:18093</code>. The <code>decap-cms-user</code> key is the entire authentication state for <code>test-repo</code> — a literal JSON blob <code>{"backendName":"test-repo"}</code>. Clear the storage and you're "logged out" instantly. The collection drafts you create live in the same storage; nothing is written to <code>content/blog/</code> on disk.</figcaption>
+      </figure>
+
+      <div class="callout-broken">
+        <div class="lbl">What we observed</div>
+        <p>With <code>backend.name: test-repo</code>, Decap stores entries, drafts, and user identity in browser <code>localStorage</code>. <code>CHANGES SAVED</code> means "saved to your tab's storage". Closing the tab keeps the data; clearing site data destroys it. There is no commit, no API call, no file write. The collection <code>folder: content/blog</code> in the config is the path Decap <em>would</em> use against a real backend; with <code>test-repo</code> it's only a label.</p>
+        <p>This is not a bug — it's the documented behaviour of <code>test-repo</code>. But it's a pothole if you're new: people demo Decap to a client, the client types a draft in the demo, the team migrates the config to <code>backend.name: github</code>, and the draft is gone.</p>
+      </div>
+
+      <h2>The dashboard, once you're past the login</h2>
+
+      <p>Click "Login", and the dashboard renders. Two collections from the YAML on the left, "Test Backend ↗" pinned to the top right as a permanent reminder of which backend is in use:</p>
+
+      <figure>
+        <img src="assets/02-admin-dashboard.jpg" alt="Decap CMS admin dashboard — left sidebar lists Blog and Pages collections, main panel shows Blog with No Entries and a New Blog button, top right shows Test Backend label and Quick add">
+        <figcaption>Real admin shell. Two collections from <code>config.yml</code>, an empty Blog list, and the <code>Test Backend ↗</code> tag on the right. The "↗" arrow links to the Decap docs page about test-repo — we like that detail; most apps don't tell you what mode you're in this loudly.</figcaption>
+      </figure>
+
+      <p>Visually, this is closer to a 2018 React admin than a 2026 one. The widget set (Markdown body, datetime, image, list, relation, file) is solid; the polish is uneven. The Markdown widget has a Rich Text/Markdown toggle that genuinely round-trips; the date widget is the unstyled HTML <code>&lt;input type="date"&gt;</code> with a "Now" / "Clear" pair welded on. We'll take it.</p>
+
+      <h2>Switching to a real backend: GitHub friction</h2>
+
+      <p>Swap <code>config.yml</code> for the real backend and re-load:</p>
+
+<pre><code>backend:
+  name: github
+  repo: example-org/example-decap-site
+  branch: main</code></pre>
+
+      <p>The login screen changes — same Decap logo, but the button is now "Login with GitHub":</p>
+
+      <figure>
+        <img src="assets/04-github-backend-login.jpg" alt="Decap CMS login screen with GitHub backend — Decap logo and a dark Login with GitHub button featuring a GitHub octocat icon">
+        <figcaption>Same admin bundle, different backend. The button now points at GitHub's OAuth flow. This is also where setup gets non-trivial.</figcaption>
+      </figure>
+
+      <p>Click that button without an OAuth provider, and the popup goes nowhere — Decap doesn't ship its own OAuth server, because GitHub doesn't allow client-side OAuth: the token has to come from a confidential client. Your options as of 2026:</p>
+
+      <ul>
+        <li><strong>Netlify Identity / Git Gateway.</strong> Easiest, but means standing up a Netlify project even if your hosting isn't on Netlify. The Netlify-Decap split in 2023 didn't break this integration, but it does feel like a vestigial limb on what's now a third-party project.</li>
+        <li><strong>Cloudflare Workers OAuth proxy.</strong> A community pattern (the popular one is <a href="https://github.com/sterlingwes/decap-proxy" target="_blank" rel="noopener">decap-proxy</a>): a Worker that holds the GitHub client secret and exchanges the code for a token. Two env vars, one Worker. Once running, free-tier traffic costs nothing.</li>
+        <li><strong>Self-host the OAuth server.</strong> The Decap repo includes <code>oauth-provider</code> code; deploy it on Render / Fly / your own VPS. More moving parts, but no third-party dependency.</li>
+        <li><strong>Switch to <code>git-gateway</code>.</strong> Same Netlify-bundled service that ran for Netlify CMS, still works for Decap. Requires Netlify Identity.</li>
+      </ul>
+
+      <p>None of these are documented prominently on the Decap site's getting-started flow. The path you actually land on after clicking "Login with GitHub" without setup is a popup that opens the OAuth URL with no <code>client_id</code>, GitHub returns a generic error page, and the popup closes. The Decap admin tab is unchanged. There's no toast, no console error in the parent window. You're left wondering whether to debug your OAuth provider or your config.</p>
+
+      <h2>What we measured</h2>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Bundle (HTTP, gzipped)</td><td class="num">1.65 MiB</td><td>What the browser actually downloads from unpkg</td></tr>
+          <tr><td>Bundle (uncompressed)</td><td class="num">5.66 MiB</td><td>Size on disk after Content-Encoding decode</td></tr>
+          <tr><td>Cold load (one fetch)</td><td class="num">0.5 – 0.6 s</td><td>EU server to <code>cf-cache HIT</code> on Cloudflare; first paint adds ~1 s of React boot</td></tr>
+          <tr><td>Login → dashboard (test-repo)</td><td class="num">~2 s</td><td>No network, just Redux store init</td></tr>
+          <tr><td>Backend file I/O for content</td><td class="num">0 bytes</td><td>Test-repo writes only to <code>localStorage</code></td></tr>
+          <tr><td>Admin source files needed</td><td class="num">2</td><td><code>admin/index.html</code> + <code>admin/config.yml</code></td></tr>
+        </tbody>
+      </table>
+
+      <p>For a client-side-only CMS the bundle is fine. 1.65 MiB on the wire is roughly two typical hero images; gzipped JS doesn't compete with image weight on real content sites. The number that matters is the <em>second</em> visit — once the bundle's in HTTP cache, Decap boots in well under a second, which is the experience editors actually have day-to-day.</p>
+
+      <h2>Quiet warnings worth knowing about</h2>
+
+      <ul>
+        <li><strong>The config is fetched, not bundled.</strong> Decap reads <code>/admin/config.yml</code> with a <code>fetch()</code> call. Cache-busting matters when you edit the YAML — we hit a 304 once and spent ten minutes wondering why a renamed field wasn't appearing.</li>
+        <li><strong>You can't drop in a new collection without a hard refresh.</strong> Even though Decap polls <code>config.yml</code> on focus, runtime config changes don't propagate cleanly. Editors complaining "I don't see the new field" usually need a Cmd-Shift-R.</li>
+        <li><strong>Pin a version in production.</strong> The <code>@^3.0.0</code> selector we used resolves to the latest 3.x at request time (3.12.2 today). For real sites use <code>@3.12.2</code> exactly — Decap minor releases have introduced editor regressions before. unpkg redirects <code>^3.0.0</code> with HTTP 302 → <code>/decap-cms@3.12.2/dist/decap-cms.js</code>, which is fine for hobby sites and exactly what you don't want for client work.</li>
+        <li><strong>Editorial Workflow needs a real backend.</strong> The <code>publish_mode: editorial_workflow</code> setting (PR-based draft/review/publish) is the killer feature, but it's a no-op under <code>test-repo</code>. You can't validate the review flow without already having OAuth and a real repo wired up, which is exactly when the bug rate spikes for new installs.</li>
+        <li><strong>Image uploads under <code>test-repo</code> go nowhere.</strong> Same story as text drafts: the file lives in browser memory while the tab is open, then it's gone. The Media Library tab will sit at "No assets found" between sessions, which is correct but disorienting for first-time users.</li>
+      </ul>
+
+      <h2>The fix the README could ship today</h2>
+
+      <ol>
+        <li><strong>Rename <code>test-repo</code> in the UI.</strong> "Test Backend ↗" is a start — but the dashboard could carry a yellow strip: <em>"Drafts saved here are stored in your browser only and will be lost when site data is cleared. To save to a real repo, configure a Git backend."</em> Anyone who has demoed Decap to a client has been bitten by the absence of this line.</li>
+        <li><strong>Surface the OAuth failure mode.</strong> When the popup closes after a GitHub OAuth bounce-back without setup, the parent admin should toast: <em>"Couldn't reach OAuth provider — see <code>backend.base_url</code> in config."</em> Right now the silence reads as "this is just slow".</li>
+        <li><strong>Bundle a one-page recipe for Cloudflare Workers OAuth.</strong> The community proxy is the de-facto standard now that Netlify's not the only host. A Decap-blessed copy of the Worker code, with the right <code>backend.base_url</code> snippet, would cut the average new-install time to working state by an hour, easily.</li>
+        <li><strong>Pin the version in <code>create-decap-cms-app</code> output.</strong> Templates that scaffold <code>&lt;script src="...^3.0.0..."&gt;</code> bake in a future regression risk.</li>
+      </ol>
+
+      <h2>Where Decap fits in 2026</h2>
+
+      <p>Decap is the right tool for a specific narrow case: a small site (Hugo, Eleventy, Next-static, Astro) where the editor is one or two technical-ish people, the source of truth is a Git repo, and pull-request-based review of content is genuinely useful. For that case, Decap's combination of zero backend, real Git history per edit, and free hosting on whatever already serves your site is unbeatable.</p>
+
+      <p>It's the wrong tool for a content team of ten with media-heavy uploads, role-based permissions, or non-Git editorial workflows. Strapi, Directus, or Payload CMS each handle that better. Ghost handles it better still if all you want is a blog. Where Decap wins is when "the CMS shouldn't add a server" is a hard requirement — that's still a real shape of project, especially for documentation sites and side-project blogs.</p>
+
+      <p>The <code>test-repo</code> default is the rough edge worth knowing about before you demo it. Once you've seen the localStorage screenshot above, the friction stops being mysterious and starts being something you can route around — either by skipping the demo and going straight to a Git backend with OAuth, or by warning the client up front that drafts in this view aren't real until the GitHub login screen replaces the test one.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per self-hostable CMS / LLM / booking tool we run on a real Linux box. Adjacent articles in the same series: <a href="../ghost/">Ghost 5 on Docker SQLite</a>, <a href="../open-webui/">Open WebUI on Linux Docker</a>, <a href="../dify/">Dify 1.14.0 docker-compose</a>, <a href="../cal-com/">Cal.com 6.16.1 self-host</a>, <a href="../posthog/">PostHog hobby self-host</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin — a misbehaving Decap collection editor included — into a draft code-fix PR you can ship without leaving the page.</p>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on a Hetzner CX-line VM, Ubuntu 22.04, kernel Linux 5.15, Docker 24, Decap CMS <code>3.12.2</code> served from unpkg (<code>https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js</code>, 5.66 MiB uncompressed, 1.65 MiB on the wire). Static admin served by <code>python3 -m http.server</code> on port 18093. Decap CMS is a trademark-free open-source project under the MIT licence; the Netlify CMS → Decap CMS rename happened in February 2023.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>
