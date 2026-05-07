@@ -337,7 +337,7 @@ Source of truth for **currently shipped CMS hubs** is code, not memory:
 - `README.md` → public project-level summary table.
 - This wiki section → operational checklist for forum links, content planning, and future CMS phases.
 
-Live indexed CMS hubs (22):
+Live indexed CMS hubs (26):
 
 | Phase | CMS / platform | Slug | Public URL | RU sibling |
 |-------|----------------|------|------------|------------|
@@ -363,6 +363,10 @@ Live indexed CMS hubs (22):
 | 2 | DNN | `dnn` | https://onout.org/dnn/ | — |
 | 2 | Concrete CMS | `concrete-cms` | https://onout.org/concrete-cms/ | — |
 | 2 | TYPO3 | `typo3` | https://onout.org/typo3/ | — |
+| 1.5 | Open WebUI (LLM admin) | `open-webui` | https://onout.org/open-webui/ | — |
+| 1.5 | Dify (LLM workflow) | `dify` | https://onout.org/dify/ | — |
+| 1.5 | Cal.com (booking) | `cal-com` | https://onout.org/cal-com/ | — |
+| 1.5 | PostHog (analytics) | `posthog` | https://onout.org/posthog/ | — |
 
 Separate platform cluster, not part of `CMS_SLUGS` yet:
 
@@ -387,6 +391,31 @@ Planned CMS/platform backlog from GitHub issue #66 (no `/root/vibers/<slug>/inde
 | 10 | E-commerce frameworks | Sylius, Saleor |
 
 When adding a new CMS hub, update all four places in the same task: `scripts/generate-onout-sitemap.py`, `scripts/lint-cms-hubs.py`, `README.md`, and this wiki's **CMS announcement links** table. Then run `timeout 30s scripts/generate-onout-sitemap.py` and `timeout 30s scripts/lint-cms-hubs.py`.
+
+## 2026-05-07 deploy notes (Issue #69 closeout, Issue #70 in progress)
+
+**4 first-hand articles + voiced banners shipped:**
+
+| Lib | URL | Banner | Real artifact captured |
+|-----|-----|--------|------------------------|
+| Open WebUI | https://onout.org/open-webui/ | `banner_voiced.mp4` | `host.docker.internal` doesn't resolve on Linux Docker → silent `{"models":[]}` |
+| Dify 1.14.0 | https://onout.org/dify/ | `banner_voiced.mp4` | `plugin_daemon` panic-loop without `--profile=postgresql` flag |
+| Cal.com 6.16.1 | https://onout.org/cal-com/ | `banner_voiced.mp4` | Image doesn't run `prisma migrate deploy` on boot; needs undocumented `DATABASE_DIRECT_URL` |
+| PostHog hobby | https://onout.org/posthog/ | `banner_voiced.mp4` | Compose pull fails on empty `REGISTRY_URL`; 19 GB images; "really need 8GB" warning |
+
+**Approach:** rejected the pre-scheduled "4 hubs × 5 cluster articles via parallel agents" plan as scaled-content abuse per Google March 2026 spam policy (`developers.google.com/search/docs/essentials/spam-policies`, last updated 2026-04-13). Replaced with one honest first-hand article per lib — actually deploy on this VM, capture real broken state, document fix. Same rule going forward: **no first-hand artifact = don't ship the article.**
+
+**Headless CMS Semrush research (Issue #70):**
+
+- 33 CSVs in `docs/keywords/headless-cms-2026-05-07/` (broad-match, US, single-seed-per-CMS)
+- Summary at `docs/keywords/headless-cms-2026-05-07/_summary.md` with tier rec
+- **Tier 1 (≥1k brand kw):** Storyblok, Ghost, Contentstack, Hashnode, Decap CMS — viable for first-hand articles
+- **Tier 2 (170–590):** Hygraph, DatoCMS, Sitecore XM, ButterCMS, TinaCMS, Kontent.ai, Prismic, Optimizely, KeystoneJS, ApostropheCMS — comparison-page material
+- **Tier 3 (<170):** the rest — round-up only
+- **Re-run queue:** `sanity` (timed out), `crystallize` / `contentful` / `builder.io` / `keystatic` / `vault-cms` (bare-name seeds pulled non-product noise — re-query with disambiguating terms)
+- **Bogus entry:** "Craft Cross CMS" is not a real product (working list = 41, not 42)
+
+**Banner recording params (memory):** Emulation viewport 800×460, ScreenCast maxWidth 800, ffmpeg crop `720:446:40:0`, 14.714 fps (412 frames / 28 s), TTS via OpenAI tts-1 voice=nova, 4 segments mixed via `adelay+amix`. Recorder script: `scripts/record-article-banner.js`.
 
 Rules for adding or editing multilingual articles:
 
