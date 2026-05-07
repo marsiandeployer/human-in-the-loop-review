@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ghost 5 on Docker SQLite: the two env vars the README forgets</title>
+  <meta name="description" content="We pulled ghost:5-alpine on 2026-05-07 and watched it crash with a TypeError on the documented `database__client=sqlite3` config. Real container, two missing env vars, full boot in 4.9 seconds once they're set.">
+  <link rel="canonical" href="https://onout.org/ghost/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Ghost 5 on Docker SQLite: two env vars the README forgets">
+  <meta property="og:description" content="`database__client=sqlite3` alone crashes Ghost with `TypeError: String expected`. Real container, real fix.">
+  <meta property="og:url" content="https://onout.org/ghost/">
+  <meta property="og:image" content="https://onout.org/ghost/assets/01-admin-setup.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Ghost 5 on Docker SQLite: the two env vars the README forgets",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "image": "https://onout.org/ghost/assets/01-admin-setup.jpg",
+    "mainEntityOfPage": "https://onout.org/ghost/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { width: 100%; border: 1px solid #e0e7ee; border-radius: 8px; display: block; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) { h1 { font-size: 28px; } h2 { font-size: 22px; } .content-wrap { padding: 0 4px; } }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Ghost
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Self-host notes</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Ghost <code>5.130.6</code></span>
+          <span>·</span>
+          <span>Image <code>ghost:5-alpine</code></span>
+        </div>
+        <h1>Ghost 5 on Docker SQLite: the two env vars the README forgets</h1>
+        <p class="lede">The Ghost docker README's example uses MySQL. The image, however, supports SQLite for hobby and dev installs — but the moment you set <code>database__client=sqlite3</code> and nothing else, the container starts, prints "Your site is now available", then crashes within four seconds with <code>TypeError: String expected</code>. Two more env vars (one of them undocumented in the README) make it boot cleanly. Here's the exact log, the fix, and the real numbers.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever site you click. Not affiliated with Ghost Foundation. This page is a deployment note from one real install on one Linux box, dated above. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>The docker run that crashes</h2>
+
+<pre><code>docker run -d --name ghost-test -p 18082:2368 \
+  -e url=http://localhost:18082 \
+  -e database__client=sqlite3 \
+  ghost:5-alpine</code></pre>
+
+      <p>This is the natural extrapolation from the official README's MySQL example. <code>database__client=sqlite3</code> is a valid Knex client. So we'd expect Ghost to pick a default file path and run. It does not.</p>
+
+<pre><code>$ docker logs ghost-test
+[INFO] Ghost is running in production...
+[INFO] Your site is now available on http://localhost:18082/
+[INFO] Ctrl+C to shut down
+[INFO] Ghost server started in 0.308s
+
+Could not find `connection.filename` in config.
+   Please specify the database path and name to avoid errors.
+   (see docs https://knexjs.org/guide/#configuration-options)
+
+[ERROR] String expected
+"Unknown database error"
+Error ID: 500
+TypeError: String expected
+    at /var/lib/ghost/versions/5.130.6/node_modules/knex-migrator/lib/database.js:57:19
+    at /var/lib/ghost/versions/5.130.6/node_modules/knex/lib/dialects/sqlite3/index.js:99:18
+[WARN] Ghost is shutting down
+[WARN] Ghost has shut down
+[WARN] Your site is now offline
+[WARN] Ghost was running for a few seconds</code></pre>
+
+      <div class="callout-broken">
+        <div class="lbl">Broken default — observed locally</div>
+        <p>Ghost 5.130.6 prints <code>Your site is now available</code> at <code>0.3 s</code> — that line is misleading. The actual database client doesn't acquire a connection until the first request, and at that point Knex tries to read <code>connection.filename</code> from config. It's <code>undefined</code>, the SQLite driver throws <code>TypeError: String expected</code>, the error handler catches it as <em>"Unknown database error"</em>, and the container exits within four seconds.</p>
+        <p>The advisory line above the crash — <em>"Could not find connection.filename in config"</em> — is the right diagnostic, but it scrolls past the green INFO logs and most users miss it.</p>
+      </div>
+
+      <h2>The two env vars that make it work</h2>
+
+      <p>Knex needs a real path. Ghost also wants a SQLite-friendly default behaviour flag. Set both:</p>
+
+<pre><code>docker run -d --name ghost-test -p 18082:2368 \
+  -e url=http://localhost:18082 \
+  -e database__client=sqlite3 \
+  -e database__connection__filename=/var/lib/ghost/content/data/ghost.db \
+  -e database__useNullAsDefault=true \
+  -v ghost-data:/var/lib/ghost/content \
+  ghost:5-alpine</code></pre>
+
+      <div class="callout-fix">
+        <div class="lbl">Fix summary</div>
+        <p><strong>1.</strong> <code>database__connection__filename</code> — absolute path to the SQLite file inside the container. Ghost expects it under <code>/var/lib/ghost/content/data/</code> (anywhere else and the image's volume layout doesn't help you).</p>
+        <p><strong>2.</strong> <code>database__useNullAsDefault=true</code> — the Knex flag that turns off <code>undefined</code>-becomes-<code>NULL</code> warnings. Ghost's migrations run cleaner with it on. Without it, you get a console warning per insert and slower migration boots.</p>
+        <p><strong>3.</strong> A volume mount on <code>/var/lib/ghost/content</code> — otherwise the SQLite file vanishes on container restart. Strictly speaking optional, but you almost certainly want it.</p>
+      </div>
+
+      <h2>What boot looks like once env is right</h2>
+
+      <p>Same image, same docker run, just with the two extra env vars. Logs (trimmed):</p>
+
+<pre><code>[INFO] Ghost server started in 0.32s
+[WARN] Missing mail.from config, falling back to a generated email address.
+       Please update your config file and set a valid from address
+[INFO] Invalidating assets for regeneration
+[INFO] Adding offloaded job to the inline job queue
+[INFO] Stripe not configured - skipping migrations
+[INFO] URL Service ready in 1142ms
+[INFO] Scheduling job clean-expired-comped at 19 5 1 * * *
+[INFO] Scheduling job clean-tokens at 25 42 6 * * *
+[INFO] Scheduling job update-check at 57 5 4 * * *
+[INFO] Ghost booted in 4.909s</code></pre>
+
+      <p>Ghost reports two start times in different log lines: <em>"server started in 0.32s"</em> (the Express server is listening) and <em>"booted in 4.9s"</em> (URL service, schedulers, and migrations are done). Treat the second number as your real cold start.</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Phase</th><th>Wall clock / RAM</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Express listens</td><td class="num">0.32 s</td><td>Misleading — DB not yet acquired</td></tr>
+          <tr><td>Full boot</td><td class="num">4.91 s</td><td>URL service, cron schedulers, migrations</td></tr>
+          <tr><td>Idle RAM</td><td class="num">154 MiB</td><td>Lightest of the LLM/CMS tools we tested today</td></tr>
+          <tr><td>Content volume</td><td class="num">1.2 MB</td><td>Empty SQLite + default theme. Lean by any standard.</td></tr>
+          <tr><td>HTTP /</td><td class="num">200</td><td>Front-of-house default theme renders</td></tr>
+          <tr><td>HTTP /ghost/</td><td class="num">200</td><td>Admin setup wizard renders</td></tr>
+        </tbody>
+      </table>
+
+      <p>For comparison, the four other tools we tested today on the same VM:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Tool</th><th>Cold start</th><th>Idle RAM</th><th>Disk after first boot</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Ghost 5.130.6</td><td class="num">4.9 s</td><td class="num">154 MiB</td><td class="num">1.2 MB</td></tr>
+          <tr><td>Open WebUI 0.9.2</td><td class="num">36 s</td><td class="num">1015 MiB</td><td class="num">1.1 GB</td></tr>
+          <tr><td>Cal.com 6.16.1</td><td class="num">~30 s + migrate</td><td class="num">1126 MiB</td><td class="num">350 MB</td></tr>
+          <tr><td>Dify 1.14.0 (11 containers)</td><td class="num">58 s</td><td class="num">1326 MiB total</td><td class="num">~1 GB</td></tr>
+        </tbody>
+      </table>
+
+      <p>Ghost's resource profile is what you'd want from a blogging tool: small, fast, predictable. The friction is in the env layout, not the runtime.</p>
+
+      <h2>The setup wizard</h2>
+
+      <p>Once boot finishes, <code>/ghost/</code> serves a three-step wizard:</p>
+
+      <figure>
+        <img src="assets/01-admin-setup.jpg" alt="Ghost admin setup — Welcome screen with Site title field focused, full name and email below">
+        <figcaption>The Ghost admin setup wizard at <code>http://&lt;host&gt;/ghost/</code> after first boot. The first user becomes admin (same convention as Open WebUI). No email confirmation required for SQLite installs without SMTP configured.</figcaption>
+      </figure>
+
+      <h2>Quiet warnings worth knowing about</h2>
+
+      <ul>
+        <li><strong><code>Missing mail.from config</code>:</strong> Ghost falls back to a generated <code>noreply@&lt;your-host&gt;</code> address and sends through… no provider, because no SMTP env is set. Effect: invitations, password resets, member sign-ups all silently no-op. Fix: set <code>mail__transport=SMTP</code> + <code>mail__options__service</code> + credentials. The README's MySQL example doesn't include the mail block; add it before going public.</li>
+        <li><strong><code>Stripe not configured - skipping migrations</code>:</strong> fine for a hobby/blog install, but if you later wire Stripe you'll see a backlog of "skipped" migrations replay on the boot when keys are added. Plan a maintenance window.</li>
+        <li><strong>SQLite is not officially recommended for production.</strong> Ghost's own docs say "for development and small sites only". Reasonable rule of thumb: SQLite is fine until your traffic hits a few thousand uniques/day or you want background workers; switch to MySQL 8 above that. Don't migrate later by hand — Ghost's <code>ghost migrate</code> command exists for a reason.</li>
+        <li><strong>The <code>url</code> env is permanent in the database.</strong> Change it after first boot and you'll have to rewrite stored references. Pick the production URL on day one.</li>
+      </ul>
+
+      <h2>Things we'd change in the docker README</h2>
+
+      <ol>
+        <li><strong>Add a SQLite "hobby" example next to the MySQL one.</strong> The image supports it; the example just isn't there. The two env vars (<code>filename</code> + <code>useNullAsDefault</code>) need to be in the example, not buried in <a href="https://ghost.org/docs/config/" target="_blank" rel="noopener">ghost.org/docs/config</a>.</li>
+        <li><strong>Move the "Your site is now available" log behind the DB acquisition.</strong> Right now it prints before the database connects, which is misleading when the DB then crashes the process. Print it after the first successful query.</li>
+        <li><strong>Surface the warning earlier.</strong> The <em>"Could not find connection.filename"</em> diagnostic is correct; the surrounding INFO logs bury it.</li>
+      </ol>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per self-hostable CMS/LLM/booking tool we run on a real Linux box. Adjacent: <a href="../open-webui/">Open WebUI on Linux Docker</a>, <a href="../dify/">Dify 1.14.0 docker-compose</a>, <a href="../cal-com/">Cal.com 6.16.1 self-host</a>, <a href="../posthog/">PostHog hobby self-host</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin into a draft code-fix PR — Ghost setup wizards included.</p>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on a Hetzner CX-line VM, Ubuntu 22.04, Docker 24, Ghost <code>5.130.6</code> (image <code>ghost:5-alpine</code>, sha256 <code>a0506f3f05f5…</code>). Ghost is a trademark of The Ghost Foundation.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

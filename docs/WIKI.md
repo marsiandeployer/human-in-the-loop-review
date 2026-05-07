@@ -337,7 +337,7 @@ Source of truth for **currently shipped CMS hubs** is code, not memory:
 - `README.md` → public project-level summary table.
 - This wiki section → operational checklist for forum links, content planning, and future CMS phases.
 
-Live indexed CMS hubs (26):
+Live indexed CMS hubs (27):
 
 | Phase | CMS / platform | Slug | Public URL | RU sibling |
 |-------|----------------|------|------------|------------|
@@ -367,6 +367,7 @@ Live indexed CMS hubs (26):
 | 1.5 | Dify (LLM workflow) | `dify` | https://onout.org/dify/ | — |
 | 1.5 | Cal.com (booking) | `cal-com` | https://onout.org/cal-com/ | — |
 | 1.5 | PostHog (analytics) | `posthog` | https://onout.org/posthog/ | — |
+| 1.5 | Ghost (CMS / blog) | `ghost` | https://onout.org/ghost/ | — |
 
 Separate platform cluster, not part of `CMS_SLUGS` yet:
 
@@ -416,6 +417,95 @@ When adding a new CMS hub, update all four places in the same task: `scripts/gen
 - **Bogus entry:** "Craft Cross CMS" is not a real product (working list = 41, not 42)
 
 **Banner recording params (memory):** Emulation viewport 800×460, ScreenCast maxWidth 800, ffmpeg crop `720:446:40:0`, 14.714 fps (412 frames / 28 s), TTS via OpenAI tts-1 voice=nova, 4 segments mixed via `adelay+amix`. Recorder script: `scripts/record-article-banner.js`.
+
+## First-hand article writing playbook
+
+Used for the 4 lib articles on 2026-05-07 + Ghost on the same day. Replaces the
+"5-cluster-articles-per-hub by parallel agents" pattern that violates Google
+2026 spam policy.
+
+**Goal:** every article ships with at least one first-hand artifact — a real
+config we ran, a benchmark we measured, a real screenshot of a real broken
+state. **No first-hand artifact = don't ship the article.**
+
+### The pattern
+
+1. **Pick the lib + the angle.** One narrow angle per article (e.g. "default
+   docker run on Linux fails because X"), not a comprehensive guide. The
+   broken state IS the angle.
+
+2. **Pull the official image.** `docker pull ghcr.io/<org>/<image>:tag`.
+   Record the digest — `sha256:…` goes into the article footer for traceability.
+
+3. **Run with the most-naive config a docs reader would copy.** Skip
+   custom env vars, skip the install script. The friction the article is
+   about lives in the gap between "what the README says works" and "what
+   actually works".
+
+4. **Capture the broken state to the disk.**
+   - Container logs: `docker logs <name> 2>&1 > /root/vibers/<slug>/assets/_logs.txt`
+     (only if useful as artifact — usually we just paste the relevant lines into the article)
+   - Screenshots: use the chrome-screen daemon, NOT a fake mockup:
+     ```bash
+     CDP_PORT=9223 node /root/tools/chrome-daemon/screenshot-model.js \
+       "http://172.17.0.1:<port>/<route>" \
+       /root/vibers/<slug>/assets/01-<state>.jpg
+     ```
+     The container listens on the host's docker0 gateway IP (`172.17.0.1`) which
+     chrome-screen sees from the same network. Use the running container's
+     actual hostname/IP, not the bind port from `localhost` on the host.
+   - Resource numbers: `docker stats --no-stream <name>` gives RSS / CPU /
+     I/O. Take a snapshot at idle and one under load if relevant.
+
+5. **Verify the image is real.** Read the JPG back via the Read tool — confirm
+   the screenshot shows what we claim (correct admin panel, real error text,
+   target element in the right place). Fake-looking mockups are caught here.
+
+6. **Apply the fix, capture the recovered state.** Same pattern — `docker run`
+   with corrected env, take a second screenshot of the working state. The
+   article needs to demonstrate both halves of the broken→fixed transition.
+
+7. **Stop the container and clean up the docker volume only after the article
+   is committed.** Removing the volume too early loses the screenshots' source
+   of truth if a reviewer asks "show me that error again". Confirm with user
+   before destructive `docker rm -f` or `docker volume rm` — the harness will
+   warn but the user-confirmation is the policy.
+
+8. **Write the article.** Structure:
+   - Honest disclaimer callout (who we are, who we're NOT affiliated with)
+   - The exact `docker run` we used
+   - The broken-state log (verbatim, in `<pre><code>`)
+   - `.callout-broken` block with one-paragraph diagnosis
+   - The fix in a `.callout-fix` block
+   - `<figure>` with the real screenshot
+   - Resource table with the numbers we measured
+   - Quiet warnings worth knowing about
+   - "Things we'd change in the README" — concrete, opinionated
+   - Cross-links to adjacent articles + back to onout.org/ for SimpleReview
+
+9. **Banner.** Animated CSS banner per `animated-banner` skill, with a mockup
+   admin/UI that matches THIS article (not a template across many articles).
+   Record via `scripts/record-article-banner.js`, TTS via OpenAI tts-1, embed
+   YouTube iframe after upload. Banner is the demo of SimpleReview catching
+   the same error the article describes.
+
+### Why this beats parallel-agent cluster generation
+
+- Each article has a real artifact a reviewer can verify.
+- The friction is real — Google's helpful-content signal recognizes first-hand
+  experience.
+- Forum / HN / Reddit audiences (where these articles get linked) can
+  immediately tell SEO-ghost-written prose from someone who actually ran the
+  thing. Trust signal compounds.
+- Slower per article (~1 hour vs ~5 minutes for template prose) but the
+  per-article ROI is order-of-magnitude higher because of the rate it gets
+  cited in tool comparisons and stack-overflow answers.
+
+### Quick reference — chrome-screen daemon
+- Port: `9223` (Xvfb-backed, real rendering — for screenshots)
+- Port `9222` is the headless one — DO NOT use for screenshots, use for console/CDP tests
+- Daemon stays in pm2, just point it at a new URL via `PUT /json/new?<encoded-url>`
+- Script: `/root/tools/chrome-daemon/screenshot-model.js <url> <output.jpg>`
 
 Rules for adding or editing multilingual articles:
 

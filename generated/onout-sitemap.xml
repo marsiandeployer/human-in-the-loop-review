@@ -281,7 +281,7 @@
   </url>
   <url>
     <loc>https://onout.org/cal-com/</loc>
-    <lastmod>2026-05-07T14:02:50+00:00</lastmod>
+    <lastmod>2026-05-07T14:27:15+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/cloud/gpt.html</loc>
@@ -353,7 +353,7 @@
   </url>
   <url>
     <loc>https://onout.org/dify/</loc>
-    <lastmod>2026-05-07T14:00:09+00:00</lastmod>
+    <lastmod>2026-05-07T14:27:15+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/directus/</loc>
@@ -448,6 +448,10 @@
     <lastmod>2026-04-30T15:19:07+00:00</lastmod>
   </url>
   <url>
+    <loc>https://onout.org/ghost/</loc>
+    <lastmod>2026-05-07T14:43:40+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://onout.org/joomla/</loc>
     <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
@@ -497,7 +501,7 @@
   </url>
   <url>
     <loc>https://onout.org/open-webui/</loc>
-    <lastmod>2026-05-07T13:58:33+00:00</lastmod>
+    <lastmod>2026-05-07T14:27:15+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/opencart/</loc>
@@ -517,7 +521,7 @@
   </url>
   <url>
     <loc>https://onout.org/posthog/</loc>
-    <lastmod>2026-05-07T14:08:18+00:00</lastmod>
+    <lastmod>2026-05-07T14:27:15+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/predictionmarket/</loc>

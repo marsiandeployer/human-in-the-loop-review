@@ -43,6 +43,7 @@ CMS_SLUGS = (
     "open-webui",
     "cal-com",
     "posthog",
+    "ghost",
 )
 RU_CMS_SLUGS = {"bitrix", "webasyst"}
 
