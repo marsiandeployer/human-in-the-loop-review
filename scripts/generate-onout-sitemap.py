@@ -39,6 +39,8 @@ CMS_SLUGS = (
     "dnn",
     "concrete-cms",
     "typo3",
+    "dify",
+    "open-webui",
 )
 RU_CMS_SLUGS = {"bitrix", "webasyst"}
 
@@ -114,7 +116,10 @@ def collect_vibers_alias(urls: dict[str, SitemapUrl]) -> None:
         add_url(urls, f"{ONOUT}/vibers/", index_path)
 
     # Clean product routes configured explicitly in nginx.
-    for clean_slug in ("simple-review", "simple-review-wordpress"):
+    # Note: /simple-review/ is intentionally NOT included — it 301-redirects to
+    # https://onout.org/ (SimpleReview lives on the homepage). Submitting a
+    # redirected URL in a sitemap triggers a GSC warning and confuses Google.
+    for clean_slug in ("simple-review-wordpress",):
         path = VIBERS_ROOT / clean_slug / "index.html"
         if path.exists():
             add_url(urls, f"{ONOUT}/{clean_slug}/", path)

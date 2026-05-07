@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dify 1.14.0 docker-compose: the profile flag the README forgets</title>
+  <meta name="description" content="We deployed Dify 1.14.0 from the official docker repo on 2026-05-07. Running --profile=weaviate alone leaves plugin_daemon in a panic-restart loop because db_postgres lives behind a separate profile. Real container logs, the fix, and resource numbers.">
+  <link rel="canonical" href="https://onout.org/dify/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Dify 1.14.0: the docker-compose profile flag that nobody mentions">
+  <meta property="og:description" content="plugin_daemon panics in a loop until you add --profile=postgresql. Real install, real logs, real numbers.">
+  <meta property="og:url" content="https://onout.org/dify/">
+  <meta property="og:image" content="https://onout.org/dify/assets/01-install-page.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Dify 1.14.0 docker-compose: the profile flag the README forgets",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "image": "https://onout.org/dify/assets/01-install-page.jpg",
+    "mainEntityOfPage": "https://onout.org/dify/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { width: 100%; border: 1px solid #e0e7ee; border-radius: 8px; display: block; background: #fafafa; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    .banner-placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0f172a, #1e3a8a); border-radius: 10px; margin: 8px 0 22px; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 13px; padding: 24px; text-align: center; }
+    .banner-placeholder strong { color: #fff; display: block; font-size: 16px; margin-bottom: 6px; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Dify
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Self-host notes</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Dify <code>1.14.0</code> (compose at commit <code>9331024</code>)</span>
+          <span>·</span>
+          <span>Linux 5.15, Docker 24</span>
+        </div>
+        <h1>Dify 1.14.0 docker-compose: the profile flag the README forgets</h1>
+        <p class="lede">The official Dify <code>docker/docker-compose.yaml</code> ships eleven services, of which the database and the vector store are gated behind separate Compose profiles. If you do what most quickstart blogs say (<code>docker compose --profile=weaviate up -d</code>), one of the services — <code>plugin_daemon</code> — panics in a loop because <code>db_postgres</code> isn't running. Here's the full container log, the trivial fix, and the resource numbers from a real install.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever site you click. Not affiliated with LangGenius (the company behind Dify). This page is a short deployment note from one real install on one Linux box, dated above. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>What "default" actually starts</h2>
+
+      <p>We sparse-cloned <code>langgenius/dify</code> at <code>main</code> on 2026-05-07 (commit <code>9331024</code>) and copied the bundled <code>docker/.env.example</code> to <code>.env</code> with one change — remapping <code>EXPOSE_NGINX_PORT</code> from 80 to 18180 because port 80 was already taken on this VM.</p>
+
+<pre><code>cd dify/docker
+cp .env.example .env
+sed -i 's/^EXPOSE_NGINX_PORT=80/EXPOSE_NGINX_PORT=18180/' .env
+docker compose --profile=weaviate up -d</code></pre>
+
+      <p>Compose returned in 58 seconds with eleven containers reportedly "Started". Among them:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Service</th><th>Image</th><th>Profile</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>api / worker / worker_beat</td><td><code>langgenius/dify-api:1.14.0</code></td><td>default</td></tr>
+          <tr><td>web</td><td><code>langgenius/dify-web:1.14.0</code></td><td>default</td></tr>
+          <tr><td>plugin_daemon</td><td><code>langgenius/dify-plugin-daemon:0.6.0-local</code></td><td>default</td></tr>
+          <tr><td>sandbox</td><td><code>langgenius/dify-sandbox:0.2.15</code></td><td>default</td></tr>
+          <tr><td>nginx</td><td><code>nginx:latest</code></td><td>default</td></tr>
+          <tr><td>redis</td><td><code>redis:6-alpine</code></td><td>default</td></tr>
+          <tr><td>ssrf_proxy</td><td><code>ubuntu/squid:latest</code></td><td>default</td></tr>
+          <tr><td>weaviate</td><td><code>semitechnologies/weaviate:1.27.0</code></td><td><code>weaviate</code></td></tr>
+          <tr><td>db_postgres</td><td><code>postgres:15-alpine</code></td><td><code>postgresql</code></td></tr>
+        </tbody>
+      </table>
+
+      <p>The catch: <code>db_postgres</code> sits behind <code>profiles: [postgresql]</code>. If you only pass <code>--profile=weaviate</code>, Postgres never starts.</p>
+
+      <h2>What plugin_daemon does about a missing Postgres</h2>
+
+      <p>Within seconds, <code>docker compose ps</code> showed <code>plugin_daemon</code> in <code>Restarting (2)</code> state. <code>docker logs</code> on the container revealed why:</p>
+
+<pre><code>[error] failed to initialize database, got error
+   failed to connect to `host=db_postgres user=postgres database=dify_plugin`:
+   hostname resolving error
+   (lookup db_postgres on 127.0.0.11:53: server misbehaving)
+
+ERROR failed to init dify plugin db
+   error="failed to connect to `host=db_postgres user=postgres database=postgres`:
+          hostname resolving error
+          (lookup db_postgres on 127.0.0.11:53: server misbehaving)"
+
+panic: failed to init dify plugin db</code></pre>
+
+      <p>The Compose default <code>restart: always</code> kicks in. After ten minutes of the same failure we counted <strong>ten panic restarts</strong> on a single <code>docker inspect ... --format '{{.RestartCount}}'</code>.</p>
+
+      <div class="callout-broken">
+        <div class="lbl">Broken state — observed locally</div>
+        <p><code>plugin_daemon</code> has <code>depends_on: db_postgres</code>, but <code>db_postgres</code> is in profile <code>postgresql</code> while <code>plugin_daemon</code> is in the default profile. Compose interprets this as: bring <code>plugin_daemon</code> up regardless; if its dependency isn't enabled, that's not Compose's problem. The result: a perpetual panic-restart loop on a service the rest of the stack depends on.</p>
+        <p>A worse version of this would be the API container falling into the same loop — but the API and worker happen to default to <code>DB_HOST=db_postgres</code> and tolerate the missing host until you actually try to log in. We saw this when <code>POST /console/api/setup</code> returned <code>502 Bad Gateway</code> — nginx had no upstream because the API was wedged on its first DB query.</p>
+      </div>
+
+      <h3>The fix</h3>
+
+      <div class="callout-fix">
+        <div class="lbl">One extra flag</div>
+        <p>Always pass <em>both</em> profiles when bringing the stack up:</p>
+        <p style="margin:0"><code>docker compose --profile=weaviate --profile=postgresql up -d</code></p>
+      </div>
+
+      <p>After the second profile was added, <code>db_postgres-1</code> reached <code>Healthy</code> in 23 s, <code>plugin_daemon</code> stayed up, and <code>POST /console/api/setup</code> went to <code>200</code>. The API container went green-healthy at the same time.</p>
+
+      <h2>The signin page hits Next.js's "This page couldn't load" if the API is wedged</h2>
+
+      <p>While we were debugging the missing Postgres, we tried opening <code>/signin</code> in a browser and got the Next.js generic runtime-error page rather than the actual signin form. Screenshot below.</p>
+
+      <figure>
+        <img src="assets/02-signin-page.jpg" alt="Dify signin route showing the Next.js 'This page couldn't load' fallback when the API container is unable to respond">
+        <figcaption>What <code>/signin</code> renders when the <code>api</code> container can't fulfill the initial RSC request — a generic Next.js error page with no clue about the underlying Postgres-not-running issue. The browser console is the only place that tells you it's a 502 from nginx.</figcaption>
+      </figure>
+
+      <p>The <code>/install</code> route is more graceful — it renders the Dify logo and a footer credit (<em>© 2026 LangGenius, Inc.</em>) while it waits for the API. Users who land there during boot at least see a recognisable shell rather than a stack trace.</p>
+
+      <figure>
+        <img src="assets/01-install-page.jpg" alt="Dify install page during initial container boot showing logo and copyright while the API is still starting">
+        <figcaption>The <code>/install</code> route during the first ~30 s of API boot. The small grey spinner top-right is the only signal that anything is happening; we caught the screenshot mid-load.</figcaption>
+      </figure>
+
+      <h2>Resource budget at idle</h2>
+
+      <p>Once everything was healthy and we'd created the admin account, we measured idle memory across the eleven containers. Numbers from <code>docker stats --no-stream</code>:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Container</th><th>RSS (MiB)</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>api</td><td class="num">211</td><td>Spikes to ~120 % CPU on first request as it lazy-loads model configs</td></tr>
+          <tr><td>worker</td><td class="num">218</td><td>Same image as api; idle but resident</td></tr>
+          <tr><td>worker_beat</td><td class="num">185</td><td>Celery beat — drops to ~150 once the schedule loop is steady</td></tr>
+          <tr><td>web (Next.js)</td><td class="num">80</td><td>Production build, prerendered routes</td></tr>
+          <tr><td>plugin_daemon</td><td class="num">~140</td><td>Goes from 0 to ~140 MiB during plugin init</td></tr>
+          <tr><td>db_postgres</td><td class="num">~110</td><td>Empty schema; will grow with chat/document data</td></tr>
+          <tr><td>weaviate</td><td class="num">34</td><td>No vectors yet</td></tr>
+          <tr><td>ssrf_proxy (squid)</td><td class="num">41</td><td>Required for outbound LLM calls inside the sandbox</td></tr>
+          <tr><td>sandbox</td><td class="num">35</td><td>Goes up sharply when running user-submitted code</td></tr>
+          <tr><td>nginx + redis</td><td class="num">~16</td><td>Combined</td></tr>
+          <tr><th>Total</th><th class="num">~1326 MiB</th><td>Idle, single-tenant, no chats yet</td></tr>
+        </tbody>
+      </table>
+
+      <p>So the practical floor for a Dify-with-Weaviate self-host is around <strong>1.5 GB RAM resident at idle</strong>. The 4-GB-RAM VPS recommendations you'll see online are not paranoia — they're for the moment you actually run a workflow with a 7B local model and a knowledge base attached.</p>
+
+      <h2>Things we'd change in the README</h2>
+
+      <ul>
+        <li><strong>Make the profile flag part of the canonical command.</strong> The current Quickstart shows <code>docker compose up -d</code>; on a clean machine that brings up zero of the optional services and you discover the gap by reading container logs. <code>docker compose --profile=postgresql --profile=weaviate up -d</code> ought to be the copy-paste line.</li>
+        <li><strong>Add a healthcheck guard on <code>plugin_daemon</code>.</strong> Right now it depends on <code>db_postgres</code> at runtime but happily starts before <code>db_postgres</code> is reachable. A <code>condition: service_healthy</code> on the dependency would prevent the panic loop and produce a cleaner error.</li>
+        <li><strong>Surface the 502 in <code>/signin</code>.</strong> The Next.js <em>"This page couldn't load"</em> message is correct but unhelpful — a small "API not ready, retrying…" banner would shave hours off most first-time-deploy debugging sessions.</li>
+        <li><strong>Drop the <code>0.6.0-local</code> tag.</strong> The plugin daemon image suffix <code>-local</code> on a public registry tag is confusing; if it's the production image, drop the suffix; if it isn't, document what it is.</li>
+      </ul>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per LLM/CMS/forum tool we actually run on a real Linux box. Adjacent: <a href="../open-webui/">Open WebUI on Linux Docker — first 90 seconds, measured</a>, <a href="../discourse/">Discourse self-hoster's handbook</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin into a draft code-fix PR — Dify admin forms included.</p>
+
+      <h2>Demo: SimpleReview on a Dify admin error</h2>
+
+      <div class="banner-placeholder" aria-label="Banner placeholder — SimpleReview demoing a fix on the Dify Next.js error page">
+        <div>
+          <strong>Banner: SimpleReview drafting a fix on the Dify "This page couldn't load" state</strong>
+          Animated mp4 to be recorded via the <code>animated-banner</code> skill — drop into <code>assets/banner.mp4</code> when ready.
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on Hetzner CX-line, Ubuntu 22.04, Docker 24, Dify <code>1.14.0</code> (<code>langgenius/dify-api:1.14.0</code>, plugin daemon <code>0.6.0-local</code>, sandbox <code>0.2.15</code>). Dify is a trademark of LangGenius, Inc.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

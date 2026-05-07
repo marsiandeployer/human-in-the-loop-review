@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://onout.org/</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
+    <lastmod>2026-05-04T12:27:51+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/.claude/skills/envato-upload/scripts/node_modules/tslib/tslib.es6.html</loc>
@@ -254,14 +254,14 @@
   </url>
   <url>
     <loc>https://onout.org/bitrix/</loc>
-    <lastmod>2026-04-30T15:14:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://onout.org/bitrix/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://habab.ru/bitrix/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://onout.org/bitrix/"/>
   </url>
   <url>
     <loc>https://onout.org/bitrix/how-to-fix-and-customize-bitrix-sites/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/blog/</loc>
@@ -297,11 +297,11 @@
   </url>
   <url>
     <loc>https://onout.org/concrete-cms/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/craft-cms/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/create/</loc>
@@ -329,11 +329,11 @@
   </url>
   <url>
     <loc>https://onout.org/cs-cart/</loc>
-    <lastmod>2026-04-30T15:14:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/cs-cart/how-to-fix-and-customize-cs-cart/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/dao/</loc>
@@ -356,24 +356,28 @@
     <lastmod>2026-03-03T20:24:07+00:00</lastmod>
   </url>
   <url>
+    <loc>https://onout.org/dify/</loc>
+    <lastmod>2026-05-07T13:22:54+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://onout.org/directus/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/dnn/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/drupal/</loc>
-    <lastmod>2026-04-30T15:14:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/drupal/hire-drupal-developer-or-use-simplereview/</loc>
-    <lastmod>2026-04-30T12:38:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:48:04+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/drupal/how-to-fix-drupal-issues/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/eeat/</loc>
@@ -449,11 +453,11 @@
   </url>
   <url>
     <loc>https://onout.org/joomla/</loc>
-    <lastmod>2026-04-30T15:14:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/joomla/how-to-fix-joomla-issues/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/launchpad/</loc>
@@ -473,15 +477,15 @@
   </url>
   <url>
     <loc>https://onout.org/magento/</loc>
-    <lastmod>2026-04-30T15:14:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/magento/how-to-fix-magento-2-issues/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/modx/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/nft/</loc>
@@ -493,23 +497,27 @@
   </url>
   <url>
     <loc>https://onout.org/nopcommerce/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://onout.org/open-webui/</loc>
+    <lastmod>2026-05-07T13:09:33+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/opencart/</loc>
-    <lastmod>2026-04-30T15:14:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/opencart/edit-opencart-without-developer/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/opencart/how-to-fix-opencart-issues/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/payload-cms/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/predictionmarket/</loc>
@@ -517,15 +525,15 @@
   </url>
   <url>
     <loc>https://onout.org/prestashop/</loc>
-    <lastmod>2026-05-02T11:45:06+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/prestashop/how-to-fix-prestashop-issues/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/prestashop/prestashop-stripe-double-charge-fix/</loc>
-    <lastmod>2026-05-02T11:46:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/product-template/</loc>
@@ -645,19 +653,15 @@
   </url>
   <url>
     <loc>https://onout.org/shopware/</loc>
-    <lastmod>2026-04-30T15:14:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/shopware/how-to-fix-shopware-6-issues/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/simple-review-wordpress/</loc>
-    <lastmod>2026-05-01T17:25:43+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/simple-review/</loc>
-    <lastmod>2026-05-02T12:40:45+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/simpledashboard/</loc>
@@ -681,11 +685,11 @@
   </url>
   <url>
     <loc>https://onout.org/statamic/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/strapi/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/telegram/</loc>
@@ -709,11 +713,11 @@
   </url>
   <url>
     <loc>https://onout.org/typo3/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/umbraco/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/uniswapFork/</loc>
@@ -721,11 +725,11 @@
   </url>
   <url>
     <loc>https://onout.org/vibers/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:48:04+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/vibers/blog/</loc>
-    <lastmod>2026-04-22T14:50:10+00:00</lastmod>
+    <lastmod>2026-05-04T08:38:47+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/vibers/blog/add-captcha-to-website/</loc>
@@ -829,65 +833,65 @@
   </url>
   <url>
     <loc>https://onout.org/webasyst/</loc>
-    <lastmod>2026-04-30T15:14:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://onout.org/webasyst/"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://habab.ru/webasyst/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://onout.org/webasyst/"/>
   </url>
   <url>
     <loc>https://onout.org/webasyst/how-to-fix-and-customize-shop-script/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/woocommerce/</loc>
-    <lastmod>2026-05-02T12:39:22+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/woocommerce/fix-woocommerce-checkout-slow/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/</loc>
-    <lastmod>2026-04-30T15:14:44+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/critical-error-on-this-website/</loc>
-    <lastmod>2026-04-30T12:15:47+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/disable-comments-wordpress/</loc>
-    <lastmod>2026-04-30T12:15:47+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/error-establishing-a-database-connection-wordpress/</loc>
-    <lastmod>2026-04-30T12:15:47+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/how-to-fix-and-improve-wordpress-sites/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/how-to-hide-header-in-elementor-wordpress/</loc>
-    <lastmod>2026-04-24T19:19:37+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/remove-powered-by-astra/</loc>
-    <lastmod>2026-04-30T12:15:47+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/wordpress-6-9-broke-my-site/</loc>
-    <lastmod>2026-04-30T12:15:47+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/wordpress-6-9-broke-slider-revolution/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/wordpress-duplicate-page/</loc>
-    <lastmod>2026-04-30T12:15:47+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/wordpress/wordpress-emergency-help/</loc>
-    <lastmod>2026-04-30T12:15:18+00:00</lastmod>
+    <lastmod>2026-05-05T15:47:30+00:00</lastmod>
   </url>
 </urlset>
