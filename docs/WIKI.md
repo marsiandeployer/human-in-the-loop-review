@@ -374,9 +374,12 @@ Planned CMS/platform backlog from GitHub issue #66 (no `/root/vibers/<slug>/inde
 
 | Phase | Group | Candidates |
 |-------|-------|------------|
-| 3 | Flat-file / Git-based CMS | Grav, Bludit, Kirby, Decap CMS, Keystatic, Publii. Pico is intentionally skipped because it is deprecated. |
+| 3 | Flat-file / Git-based CMS | Grav, Bludit, Kirby, Decap CMS, Keystatic, Publii, Front Matter CMS, JekyllPad, Pages CMS, Sitepins, GitCMS, StudioCMS. Pico is intentionally skipped because it is deprecated. |
 | 4 | RU/CIS source-available CMS | UMI.CMS, NetCat, HostCMS, DataLife Engine (DLE), Amiro.CMS |
-| 5 | Headless CMS | KeystoneJS, TinaCMS, Static CMS, Squidex, dotCMS, October CMS. Payload CMS is already live. |
+| 5 | Open-source headless CMS (self-hostable) | KeystoneJS, TinaCMS, Static CMS, Squidex, dotCMS, October CMS, Ghost, ApostropheCMS, Cosmic, Caisy, Crystallize, Decap CMS, Spinal, Vault CMS. Payload CMS, Strapi, Directus are already live. |
+| 5a | SaaS headless CMS (commercial, traffic exists) | Contentful, Sanity, Hygraph (former GraphCMS), Storyblok, DatoCMS, Kontent.ai (former Kentico Kontent), Contentstack, Builder.io, Prismic, ButterCMS, microCMS, Flotiq, Prepr CMS, CloudCannon, Hashnode. |
+| 5b | Enterprise headless CMS | Sitecore XM, Optimizely CMS (former Episerver), Adobe Experience Manager (AEM). Low self-host fit but search volume exists. |
+| 5c | Static-site / git-flow CMS variants | Craft Cross CMS — note: this looks like a typo in the source list, treat as Craft CMS sibling and verify before pulling Semrush keys. |
 | 6 | Python CMS | Wagtail, django CMS, Plone, Mezzanine |
 | 7 | .NET CMS | Orchard Core, Piranha CMS. Umbraco is already live. |
 | 8 | Java CMS / portals | OpenCms, Liferay Portal, Jahia |

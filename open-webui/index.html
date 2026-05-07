@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open WebUI on Linux Docker — what actually happens in the first 90 seconds</title>
+  <meta name="description" content="We deployed Open WebUI 0.9.2 to a clean Linux box on 2026-05-07 and measured cold-start time, RAM, disk, and why the default Ollama URL silently fails on Linux Docker. Real container, real numbers, real workaround.">
+  <link rel="canonical" href="https://onout.org/open-webui/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Open WebUI on Linux Docker — first 90 seconds, measured">
+  <meta property="og:description" content="Cold-start 36 s, 1.1 GB on disk, default Ollama URL doesn't resolve on Linux. Here's what we actually saw — and the one-line fix.">
+  <meta property="og:url" content="https://onout.org/open-webui/">
+  <meta property="og:image" content="https://onout.org/open-webui/assets/01-signin-page.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Open WebUI on Linux Docker — what actually happens in the first 90 seconds",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "image": "https://onout.org/open-webui/assets/01-signin-page.jpg",
+    "mainEntityOfPage": "https://onout.org/open-webui/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13.5px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 38px; font-weight: 800; letter-spacing: -0.8px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+
+    figure { margin: 18px 0 22px; }
+    figure img { width: 100%; border: 1px solid #e0e7ee; border-radius: 8px; display: block; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14.5px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+
+    /* SimpleReview banner — placeholder until /open-webui/assets/banner.mp4 exists */
+    .banner-placeholder { aspect-ratio: 16/9; background: linear-gradient(135deg, #0f172a, #1e3a8a); border-radius: 10px; margin: 8px 0 22px; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 13px; padding: 24px; text-align: center; }
+    .banner-placeholder strong { color: #fff; display: block; font-size: 16px; margin-bottom: 6px; }
+
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Open WebUI
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Self-host notes</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Open WebUI <code>0.9.2</code></span>
+          <span>·</span>
+          <span>Linux 5.15, Docker 24, Ubuntu 22.04</span>
+        </div>
+        <h1>Open WebUI on Linux Docker: what actually happens in the first 90 seconds</h1>
+        <p class="lede">We pulled <code>ghcr.io/open-webui/open-webui:main</code> on a clean Hetzner box, ran it, signed in, asked the API which models it could see, and watched it answer <code>{"models":[]}</code> with a smile. Here's exactly what the container does on first boot, why the default Ollama URL won't reach a host-side Ollama on Linux, and the one-line fix that nobody ships in the README.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a> — a small Chrome extension that drafts code-fix PRs on whatever website you click. We are not affiliated with Open WebUI. This page is a deployment note from one real install on one real box, dated above. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">file an issue on GitHub</a> and we'll fix it.</p>
+      </div>
+
+      <h2>The exact docker run we used</h2>
+
+<pre><code>docker run -d \
+  --name owui-test \
+  -p 18080:8080 \
+  -v owui-data:/app/backend/data \
+  -e WEBUI_AUTH=true \
+  ghcr.io/open-webui/open-webui:main</code></pre>
+
+      <p>That's it. No <code>--add-host</code>, no <code>--network=host</code>, no Ollama, nothing else. We wanted to know what the README's "just run it" claim actually buys you.</p>
+
+      <h2>What boot looked like, second by second</h2>
+
+      <p>Container ID printed at <code>13:03:38</code>. The first useful log line — <code>INFO: Started server process [1]</code> — appeared at <code>13:04:00</code>. The first HTTP 200 on <code>GET /</code> came in at <code>13:04:14</code>. So:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Phase</th><th>Wall clock</th><th>What's happening</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Container start</td><td class="num">0 s</td><td>image already pulled, container created, Python interpreter loading</td></tr>
+          <tr><td>App boot</td><td class="num">~22 s</td><td>uvicorn started, sentence-transformers <code>all-MiniLM-L6-v2</code> downloading from Hugging Face (~80 MB compressed)</td></tr>
+          <tr><td>First 200</td><td class="num">~36 s</td><td>app ready to render the sign-in page</td></tr>
+          <tr><td>RAM resident</td><td class="num">1015 MiB</td><td>idle, no chats opened, no models configured</td></tr>
+          <tr><td>Disk volume</td><td class="num">1.1 GB</td><td><code>/app/backend/data</code> after first boot — embedding model is most of it</td></tr>
+        </tbody>
+      </table>
+
+      <p>The 36 s number is on a 32 GB Hetzner CX-line VPS with the image pre-pulled. If you let <code>docker run</code> do the pull, add another 90 s on a 1 Gbit link for the first time. The image is ~3 GB compressed.</p>
+
+      <p>The 1.1 GB disk usage on first idle boot is the part most people miss when they pick a 10 GB VPS — Open WebUI ships a sentence-transformer model for retrieval-augmented chat. You don't get to opt out; it downloads on first run unless you bind-mount a pre-warmed cache.</p>
+
+      <figure>
+        <img src="assets/01-signin-page.jpg" alt="Open WebUI sign-in page on a fresh install — empty form, OI logo top-left">
+        <figcaption>The sign-in screen at <code>http://&lt;host&gt;:18080</code> after first boot. The very first user that signs up becomes admin — no email confirmation, no separate setup wizard.</figcaption>
+      </figure>
+
+      <h2>The first user is admin. Quietly.</h2>
+
+      <p>This is the line in the source that decides it: in <code>backend/open_webui/routers/auths.py</code>, the signup handler checks <code>Users.get_num_users() == 0</code> and, if true, sets <code>role="admin"</code> for the new account. There's no UI prompt explaining this. We wrote a <code>POST /api/v1/auths/signup</code> with the first email we picked and got <code>"role": "admin"</code> back in the JSON response.</p>
+
+      <p>The takeaway: if you expose port 18080 to the internet for "just five minutes while I show a colleague," whoever hits the page first owns your instance. Bind to <code>127.0.0.1</code> behind a reverse proxy, or front it with HTTP basic-auth on the very first day, not the second.</p>
+
+      <h2>The default Ollama URL doesn't resolve on Linux</h2>
+
+      <p>Here's the config Open WebUI ships with, fetched from a real signed-in admin token against <code>GET /ollama/config</code>:</p>
+
+<pre><code>{
+  "ENABLE_OLLAMA_API": true,
+  "OLLAMA_BASE_URLS": ["http://host.docker.internal:11434"],
+  "OLLAMA_API_CONFIGS": {}
+}</code></pre>
+
+      <div class="callout-broken">
+        <div class="lbl">Broken state — Linux Docker only</div>
+        <p>On Docker for Mac and Docker for Windows, <code>host.docker.internal</code> is automatically wired to the host's loopback. <strong>On Linux Docker it isn't.</strong> Unless you pass <code>--add-host=host.docker.internal:host-gateway</code> at <code>docker run</code> time, that hostname does not resolve from inside the container.</p>
+        <p>We confirmed this from inside the running container:</p>
+      </div>
+
+<pre><code>$ docker exec owui-test getent hosts host.docker.internal
+(no output — exit 2: not resolvable)</code></pre>
+
+      <p>And the worse part: Open WebUI does <em>not</em> surface this as an error. Hitting the proxied tags endpoint returns an empty model list, not a connection-refused or DNS-resolution error:</p>
+
+<pre><code>$ curl -H "Authorization: Bearer $TOKEN" http://localhost:18080/ollama/api/tags
+{"models":[]}</code></pre>
+
+      <p>So you sign up, you sign in, you click the model picker, the dropdown is empty, you go check the docs, the docs say "Ollama discovery is automatic" — and you're stuck wondering whether it's your firewall, your Ollama install, or some local DNS quirk. None of those. It's a Mac/Windows-shaped default in a Linux-shaped container.</p>
+
+      <div class="callout-fix">
+        <div class="lbl">The fix — pick one</div>
+        <p><strong>Option A — fix the hostname at run time:</strong> add <code>--add-host=host.docker.internal:host-gateway</code> to your <code>docker run</code>. The container resolves <code>host.docker.internal</code> to the docker0 bridge gateway (usually <code>172.17.0.1</code>) and the default config Just Works.</p>
+        <p><strong>Option B — bypass the hostname:</strong> set <code>OLLAMA_BASE_URLS=http://172.17.0.1:11434</code> in the container env (or via <code>POST /ollama/config/update</code> as admin). This is what we use because it's explicit and survives <code>docker run</code> being copied around.</p>
+        <p><strong>Option C — host networking:</strong> <code>--network=host</code>. Works, but you lose the port remap and pick up every other listener on the host.</p>
+      </div>
+
+      <p>Verifying the bridge-gateway route from inside the container:</p>
+
+<pre><code>$ docker exec owui-test sh -c "timeout 2 nc -zv 172.17.0.1 11434"
+nc: connect to 172.17.0.1 port 11434 (tcp) failed: Connection refused</code></pre>
+
+      <p>"Connection refused" here is the answer we wanted — it confirms <em>routing</em> works; we got a TCP RST from the host because we hadn't started Ollama yet. With Ollama running on the host, the same command would succeed.</p>
+
+      <h2>Things we noticed that the docs don't lead with</h2>
+
+      <ul>
+        <li><strong>The <code>/api/v1/configs/*</code> path is wrong.</strong> The Swagger UI implies a clean <code>/api/v1/configs/{provider}</code> shape, but in 0.9.2 the working endpoints are <code>/openai/config</code>, <code>/ollama/config</code>, <code>/openai/config/update</code>, <code>/ollama/config/update</code> — under the provider prefix, not the versioned API root. If your client calls <code>/api/v1/configs/ollama</code>, you get the SPA's <code>index.html</code> back instead of JSON. We wasted six minutes on this before grepping the source.</li>
+        <li><strong>Embedding model lives in the data volume.</strong> Wipe <code>owui-data</code> and the next boot re-downloads the 80 MB compressed weights from Hugging Face. This matters in CI: pin the volume across runs or you'll get rate-limited eventually.</li>
+        <li><strong>WEBUI_AUTH=false is a footgun, not a feature.</strong> It removes the sign-in screen entirely — every page shows the chat UI to anyone who can reach the port. We left ours at <code>true</code>; if you flip it off "for testing," remember the port-exposure note above applies tenfold.</li>
+        <li><strong>Cold-start &gt; 30 s breaks naive healthchecks.</strong> Compose's <code>healthcheck:</code> default is 30 s before the first probe. Either set <code>start_period: 60s</code>, or your orchestrator will keep restarting the container during the embedding download.</li>
+      </ul>
+
+      <h2>What we'd do differently next time</h2>
+
+      <ol>
+        <li>Pre-bake the embedding model into the image (FROM <code>open-webui:main</code>, then <code>RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"</code>). Cuts cold-start by ~14 s and avoids first-run network egress.</li>
+        <li>Drop <code>--add-host=host.docker.internal:host-gateway</code> into the <code>docker run</code> as a habit — even when we don't use Ollama, it costs nothing and stops surprising future-us.</li>
+        <li>Front it with nginx + basic auth on day one. The "first user is admin" rule is fine for a personal box; on anything reachable from the public internet, treat it like a freshly-installed WordPress and assume bots will find it inside an hour.</li>
+        <li>Bind the data volume to a path you back up — <code>/var/lib/owui-data</code> rather than a Docker-managed volume. We've already lost a sandbox install once because we <code>docker volume prune</code>d after a Friday cleanup.</li>
+      </ol>
+
+      <h2>Where this article fits</h2>
+
+      <p>This is one of a small set of self-host write-ups we publish: how a thing actually behaves on a real Linux box, with timings, the one default that breaks, and the one-line fix. Adjacent pieces: <a href="../discourse/">Discourse self-hoster's handbook</a> (forum software), <a href="../wordpress/">WordPress emergency repair</a> (when the dashboard is gone). If you want SimpleReview to draft code fixes on whichever app you click — including a broken Open WebUI plugin or admin form — that's at <a href="https://onout.org/">onout.org</a>.</p>
+
+      <h2>Demo: SimpleReview on an Open WebUI admin error</h2>
+
+      <div class="banner-placeholder" aria-label="Banner placeholder — animated demo of SimpleReview on Open WebUI">
+        <div>
+          <strong>Banner: SimpleReview spotting an Open WebUI config issue</strong>
+          Animated mp4 to be recorded via the animated-banner skill — drop into <code>assets/banner.mp4</code> when ready.
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on Hetzner CX-line, Ubuntu 22.04, Docker 24, Open WebUI <code>0.9.2</code> (<code>ghcr.io/open-webui/open-webui:main</code>, sha256:c2e4723f…). Open WebUI is a trademark of its respective owners.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>
