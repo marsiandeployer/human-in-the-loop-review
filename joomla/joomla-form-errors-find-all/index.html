@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Find All Form Errors on a Joomla Site</title>
+  <meta name="description" content="Find Joomla form errors across contact forms, custom fields, validation rules, PHP logs, and debug mode. Includes real Joomla 5.4.5 Docker screenshots and a SimpleReview fix workflow.">
+  <meta name="keywords" content="joomla form errors, find all form errors joomla, joomla contact form validation, joomla invalid field, joomla debug form errors">
+  <link rel="canonical" href="https://onout.org/joomla/joomla-form-errors-find-all/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Find All Form Errors on a Joomla Site">
+  <meta property="og:description" content="A practical Joomla 4/5 form-error checklist with real Joomla screenshots, validation rules, logs, and a SimpleReview site-ready fix workflow.">
+  <meta property="og:url" content="https://onout.org/joomla/joomla-form-errors-find-all/">
+  <meta property="og:image" content="https://onout.org/joomla/joomla-form-errors-find-all/screenshots/joomla-contact-required-errors.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/joomla/joomla-form-errors-find-all/screenshots/joomla-contact-required-errors.png">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "inLanguage": "en",
+    "headline": "How to Find All Form Errors on a Joomla Site",
+    "description": "Find Joomla form errors across contact forms, custom fields, validation rules, PHP logs, and debug mode. Includes real Joomla 5.4.5 Docker screenshots and a SimpleReview fix workflow.",
+    "url": "https://onout.org/joomla/joomla-form-errors-find-all/",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "image": "https://onout.org/joomla/joomla-form-errors-find-all/screenshots/joomla-contact-required-errors.png",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/joomla/joomla-form-errors-find-all/" },
+    "keywords": ["joomla form errors", "joomla contact form validation", "joomla debug form errors", "joomla invalid field"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "en",
+    "mainEntity": [
+      {"@type": "Question", "name": "How do I find all form errors on a Joomla site?", "acceptedAnswer": {"@type": "Answer", "text": "Start with a real failed submission, then inspect the marked fields, browser console/network request, Joomla validation XML, server-side validation rules, mail settings, and temporary debug/error reporting output."}},
+      {"@type": "Question", "name": "Why does Joomla show Invalid Field?", "acceptedAnswer": {"@type": "Answer", "text": "Joomla server-side validation returns Invalid Field when a field fails a validation rule and no custom message is provided. Check the field XML validate attribute and message attribute."}},
+      {"@type": "Question", "name": "Should Joomla Debug System stay enabled?", "acceptedAnswer": {"@type": "Answer", "text": "No. Use Debug System and Maximum Error Reporting only while reproducing the issue, then disable debug and return Error Reporting to System Default."}},
+      {"@type": "Question", "name": "Can SimpleReview fix Joomla form validation errors?", "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview can prepare site-ready fixes for file-level form issues: missing form-validate class, broken validation asset, wrong field XML, language string, template override, or component PHP validation rule."}}
+    ]
+  }
+  </script>
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-text-size-adjust:100%}
+    body{background:#f6f7fb;color:#172033;font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+    a{color:#1769c2;text-decoration:none}a:hover{text-decoration:underline}
+    code{background:#eef2f7;border:1px solid #dbe4f0;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;padding:1px 5px}
+    .page{background:#fff;max-width:920px;margin:0 auto;min-height:100vh;padding:0 40px 44px}
+    .site-nav{align-items:center;border-bottom:2px solid #1f3553;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;padding:24px 0 18px}
+    .brand{color:#172033;font-size:17px;font-weight:800}.nav-links{display:flex;flex-wrap:wrap;gap:18px;font-size:14px}.nav-links a{color:#536171}
+    .article-meta{color:#6c7683;display:flex;flex-wrap:wrap;font-size:13px;gap:14px;margin:34px 0 12px}
+    h1{color:#18395c;font-size:42px;font-weight:800;letter-spacing:-.8px;line-height:1.12;margin:0 0 14px;max-width:820px}
+    .lead{border-left:4px solid #f44321;color:#344052;font-size:18px;line-height:1.62;margin:0 0 26px;padding-left:18px}
+    h2{border-top:1px solid #e7edf4;color:#18395c;font-size:26px;letter-spacing:-.35px;line-height:1.22;margin:42px 0 14px;padding-top:24px}
+    h3{color:#18395c;font-size:18px;margin:28px 0 8px}p,ul,ol{margin-bottom:16px}ul,ol{padding-left:24px}li{margin-bottom:8px}
+    .takeaways,.warning,.cta-block{border-radius:8px;margin:24px 0;padding:20px 22px}.takeaways{background:#eef6ff;border:1px solid #c8dff6}.takeaways strong{color:#18395c}.warning{background:#fff6ed;border:1px solid #ffd5ac;color:#6f3d0e}.cta-block{background:#18395c;color:#fff;text-align:center}.cta-block h2{border:0;color:#fff;margin:0 0 8px;padding:0}.cta-block p{color:#d7e5f7}.cta-btn{align-items:center;background:#f44321;border-radius:7px;color:#fff;display:inline-flex;font-weight:700;margin-top:4px;min-height:44px;padding:10px 22px}.cta-btn:hover{background:#d33718;text-decoration:none}
+    .table-wrap{overflow-x:auto}table{border-collapse:collapse;font-size:14px;margin:18px 0 24px;width:100%}th{background:#18395c;color:#fff;font-weight:700;text-align:left}th,td{border-bottom:1px solid #e4ebf4;padding:10px 12px;vertical-align:top}tr:nth-child(even) td{background:#fbfdff}
+    .figure{margin:24px 0 30px}.figure img{border:1px solid #d7e2ee;border-radius:8px;display:block;height:auto;width:100%}.figure figcaption{color:#667381;font-size:13px;line-height:1.5;margin-top:8px}
+    .video-wrap{margin:22px 0 30px}.video-wrap video{background:#111827;border-radius:10px;display:block;width:100%}.sources-list{font-size:14px;padding-left:20px}
+    .related{border-top:2px solid #18395c;margin-top:42px;padding-top:24px}.related-grid{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}.related-card{border:1px solid #e0e8f1;border-radius:8px;padding:15px}.related-card a{color:#172033;font-weight:700}.related-card p{color:#6c7683;font-size:13px;margin:6px 0 0}
+    footer{border-top:1px solid #e7edf4;color:#778390;display:flex;flex-wrap:wrap;font-size:13px;gap:10px;justify-content:space-between;margin-top:42px;padding-top:20px}
+
+    .sc-banner{background:#111827;border-radius:12px;box-shadow:0 6px 28px rgba(15,23,42,.18);font-family:'Inter',sans-serif;margin:30px 0;overflow:hidden;position:relative}
+    .sc-chrome{align-items:center;background:#e7ebf2;border-bottom:1px solid #cbd5e1;display:flex;gap:8px;min-width:0;padding:8px 12px}.sc-dots{display:flex;gap:5px}.sc-dots span{border-radius:50%;height:10px;width:10px}.sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{background:#fff;border:1px solid #cad3df;border-radius:5px;color:#4b5563;flex:1;font-size:12px;min-width:0;overflow:hidden;padding:5px 10px;text-overflow:ellipsis;white-space:nowrap}.sc-ext{background:#f44321;border-radius:5px;color:#fff;font-size:12px;font-weight:800;padding:3px 7px;animation:extPulse 28s infinite}
+    .sc-stage{background:#fff;min-height:360px;overflow:hidden;position:relative}.sc-site{display:grid;grid-template-columns:1fr 210px;gap:16px;min-height:360px;padding:18px}.sc-header{background:#27366f;color:#fff;font-size:24px;font-weight:800;grid-column:1/3;letter-spacing:3px;padding:13px 16px}.sc-form h3{color:#172033;font-size:18px;margin:0 0 12px}.sc-alert{background:#fff5f5;border:1px solid #dc2626;border-left:38px solid #b91c1c;border-radius:5px;color:#111827;font-size:13px;margin-bottom:14px;padding:9px 12px;animation:alertPulse 28s infinite}.sc-field{margin-bottom:9px}.sc-field label{display:block;font-size:11px;font-weight:700;margin-bottom:2px}.sc-input,.sc-textarea{border:1px solid #ef4444;border-radius:4px;height:30px;width:100%}.sc-textarea{height:72px}.sc-err{color:#b91c1c;font-size:10px;margin-top:2px}.sc-send{background:#17325d;border-radius:5px;color:#fff;display:inline-block;font-size:12px;margin-top:3px;padding:8px 14px}.sc-side{border:1px solid #d7e2ee;border-radius:6px;padding:12px}.sc-side h4{font-size:16px;margin:0 0 10px}.sc-panel{background:#fff;border:1px solid #dce6f2;border-radius:10px;box-shadow:0 16px 44px rgba(15,23,42,.25);position:absolute;right:24px;top:82px;width:310px;z-index:5;opacity:0;transform:translateY(12px);animation:panelShow 28s infinite}.sc-panel-h{background:#18395c;border-radius:10px 10px 0 0;color:#fff;font-weight:800;padding:12px 14px}.sc-panel-b{padding:14px}.sc-panel-b p{color:#475569;font-size:12px;line-height:1.5;margin:0 0 10px}.sc-fix{background:#f44321;border-radius:6px;color:#fff;display:inline-block;font-size:12px;font-weight:800;padding:8px 12px}.sc-done{background:#e8fff1;border:1px solid #a7f3d0;color:#166534;font-size:12px;font-weight:800;margin-top:10px;padding:8px;border-radius:6px;opacity:0;animation:doneShow 28s infinite}.sc-cursor{background:#fff;border:2px solid #f44321;border-radius:50%;box-shadow:0 6px 16px rgba(244,67,33,.25);height:22px;left:62%;position:absolute;top:36%;width:22px;z-index:6;animation:cursorMove 28s infinite}
+    @keyframes extPulse{0%,10%,100%{box-shadow:none}12%,16%{box-shadow:0 0 0 6px rgba(244,67,33,.28)}}@keyframes alertPulse{0%,20%{opacity:.15}28%,88%{opacity:1}96%,100%{opacity:.15}}@keyframes cursorMove{0%,12%{left:76%;top:24%}22%,38%{left:38%;top:51%}54%,68%{left:68%;top:58%}82%,100%{left:74%;top:72%}}@keyframes panelShow{0%,30%{opacity:0;transform:translateY(12px)}36%,88%{opacity:1;transform:translateY(0)}94%,100%{opacity:0;transform:translateY(12px)}}@keyframes doneShow{0%,62%{opacity:0}68%,88%{opacity:1}94%,100%{opacity:0}}
+    @media(max-width:760px){.page{padding:0 20px 34px}h1{font-size:30px}.related-grid{grid-template-columns:1fr}.sc-site{grid-template-columns:1fr}.sc-header{grid-column:1}.sc-side{display:none}.sc-panel{left:14px;right:14px;width:auto}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="/joomla/">Joomla hub</a>
+      <a href="/joomla/joomla-extensions-search-errors-fix/">Extension errors</a>
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta"><span>Joomla / Forms</span><span>May 8, 2026</span><span>11 min read</span></div>
+    <h1>How to Find All Form Errors on a Joomla Site</h1>
+    <p class="lead">The fastest way to find Joomla form errors is to reproduce one failed submission, then separate the visible field errors from server-side validation, mail delivery, template overrides, and fatal PHP errors. This guide uses a real Joomla 5.4.5 Docker contact form so the screenshots show the actual Cassiopeia error state, not a mockup.</p>
+
+    <section class="sc-banner" aria-label="Animated SimpleReview Joomla form error demo">
+      <div class="sc-chrome"><div class="sc-dots"><span></span><span></span><span></span></div><div class="sc-url">joomla.example/contact?missing-required-fields</div><div class="sc-ext">SR</div></div>
+      <div class="sc-stage">
+        <div class="sc-site">
+          <div class="sc-header">CASSIOPEIA</div>
+          <div class="sc-form">
+            <div class="sc-alert">The form cannot be submitted because required data is missing.</div>
+            <h3>Contact Form</h3>
+            <div class="sc-field"><label>Name *</label><div class="sc-input"></div></div>
+            <div class="sc-field"><label>Email *</label><div class="sc-err">Please fill in this field</div><div class="sc-input"></div></div>
+            <div class="sc-field"><label>Subject *</label><div class="sc-err">Please fill in this field</div><div class="sc-input"></div></div>
+            <div class="sc-field"><label>Message *</label><div class="sc-err">Please fill in this field</div><div class="sc-textarea"></div></div>
+            <span class="sc-send">Send Email</span>
+          </div>
+          <div class="sc-side"><h4>Main Menu</h4><p>Home</p><h4>Login Form</h4><p>Username<br>Password</p></div>
+        </div>
+        <div class="sc-cursor"></div>
+        <div class="sc-panel">
+          <div class="sc-panel-h">SimpleReview maps the failing form</div>
+          <div class="sc-panel-b">
+            <p>It captures the field errors, checks the Joomla form XML, validation asset, template override, and PHP rule before preparing the fix.</p>
+            <span class="sc-fix">Prepare site-ready fix</span>
+            <div class="sc-done">Fix ready: validation message + form override patch</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="video-wrap">
+      <video controls muted playsinline preload="metadata" poster="screenshots/joomla-contact-required-errors.png">
+        <source src="banner.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="takeaways">
+      <p><strong>Short version:</strong> visible field warnings are only the first layer. Joomla forms can fail in browser validation, server-side validation rules, component configuration, email sending, template overrides, custom fields, captcha plugins, or PHP errors. Capture each layer before editing code.</p>
+    </div>
+
+    <h2>Start with one real failed submission</h2>
+    <p>Submit the form exactly as a visitor would. In the screenshot below, Joomla’s core contact form shows a top-level error plus marked required fields. That tells you the page is rendering, the form JavaScript is active enough to mark fields, and the issue is not a blank white-screen PHP crash.</p>
+    <figure class="figure">
+      <img src="screenshots/joomla-contact-required-errors.png" alt="Joomla 5.4.5 Cassiopeia contact form showing required field validation errors">
+      <figcaption>Real Joomla 5.4.5 Docker screenshot: Cassiopeia contact form after submitting empty required fields.</figcaption>
+    </figure>
+
+    <p>Record the URL, component, template, user role, language, browser, exact input, and the visible error text. If you cannot reproduce the error twice, do not patch yet. Intermittent form errors are often cache, session, captcha, or mail-server issues rather than field validation.</p>
+
+    <h2>Separate client-side and server-side validation</h2>
+    <p>Joomla’s developer docs are explicit: browser validation is useful, but it is not security. A user can bypass JavaScript and post directly to the server. That means every important form rule must exist on the server side too.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Layer</th><th>Where it lives</th><th>What breaks</th></tr></thead>
+        <tbody>
+          <tr><td>Client-side</td><td><code>form.validate</code>, <code>form-validate</code>, <code>validate-email</code>, required fields</td><td>Visitor sees no useful hint, bad selector, missing validation asset, template override removed the class</td></tr>
+          <tr><td>Server-side</td><td>Form XML <code>validate="..."</code>, PHP rule class in <code>libraries/src/Form/Rule</code> or component rule path</td><td>“Invalid Field”, save fails, custom component rejects data after POST</td></tr>
+          <tr><td>Delivery</td><td>Contacts component settings, mail configuration, captcha, spam plugin</td><td>Form appears valid but no email arrives, or submit returns a generic failure</td></tr>
+          <tr><td>Runtime</td><td>PHP logs, Joomla debug output, extension stack trace</td><td>Fatal error, blank page, admin/login breaks after enabling a plugin</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Inspect the Joomla form definition</h2>
+    <p>If the problem is repeatable, inspect the form XML and template override that render the fields. Required fields should have <code>required="true"</code>. Email fields should use the email field type or server-side <code>validate="email"</code>. Custom rules need the right rule prefix and a clear message, otherwise users may only see a generic “Invalid Field”.</p>
+    <p>For custom components, check whether the page includes the Joomla validation asset and whether the form tag still has <code>class="form-validate"</code>. Template overrides are a common source of form regressions because they can accidentally remove classes, tokens, labels, hidden fields, or submit button behavior.</p>
+
+    <h2>Use debug mode only while reproducing</h2>
+    <p>When the error is not visible on the page, use Joomla’s diagnostic settings temporarily. The official FatalError guide says to set Debug System to Yes in the System tab and Error Reporting to Maximum in the Server tab, then reproduce the issue. When finished, switch Debug System back to No and Error Reporting back to System Default.</p>
+    <figure class="figure">
+      <img src="screenshots/joomla-global-config-debug.png" alt="Joomla 5.4.5 Global Configuration Server tab showing Error Reporting setting">
+      <figcaption>Real Joomla 5.4.5 Docker screenshot: Global Configuration → Server has the Error Reporting control used during diagnosis.</figcaption>
+    </figure>
+
+    <div class="warning">
+      <strong>Do not leave debug on in production.</strong> Stack traces, paths, table prefixes, plugin names, and mail settings are useful to a developer but can leak implementation details to visitors.
+    </div>
+
+    <h2>Checklist: find every Joomla form error source</h2>
+    <ol>
+      <li>Submit the form as a guest and as the affected logged-in role.</li>
+      <li>Take a screenshot of the visible field errors and top-level Joomla message.</li>
+      <li>Open browser DevTools and check Console plus the POST request response.</li>
+      <li>Check the form XML for <code>required</code>, <code>validate</code>, <code>message</code>, <code>pattern</code>, and captcha fields.</li>
+      <li>Check template overrides under <code>templates/[template]/html/</code> for missing classes, hidden fields, CSRF token, or changed submit button markup.</li>
+      <li>For Contacts, verify the contact has an email address and the form is enabled.</li>
+      <li>For custom fields, verify the field group, access level, language, and required state.</li>
+      <li>For mail failures, use Global Configuration → Server → Send Test Mail before editing the contact component.</li>
+      <li>Temporarily enable debug/error reporting only if the page hides the real PHP error.</li>
+      <li>Turn debug off after capture and keep the screenshot/log with the fix ticket.</li>
+    </ol>
+
+    <h2>What SimpleReview can fix</h2>
+    <p><a href="/joomla/">SimpleReview for Joomla</a> is useful when the failing form maps to a file-level fix: a missing validation class, wrong language string, broken template override, incorrect form XML, or custom component validation rule. It captures the screen, identifies the Joomla path, and prepares a site-ready fix you can upload or deploy.</p>
+    <p>It should escalate to <a href="/vibers/">Vibers human review</a> when the issue involves private customer data, payment forms, custom security checks, captcha abuse, or database cleanup after a failed extension migration.</p>
+
+    <div class="cta-block">
+      <h2>Turn the visible form error into a fix</h2>
+      <p>Click the broken Joomla form with SimpleReview, describe what should happen, and get a site-ready patch instead of a vague support thread.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview</a>
+    </div>
+
+    <h2>Sources checked</h2>
+    <ul class="sources-list">
+      <li><a href="https://manual.joomla.org/docs/5.4/general-concepts/forms/client-side-validation/">Joomla 5.4 Developer Manual: Client-side Validation</a></li>
+      <li><a href="https://manual.joomla.org/docs/general-concepts/forms/server-side-validation/">Joomla Developer Manual: Server-side Validation</a></li>
+      <li><a href="https://guide.joomla.org/user-manual/contacts/contacts-contacts">Joomla User Guide: Contacts</a></li>
+      <li><a href="https://guide.joomla.org/user-manual/problems/problems-fatalerror">Joomla User Guide: FatalError</a></li>
+    </ul>
+
+    <section class="related">
+      <h2>Related Joomla fixes</h2>
+      <div class="related-grid">
+        <div class="related-card"><a href="/joomla/">SimpleReview for Joomla</a><p>Main Joomla hub for site-ready fixes.</p></div>
+        <div class="related-card"><a href="/joomla/joomla-extensions-search-errors-fix/">Joomla extension install/update errors</a><p>Diagnose extension installer, update sites, and Discover problems.</p></div>
+        <div class="related-card"><a href="/joomla/how-to-fix-joomla-issues/">How to fix Joomla issues</a><p>General Joomla repair guide for white screens, overrides, and upgrades.</p></div>
+        <div class="related-card"><a href="/wordpress/how-to-fix-and-improve-wordpress-sites/">Fix WordPress sites</a><p>Same SimpleReview workflow applied to WordPress plugin and theme issues.</p></div>
+      </div>
+    </section>
+  </article>
+
+  <footer>
+    <span>© 2026 Vibers / SimpleReview</span>
+    <span><a href="/vibers/">Vibers</a> · <a href="/simple-review/">SimpleReview</a> · <a href="/joomla/">Joomla hub</a></span>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sanity 5.24 first boot: a fake project ID, a peer-dep wall, and a 516 MB studio</title>
+  <meta name="description" content="We scaffolded Sanity Studio 5.24 on a clean Linux box on 2026-05-07 with `npm install sanity`, pointed it at a fake project ID, watched the Content Lake refuse to authenticate, and measured what the open-source half of Sanity actually costs to run on disk and in RAM. Real screenshot of the error, real curl against apicdn.sanity.io, real numbers.">
+  <link rel="canonical" href="https://onout.org/sanity/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Sanity 5.24 first boot: a fake project ID, a peer-dep wall, and a 516 MB studio">
+  <meta property="og:description" content="One scaffold, one Linux box, three frictions before Sanity Studio could even paint a tree view.">
+  <meta property="og:url" content="https://onout.org/sanity/">
+  <meta property="og:image" content="https://onout.org/sanity/assets/01-studio-error.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Sanity 5.24 first boot: a fake project ID, a peer-dep wall, and a 516 MB studio",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "image": "https://onout.org/sanity/assets/01-studio-error.jpg",
+    "mainEntityOfPage": "https://onout.org/sanity/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { width: 100%; border: 1px solid #e0e7ee; border-radius: 8px; display: block; background: #fafafa; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    .banner-placeholder { background: linear-gradient(135deg, #f7fbfe 0%, #eef3f8 100%); border: 2px dashed #c4d4e0; border-radius: 12px; padding: 80px 20px; text-align: center; color: #6b7c8c; font-size: 14px; margin: 0 0 32px; }
+    .banner-placeholder strong { display: block; color: #1a4480; font-size: 18px; margin-bottom: 8px; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Sanity 5
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Self-host notes</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Sanity Studio <code>5.24.0</code></span>
+          <span>·</span>
+          <span>Node <code>22.21.1</code> · Linux</span>
+        </div>
+        <h1>Sanity 5.24 first boot: a fake project ID, a peer-dep wall, and a 516&nbsp;MB studio</h1>
+        <p class="lede">Sanity is the unusual headless CMS where the admin UI ships as an open-source npm package you scaffold yourself, while the actual database — the &ldquo;Content Lake&rdquo; — is a commercial managed service at <code>api.sanity.io</code>. We installed Sanity Studio 5.24 on a clean Linux box on 2026-05-07, pointed it at an obviously fake project ID, and watched the two halves of the architecture argue about who's allowed to do what. The studio booted in 864&nbsp;ms; the Content Lake fired back a verbatim 404 with the project ID echoed in the message; the React-19 peer-dep wall stopped a vanilla install cold; and the on-disk footprint of an empty studio came in at <strong>516&nbsp;MB across 552 packages</strong>. Here are the screenshots, the unedited error JSON, and what the README leaves out.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever element you click on a broken admin or storefront. We are not affiliated with Sanity, not partners, not customers. This is a deployment note from one real <code>npm install sanity</code> session on one Linux box, dated above. We picked Sanity because it sits in an unusual spot among the headless CMSes we've been auditing &mdash; the studio is open-source like <a href="../decap-cms/">Decap</a> or <a href="../keystonejs/">Keystone</a>, but the data plane is closed SaaS like <a href="../datocms/">DatoCMS</a>. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>The exact commands we ran</h2>
+
+<pre><code># Node 22 LTS already on the box
+node --version    # v22.21.1
+npm --version     # 10.9.4
+
+mkdir -p /tmp/sanity-test/my-studio &amp;&amp; cd $_
+npm init -y
+npm install --legacy-peer-deps \
+  sanity@latest @sanity/vision@latest \
+  react@^19 react-dom@^19 styled-components@^6
+
+# minimal sanity.config.ts pointing at a fake project ID
+# (full file in the appendix below)
+
+npx sanity dev --port 18096 --host 0.0.0.0</code></pre>
+
+      <p>Notice what we did <em>not</em> run: <code>npm create sanity@latest</code>. That is the path the official docs guide you down, and it's the path that broke first. We'll get to why.</p>
+
+      <h2>Friction #1 &mdash; <code>npm create sanity</code> insists on a login before it'll do anything</h2>
+
+      <p>The official quick-start command is <code>npm create sanity@latest</code>. It pulls <code>create-sanity@5.2.16</code> and presents a wizard. We tried the unattended flag (<code>-y</code>) with a fake project ID, intending to scaffold the studio and worry about Content Lake credentials separately. Verbatim:</p>
+
+<pre><code>$ npm create sanity@latest -- -y --bare \
+    --project ffffffff --dataset production
+&gt; npx
+&gt; create-sanity -y --bare --project ffffffff --dataset production
+
+ ›   Error: Must be logged in to run this command in unattended mode,
+ ›   run `sanity login`
+npm error code 1</code></pre>
+
+      <p>You cannot scaffold a studio &mdash; even a <code>--bare</code> one literally documented as &ldquo;skip the Studio initialization and only print the project ID&rdquo; &mdash; without a logged-in session. <code>sanity login</code> is an OAuth dance through the browser; there's no <code>--token</code> flag on <code>create-sanity</code>. On a CI box, a dev VM with no display, or a fresh workshop container, that's a wall.</p>
+
+      <div class="callout-broken">
+        <div class="lbl">Broken state &mdash; observed locally</div>
+        <p>The unattended-mode flag (<code>-y</code>) does not actually run unattended. <code>create-sanity</code> still requires a real authenticated user. The <code>-y</code> flag answers yes/no prompts but does not bypass auth.</p>
+      </div>
+
+      <p>The fix is to skip <code>create-sanity</code> entirely, install the <code>sanity</code> npm package directly, and write <code>sanity.config.ts</code> by hand &mdash; it's eight lines. The scaffolder isn't magic; it's a wizard wrapper around an <code>npm install</code> and a templated config file.</p>
+
+      <h2>Friction #2 &mdash; the React-19 peer-dep wall</h2>
+
+      <p>Once we'd switched to a manual install, the next obstacle was the peer-dep tree. Sanity 5.24 was published a few weeks before we tested it and it requires React 19. A vanilla <code>npm install sanity react react-dom</code> resolves <code>react@^18</code> from npm's defaults and explodes:</p>
+
+<pre><code>$ npm install sanity react react-dom styled-components
+npm error ERESOLVE could not resolve
+npm error
+npm error While resolving: my-studio@1.0.0
+npm error Found: react@18.3.1
+npm error Could not resolve dependency:
+npm error peer react@"^19.2.2" from sanity@5.24.0
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps</code></pre>
+
+      <p>Fine, install with the right pin. We did. The studio starts, then immediately throws this in the dev-server log <em>and</em> in a styled error overlay in the browser:</p>
+
+<pre><code>›   Error: Failed to start dev server: The following package versions are no
+›   longer supported and needs to be upgraded:
+›
+›     react (installed: 18.3.1, want: ^19.2.2)
+›     react-dom (installed: 18.3.1, want: ^19.2.2)
+›
+›     To upgrade, run either:
+›     npm install "react@^19.2.2" "react-dom@^19.2.2"</code></pre>
+
+      <p>Credit where it's due &mdash; the runtime check is in the studio's startup path and the message names a copy-pasteable upgrade command. The friction is the <em>cliff</em>: no soft warning when you're one minor version behind, only a hard refuse. If you share <code>node_modules</code> with a Next.js 14 app still on React 18, that's now your problem.</p>
+
+      <h2>Friction #3 &mdash; the studio is half a gigabyte for an empty schema</h2>
+
+      <p>After resolving everything &mdash; <code>sanity@5.24.0</code>, <code>@sanity/vision@5.24.0</code>, <code>react@19.2.6</code>, <code>react-dom@19.2.6</code>, <code>styled-components@6.4.1</code> &mdash; the on-disk footprint of an empty studio with one <code>post</code> document type is:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Phase</th><th>Wall clock</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>npm install</code> (cold cache)</td><td class="num">~110 s</td><td>NVMe disk, 552 packages installed</td></tr>
+          <tr><td><code>node_modules</code> on disk</td><td class="num">516 MB</td><td>For one <code>document</code> type with 3 fields</td></tr>
+          <tr><td><code>@sanity/*</code> sub-packages</td><td class="num">46</td><td>Including <code>asset-utils</code>, <code>diff-patch</code>, <code>icons</code>, <code>presentation-comlink</code>, <code>visual-editing-types</code>, <code>codegen</code>, <code>migrate</code>, <code>worker-channels</code>&hellip;</td></tr>
+          <tr><td><code>npx sanity dev</code> &rarr; ready</td><td class="num">864 ms</td><td>Vite 7.3.3 dev server bound to 0.0.0.0:18096</td></tr>
+          <tr><td>First HTTP <code>GET /</code></td><td class="num">5 ms</td><td>Just the HTML shell, 8.9&nbsp;KB</td></tr>
+          <tr><td>Studio process RSS at idle</td><td class="num">278 MiB</td><td>One node process with the Vite dev server</td></tr>
+          <tr><td>Studio process VSZ</td><td class="num">32.9 GiB</td><td>Virtual memory; not actually allocated</td></tr>
+        </tbody>
+      </table>
+
+      <p>For comparison: <a href="../keystonejs/">Keystone 6.5</a> with two collections, GraphQL playground and a Next.js admin came in at <strong>598 MB</strong> and <strong>77 MiB RSS</strong>. Sanity Studio with one document type and zero data sits in the same on-disk neighborhood, but pulls 552 packages to get there. The 46 <code>@sanity/*</code> sub-packages include things you won't touch on day one &mdash; <code>@sanity/codegen</code>, <code>@sanity/migrate</code>, <code>@sanity/comlink</code>, <code>@sanity/blueprints</code>, <code>@sanity/sdk</code>, <code>@sanity/visual-editing-types</code> &mdash; hoisted because the dependency closure doesn't differentiate between &ldquo;runtime needs this&rdquo; and &ldquo;the CLI loads this on demand.&rdquo;</p>
+
+      <h2>What the studio actually does when you point it at a fake project ID</h2>
+
+      <p>Here's the part that's most worth knowing about Sanity's architecture: the open-source studio is not self-contained. It's a Vite-built React app whose first network call &mdash; the very first thing that happens when you load the URL after the bundle is parsed &mdash; is <code>GET https://&lt;projectId&gt;.api.sanity.io/v&lt;date&gt;/users/me?tag=sanity.studio.users.get-current.initial</code>. The studio is not a CMS; it's a thin client over the Content Lake.</p>
+
+      <p>So we wrote the smallest config that would boot, with an obviously bogus project ID, and watched what happened:</p>
+
+<pre><code>// sanity.config.ts
+import {defineConfig} from 'sanity'
+import {structureTool} from 'sanity/structure'
+import {visionTool} from '@sanity/vision'
+
+export default defineConfig({
+  name: 'default',
+  title: 'My Studio',
+
+  projectId: 'ffffffff',
+  dataset: 'production',
+
+  plugins: [structureTool(), visionTool()],
+
+  schema: {
+    types: [
+      {
+        name: 'post',
+        title: 'Post',
+        type: 'document',
+        fields: [
+          {name: 'title', title: 'Title', type: 'string'},
+          {name: 'slug', title: 'Slug', type: 'slug', options: {source: 'title'}},
+          {name: 'body', title: 'Body', type: 'text'},
+        ],
+      },
+    ],
+  },
+})</code></pre>
+
+      <p>Boot the studio, hit <code>http://127.0.0.1:18096/</code>, and:</p>
+
+      <figure>
+        <img src="assets/01-studio-error.jpg" alt="Sanity Studio at http://127.0.0.1:18096/ rendering a fatal error: 'An error occurred — An error occurred that Sanity Studio was unable to recover from. Request error while attempting to reach is https://ffffffff.api.sanity.io/v2026-04-09/users/me?tag=sanity.studio.users.get-current.initial' with a Retry button and a Copy error details button.">
+        <figcaption>Sanity Studio 5.24.0 served by Vite 7.3.3 on <code>127.0.0.1:18096</code>, configured with <code>projectId: 'ffffffff'</code>. The studio loads, attempts to authenticate against the Content Lake, fails, and renders an unrecoverable error inside its own React error boundary. Captured 2026-05-07 via headless Chromium at 1280&times;760.</figcaption>
+      </figure>
+
+      <p>The error message is unusually honest: it names the exact URL the studio failed to reach, the request tag (<code>sanity.studio.users.get-current.initial</code> &mdash; searchable in the open-source repo), and the source frame inside Vite's pre-bundled chunk. The phrasing &ldquo;Request error while attempting to reach is&hellip;&rdquo; is a real grammatical bug in the published string &mdash; the &ldquo;is&rdquo; shouldn't be there. We left it in the screenshot verbatim.</p>
+
+      <h2>The Content Lake's response, verbatim</h2>
+
+      <p>To check what the studio was seeing on the wire, we hit the same URL the studio hits and the public query endpoints with deliberately invalid IDs:</p>
+
+<pre><code>$ curl -s -i "https://ffffffff.api.sanity.io/v2026-04-09/users/me?tag=sanity.studio.users.get-current.initial"
+
+HTTP/2 404
+content-type: application/json; charset=utf-8
+ratelimit-limit: 120
+ratelimit-remaining: 119
+x-served-by: populus-67997d6488-kxcl2
+sanity-gateway: k8s-gcp-eu-w1-prod-ing-01
+
+{"statusCode":404,"error":"Not Found",
+ "message":"Project with ID \"ffffffff\" not found",
+ "attributes":{"type":"project"}}</code></pre>
+
+      <p>And the GROQ query endpoint:</p>
+
+<pre><code>$ curl -s -i "https://invalidproject123.apicdn.sanity.io/v2024-05-07/data/query/production?query=*"
+
+HTTP/2 404
+content-type: application/json; charset=utf-8
+sanity-gateway: k8s-gcp-eu-w1-prod-ing-01
+apicdn-cache-control:
+cache-control: public, max-age=10
+x-sanity-age: 0
+
+{"error":"Dataset not found",
+ "statusCode":404,
+ "message":"Dataset \"production\" not found for project ID \"invalidproject123\""}</code></pre>
+
+      <p>Three things to notice. First, the envelope echoes your project ID back at you &mdash; you can verify client config without grepping. Second, <code>sanity-gateway: k8s-gcp-eu-w1</code> reveals the upstream is in GCP's <code>europe-west1</code> region, which matters for latency budgeting and compliance. Third, project IDs are silently lower-cased by the gateway: we sent <code>INVALID</code> as the subdomain and got back <code>"project ID \"invalid\""</code> in the body &mdash; a normalization that has caused bugs elsewhere when SDKs literal-compare configured vs echoed IDs.</p>
+
+      <p>CDN and API hosts share path and response schema. The CDN host adds <code>cache-control: public, max-age=10</code> and <code>x-sanity-age</code>; the live host bypasses caching. <code>@sanity/client@7.22.0</code> routes through CDN if you pass <code>useCdn: true</code>.</p>
+
+      <h2>What works, on a real public dataset</h2>
+
+      <p>The other end of the spectrum &mdash; what Sanity feels like when it works &mdash; we exercised against the Sanity-published demo dataset (<code>ppsg7ml5</code> / <code>movies</code>), which is the same one their tutorials use:</p>
+
+<pre><code>$ curl -s "https://ppsg7ml5.apicdn.sanity.io/v2024-05-07/data/query/movies\
+?query=*%5B_type%20%3D%3D%20%22movie%22%5D%5B0%5D%7Btitle%7D"
+
+{"query":"*[_type == \"movie\"][0]{title}",
+ "result":{"title":"WALL·E"},
+ "syncTags":["s1:EIIvFg"],
+ "ms":8}</code></pre>
+
+      <p>That's the GROQ pitch in one curl: a single URL, no client SDK, eight milliseconds from the EU edge. <code>*[_type == "movie"][0]{title}</code> filters to documents of type <code>movie</code>, takes the first one, projects only <code>title</code>. The response includes <code>syncTags</code> for cache invalidation and <code>ms</code> for honest latency. None of this requires auth on a public dataset.</p>
+
+      <p>For malformed queries the parser returns source-map-like positions:</p>
+
+<pre><code>$ curl -s "https://ppsg7ml5.apicdn.sanity.io/v2024-05-07/data/query/movies?query=BADGROQ%21%21%21"
+
+{"error":{"description":"expected infix operator, but saw \"!\"",
+  "end":14,"query":"BADGROQ!!!","start":7,"type":"queryParseError"}}</code></pre>
+
+      <p><code>start: 7, end: 14</code> for a query language is rare. <code>type: "queryParseError"</code> is a stable string a CI integration can branch on.</p>
+
+      <h2>Pricing &mdash; what the open-source studio costs to actually use</h2>
+
+      <p>Studio is MIT; the Content Lake is metered. Per the pricing page on 2026-05-07, <strong>Free</strong> (forever) ships 20 seats, 2 public datasets, 10,000 documents, 1M CDN requests/month, 250k API requests/month, 100 GB assets+bandwidth. <strong>Growth</strong> is $15/seat/month, 50 seats, private datasets, 25,000 documents, with metered overage ($1 per 250k extra CDN requests, $1 per 25k extra API requests, $0.50/GB extra asset storage, $0.30/GB extra bandwidth). Enterprise is contact-sales.</p>
+
+      <p>Free is genuinely generous. Growth gets pointed: a 5-editor team is $75/month before overages, $900/year. Self-hosted <a href="../keystonejs/">Keystone</a> with the same 5 editors on a $20/month VPS is $240/year. The trade is operational labor and the Presentation visual editor &mdash; which has no good open-source equivalent.</p>
+
+      <h2>The architectural shape, said plainly</h2>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Layer</th><th>What lives here</th><th>License</th><th>Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Studio</td><td>React app, schema config, plugins, custom inputs</td><td>MIT (open source)</td><td>Your repo / your hosting / npm package <code>sanity</code></td></tr>
+          <tr><td>Content Lake</td><td>Document store, GROQ query engine, asset pipeline, real-time API, mutations</td><td>Closed source (commercial SaaS)</td><td>Sanity-managed, GCP <code>europe-west1</code></td></tr>
+          <tr><td>API hostnames</td><td><code>api.sanity.io</code> (live), <code>apicdn.sanity.io</code> (cached)</td><td>&mdash;</td><td>Cloudflare-fronted (no <code>cf-ray</code> exposed; <code>via: 1.1 google</code> &amp; <code>sanity-gateway</code> headers expose origin)</td></tr>
+          <tr><td>Asset CDN</td><td><code>cdn.sanity.io</code> for image &amp; file delivery with on-the-fly transforms</td><td>&mdash;</td><td>Sanity-managed</td></tr>
+          <tr><td>Studio &harr; Lake handshake</td><td>OAuth via <code>sanity login</code>; cookie-based session for the studio</td><td>&mdash;</td><td>First call: <code>users/me?tag=&hellip;.initial</code></td></tr>
+        </tbody>
+      </table>
+
+      <p>This split is unusual. Most headless CMSes are either fully open (<a href="../keystonejs/">Keystone</a>, Strapi, Directus, Payload) or fully closed (<a href="../datocms/">DatoCMS</a>, Contentstack, Hashnode). Sanity ships a real, modifiable, MIT-licensed admin UI that's a shell over a backend you cannot self-host. If the Content Lake goes down, your studio is a tree-view of nothing. The tradeoff buys you Vision, schema-as-code in TypeScript, plugin ecosystem, real-time collaborative editing, and the Presentation visual editor. It costs you vendor lock on the data, 516 MB of <code>node_modules</code>, the React-19 wall, and a login dance to scaffold.</p>
+
+      <h2>What we wish the README had said up front</h2>
+
+      <ol>
+        <li><strong>Skip <code>npm create sanity</code> on a CI box.</strong> The unattended flag isn't unattended. Install <code>sanity</code> directly and write <code>sanity.config.ts</code> by hand &mdash; eight lines.</li>
+        <li><strong>You're on React 19.</strong> Sanity 5.24 hard-fails on React 18. Plan the upgrade for any sibling React apps too.</li>
+        <li><strong>The studio is a Content Lake client, not a CMS.</strong> Without a real <code>projectId</code> + <code>dataset</code> the studio renders a fatal error on page load. No offline mode, no &ldquo;just show the schema explorer&rdquo; mode.</li>
+        <li><strong>Project IDs are case-insensitive on the wire.</strong> The gateway lower-cases your subdomain &mdash; if your config validation literal-compares IDs, normalize first.</li>
+        <li><strong>The Growth seat axis is the cost driver.</strong> $15/seat/month is the line item to forecast; API/CDN meters rarely bind under a few million views/month.</li>
+      </ol>
+
+      <h2>What's actually nice about Sanity</h2>
+
+      <ul>
+        <li><strong>The studio boots in under a second.</strong> Vite 7 + hot reload of <code>sanity.config.ts</code> on save makes the iteration cycle fast.</li>
+        <li><strong>GROQ is a real query language.</strong> Filtering, projection, joins, ordering, pagination, references &mdash; all in one URL-safe DSL.</li>
+        <li><strong>Vision is built in.</strong> The GROQ playground ships at <code>/vision</code> with no extra config.</li>
+        <li><strong>The error envelopes are honest.</strong> Studio overlay and Content Lake JSON both include URL, project ID, and query position. That's rare.</li>
+        <li><strong>The asset pipeline isn't an afterthought.</strong> <code>cdn.sanity.io</code> does on-the-fly resize/format/focal-crop by URL params &mdash; no separate Imgix.</li>
+        <li><strong>Free tier is unusually wide.</strong> 20 seats, 10k documents, 1M CDN requests/month covers most hobby and small-team sites for $0.</li>
+      </ul>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per headless CMS we run on a real Linux box. Adjacent: <a href="../keystonejs/">Keystone 6.5.2 first boot</a> (TypeScript + Prisma + GraphQL, fully self-host), <a href="../datocms/">DatoCMS in 2026</a> (closed-source, GraphQL-first, EU SaaS), <a href="../decap-cms/">Decap CMS</a> (open-source studio over Git, no backend at all), <a href="../ghost/">Ghost on Linux Docker</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin into a draft code-fix PR &mdash; the &ldquo;Request error while attempting to reach is&rdquo; grammar bug is exactly the kind of thing it catches.</p>
+
+      <h2>Demo: SimpleReview on a Sanity issue</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/ZMo_kYLXO4U?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots Sanity Studio's grammar-bug error message and proposes the config-fix">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">localhost:18096/studio/</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-info">Sanity Studio v5.24.0</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">Vite v7.3.3 dev server · ready in 864 ms</span></div>
+              <div class="sc-term-line">&nbsp;</div>
+              <div class="sc-term-line"><span class="sc-term-warn">⚠ React Error Boundary caught:</span></div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⨯ Unrecoverable error</div>
+                <div class="sc-err-msg">"Request error while attempting to reach <span class="sc-rcount">is</span>..."<br># grammar bug — missing object after "reach"<br>cause: GET https://ffffffff.api.sanity.io/v2024-X/users/me<br>→ HTTP 404 · projectId "ffffffff" not found</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ Studio loaded · GROQ query 8 ms</span>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl https://apicdn.sanity.io/v2024-05-07/data/query/production \</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;-G --data-urlencode 'query=*[_type=="movie"][0]{title}'</span></div>
+                <div class="sc-term-line">&nbsp;</div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 200</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; sanity-gateway: k8s-gcp-eu-w1-prod-ing-01</span></div>
+                <div class="sc-term-line"><span class="sc-term-out" style="color:#7ee787">{"ms":8,"query":"...","result":{"title":"WALL·E"}}</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">"reach is..." — typo in studio</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Bug</span><span class="sc-sb-v">grammar</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Cause</span><span class="sc-sb-v">bad projectId</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Replace "ffffffff" placeholder with real Sanity projectId. Studio recovers without restart.</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">Studio loads. GROQ query 8 ms via apicdn.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(studio): use $SANITY_PROJECT_ID<br>1 line · sanity.config.ts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select <strong>"reach is..."</strong> → <strong>Fix it</strong> → real projectId in env</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 on a 32&nbsp;GB Linux VM, Node <code>v22.21.1</code>, npm <code>10.9.4</code>, <code>sanity@5.24.0</code> + <code>@sanity/vision@5.24.0</code> + <code>@sanity/client@7.22.0</code>, React <code>19.2.6</code>, Vite <code>7.3.3</code>, <code>create-sanity@5.2.16</code>. Studio bound to <code>127.0.0.1:18096</code>, configured with <code>projectId: 'ffffffff'</code> + <code>dataset: 'production'</code>. API responses captured from <code>https://&lt;projectId&gt;.api.sanity.io/v2026-04-09/users/me</code> and <code>https://&lt;projectId&gt;.apicdn.sanity.io/v2024-05-07/data/query/production</code>; demo dataset <code>ppsg7ml5/movies</code>. Sanity is a trademark of Sanity Inc.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

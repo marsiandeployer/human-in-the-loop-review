@@ -52,6 +52,10 @@ CMS_SLUGS = (
     "datocms",
     "tinacms",
     "keystonejs",
+    "contentful",
+    "sanity",
+    "sitecore-xm",
+    "builder-io",
 )
 RU_CMS_SLUGS = {"bitrix", "webasyst"}
 

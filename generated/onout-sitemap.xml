@@ -280,6 +280,10 @@
     <lastmod>2026-04-30T15:19:07+00:00</lastmod>
   </url>
   <url>
+    <loc>https://onout.org/builder-io/</loc>
+    <lastmod>2026-05-08T06:50:30+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://onout.org/cal-com/</loc>
     <lastmod>2026-05-07T15:46:35+00:00</lastmod>
   </url>
@@ -294,6 +298,10 @@
   <url>
     <loc>https://onout.org/concrete-cms/</loc>
     <lastmod>2026-05-07T15:46:35+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://onout.org/contentful/</loc>
+    <lastmod>2026-05-08T06:44:32+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/contentstack/</loc>
@@ -345,7 +353,7 @@
   </url>
   <url>
     <loc>https://onout.org/datocms/</loc>
-    <lastmod>2026-05-07T16:43:24+00:00</lastmod>
+    <lastmod>2026-05-07T17:10:15+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/decap-cms/</loc>
@@ -469,19 +477,27 @@
   </url>
   <url>
     <loc>https://onout.org/hygraph/</loc>
-    <lastmod>2026-05-07T16:43:10+00:00</lastmod>
+    <lastmod>2026-05-07T17:10:15+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/joomla/</loc>
-    <lastmod>2026-05-07T15:46:35+00:00</lastmod>
+    <lastmod>2026-05-08T06:51:39+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/joomla/how-to-fix-joomla-issues/</loc>
     <lastmod>2026-05-07T15:46:35+00:00</lastmod>
   </url>
   <url>
+    <loc>https://onout.org/joomla/joomla-extensions-search-errors-fix/</loc>
+    <lastmod>2026-05-08T06:41:27+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://onout.org/joomla/joomla-form-errors-find-all/</loc>
+    <lastmod>2026-05-08T06:49:35+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://onout.org/keystonejs/</loc>
-    <lastmod>2026-05-07T16:46:08+00:00</lastmod>
+    <lastmod>2026-05-07T17:10:15+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/launchpad/</loc>
@@ -664,6 +680,10 @@
     <lastmod>2026-04-30T15:19:07+00:00</lastmod>
   </url>
   <url>
+    <loc>https://onout.org/sanity/</loc>
+    <lastmod>2026-05-08T06:46:28+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://onout.org/sensorica/</loc>
     <lastmod>2026-04-30T15:19:07+00:00</lastmod>
   </url>
@@ -712,6 +732,10 @@
     <lastmod>2026-04-19T14:44:56+00:00</lastmod>
   </url>
   <url>
+    <loc>https://onout.org/sitecore-xm/</loc>
+    <lastmod>2026-05-08T06:48:22+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://onout.org/statamic/</loc>
     <lastmod>2026-05-07T15:46:35+00:00</lastmod>
   </url>
@@ -737,7 +761,7 @@
   </url>
   <url>
     <loc>https://onout.org/tinacms/</loc>
-    <lastmod>2026-05-07T16:55:38+00:00</lastmod>
+    <lastmod>2026-05-07T17:10:15+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/trash/fr.html</loc>

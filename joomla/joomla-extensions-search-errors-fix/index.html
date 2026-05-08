@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Joomla Extension "Searching for Errors" Fix — Install, Update Sites, Discover</title>
+  <meta name="description" content="Diagnose Joomla extension install and update errors in 2026: package upload, Manage Extensions, Update Sites, Discover, database checks, and when SimpleReview can prepare a site-ready fix.">
+  <meta name="keywords" content="joomla extension errors, joomla extension searching for errors, joomla extension install error, joomla update sites, joomla discover extensions">
+  <link rel="canonical" href="https://onout.org/joomla/joomla-extensions-search-errors-fix/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Joomla Extension &quot;Searching for Errors&quot; Fix">
+  <meta property="og:description" content="A practical Joomla 4/5 checklist for extension install, update site, Discover, and database errors. Includes real Joomla 5.4.5 Docker screenshots.">
+  <meta property="og:url" content="https://onout.org/joomla/joomla-extensions-search-errors-fix/">
+  <meta property="og:image" content="https://onout.org/joomla/joomla-extensions-search-errors-fix/screenshots/joomla-install-extensions.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/joomla/joomla-extensions-search-errors-fix/screenshots/joomla-install-extensions.png">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "inLanguage": "en",
+    "headline": "Joomla Extension \"Searching for Errors\" Fix — Install, Update Sites, Discover",
+    "description": "Diagnose Joomla extension install and update errors in 2026: package upload, Manage Extensions, Update Sites, Discover, database checks, and when SimpleReview can prepare a site-ready fix.",
+    "url": "https://onout.org/joomla/joomla-extensions-search-errors-fix/",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "image": "https://onout.org/joomla/joomla-extensions-search-errors-fix/screenshots/joomla-install-extensions.png",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/joomla/joomla-extensions-search-errors-fix/" },
+    "keywords": ["joomla extension errors", "joomla update sites", "joomla discover extensions", "joomla install extension error"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "en",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Where should I start when a Joomla extension install fails?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Start in System > Install > Extensions. Confirm the package is a real Joomla extension ZIP, not a nested archive, then check upload limits, the Joomla /tmp path, PHP version, and whether modules or plugins need to be enabled after install."}
+      },
+      {
+        "@type": "Question",
+        "name": "What does Joomla Update Sites rebuild do?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Update Sites lists the XML endpoints Joomla uses to find extension updates. Rebuild recreates those update site records from installed extension manifests, which helps when update site rows are missing or stale."}
+      },
+      {
+        "@type": "Question",
+        "name": "When should I use Discover in Joomla?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Use Discover when extension files were uploaded to the server manually, often because a package is too large for the web uploader. Discover searches the expected Joomla extension directories and lets you register the extension."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can SimpleReview fix Joomla extension errors automatically?",
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview can prepare site-ready fixes for file-level Joomla problems: wrong template override, language string, module/plugin setting, broken update XML, or PHP compatibility issue. Paid license portals, missing vendor support, and risky database surgery still need human review."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-text-size-adjust:100%}
+    body{background:#f6f7fb;color:#172033;font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+    a{color:#1769c2;text-decoration:none}
+    a:hover{text-decoration:underline}
+    code{background:#eef2f7;border:1px solid #dbe4f0;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;padding:1px 5px}
+    pre{background:#101827;color:#e8edf7;border-radius:8px;margin:18px 0;overflow:auto;padding:16px 18px}
+    pre code{background:transparent;border:0;color:inherit;padding:0}
+    .page{background:#fff;max-width:920px;margin:0 auto;min-height:100vh;padding:0 40px 44px}
+    .site-nav{align-items:center;border-bottom:2px solid #1f3553;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;padding:24px 0 18px}
+    .brand{color:#172033;font-size:17px;font-weight:800}
+    .nav-links{display:flex;flex-wrap:wrap;gap:18px;font-size:14px}
+    .nav-links a{color:#536171}
+    .article-meta{color:#6c7683;display:flex;flex-wrap:wrap;font-size:13px;gap:14px;margin:34px 0 12px}
+    h1{color:#18395c;font-size:42px;font-weight:800;letter-spacing:-.8px;line-height:1.12;margin:0 0 14px;max-width:820px}
+    .lead{border-left:4px solid #f44321;color:#344052;font-size:18px;line-height:1.62;margin:0 0 26px;padding-left:18px}
+    h2{border-top:1px solid #e7edf4;color:#18395c;font-size:26px;letter-spacing:-.35px;line-height:1.22;margin:42px 0 14px;padding-top:24px}
+    h3{color:#18395c;font-size:18px;margin:28px 0 8px}
+    p,ul,ol{margin-bottom:16px}
+    ul,ol{padding-left:24px}
+    li{margin-bottom:8px}
+    .takeaways,.warning,.cta-block{border-radius:8px;margin:24px 0;padding:20px 22px}
+    .takeaways{background:#eef6ff;border:1px solid #c8dff6}
+    .takeaways strong{color:#18395c}
+    .warning{background:#fff6ed;border:1px solid #ffd5ac;color:#6f3d0e}
+    .cta-block{background:#18395c;color:#fff;text-align:center}
+    .cta-block h2{border:0;color:#fff;margin:0 0 8px;padding:0}
+    .cta-block p{color:#d7e5f7}
+    .cta-btn{background:#f44321;border-radius:7px;color:#fff;display:inline-flex;font-weight:700;margin-top:4px;min-height:44px;align-items:center;padding:10px 22px}
+    .cta-btn:hover{background:#d33718;text-decoration:none}
+    .table-wrap{overflow-x:auto}
+    table{border-collapse:collapse;font-size:14px;margin:18px 0 24px;width:100%}
+    th{background:#18395c;color:#fff;font-weight:700;text-align:left}
+    th,td{border-bottom:1px solid #e4ebf4;padding:10px 12px;vertical-align:top}
+    tr:nth-child(even) td{background:#fbfdff}
+    .figure{margin:24px 0 30px}
+    .figure img{border:1px solid #d7e2ee;border-radius:8px;display:block;height:auto;width:100%}
+    .figure figcaption{color:#667381;font-size:13px;line-height:1.5;margin-top:8px}
+    .video-wrap{margin:22px 0 30px}
+    .video-wrap video{background:#111827;border-radius:10px;display:block;width:100%}
+    .sources-list{font-size:14px;padding-left:20px}
+    .related{border-top:2px solid #18395c;margin-top:42px;padding-top:24px}
+    .related-grid{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .related-card{border:1px solid #e0e8f1;border-radius:8px;padding:15px}
+    .related-card a{color:#172033;font-weight:700}
+    .related-card p{color:#6c7683;font-size:13px;margin:6px 0 0}
+    footer{border-top:1px solid #e7edf4;color:#778390;display:flex;flex-wrap:wrap;font-size:13px;gap:10px;justify-content:space-between;margin-top:42px;padding-top:20px}
+
+    .sc-banner{background:#111827;border-radius:12px;box-shadow:0 6px 28px rgba(15,23,42,.18);font-family:'Inter',sans-serif;margin:30px 0;overflow:hidden;position:relative}
+    .sc-chrome{align-items:center;background:#e7ebf2;border-bottom:1px solid #cbd5e1;display:flex;gap:8px;min-width:0;padding:8px 12px}
+    .sc-dots{display:flex;gap:5px}
+    .sc-dots span{border-radius:50%;height:10px;width:10px}.sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{background:#fff;border:1px solid #cad3df;border-radius:5px;color:#4b5563;flex:1;font-size:12px;min-width:0;overflow:hidden;padding:5px 10px;text-overflow:ellipsis;white-space:nowrap}
+    .sc-ext{background:#f44321;border-radius:5px;color:#fff;font-size:12px;font-weight:800;padding:3px 7px;animation:extPulse 28s infinite}
+    .sc-stage{background:#f2f5f9;min-height:360px;overflow:hidden;position:relative}
+    .sc-admin{display:grid;grid-template-columns:150px 1fr;min-height:360px}
+    .sc-side{background:#1f3553;color:#d9e6f5;padding:18px 12px}
+    .sc-logo{color:#fff;font-size:22px;font-weight:800;margin-bottom:20px}
+    .sc-menu{font-size:12px;line-height:2.4}
+    .sc-main{padding:18px 22px}
+    .sc-title{align-items:center;color:#18395c;display:flex;font-size:18px;font-weight:800;gap:8px;margin-bottom:18px}
+    .sc-toolbar{display:flex;gap:10px;margin-bottom:18px}
+    .sc-btn{background:#fff;border:1px solid #cbd5e1;border-radius:5px;color:#274765;font-size:12px;padding:9px 12px}
+    .sc-table{background:#fff;border:1px solid #d8e2ee;border-radius:8px;overflow:hidden}
+    .sc-row{display:grid;grid-template-columns:60px 1fr 100px 90px;border-bottom:1px solid #e6edf5;font-size:12px;gap:12px;padding:10px 12px}
+    .sc-row:last-child{border-bottom:0}
+    .sc-head{background:#f8fafc;color:#42617d;font-weight:800}
+    .sc-ok{color:#15803d;font-weight:800}.sc-off{color:#9ca3af}
+    .sc-cursor{background:#fff;border:2px solid #f44321;border-radius:50%;box-shadow:0 6px 16px rgba(244,67,33,.25);height:22px;left:77%;position:absolute;top:24%;width:22px;z-index:6;animation:cursorMove 28s infinite}
+    .sc-panel{background:#fff;border:1px solid #dce6f2;border-radius:10px;box-shadow:0 16px 44px rgba(15,23,42,.25);position:absolute;right:26px;top:76px;width:300px;z-index:5;opacity:0;transform:translateY(12px);animation:panelShow 28s infinite}
+    .sc-panel-h{background:#18395c;border-radius:10px 10px 0 0;color:#fff;font-weight:800;padding:12px 14px}
+    .sc-panel-b{padding:14px}
+    .sc-panel-b p{color:#475569;font-size:12px;line-height:1.5;margin:0 0 10px}
+    .sc-fix{background:#f44321;border-radius:6px;color:#fff;display:inline-block;font-size:12px;font-weight:800;padding:8px 12px}
+    .sc-done{background:#e8fff1;border:1px solid #a7f3d0;color:#166534;font-size:12px;font-weight:800;margin-top:10px;padding:8px;border-radius:6px;opacity:0;animation:doneShow 28s infinite}
+    @keyframes extPulse{0%,10%,100%{box-shadow:none}12%,16%{box-shadow:0 0 0 6px rgba(244,67,33,.28)}}
+    @keyframes cursorMove{0%,12%{left:77%;top:24%}22%,34%{left:43%;top:50%}48%,60%{left:83%;top:34%}76%,100%{left:72%;top:68%}}
+    @keyframes panelShow{0%,28%{opacity:0;transform:translateY(12px)}34%,86%{opacity:1;transform:translateY(0)}92%,100%{opacity:0;transform:translateY(12px)}}
+    @keyframes doneShow{0%,62%{opacity:0}68%,88%{opacity:1}94%,100%{opacity:0}}
+    @media(max-width:760px){.page{padding:0 20px 34px}h1{font-size:30px}.related-grid{grid-template-columns:1fr}.sc-admin{grid-template-columns:1fr}.sc-side{display:none}.sc-panel{left:14px;right:14px;width:auto}.sc-row{grid-template-columns:44px 1fr 72px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers — Human Code Review</a>
+    <div class="nav-links">
+      <a href="/joomla/">Joomla hub</a>
+      <a href="/joomla/how-to-fix-joomla-issues/">Joomla repair guide</a>
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Joomla / Extensions</span>
+      <span>May 8, 2026</span>
+      <span>12 min read</span>
+    </div>
+
+    <h1>Joomla Extension “Searching for Errors” Fix: Install, Update Sites, and Discover</h1>
+    <p class="lead">When people search for “Joomla extension searching for errors”, they usually do not mean one single Joomla error. They mean the extension flow is stuck somewhere: the ZIP will not upload, the plugin installed but is disabled, update checks never finish, or the extension files were copied by FTP and Joomla cannot see them. This guide gives you the shortest reliable path through Joomla 4/5 extension screens before you pay for custom work.</p>
+
+    <section class="sc-banner" aria-label="Animated SimpleReview Joomla extension error demo">
+      <div class="sc-chrome">
+        <div class="sc-dots"><span></span><span></span><span></span></div>
+        <div class="sc-url">joomla.example/administrator/index.php?option=com_installer</div>
+        <div class="sc-ext">SR</div>
+      </div>
+      <div class="sc-stage">
+        <div class="sc-admin">
+          <div class="sc-side">
+            <div class="sc-logo">Joomla!</div>
+            <div class="sc-menu">Home Dashboard<br>Content<br>Menus<br>Components<br>Users<br>System<br>Help</div>
+          </div>
+          <div class="sc-main">
+            <div class="sc-title">Extensions: Manage</div>
+            <div class="sc-toolbar"><div class="sc-btn">Install Extensions</div><div class="sc-btn">Check For Updates</div><div class="sc-btn">Filter Options</div></div>
+            <div class="sc-table">
+              <div class="sc-row sc-head"><div>Status</div><div>Name</div><div>Type</div><div>Version</div></div>
+              <div class="sc-row"><div class="sc-ok">OK</div><div>System - SEF</div><div>Plugin</div><div>5.4.5</div></div>
+              <div class="sc-row"><div class="sc-off">OFF</div><div>API Authentication</div><div>Plugin</div><div>4.0.0</div></div>
+              <div class="sc-row"><div class="sc-ok">OK</div><div>Example Updates</div><div>Component</div><div>1.0.0</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-cursor"></div>
+        <div class="sc-panel">
+          <div class="sc-panel-h">SimpleReview found the Joomla extension path</div>
+          <div class="sc-panel-b">
+            <p>It checks the installer screen, update-site XML, enabled state, PHP version, and the file-level fix before you touch production.</p>
+            <span class="sc-fix">Prepare site-ready fix</span>
+            <div class="sc-done">Fix package ready: update XML + extension manifest note</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="video-wrap">
+      <video controls muted playsinline preload="metadata" poster="screenshots/joomla-manage-extensions.png">
+        <source src="banner.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="takeaways">
+      <p><strong>Fast triage:</strong> use <code>System → Install → Extensions</code> for package problems, <code>System → Manage → Extensions</code> for disabled or locked extensions, <code>System → Update → Update Sites</code> for update XML problems, and <code>System → Install → Discover</code> when files were uploaded manually. The screenshots below were captured from a real Joomla 5.4.5 Docker install, not a mock UI.</p>
+    </div>
+
+    <h2>The three screens that matter first</h2>
+    <p>Do not start by editing database tables. Joomla already exposes enough signal in the administrator UI to separate a bad package from a bad update server or a disabled plugin. In a clean Joomla 5.4.5 install, the extension workflow begins at <code>System → Install → Extensions</code>.</p>
+
+    <figure class="figure">
+      <img src="screenshots/joomla-install-extensions.png" alt="Joomla 5.4.5 administrator Extensions Install screen with Upload Package File selected">
+      <figcaption>Real Joomla 5.4.5 Docker screenshot: the Upload Package File tab is where ZIP format, upload-size, and package-structure issues surface first.</figcaption>
+    </figure>
+
+    <p>If the package uploads but the extension “does nothing”, go to Manage Extensions before you reinstall it three times. Modules and plugins often need to be enabled after installation; core extensions may be locked; and a disabled plugin can look like a broken install from the frontend.</p>
+
+    <figure class="figure">
+      <img src="screenshots/joomla-manage-extensions.png" alt="Joomla 5.4.5 administrator Extensions Manage table with status, name, location, type and version columns">
+      <figcaption>The Manage screen gives you status, location, type, version, folder, package ID, and extension ID. Those columns are the evidence you need before changing files.</figcaption>
+    </figure>
+
+    <p>For update problems, Update Sites is the next screen. Joomla extension updates depend on XML endpoints. If those rows are stale, disabled, missing, or pointing to a vendor URL that no longer responds, update checks can appear to hang or silently show no available update.</p>
+
+    <figure class="figure">
+      <img src="screenshots/joomla-update-sites.png" alt="Joomla 5.4.5 administrator Update Sites table showing Joomla core and language update XML URLs">
+      <figcaption>Update Sites shows the XML endpoints Joomla checks. Rebuild is useful when installed manifests and update-site records have drifted.</figcaption>
+    </figure>
+
+    <h2>Fix the common install errors in order</h2>
+    <ol>
+      <li><strong>Confirm the package is a Joomla extension ZIP.</strong> A common failure is a nested archive: the downloaded ZIP contains documentation plus a second installable ZIP. Joomla expects the installable extension package at upload time.</li>
+      <li><strong>Check upload limits.</strong> The real installer screen above shows a 2 MB maximum in this Docker setup. Shared hosting often has low <code>upload_max_filesize</code> or <code>post_max_size</code>. Use Install from Folder when the package is legitimate but too large.</li>
+      <li><strong>Check the temporary path.</strong> Joomla stores and unpacks uploads in <code>/tmp</code> during install. A wrong or unwritable temp path breaks packages that are otherwise valid.</li>
+      <li><strong>Read the extension manifest.</strong> The manifest tells Joomla the extension type, version, target files, update servers, and sometimes PHP/Joomla constraints.</li>
+      <li><strong>Enable the right thing after install.</strong> Components appear under Components, modules need assignment, and plugins usually need to be enabled in Manage Extensions or Plugins.</li>
+    </ol>
+
+    <p>Official Joomla user docs describe the standard upload path as: download the ZIP, go to <code>System → Install → Extensions</code>, choose the file or drag it into the upload area, and then enable modules/plugins when required. The same docs point to Install from Folder for packages that are too large for the web uploader.</p>
+
+    <h2>When update checks are the real problem</h2>
+    <p>Joomla update discovery is not magic. The developer documentation describes it as a two-step flow: Joomla finds updates for installed extensions, then installs the selected update. Each extension can register an update server URL; Joomla fetches XML, checks that the XML is well formed, compares versions, checks platform restrictions, and then writes a matching row into <code>#__updates</code>.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Symptom</th><th>Most likely cause</th><th>What to check</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>“No updates found” but vendor has a new version</td><td>Update site missing, disabled, or stale</td><td>System → Update → Update Sites → Rebuild; verify the vendor XML URL still opens</td></tr>
+          <tr><td>Update appears, then fails</td><td>Download URL, license key, PHP version, Joomla target version, or vendor server issue</td><td>Update XML restrictions, vendor download key, PHP version, Joomla 4/5 compatibility</td></tr>
+          <tr><td>Update check is slow or hangs</td><td>One or more remote update XML endpoints time out</td><td>Temporarily disable suspect third-party update sites and rerun Check For Updates</td></tr>
+          <tr><td>Pre-update check complains about database structure</td><td>Schema tracking issue, often from non-standard installs or failed migrations</td><td>System → Maintenance → Database before touching SQL</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Do not delete update sites blindly. Some paid extensions rely on vendor-specific update endpoints and download IDs. Rebuild first, then disable only the row you are testing, and record the before/after state.</p>
+
+    <h2>Use Discover only for manually uploaded files</h2>
+    <p><code>System → Install → Discover</code> is not a general repair button. Use it when extension files were already placed into Joomla’s expected directories by SFTP/FTP, commonly because the normal uploader cannot handle the package size. Joomla’s user documentation lists typical component paths such as site files under <code>components/com_example</code>, administrator files under <code>administrator/components/com_example</code>, media under <code>media/com_example</code>, and language files under the relevant <code>language</code> directories.</p>
+
+    <p>If Discover finds nothing, one of these is usually true: files are in the wrong directory, the extension manifest is missing, the archive was unpacked one directory too deep, or the package is not compatible with the Joomla version you are running.</p>
+
+    <h2>Database checks come late, not first</h2>
+    <p>The official Joomla problem note for database table structure is narrow: it describes a pre-update check mismatch where the maintenance page does not show the same error, and points to missing schema data. That is not a reason to run random SQL from a forum post. If you get a database-structure warning, first use <code>System → Maintenance → Database</code>. Only then consider a database client, and only after a backup.</p>
+
+    <div class="warning">
+      <strong>Production rule:</strong> before changing extension records, schemas, update sites, or filesystem permissions, take a full file/database backup. Extension fixes often touch both code and data.
+    </div>
+
+    <h2>How SimpleReview helps without turning this into a ticket</h2>
+    <p><a href="/joomla/">SimpleReview for Joomla</a> is useful when the error has a file-level or configuration-level fix: broken template override, language override, plugin enablement, update XML mismatch, manifest constraint, or PHP compatibility warning. It captures the exact screen, checks the Joomla file layout, and prepares a site-ready fix you can upload or deploy.</p>
+
+    <p>It will not pretend to solve vendor-side problems. If a paid download server rejects your license key, if a closed-source extension has no Joomla 5 build, or if the database needs risky surgery, the right output is a clear handoff to <a href="/vibers/">Vibers human review</a> with screenshots, logs, and the exact admin screen.</p>
+
+    <div class="cta-block">
+      <h2>Fix the Joomla screen you can actually see</h2>
+      <p>Click the broken frontend or administrator element, let SimpleReview inspect the Joomla paths, and get a site-ready fix instead of another vague support thread.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview</a>
+    </div>
+
+    <h2>Sources checked</h2>
+    <ul class="sources-list">
+      <li><a href="https://guide.joomla.org/user-manual/extensions/extensions-installing-an-extension">Joomla User Guide: Installing an Extension</a></li>
+      <li><a href="https://manual.joomla.org/docs/5.4/building-extensions/install-update/installation/install-process/">Joomla 5.4 Developer Manual: Install Process and Script Files</a></li>
+      <li><a href="https://manual.joomla.org/docs/5.4/building-extensions/install-update/update-server/">Joomla 5.4 Developer Manual: Update Servers</a></li>
+      <li><a href="https://guide.joomla.org/user-manual/problems/problems-database-table-structure">Joomla User Guide: Database Table Structure</a></li>
+      <li><a href="https://guide.joomla.org/user-manual/extensions/extensions-vulnerable-extensions">Joomla User Guide: Vulnerable Extensions</a></li>
+    </ul>
+
+    <section class="related">
+      <h2>Related Joomla fixes</h2>
+      <div class="related-grid">
+        <div class="related-card">
+          <a href="/joomla/">SimpleReview for Joomla</a>
+          <p>The main Joomla landing page for site-ready fixes and marketplace positioning.</p>
+        </div>
+        <div class="related-card">
+          <a href="/joomla/how-to-fix-joomla-issues/">How to fix Joomla issues</a>
+          <p>General Joomla repair guide for white screens, template overrides, forms, and upgrades.</p>
+        </div>
+        <div class="related-card">
+          <a href="/drupal/drupal-vs-wordpress-honest-tradeoffs/">Drupal vs WordPress</a>
+          <p>For teams comparing CMS maintenance burden before rebuilding a legacy site.</p>
+        </div>
+        <div class="related-card">
+          <a href="/wordpress/how-to-fix-and-improve-wordpress-sites/">Fix WordPress sites</a>
+          <p>Same SimpleReview approach applied to WordPress plugin and theme issues.</p>
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <footer>
+    <span>© 2026 Vibers / SimpleReview</span>
+    <span><a href="/vibers/">Vibers</a> · <a href="/simple-review/">SimpleReview</a> · <a href="/joomla/">Joomla hub</a></span>
+  </footer>
+</div>
+</body>
+</html>

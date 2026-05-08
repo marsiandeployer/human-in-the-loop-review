@@ -2,6 +2,13 @@
 .entire/
 .agents/
 .claude/
+!.claude/
+.claude/*
+!.claude/skills/
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/cms-docker-screenshots/
+!.claude/skills/cms-docker-screenshots/SKILL.md
 
 # Runtime state
 .env

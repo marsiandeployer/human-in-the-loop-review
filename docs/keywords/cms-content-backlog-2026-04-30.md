@@ -46,8 +46,8 @@ Cost: ~1-2 days. Target: ship-then-measure.
 | ☐ | prestashop | `prestashop-vs-wordpress-when-each-wins` | PrestaShop vs WordPress: When Each Wins | `prestashop vs wordpress` | 110 | 3 | KD 3 |
 | ☐ | prestashop | `prestashop-meta-keywords-guide` | PrestaShop Meta Keywords: Are They Still Worth It? | `prestashop meta keywords` | 390 | 11 | KD 11 |
 | ☐ | prestashop | `hire-prestashop-developer-vs-simplereview` | Hire PrestaShop Developer vs SimpleReview | `hire prestashop developers` | 140 | 6 | KD 6-11 |
-| ☐ | joomla | `joomla-extensions-search-errors-fix` | Joomla Extension "Searching for Errors" — Diagnose & Fix | `joomla: extension seaching for errors` | 2400 | 6 | KD 6, vol 2400! |
-| ☐ | joomla | `joomla-form-errors-find-all` | How to Find All Form Errors on a Joomla Site | `joomla: how to find all form errors on a website` | 1900 | 7 | KD 7, vol 1900 |
+| ☑ | joomla | `joomla-extensions-search-errors-fix` | Joomla Extension "Searching for Errors" — Diagnose & Fix | `joomla: extension seaching for errors` | 2400 | 6 | Published 2026-05-08 with official Joomla research, real Joomla 5.4.5 Docker screenshots, SimpleReview animated banner video, and hub/internal links |
+| ☑ | joomla | `joomla-form-errors-find-all` | How to Find All Form Errors on a Joomla Site | `joomla: how to find all form errors on a website` | 1900 | 7 | Published 2026-05-08 with official Joomla validation/debug research, real Joomla 5.4.5 contact-form error screenshots, SimpleReview animated banner video, and internal links |
 | ☐ | joomla | `joomla-3-change-footer-template-js-unlimited` | Joomla 3: Change Footer Info in JS_Unlimited Template | `joomla 3: change footer info in template js_unlimited` | 720 | 9 | KD 9, vol 720 |
 | ☐ | joomla | `joomla-4-to-5-upgrade-extension-issues` | Joomla 4 → 5 Upgrade: Extension Compatibility Fix | `joomla 4 to joomla 5 upgade extension` | 880 | 16 | KD 16, vol 880 |
 | ☐ | joomla | `joomla-imagick-php-module-not-loaded-fix` | Fix "Imagick PHP Module Not Loaded" on Joomla 3 | `automatic intro image: imagick php module not loaded joomla 3` | 720 | 16 | KD 16 |

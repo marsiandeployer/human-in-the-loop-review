@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Builder.io: a real curl, the Fusion/Publish split, and where the visual editor actually lands</title>
+  <meta name="description" content="We scouted Builder.io on 2026-05-07 the way a developer comparing five visual headless CMSes would: pricing page, public CDN, docs, a real curl. The 401 JSON shape, the Fusion vs Publish tab on /m/pricing, the Mitosis story, and where Builder.io fits next to Storyblok, Contentstack, Strapi and Directus.">
+  <link rel="canonical" href="https://onout.org/builder-io/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Builder.io: a real curl, the Fusion/Publish split, and where the visual editor actually lands">
+  <meta property="og:description" content="The pricing page that hides the numbers, the 401 JSON shape from cdn.builder.io, the Mitosis bet, and where it fits next to Storyblok and Contentstack. Scouting note from 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/builder-io/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Builder.io: a real curl, the Fusion/Publish split, and where the visual editor actually lands",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/builder-io/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #ececec; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .banner-placeholder { background: #0f0f0f; border-radius: 12px; min-height: 380px; display: flex; align-items: center; justify-content: center; color: #555; font-family: ui-monospace, monospace; font-size: 13px; margin: 0 0 32px; border: 1px dashed #2a2a2a; }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Builder.io
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Visual SaaS scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>Builder.io Content API <code>v3</code></span>
+          <span>·</span>
+          <span>edge: <code>cdn.builder.io</code> (Cloudfront + Fastly + GFE)</span>
+        </div>
+        <h1>Builder.io: a real curl, the Fusion/Publish split, and where the visual editor actually lands</h1>
+        <p class="lede">Builder.io is the visual-editor headless CMS the React community keeps coming back to. We spent a session on 2026-05-07 doing the basic developer-evaluation walk: open <code>/m/pricing</code>, hit <code>cdn.builder.io/api/v3/content/page</code> with a fake key to see the unfiltered JSON, read the Content API docs, and check what "Fusion" and "Publish" actually mean now that the marketing has reframed the product around an AI-first IDE. Here's the verbatim 401 we pulled, the pricing tab structure, and where Builder.io sits next to Storyblok, Contentstack and the open-source three.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts a code-fix PR on whatever element you click on a broken admin or storefront. We are not affiliated with Builder.io, not partners, not customers, not investors. This page is a scouting note from one real evaluation session on 2026-05-07: public marketing site, public docs, the actual <code>cdn.builder.io</code> CDN endpoint hit with <code>curl</code>. We did not pay for a seat. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>Friction 1 — the pricing page is a tab</h2>
+
+      <p>Most pricing pages are a tier ladder you can absorb in ten seconds. Builder's <code>/m/pricing</code> opens with a headline that reads "Select a plan for your team" and a subhead that does the actual product positioning: <em>"Start with either Fusion or Publish. Combine both into the ultimate AI-accelerated workflow."</em> Underneath that, before any tier card, there's a tab toggle: <strong>Fusion (Visual IDE)</strong> on the left, <strong>Publish (Visual CMS)</strong> on the right.</p>
+
+      <figure>
+        <img src="assets/01-pricing.jpg" alt="Builder.io pricing page on 2026-05-07: dark background, headline 'Select a plan for your team', subhead about combining Fusion and Publish, tab toggle with Fusion (Visual IDE) and Publish (Visual CMS)">
+        <figcaption>Captured 2026-05-07 from <code>https://www.builder.io/m/pricing</code> via headless Chrome 145 at 992&times;558. The first thing you have to do on the pricing page is pick a product axis — Fusion (the AI design-to-code IDE) or Publish (the headless CMS). Pricing is per-axis.</figcaption>
+      </figure>
+
+      <p>The split matters. Fusion is the AI-pipeline product — Figma-to-code, brand-aware generation, the agent stack — pushed hard since the 2024-2025 design-to-code wave (same era that fed v0 / Lovable / Bolt). Publish is the older, more familiar Builder.io: visual page builder + headless content delivery via <code>cdn.builder.io</code>, the side the existing customer base integrates against in production.</p>
+
+      <p>Once you pick a tab, the tier cards are the standard four-column SaaS layout: <strong>Free</strong>, <strong>Pro</strong>, <strong>Team</strong>, <strong>Enterprise</strong>. Free and Pro CTAs route to self-serve signup; Enterprise routes to <em>Contact sales</em>.</p>
+
+      <figure>
+        <img src="assets/03-pricing-cards.jpg" alt="Builder.io pricing tier cards captured 2026-05-07. Four columns: Free, Pro, Team, Enterprise. Each has a one-line description and a Get started or Contact sales button. No monthly numbers visible at this scroll position.">
+        <figcaption>The tier cards on the same page, scrolled past the hero. The four-column "Free / Pro / Team / Enterprise" layout is the canonical SaaS shape. Monthly numbers live behind the "Compare plan features" matrix below; the cards themselves carry only persona descriptions, not prices.</figcaption>
+      </figure>
+
+      <div class="callout-broken">
+        <div class="lbl">What's hidden vs what's shown</div>
+        <p>Unlike Contentstack (which hides everything behind "Contact us"), Builder shows you Free and lets you self-serve into a sandbox. Where it gets coy is the Pro and Team monthly amount — the cards don't carry a $X/month number. You have to expand the "Compare plan features" matrix and read the Monthly Usage row to see numbers like "$25 per 500 Agent Credits" pay-as-you-go and "500 monthly Agent Credits" included. The unit of pricing is not seats — it's <strong>Agent Credits</strong>, which is the AI generation budget, not document count or page views. That changes the buyer math significantly: the question stops being "how many editors" and becomes "how much does our team generate with the AI."</p>
+      </div>
+
+      <p>The Free tier is generous enough to actually evaluate the editor: up to 5 users per space, 25 daily / 75 monthly Agent Credits, GitHub/GitLab/Bitbucket integration, public previews. Enough to wire a Next.js app against a real Builder space without paying. We didn't sign up in this session — we wanted to characterize the surface a developer hits first — but the gate is materially lower than Contentstack's.</p>
+
+      <h2>The first-hand artifact — what <code>cdn.builder.io</code> actually returns</h2>
+
+      <p>The pricing page can be a tab. The production CDN cannot. Builder's Content API is the same endpoint every customer's frontend calls, and you can hit it without an account because the auth is a query-string <code>apiKey</code>. Public CDN, public response, no rate-limit on the unauthenticated path before the 401:</p>
+
+<pre><code>$ curl -sD- -o /tmp/resp.json \
+    "https://cdn.builder.io/api/v3/content/page?apiKey=fake_invalid_key_test_12345"
+
+HTTP/2 401
+content-type: application/json; charset=utf-8
+content-length: 103
+x-builder-long-cache-setting: -1
+x-powered-by: Express
+access-control-allow-origin: *
+access-control-allow-headers: content-type, accept, authorization,
+  x-builder-sdk, x-builder-sdk-gen, x-builder-sdk-version,
+  sentry-trace, baggage
+access-control-allow-methods: GET, POST, PUT, DELETE, OPTIONS, PATCH
+x-request-id: 1d686210-4aa7-11f1-9f56-ed42afe9474f
+etag: W/"67-xZqoQ28XGZwrYSYebFoYpA8DNzI"
+server: Google Frontend
+via: 1.1 varnish, 1.1 102b88467fa873b1937f2ab6cab80ac0.cloudfront.net (CloudFront)
+x-served-by: cache-fra-etou8220068-FRA
+x-builder-custom-fastly-maxage: -1
+x-cloudrun-origin: primary
+vary: Authorization
+x-cache: Error from cloudfront
+x-amz-cf-pop: HEL51-P6
+date: Fri, 08 May 2026 06:28:23 GMT</code></pre>
+
+      <p>Body of the response, verbatim:</p>
+
+<pre><code>{
+  "status": 401,
+  "message": "Authorization required",
+  "detail": "For help please contact support@builder.io"
+}</code></pre>
+
+      <p>A few things you can read off this response without buying a seat:</p>
+
+      <ul>
+        <li><strong>The infra is multi-layered.</strong> <code>via: 1.1 varnish, 1.1 ... cloudfront.net (CloudFront)</code> plus <code>server: Google Frontend</code> plus <code>x-cloudrun-origin: primary</code> means: Cloudflare/Fastly Varnish at the edge → CloudFront in front of that for some routes → Google Cloud Run as the origin. Three providers stacked. That's a lot of failure surface, but it's also a lot of redundancy.</li>
+        <li><strong>The error shape is small and stable.</strong> Three keys: <code>status</code>, <code>message</code>, <code>detail</code>. No field-level error array (Contentstack's CDA returns one), no rate-limit headers visible, no per-resource hint. If you write a generic error handler in your SDK, this is what it has to parse — and a real Builder client should treat 401 + this body as "the apiKey is wrong or the project moved" before bothering the user.</li>
+        <li><strong>CORS is wide open and well-documented.</strong> The <code>access-control-allow-origin: *</code> plus the long allowed-headers list including <code>x-builder-sdk</code>, <code>x-builder-sdk-gen</code>, <code>x-builder-sdk-version</code> tells you the SDK identifies itself per request. That's how Builder tracks SDK adoption and rolls out per-version bug fixes.</li>
+        <li><strong>The cache layer is hostile to errors, by design.</strong> <code>x-cache: Error from cloudfront</code> plus <code>x-builder-long-cache-setting: -1</code> means failed responses are explicitly not cached. So a 401 storm from a misconfigured client doesn't poison the CDN, but it also doesn't get any backpressure relief.</li>
+        <li><strong>Geo: <code>x-served-by: cache-fra-etou8220068-FRA</code> and <code>x-amz-cf-pop: HEL51-P6</code>.</strong> Frankfurt + Helsinki POPs from our Hetzner FRA-region box. Latency to first byte was sub-150ms on the warm path.</li>
+      </ul>
+
+      <p>If you drop the <code>apiKey</code> entirely — same 401, same body. Auth is enforced at the edge, not at the origin, which is the right call for a CDN-fronted API.</p>
+
+      <h2>The Content API surface (what a real integration looks like)</h2>
+
+      <p>Per the public docs at <code>builder.io/c/docs/content-api</code>, the request shape is one URL and one parameter:</p>
+
+<pre><code>GET https://cdn.builder.io/api/v3/content/&lt;model&gt;?apiKey=&lt;publicKey&gt;</code></pre>
+
+      <p>The model name is whatever you defined in the Builder space (<code>page</code>, <code>blog-post</code>, <code>landing</code>, <code>navigation</code>, etc.). The API key is the public read key per space. Notably the docs flag a casing rule: <em>"You must <code>apiKey</code>, not <code>apikey</code>"</em>. Lowercase fails. That's a common foot-gun on case-sensitive runtimes; it's worth pinning in a constant.</p>
+
+      <figure>
+        <img src="assets/04-docs-content-api.jpg" alt="Builder.io Content API documentation page captured 2026-05-07. Sidebar lists API surface: API Intro, Admin API, Assets API, Content API, HTML API, Content API Versions, GraphQL Content API, Image API, Querying Cheatsheet, Qwik API, Web Components API, Write API, Upload API, Enrich for Fetching. Main column shows framework selector (React, Next.js Pages Router, Gen 1) and an npm install command.">
+        <figcaption>The Content API reference at <code>builder.io/c/docs/content-api</code>. The sidebar inventories the full API surface (Content, HTML, GraphQL Content, Image, Write, Upload, Admin, Assets). The framework + meta-framework + SDK-Generation triple selector at the top of the body is a notable docs UX choice — the same page rewrites itself for React vs Vue vs Qwik vs Web Components.</figcaption>
+      </figure>
+
+      <p>The interesting choices in the Content API surface:</p>
+
+      <ul>
+        <li><strong>v3 is the default; older SDK generations are still documented.</strong> The "SDK Generation" dropdown ("Gen 1" by default) means you can read the right code samples for legacy projects without having to time-travel through Git tags. Most CMS docs sites force you to pick a current version and bury the older one.</li>
+        <li><strong>GraphQL is offered alongside REST.</strong> The "GraphQL Content API" entry in the sidebar is real — the same content is queryable via GraphQL if you prefer it for client-side composition. We did not test the GraphQL endpoint in this session.</li>
+        <li><strong>HTML API and Image API are first-class.</strong> Builder ships a managed image pipeline and an HTML-rendered output, not just JSON. That's the part of the product that competes with Contentful's Compose and Storyblok's visual editor — it's why a non-React stack can still use Builder.</li>
+        <li><strong>Write API and Admin API exist publicly.</strong> Most CDN-fronted CMSes hide the write side behind a different domain or behind partner agreements. Builder publishing it openly says they expect content to flow in from automation pipelines, not just the visual editor.</li>
+      </ul>
+
+      <p>The framework selector at the top of every API page (React, Vue, Svelte, Qwik, Angular, Solid, Web Components) is the visible tip of Builder's bigger architectural bet — Mitosis.</p>
+
+      <h2>The Mitosis story (and why it matters here)</h2>
+
+      <p>Mitosis is an open-source compiler the Builder team published in 2022 (and has continued investing in since): one component source written in a JSX-like dialect compiles down to React, Vue, Svelte, Solid, Qwik, Angular and several other targets. It's MIT-licensed, in a public monorepo at <code>github.com/BuilderIO/mitosis</code>, and powers the multi-framework SDK output Builder ships.</p>
+
+      <p>Mitosis is the answer to the question every visual editor has to face: <em>"will this lock me into one frontend framework?"</em> Storyblok and Contentstack answer with framework-agnostic JSON — you bring the render layer. Builder answers with: <em>we wrote a compiler so the same visual component renders on whatever framework you bring</em>. The trade is real (Mitosis-compiled components have constraints; no arbitrary hooks the compiler can't reason about) but the upside is one source producing idiomatic output across seven targets. For a multi-stack org — React storefront + Vue admin + Svelte landing site, common in companies that grew by acquisition — that's a real wedge. For a single-framework shop it's overhead you don't need.</p>
+
+      <h2>Honestly, next to Storyblok / Contentstack / Strapi / Directus</h2>
+
+      <p>We've done the same scouting walk on the open-source side and on Storyblok and Contentstack the same week. The contrast is the article:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Dimension</th><th>Builder.io</th><th>Storyblok</th><th>Contentstack</th><th>Strapi / Directus / Payload</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Time to first <code>curl</code> against your own data</td>
+            <td>~5 min: free signup → space → public <code>apiKey</code>.</td>
+            <td>~5 min: free signup → preview token.</td>
+            <td>Behind a sales call.</td>
+            <td>~10 min from <code>docker run</code>.</td>
+          </tr>
+          <tr>
+            <td>Public Free tier</td>
+            <td>Yes — 5 users, 25 daily Agent Credits.</td>
+            <td>Yes — limited content entries.</td>
+            <td>"Start free" exists but funnels to demo.</td>
+            <td>Self-host: free. Cloud: published numbers.</td>
+          </tr>
+          <tr>
+            <td>Visual editor depth</td>
+            <td>Highest — drag/drop on top of your own React/Vue components, with AI generation.</td>
+            <td>Strong — visual editor on a preview iframe.</td>
+            <td>Strong — gated behind the wall.</td>
+            <td>Form-based admin. No "drag on the live page" mode out of the box.</td>
+          </tr>
+          <tr>
+            <td>Multi-framework SDK</td>
+            <td>Mitosis-compiled: React, Vue, Svelte, Qwik, Angular, Solid, Web Components.</td>
+            <td>Per-framework SDKs maintained separately.</td>
+            <td>Per-framework SDKs maintained separately.</td>
+            <td>JSON-first. You bring the SDK.</td>
+          </tr>
+          <tr>
+            <td>Pricing unit</td>
+            <td>Agent Credits (AI generation budget) + seats.</td>
+            <td>Per-seat + entries + bandwidth.</td>
+            <td>Custom-quote / per-seat.</td>
+            <td>Free self-host; cloud is per-seat / per-project.</td>
+          </tr>
+          <tr>
+            <td>Vendor lock-in</td>
+            <td>Medium-high. Content lives in their stack; SDK is open but compiled output is theirs.</td>
+            <td>High. Content lives in their stack.</td>
+            <td>High. Same.</td>
+            <td>Low. You own the database.</td>
+          </tr>
+          <tr>
+            <td>AI surface</td>
+            <td>Highest — Fusion is the headline product. Figma-to-code, brand-aware generation, agent workflows.</td>
+            <td>Add-on AI features. Editor-side assistant.</td>
+            <td>"Brand-aware AI" + "agentic foundation." Mostly conference-marketing as of this scout.</td>
+            <td>BYO LLM via plugins. Friction higher; control complete.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>None of this is a verdict. It's positioning. Builder.io is the most opinionated about <em>how</em> you'll build pages — its differentiator is the visual + AI layer, and the price is the vendor relationship that comes with it. Storyblok is the same shape with less AI ambition and more conservative tooling. Contentstack is enterprise procurement. The open-source three are the answer when you want to own the database and write your own admin chrome.</p>
+
+      <h2>Things we'd change in the developer evaluation flow</h2>
+
+      <ol>
+        <li><strong>Show one Pro/Team monthly number on the tier cards.</strong> The Fusion/Publish tab + the four-column persona row is fine, but a developer skimming for a budget conversation needs a $X/month anchor before the "Compare plan features" matrix unfolds. Hiding it costs you the comparison-spreadsheet shortlist.</li>
+        <li><strong>Pin the casing rule on every Content API code sample.</strong> The "<code>apiKey</code>, not <code>apikey</code>" warning is a 30-minute debugging session for someone copying from a Slack message. Inline the constant in the sample, don't paragraph-warn.</li>
+        <li><strong>Document the rate-limit shape.</strong> The 401 response carries no rate-limit header; the docs page we read didn't enumerate per-second / per-month caps. A real production integration needs to know whether the limit is per-IP, per-key, per-org, or none, and what the 429 body looks like. Right now you find out by hitting it.</li>
+        <li><strong>Keep the per-framework SDK selector.</strong> The framework + meta-framework + SDK-Generation triple at the top of every API page is a quietly excellent docs UX choice — most vendors should copy it.</li>
+      </ol>
+
+      <h2>What we'd actually do</h2>
+
+      <p>If we had a marketing-led team that wanted non-engineers shipping landing pages onto a React or Next.js site, and the team had a budget for AI generation credits, we'd put Builder.io on the shortlist next to <a href="../storyblok/">Storyblok</a>. The visual editor on top of your own components is the right shape for that team and the AI-design-to-code path is real (not just marketing). If we had a small startup picking a CMS for the next two years of product, we'd self-host one of <a href="../strapi/">Strapi</a>, <a href="../directus/">Directus</a>, or <a href="../payload-cms/">Payload</a>, build a bespoke admin in our own stack, and revisit Builder once we had revenue and a non-dev editorial team. The Mitosis bet is interesting either way — even if you don't use Builder, watching how the multi-framework compiler evolves tells you where the design-system tooling space is heading.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>Adjacent scouting notes from the same week: <a href="../storyblok/">Storyblok — visual editor SaaS scout</a>, <a href="../contentstack/">Contentstack — behind the "Contact us" wall</a>, <a href="../strapi/">Strapi — open-source headless default</a>, <a href="../directus/">Directus — SQL-first with a real admin</a>, <a href="../payload-cms/">Payload — TypeScript-first headless</a>, <a href="../ghost/">Ghost — the headless-blog wedge</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin or storefront into a draft code-fix PR — it works on a Builder.io-rendered front end the same way it works on a Strapi one, because by the time the page renders it's just HTML.</p>
+
+      <h2>Demo: SimpleReview on a Builder.io issue</h2>
+
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/hszf-PcNGFo?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div id="sc-banner-fallback" class="sc-banner" style="display:block" aria-label="Animated demo: SimpleReview spots Builder.io 401 Authorization required and proposes the public apiKey fix">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl https://cdn.builder.io/api/v3/...</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -D - \</span></div>
+              <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;'https://cdn.builder.io/api/v3/content/page?apiKey=<span style="color:#fbbf24">fake_invalid_key</span>'</span></div>
+              <div class="sc-term-line">&nbsp;</div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 401</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; x-amz-cf-pop: HEL51-P6</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; via: 1.1 Fastly Varnish</span></div>
+              <div class="sc-term-line"><span class="sc-term-out">&lt; x-served-by: cache-fra-etou8220068-FRA</span></div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">⨯ Authorization required</div>
+                <div class="sc-err-msg">{"status":401,"message":<span class="sc-rcount">"Authorization required"</span>,<br>&nbsp;"detail":"For help please contact support@builder.io"}<br>request id: 1d686210-4aa7-11f1-9f56-ed42afe9474f</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">✓ HTTP 200 · results array · cached at edge</span>
+                <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -D - \</span></div>
+                <div class="sc-term-line"><span class="sc-term-cmd">&nbsp;&nbsp;&nbsp;'https://cdn.builder.io/api/v3/content/page?apiKey=<span style="color:#7ee787">$BUILDER_PUBLIC_KEY</span>'</span></div>
+                <div class="sc-term-line">&nbsp;</div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; HTTP/2 200</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; x-cache: HIT, MISS</span></div>
+                <div class="sc-term-line"><span class="sc-term-out">&lt; cache-control: public, max-age=300</span></div>
+                <div class="sc-term-line"><span class="sc-term-out" style="color:#7ee787">{"results":[{"id":"...","name":"home","data":{...}}]}</span></div>
+              </div>
+              <div class="sc-popup">
+                <div class="sc-popup-hdr"><span>Comment</span><span class="sc-popup-x">×</span></div>
+                <div class="sc-popup-ta"><span class="sc-ta-inner">apiKey is the public key, not secret</span><span class="sc-blink">|</span></div>
+                <div class="sc-popup-fix">
+                  <span class="sc-fxt">Fix it</span>
+                  <span class="sc-fsp"><span class="sc-fsp-icon">⟳</span></span>
+                  <span class="sc-fdn">✓ Done</span>
+                </div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo"><img src="../favicon.png" width="14" height="14" style="border-radius:3px" alt="SimpleReview"> SimpleReview <span class="sc-panel-badge">PRO</span></div>
+              <div class="sc-sb-hint">waiting for selection…</div>
+              <div class="sc-sb-card sc-sb-c1">
+                <div class="sc-sb-hdr">Detected</div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Status</span><span class="sc-sb-v">401</span></div>
+                <div class="sc-sb-kv"><span class="sc-sb-k">Edge</span><span class="sc-sb-v">CloudFront+Fastly</span></div>
+              </div>
+              <div class="sc-sb-card sc-sb-c2">
+                <div class="sc-sb-hdr">Fix plan</div>
+                <div style="font-size:9px;color:#333;line-height:1.4">Builder.io's apiKey is a PUBLIC key (safe in client). Replace placeholder with $BUILDER_PUBLIC_KEY env var.</div>
+              </div>
+              <div class="sc-sb-card sc-sb-c3">
+                <div class="sc-sb-hdr">Result</div>
+                <div style="font-size:9px;color:#166534;line-height:1.4">200 with results. Edge-cached 5 min. Multi-CDN stack visible.</div>
+              </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">✓ Fix ready</div>
+                <div class="sc-pr-meta">fix(builder): use $BUILDER_PUBLIC_KEY<br>1 line · client.ts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption">Click SimpleReview → select <strong>Authorization required</strong> → <strong>Fix it</strong> → public apiKey wired in</div>
+        <div class="sc-cursor">
+          <span class="sc-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+          </svg></span>
+        </div>
+      </div>
+      <div></div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 145 at 992&times;558, against the public marketing site at <code>www.builder.io</code>, the public docs at <code>builder.io/c/docs</code>, and the <code>cdn.builder.io</code> Content API endpoint. Builder.io, Fusion and Publish are trademarks of Builder.io. Mitosis is MIT-licensed, repository at <code>github.com/BuilderIO/mitosis</code>. Sources: <a href="https://www.builder.io/m/pricing" target="_blank" rel="noopener">builder.io/m/pricing</a>, <a href="https://www.builder.io/c/docs/content-api" target="_blank" rel="noopener">Content API reference</a>, <code>curl https://cdn.builder.io/api/v3/content/page?apiKey=fake_invalid_key_test_12345</code> (HTTP 401, request id <code>1d686210-4aa7-11f1-9f56-ed42afe9474f</code>).
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

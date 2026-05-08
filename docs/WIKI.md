@@ -141,10 +141,11 @@ On 2026-05-07 the FL.ru workflow was tested and submitted on project `5503877`: 
 1. **Inline animated banner** — мокап на фоне строго по теме статьи (URL bar = relevant admin URL, highlighted element = relevant feature, sidebar comment = topic-specific), курсор → **Fix It button**. Каждая статья = уникальный мокап, не одинаковый template.
 2. **TL;DR card** (3-5 буллетов)
 3. **Real research** — WebFetch на оф. доки, GitHub source, meta-форумы. Цитировать конкретные имена методов/файлов.
-4. **First-hand артефакт** — обязательно. Без рабочего кода / конфига / бенчмарка / debug-table статья не публикуется.
-5. **Cross-link block** — 4 sibling-статьи + back to hub
-6. **FAQ** (5-7 Q&A) + FAQPage JSON-LD
-7. **Article JSON-LD** с author bylines
+4. **Real CMS screenshots** — если статья касается экрана CMS/админки/магазина, поднять движок в Docker и сделать реальные скриншоты через skill `.claude/skills/cms-docker-screenshots/SKILL.md`. Скриншот обязательно открыть и визуально проверить: это должен быть именно экран, о котором пишет статья, без setup wizard/login/пустого состояния.
+5. **First-hand артефакт** — обязательно. Без рабочего кода / конфига / бенчмарка / debug-table / реального скриншота из движка статья не публикуется.
+6. **Cross-link block** — 4 sibling-статьи + back to hub
+7. **FAQ** (5-7 Q&A) + FAQPage JSON-LD
+8. **Article JSON-LD** с author bylines
 
 #### ⛔ Что НЕ палить на user-facing страницах
 
@@ -374,7 +375,7 @@ Source of truth for **currently shipped CMS hubs** is code, not memory:
 - `README.md` → public project-level summary table.
 - This wiki section → operational checklist for forum links, content planning, and future CMS phases.
 
-Live indexed CMS hubs (35):
+Live indexed CMS hubs (39):
 
 | Phase | CMS / platform | Slug | Public URL | RU sibling |
 |-------|----------------|------|------------|------------|
@@ -419,6 +420,13 @@ Separate platform cluster, not part of `CMS_SLUGS` yet:
 | Platform | Disk path | Public URL | Notes |
 |----------|-----------|------------|-------|
 | Discourse | `/root/vibers/discourse/` | https://onout.org/discourse/ | 1 hub + 5 researched articles, reference cluster for self-hosted/software-platform pages. Add to sitemap/nginx intentionally if we want it treated like CMS hubs. |
+
+Shipped CMS deep articles that are useful for forum replies:
+
+| CMS | Topic | Public URL | Evidence |
+|-----|-------|------------|----------|
+| Joomla | Extension install/update/discover errors | https://onout.org/joomla/joomla-extensions-search-errors-fix/ | Official Joomla docs research + real Joomla 5.4.5 Docker screenshots + animated SimpleReview banner video |
+| Joomla | Contact/custom form validation errors | https://onout.org/joomla/joomla-form-errors-find-all/ | Official Joomla form validation/debug research + real Joomla 5.4.5 Docker screenshots + animated SimpleReview banner video |
 
 Planned CMS/platform backlog from GitHub issue #66 (no `/root/vibers/<slug>/index.html` yet unless listed above):
 

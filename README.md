@@ -136,7 +136,7 @@ We ship a SimpleReview module/extension to every major CMS marketplace. Each CMS
 | WordPress | [/wordpress/](https://onout.org/wordpress/) | [How to fix and improve WordPress sites](https://onout.org/wordpress/how-to-fix-and-improve-wordpress-sites/) + 9 specific bug articles | WordPress Plugin Directory |
 | 1С-Битрикс | [/bitrix/](https://onout.org/bitrix/) | [How to fix and customize Bitrix sites (RU)](https://onout.org/bitrix/how-to-fix-and-customize-bitrix-sites/) | 1С-Битрикс: Маркетплейс |
 | Magento 2 | [/magento/](https://onout.org/magento/) | [How to fix Magento 2 issues](https://onout.org/magento/how-to-fix-magento-2-issues/) | Adobe Commerce Marketplace |
-| Joomla 5 | [/joomla/](https://onout.org/joomla/) | [How to fix Joomla issues](https://onout.org/joomla/how-to-fix-joomla-issues/) | Joomla Extensions Directory (JED) |
+| Joomla 5 | [/joomla/](https://onout.org/joomla/) | [How to fix Joomla issues](https://onout.org/joomla/how-to-fix-joomla-issues/) + [Extension install/update errors](https://onout.org/joomla/joomla-extensions-search-errors-fix/) + [Find form errors](https://onout.org/joomla/joomla-form-errors-find-all/) | Joomla Extensions Directory (JED) |
 | PrestaShop | [/prestashop/](https://onout.org/prestashop/) | [How to fix PrestaShop issues](https://onout.org/prestashop/how-to-fix-prestashop-issues/) | PrestaShop Addons |
 | CS-Cart | [/cs-cart/](https://onout.org/cs-cart/) | [How to fix and customize CS-Cart](https://onout.org/cs-cart/how-to-fix-and-customize-cs-cart/) | CS-Cart Marketplace |
 | Webasyst (Shop-Script) | [/webasyst/](https://onout.org/webasyst/) | [Доработка Shop-Script (RU)](https://onout.org/webasyst/how-to-fix-and-customize-shop-script/) | Webasyst Store |
@@ -190,7 +190,7 @@ Brand color is platform-specific (PrestaShop pink `#df0067`, Magento orange `#ee
 
 - Keyword research per CMS: [`docs/keywords/*_broad-match_*_2026-04-30.csv`](docs/keywords/) plus WooCommerce 2026-04-23 export where available. New hub-only CMS pages are source-researched first; deep cluster articles wait for Semrush coverage or per-topic manual research.
 - Article backlog: [`docs/keywords/cms-content-backlog-2026-04-30.md`](docs/keywords/cms-content-backlog-2026-04-30.md) (62 articles, Tier 1-3 by KD)
-- CMS cluster articles are published one by one with source research and a page-specific SimpleReview animated banner; do not bulk-generate thin template pages.
+- CMS cluster articles are published one by one with source research, real CMS screenshots from Docker when the article touches CMS screens (`.claude/skills/cms-docker-screenshots/SKILL.md`), and a page-specific SimpleReview animated banner; do not bulk-generate thin template pages.
 - Master tracker: [Issue #66](https://github.com/marsiandeployer/human-in-the-loop-review/issues/66)
 - Forum press releases for each CMS marketplace launch: [Issue #67](https://github.com/marsiandeployer/human-in-the-loop-review/issues/67)
 
