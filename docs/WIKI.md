@@ -435,6 +435,7 @@ Shipped CMS deep articles that are useful for forum replies:
 | Joomla | Contact/custom form validation errors | https://onout.org/joomla/joomla-form-errors-find-all/ | Official Joomla form validation/debug research + real Joomla 5.4.5 Docker screenshots + animated SimpleReview banner video |
 | Joomla | Joomla 4.4 to 5 extension compatibility upgrade | https://onout.org/joomla/joomla-4-to-5-upgrade-extension-issues/ | Official Joomla migration/update-site research + real Joomla 5.4.5 extension screenshots reused from the Docker run + animated SimpleReview banner video |
 | Joomla | Hire Joomla developer or use SimpleReview | https://onout.org/joomla/hire-joomla-developer-vs-simplereview/ | Service-intent guide based on Joomla service-provider/forum/update-site research + real Joomla 5.4.5 extension screenshots + animated SimpleReview banner video |
+| Drupal | Display errors and read logs | https://onout.org/drupal/drupal-display-errors-and-logs/ | Semrush error cluster + Drupal.org logging/dblog/controller docs + real Drupal 11.3.8 Docker screenshots + voiced SimpleReview banner video |
 | Drupal | Hire Drupal developer vs SimpleReview | https://onout.org/drupal/hire-drupal-developer-or-use-simplereview/ | Service-intent guide based on Drupal.org services/config/Twig/hooks research + real Drupal 11.3.8 Docker admin screenshots + voiced SimpleReview banner video |
 
 Planned CMS/platform backlog from GitHub issue #66 (no `/root/vibers/<slug>/index.html` yet unless listed above):

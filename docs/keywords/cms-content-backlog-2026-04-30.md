@@ -138,7 +138,7 @@ New US broad-match seeds downloaded: `drupal error`, `joomla error`, `prestashop
 
 Best next candidates from that pass:
 
-- `drupal-display-errors-and-logs`
+- `drupal-display-errors-and-logs` — shipped 2026-05-08 with Drupal 11.3.8 Docker screenshots and voiced SimpleReview banner
 - `prestashop-500-error-debug-mode`
 - `magento-error-reporting-logs-guide`
 - `opencart-form-carefully-errors`

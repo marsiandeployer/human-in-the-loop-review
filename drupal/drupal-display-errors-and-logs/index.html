@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drupal Errors: Display Errors, Read Logs, and Find the Real Failure</title>
+  <meta name="description" content="How to debug Drupal display errors without guessing: use Logging and errors, Status report, Recent log messages, Drush watchdog, and a staged SimpleReview fix. Includes real Drupal 11.3.8 Docker screenshots.">
+  <link rel="canonical" href="https://onout.org/drupal/drupal-display-errors-and-logs/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Drupal Errors: Display Errors, Read Logs, and Find the Real Failure">
+  <meta property="og:description" content="A practical Drupal 10/11 debugging guide with real Drupal 11.3.8 screenshots: generic error page, Logging and errors, Recent log messages, Status report, and fix boundaries.">
+  <meta property="og:url" content="https://onout.org/drupal/drupal-display-errors-and-logs/">
+  <meta property="og:image" content="https://onout.org/drupal/drupal-display-errors-and-logs/screenshots/drupal-recent-log-after-error-720.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/drupal/drupal-display-errors-and-logs/screenshots/drupal-recent-log-after-error-720.jpg">
+  <meta name="keywords" content="drupal display errors, drupal show errors, drupal show php errors, drupal error log, drupal recent log messages, drupal unexpected error try again later">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Drupal Errors: Display Errors, Read Logs, and Find the Real Failure",
+    "description": "How to debug Drupal display errors without guessing: use Logging and errors, Status report, Recent log messages, Drush watchdog, and a staged SimpleReview fix. Includes real Drupal 11.3.8 Docker screenshots.",
+    "url": "https://onout.org/drupal/drupal-display-errors-and-logs/",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/drupal/drupal-display-errors-and-logs/" },
+    "keywords": ["drupal display errors", "drupal show errors", "drupal show php errors", "drupal error log", "drupal recent log messages"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I display Drupal errors?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Use Administration > Configuration > Development > Logging and errors, then choose the error level. Drupal's docs list hide, some, all, and verbose. Keep production on hide unless you are debugging on a private/staging copy."}
+      },
+      {
+        "@type": "Question",
+        "name": "Where are Drupal recent log messages?",
+        "acceptedAnswer": {"@type": "Answer", "text": "If the Database Logging module is enabled, administrators can open /admin/reports/dblog. Drupal documents this as the Recent log messages page, with filters for type and severity."}
+      },
+      {
+        "@type": "Question",
+        "name": "Should I leave verbose Drupal errors enabled?",
+        "acceptedAnswer": {"@type": "Answer", "text": "No. Verbose errors and PHP display_errors are development tools. Use them on local or staging, collect the stack trace, then turn production back to hidden error messages."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can SimpleReview fix a Drupal error automatically?",
+        "acceptedAnswer": {"@type": "Answer", "text": "SimpleReview can prepare a site-ready fix when the log points to a bounded theme, config, or custom module change. Hire a Drupal developer when the failure involves schema updates, migrations, security, unknown production state, or incident ownership."}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#fafaf8;color:#1f2328;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:16px;line-height:1.68}.page{max-width:800px;margin:0 auto;padding:48px 40px;background:#fff;min-height:100vh}@media(max-width:620px){.page{padding:24px 18px}}a{color:#0678be;text-decoration:none}a:hover{text-decoration:underline}.site-nav{border-bottom:2px solid #1f2328;padding-bottom:16px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}.brand{font-size:18px;font-weight:700;color:#1f2328}.nav-links{display:flex;gap:18px;font-size:14px}.nav-links a{color:#555}.article-meta{font-size:13px;color:#6b7280;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}h1{font-size:34px;line-height:1.14;margin:0 0 14px;letter-spacing:-.4px}@media(max-width:620px){h1{font-size:25px}}.lead{font-size:18px;color:#3f4650;border-left:3px solid #0678be;padding-left:16px;margin:0 0 24px}h2{font-size:23px;line-height:1.25;margin:42px 0 14px;padding-top:8px;border-top:1px solid #e5e7eb}h3{font-size:17px;margin:28px 0 10px;color:#003655}p{margin:0 0 16px;color:#30363d}ul,ol{padding-left:24px;margin:0 0 18px}li{margin-bottom:8px}.callout{background:#e8f4fb;border:1px solid #b8dcef;border-radius:8px;padding:18px 20px;margin:24px 0}.warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;margin:22px 0;border-radius:0 6px 6px 0}.proof{background:#f8fafc;border:1px solid #dbe4ee;border-radius:8px;padding:18px 20px;margin:26px 0}.table-wrap{overflow-x:auto;margin:22px 0}table{width:100%;border-collapse:collapse;font-size:14px}th{background:#1f2328;color:#fff;padding:10px 12px;text-align:left}td{border-bottom:1px solid #e5e7eb;padding:9px 12px;vertical-align:top}tr:nth-child(even) td{background:#fafaf8}code{background:#f1f5f9;border-radius:4px;padding:1px 5px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px}pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:15px 17px;overflow:auto;font-size:13px;line-height:1.5}pre code{background:transparent;color:inherit;padding:0}.figure{margin:26px 0 32px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;background:#fff}.figure img{display:block;width:100%;height:auto;object-fit:contain;background:#f6f7f8}.figure figcaption{padding:10px 14px;background:#fafaf8;color:#555;font-size:13px;line-height:1.45;border-top:1px solid #eee}.video-wrap{margin:20px 0 32px;background:#0f0f0f;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.14)}.video-wrap video{display:block;width:100%;height:auto;background:#0f0f0f}.cta{background:#111827;color:#fff;border-radius:10px;padding:28px 30px;margin:42px 0;text-align:center}.cta h3{margin:0 0 8px;color:#fff}.cta p{color:#cbd5e1}.btn{display:inline-block;background:#0678be;color:#fff;padding:12px 22px;border-radius:6px;font-weight:700}.sources{font-size:13px}.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:18px 0}.related-card{border:1px solid #e5e7eb;border-radius:8px;padding:14px}.related-card a{font-weight:700;color:#1f2328}.related-card p{font-size:13px;color:#6b7280;margin:6px 0 0}.site-footer{border-top:1px solid #e5e7eb;margin-top:48px;padding-top:22px;font-size:13px;color:#6b7280;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}body:not(.recording) #sc-banner-fallback{display:none}@media(max-width:620px){pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}}
+
+    .sc-banner{width:720px;height:460px;background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.sc-chrome{height:38px;background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}.sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:block}.sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}.sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444}.sc-ext-icon{width:20px;height:20px;border-radius:4px;animation:extPulse 28s infinite}@keyframes extPulse{0%,10%{box-shadow:none}12%{box-shadow:0 0 0 6px rgba(255,107,53,.7)}14%,100%{box-shadow:none}}.sc-view{height:382px;position:relative;background:#f6f7f8;overflow:hidden}.sc-adminbar{height:30px;background:#111;color:#fff;font-size:11px;display:flex;align-items:center;gap:20px;padding:0 14px}.sc-tabs{height:35px;background:#fff;border-bottom:1px solid #d8dbe2;display:flex}.sc-tab{padding:9px 14px;font-size:11px;color:#4b5563;border-right:1px solid #e5e7eb}.sc-tab.active{color:#111;font-weight:700;border-bottom:3px solid #0678be}.sc-main{position:absolute;left:0;top:65px;bottom:0;width:520px;background:#fff;padding:20px 28px;overflow:hidden}.sc-main h4{font-size:23px;margin:0 0 10px;color:#24292f}.sc-generic{font-family:Georgia,serif;font-size:16px;margin:18px 0 0;color:#111;animation:genericFade 28s infinite}@keyframes genericFade{0%,43%{opacity:1}48%,100%{opacity:.08}}.sc-error-card{opacity:0;background:#fff;border:1px solid #d8dbe2;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.08);padding:14px;margin-top:14px;animation:errorCard 28s infinite}.sc-error-card b{color:#b42318}@keyframes errorCard{0%,45%{opacity:0;transform:translateY(8px)}50%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}.sc-log-table{font-size:10px;margin-top:12px;border:1px solid #e5e7eb}.sc-row{display:grid;grid-template-columns:70px 1fr;gap:8px;padding:7px 9px;border-bottom:1px solid #e5e7eb}.sc-row.head{background:#f3f4f6;font-weight:700}.sc-row.err{color:#b42318}.sc-side{position:absolute;right:0;top:0;bottom:0;width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;padding:10px 9px;z-index:5;transform:translateX(100%);opacity:0;animation:sideIn 28s infinite}@keyframes sideIn{0%,12%{transform:translateX(100%);opacity:0}15%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}.sc-panel-logo{font-size:11px;font-weight:700;color:#ff6b35;display:flex;gap:5px;align-items:center}.sc-badge{font-size:8px;background:#0678be;color:#fff;border-radius:3px;padding:1px 5px}.sc-chip{margin:8px 0;background:#fff;border:1px solid #0678be;color:#005a87;font-size:9px;padding:5px 6px;border-radius:4px;font-weight:700}.sc-card{background:#fff;border:1px solid #e5e5e5;border-radius:5px;padding:7px 8px;font-size:10px;line-height:1.35;margin-bottom:7px;opacity:0}.sc-card h5{font-size:8px;text-transform:uppercase;letter-spacing:.4px;color:#6b7280;margin:0 0 4px}.sc-c1{animation:c1 28s infinite}.sc-c2{animation:c2 28s infinite}.sc-c3{animation:c3 28s infinite}@keyframes c1{0%,54%{opacity:0;transform:translateY(4px)}58%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}@keyframes c2{0%,64%{opacity:0;transform:translateY(4px)}68%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}@keyframes c3{0%,74%{opacity:0;transform:translateY(4px)}78%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}.sc-popup{position:absolute;left:110px;top:176px;width:230px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:pop 28s infinite}@keyframes pop{0%,24%{opacity:0;transform:translateY(6px)}28%,88%{opacity:1;transform:translateY(0)}92%,100%{opacity:0}}.sc-popup-h{font-size:10px;font-weight:700;margin-bottom:5px}.sc-input{border:1px solid #e0e0e0;background:#fafafa;border-radius:4px;padding:6px 7px;font-size:10px;white-space:nowrap;overflow:hidden}.sc-type{display:inline-block;max-width:0;overflow:hidden;white-space:nowrap;animation:type 28s infinite}@keyframes type{0%,28%{max-width:0}44%,93%{max-width:210px}96%,100%{max-width:0}}.sc-fix{height:25px;background:#ff6b35;color:#fff;border-radius:4px;margin-top:7px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}.sc-cursor{position:absolute;width:18px;height:18px;z-index:10;opacity:0;animation:cur 28s infinite}.sc-cursor svg{filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}@keyframes cur{0%{left:340px;top:220px;opacity:0}2%{left:340px;top:220px;opacity:1}10%,14%{left:698px;top:22px;opacity:1}22%,25%{left:120px;top:175px;opacity:1}31%,45%{left:192px;top:212px;opacity:1}51%,58%{left:225px;top:250px;opacity:1}70%,93%{left:620px;top:170px;opacity:1}96%,100%{opacity:0}}.sc-progress{height:3px;background:#191919}.sc-progress div{height:100%;background:#ff6b35;width:0;animation:prog 28s linear infinite}@keyframes prog{to{width:100%}}.sc-caption{height:37px;background:#0f0f0f;color:#cbd5e1;font-size:11px;text-align:center;padding:10px 12px;border-top:1px solid #222}.sc-caption strong{color:#ff6b35}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers - Human Code Review</a>
+    <div class="nav-links">
+      <a href="/drupal/">Drupal hub</a>
+      <a href="/simple-review/">SimpleReview</a>
+      <a href="https://t.me/onoutnoxon">Telegram</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta">
+      <span>Drupal / Errors &amp; Logs</span>
+      <span>May 8, 2026</span>
+      <span>11 min read</span>
+    </div>
+
+    <h1>Drupal Errors: Display Errors, Read Logs, and Find the Real Failure</h1>
+
+    <p class="lead">If your Drupal site says "The website encountered an unexpected error. Try again later.", do not start by editing random Twig files. Start by collecting the exact failure: the error-display setting, the Recent log messages row, the Status report, and the route or screen that triggered it. We reproduced the workflow in Drupal 11.3.8 on Docker and captured the screens below.</p>
+
+    <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated SimpleReview banner showing Drupal error logging workflow">
+      <div class="sc-chrome"><div class="sc-dots"><span></span><span></span><span></span></div><div class="sc-url">mysite.com/simplereview-error-lab</div><img src="../../favicon.png" class="sc-ext-icon" alt="SimpleReview"></div>
+      <div class="sc-view">
+        <div class="sc-adminbar">Manage <span>Reports</span><span>Configuration</span><span>admin</span></div>
+        <div class="sc-tabs"><div class="sc-tab active">Reports</div><div class="sc-tab">Configuration</div><div class="sc-tab">Extend</div></div>
+        <div class="sc-main">
+          <h4>Drupal error</h4>
+          <p class="sc-generic">The website encountered an unexpected error. Try again later.</p>
+          <div class="sc-error-card">
+            <b>Recent log messages</b>
+            <div class="sc-log-table">
+              <div class="sc-row head"><span>Type</span><span>Message</span></div>
+              <div class="sc-row err"><span>php</span><span>RuntimeException in ErrorLabController</span></div>
+              <div class="sc-row"><span>custom</span><span>Controlled runtime exception logged</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-popup">
+          <div class="sc-popup-h">Comment</div>
+          <div class="sc-input"><span class="sc-type">find the Drupal error and prepare a fix</span></div>
+          <div class="sc-fix">Fix it</div>
+        </div>
+        <div class="sc-side">
+          <div class="sc-panel-logo"><img src="../../favicon.png" width="14" height="14" alt=""> SimpleReview <span class="sc-badge">PRO</span></div>
+          <div class="sc-chip">Drupal logs detected</div>
+          <div class="sc-card sc-c1"><h5>Evidence</h5>Generic error page, dblog row, and Status report captured before changes.</div>
+          <div class="sc-card sc-c2"><h5>Boundary</h5>Custom module controller throws RuntimeException. No schema or migration touched.</div>
+          <div class="sc-card sc-c3"><h5>Site fix</h5>Patch the controller, keep production error display hidden, verify on staging.</div>
+        </div>
+        <div class="sc-cursor"><svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 7-6-17z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/></svg></div>
+      </div>
+      <div class="sc-progress"><div></div></div>
+      <div class="sc-caption">Capture the Drupal error -> read <strong>Recent log messages</strong> -> prepare a bounded site-ready fix</div>
+    </div>
+
+    <div class="video-wrap" aria-label="Voiced SimpleReview Drupal error banner">
+      <video controls playsinline preload="metadata" poster="banner-poster.jpg?v=20260508a">
+        <source src="banner_voiced.mp4?v=1" type="video/mp4">
+        <source src="banner.mp4?v=1" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="callout">
+      <strong>Search intent signal:</strong> people looking for Drupal error help are usually not asking for a generic "clear cache" answer. They need to know where to display the error safely, where Drupal stores recent log messages, and when the log is enough to prepare a bounded site fix.
+    </div>
+
+    <div class="proof">
+      <h3>What we actually tested</h3>
+      <ul>
+        <li>Installed Drupal <strong>11.3.8</strong> from the official <code>drupal:11-apache</code> Docker image with PostgreSQL 16 and Drush 13.7.2.</li>
+        <li>Enabled Drupal core Database Logging (<code>dblog</code>).</li>
+        <li>Created a tiny local custom module route at <code>/simplereview-error-lab</code> that throws a controlled <code>RuntimeException</code>.</li>
+        <li>Captured the generic public error page, Logging and errors settings, Recent log messages, and Status report.</li>
+      </ul>
+    </div>
+
+    <figure class="figure">
+      <img src="screenshots/drupal-generic-error-page-720.jpg?v=20260508a" width="720" height="450" loading="eager" decoding="async" alt="Drupal generic unexpected error page captured from a controlled Drupal 11 Docker route.">
+      <figcaption>The public screen is intentionally vague. This is why "display errors" is a diagnostic step, not the fix.</figcaption>
+    </figure>
+
+    <h2>The safe debugging order</h2>
+
+    <p>Use this order when Drupal shows a generic error page or a blank screen. It keeps production safe and turns "Drupal is broken" into a concrete fix brief.</p>
+
+    <ol>
+      <li><strong>Do not enable verbose errors publicly first.</strong> If the site is live, reproduce on local or staging. Verbose output can expose paths, class names, query details, and module structure.</li>
+      <li><strong>Check Status report.</strong> It tells you whether the install is already unhealthy: cron, trusted host, filesystem, PHP extensions, update status, or database warnings.</li>
+      <li><strong>Open Recent log messages.</strong> If <code>dblog</code> is enabled, use <code>/admin/reports/dblog</code>. Filter by severity and type. If the site is too broken for the UI, use Drush watchdog commands.</li>
+      <li><strong>Only then change error display.</strong> Drupal documents <code>hide</code>, <code>some</code>, <code>all</code>, and <code>verbose</code>. Switch temporarily, collect the trace, then switch back.</li>
+      <li><strong>Map the trace to the boundary.</strong> Theme/Twig, config, custom module, contributed module, environment, or database migration all have different risk.</li>
+    </ol>
+
+    <figure class="figure">
+      <img src="screenshots/drupal-status-report-720.jpg?v=20260508a" width="720" height="450" loading="lazy" decoding="async" alt="Drupal 11.3.8 Status report screen showing errors, warnings, checked items, Drupal version, web server, and last cron run.">
+      <figcaption>Real Drupal 11.3.8 Status report from the Docker lab. If this screen is already red, treat the task as diagnosis before code editing.</figcaption>
+    </figure>
+
+    <h2>How to display Drupal errors without leaking production details</h2>
+
+    <p>Drupal's official verbose logging page says the browser UI is under <code>/admin/config/development/logging</code>. The same setting can be changed with Drush:</p>
+
+    <pre><code>vendor/bin/drush config:set system.logging error_level verbose -y
+vendor/bin/drush cr</code></pre>
+
+    <p>For local development, Drupal's docs also mention PHP-level display settings such as <code>error_reporting(E_ALL)</code> and <code>ini_set('display_errors', TRUE)</code>. Keep that distinction clear:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr><th>Setting</th><th>Use it for</th><th>Do not use it for</th></tr>
+        <tr><td><code>hide</code></td><td>Production default</td><td>Debugging a hidden exception without logs</td></tr>
+        <tr><td><code>some</code> / <code>all</code></td><td>Staging reproduction where users cannot see output</td><td>Public traffic</td></tr>
+        <tr><td><code>verbose</code></td><td>Short local/staging trace capture</td><td>Long-lived live-site setting</td></tr>
+        <tr><td>PHP <code>display_errors</code></td><td>Local PHP runtime diagnosis</td><td>Shared production hosting</td></tr>
+      </table>
+    </div>
+
+    <figure class="figure">
+      <img src="screenshots/drupal-logging-config-720.jpg?v=20260508a" width="720" height="450" loading="lazy" decoding="async" alt="Drupal 11 Logging and errors configuration screen showing error message display options and database log retention.">
+      <figcaption>Real Logging and errors screen. This lab is set to "None", which is the sane production posture before you inspect logs.</figcaption>
+    </figure>
+
+    <h2>Read Recent log messages before changing code</h2>
+
+    <p>The Drupal Database Logging docs say <code>dblog</code> records events in the database and exposes them at <code>/admin/reports/dblog</code>. That page is the bridge between the generic public error and the actual failing component.</p>
+
+    <p>In our lab, the public page only showed the generic sentence. The log showed a PHP <code>RuntimeException</code> and a custom <code>simplereview_error_lab</code> entry. That is enough to avoid editing unrelated templates or clearing cache repeatedly.</p>
+
+    <figure class="figure">
+      <img src="screenshots/drupal-recent-log-after-error-720.jpg?v=20260508a" width="720" height="450" loading="lazy" decoding="async" alt="Drupal 11 Recent log messages screen showing a PHP RuntimeException and a custom simplereview_error_lab log entry.">
+      <figcaption>Real Recent log messages screen after triggering the controlled exception. The route is broken, but the cause is now concrete.</figcaption>
+    </figure>
+
+    <h2>When SimpleReview can prepare the fix</h2>
+
+    <p><a href="/simple-review/">SimpleReview</a> is a fit when the evidence points to a bounded change:</p>
+
+    <ul>
+      <li>a Twig template or theme preprocess function throws the error;</li>
+      <li>a custom module controller/service has a clear exception;</li>
+      <li>a configuration value is wrong and the expected state is obvious;</li>
+      <li>the Status report is healthy enough that this is not an environment incident.</li>
+    </ul>
+
+    <p>The workflow is: capture the screen, capture the log row, let SimpleReview prepare a site-ready fix, verify on staging, then return production error display to hidden.</p>
+
+    <h2>When to hire a Drupal developer instead</h2>
+
+    <p>Bring in a Drupal developer when the log points to migration, schema, database state, security, or infrastructure ownership. Examples:</p>
+
+    <ul>
+      <li><code>hook_update_N()</code> half-ran and the database is in an unknown state;</li>
+      <li>a contributed module update broke entity schema or field storage;</li>
+      <li>the error only happens under real traffic or cache layers;</li>
+      <li>the log contains authentication, access, payment, or private-data failures;</li>
+      <li>you cannot reproduce the issue outside production.</li>
+    </ul>
+
+    <div class="warn">
+      <strong>Rule of thumb:</strong> SimpleReview is for bounded site fixes. A human developer is for unknown state, high blast radius, and production ownership.
+    </div>
+
+    <h2>Copy-paste checklist</h2>
+
+    <pre><code># 1. On staging/local, enable verbose Drupal error output temporarily.
+vendor/bin/drush config:set system.logging error_level verbose -y
+vendor/bin/drush cr
+
+# 2. Reproduce the failing URL once.
+curl -I https://example.com/the-broken-path
+
+# 3. Read recent watchdog messages.
+vendor/bin/drush watchdog:show --count=20
+
+# 4. Put production-style display back.
+vendor/bin/drush config:set system.logging error_level hide -y
+vendor/bin/drush cr</code></pre>
+
+    <div class="cta">
+      <h3>Turn the Drupal error into a fix brief</h3>
+      <p>Capture the failing screen and log row, then let SimpleReview prepare a bounded site-ready fix for review.</p>
+      <a class="btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview</a>
+    </div>
+
+    <h2>Related</h2>
+    <div class="related-grid">
+      <div class="related-card">
+        <a href="/drupal/">SimpleReview for Drupal</a>
+        <p>Main Drupal hub with CMS-specific positioning and launch links.</p>
+      </div>
+      <div class="related-card">
+        <a href="/drupal/how-to-fix-drupal-issues/">How to fix Drupal issues</a>
+        <p>Broader Drupal fix pillar: WSOD, config import, reCAPTCHA, Powered by block, slow admin.</p>
+      </div>
+      <div class="related-card">
+        <a href="/drupal/hire-drupal-developer-or-use-simplereview/">Hire Drupal developer or use SimpleReview?</a>
+        <p>Buyer guide for deciding where the fix boundary ends and human engineering starts.</p>
+      </div>
+    </div>
+
+    <h2>Sources</h2>
+    <ul class="sources">
+      <li><a href="https://www.drupal.org/docs/8/core/modules/dblog/overview">Drupal.org docs - Database Logging module overview</a></li>
+      <li><a href="https://www.drupal.org/docs/develop/local-server-setup/enable-verbose-error-logging">Drupal.org docs - Enable verbose error logging</a></li>
+      <li><a href="https://www.drupal.org/docs/develop/creating-modules/create-a-custom-page-using-a-controller">Drupal.org docs - Create a custom page using a controller</a></li>
+      <li><a href="https://www.drupal.org/docs/drupal-apis/routing-system/structure-of-routes">Drupal.org docs - Structure of routes</a></li>
+      <li><a href="/simple-review/">SimpleReview - site-ready visual fix workflow</a></li>
+      <li><a href="/vibers/">Vibers - human-in-the-loop review</a></li>
+    </ul>
+  </article>
+
+  <footer class="site-footer">
+    <span>© 2026 Vibers - <a href="/vibers/">onout.org/vibers</a></span>
+    <span><a href="/vibers/blog/">Blog</a> · <a href="https://t.me/onoutnoxon">Telegram</a> · <a href="/vibers/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.querySelector('#sc-banner-fallback');
+  if(!banner) return;
+  function restartAll(){
+    var s = document.createElement('style');
+    s.textContent = '#sc-banner-fallback.r, #sc-banner-fallback.r *, #sc-banner-fallback.r *::before, #sc-banner-fallback.r *::after { animation: none !important; }';
+    document.head.appendChild(s);
+    banner.classList.add('r');
+    void banner.offsetWidth;
+    banner.classList.remove('r');
+    document.head.removeChild(s);
+  }
+  var triggered = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !triggered){
+        triggered = true;
+        restartAll();
+        setTimeout(function(){ triggered = false; }, 28000);
+      }
+    });
+  }, {threshold: 0.3});
+  io.observe(banner);
+})();
+</script>
+</body>
+</html>

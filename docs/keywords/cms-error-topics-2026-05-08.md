@@ -15,7 +15,7 @@ Important: the `*-error` seeds produce many very-low-volume and zero-volume long
 
 | Priority | CMS | Proposed slug | Working title | Semrush evidence | Why it can be good |
 |---:|-----|---------------|---------------|------------------|--------------------|
-| 1 | Drupal | `drupal-display-errors-and-logs` | Drupal errors: display errors, read logs, and find the real failing screen | `drupal display errors`, `drupal show errors`, `drupal show php errors`; display/show cluster: 99 rows, 120 total vol | Real Docker proof: Status report + Recent log messages + PHP error-level config. Natural internal link from Drupal hire guide and Drupal fix pillar. |
+| 1 | Drupal | `drupal-display-errors-and-logs` | Drupal errors: display errors, read logs, and find the real failing screen | `drupal display errors`, `drupal show errors`, `drupal show php errors`; display/show cluster: 99 rows, 120 total vol | Shipped 2026-05-08 with real Drupal 11.3.8 Docker proof: Status report, Recent log messages, generic error page, Logging and errors config, and a voiced SimpleReview banner. |
 | 2 | Drupal | `drupal-ajax-form-errors-fix` | Fix Drupal AJAX form errors and `limit_validation_errors` | `drupal inline form errors`, `drupal limit_validation_errors`, `drupal ajax error`; form cluster: 115 rows, AJAX cluster: 95 rows | Good technical article if we create a small custom form/module in Docker and show the failed/fixed admin or frontend form. |
 | 3 | Drupal | `drupal-unexpected-error-try-again-later` | Drupal “The website encountered an unexpected error. Try again later.” | exact keyword has 10 vol; fatal/unexpected cluster: 83 rows | Strong troubleshooting intent. Needs real log screenshot and exact exception reproduction, not generic advice. |
 | 4 | Magento | `magento-error-reporting-logs-guide` | Magento 2 error reporting: find logs, enable developer mode, and stop guessing | `magento error reporting` 30, `magento error log/logging/logs` 10 each; display/log clusters: 216 combined rows | Fits existing Magento pillar; real artifact can be `var/log/exception.log`, developer mode screen/CLI, and a broken frontend capture. |
@@ -38,11 +38,10 @@ Important: the `*-error` seeds produce many very-low-volume and zero-volume long
 
 ## Suggested next writing order
 
-1. `drupal-display-errors-and-logs` — reuse the Drupal Docker skill path; capture Status report, Recent log messages, and one broken page.
-2. `prestashop-500-error-debug-mode` — high support intent and easy visual proof.
-3. `magento-error-reporting-logs-guide` — large long-tail cluster and strong internal link from Magento pillar.
-4. `opencart-form-carefully-errors` — small but exact; good forum reply asset.
-5. `drupal-ajax-form-errors-fix` — only after creating a minimal custom form/module repro.
+1. `prestashop-500-error-debug-mode` — high support intent and easy visual proof.
+2. `magento-error-reporting-logs-guide` — large long-tail cluster and strong internal link from Magento pillar.
+3. `opencart-form-carefully-errors` — small but exact; good forum reply asset.
+4. `drupal-ajax-form-errors-fix` — only after creating a minimal custom form/module repro.
 
 ## Research rules before writing
 
