@@ -129,3 +129,19 @@ Cost: ~3-5 days. Target: pillar pages + service-intent CRO.
 - Russian Wordstat data для Bitrix/Webasyst — semrush ru db даёт thin coverage
 - Локализованные DE/FR/ES сайты для shopware/prestashop
 - Plugin/extension-specific bugs (`elementor`, `divi`, `astra`, `yoast`)
+
+## 2026-05-08 Semrush error-seed pass
+
+Follow-up file: [`cms-error-topics-2026-05-08.md`](cms-error-topics-2026-05-08.md).
+
+New US broad-match seeds downloaded: `drupal error`, `joomla error`, `prestashop error`, `opencart error`, `magento error`, `shopware error`.
+
+Best next candidates from that pass:
+
+- `drupal-display-errors-and-logs`
+- `prestashop-500-error-debug-mode`
+- `magento-error-reporting-logs-guide`
+- `opencart-form-carefully-errors`
+- `drupal-ajax-form-errors-fix`
+
+Do not generate these as scaled pages. Each needs official research, a Docker/admin screenshot of the exact screen or log, and a page-specific SimpleReview banner before publishing.
