@@ -241,6 +241,7 @@ Brand color is platform-specific (PrestaShop pink `#df0067`, Magento orange `#ee
 - Keyword research per CMS: [`docs/keywords/*_broad-match_*_2026-04-30.csv`](docs/keywords/) plus WooCommerce 2026-04-23 export where available. New hub-only CMS pages are source-researched first; deep cluster articles wait for Semrush coverage or per-topic manual research.
 - Article backlog: [`docs/keywords/cms-content-backlog-2026-04-30.md`](docs/keywords/cms-content-backlog-2026-04-30.md) (62 articles, Tier 1-3 by KD)
 - CMS cluster articles are published one by one with source research, real CMS screenshots from Docker when the article touches CMS screens (`.claude/skills/cms-docker-screenshots/SKILL.md`), and a page-specific SimpleReview animated banner; do not bulk-generate thin template pages.
+- Article screenshots must be validated visually before commit: close cookie/chat overlays, use a viewport tall enough for the complete UI block, crop only to a complete semantic frame, then inspect both the raw image and the rendered article. When replacing an existing image, add a query version such as `?v=YYYYMMDDx` to the `<img src>` so browsers do not keep the old cropped asset.
 - Master tracker: [Issue #66](https://github.com/marsiandeployer/human-in-the-loop-review/issues/66)
 - Forum press releases for each CMS marketplace launch: [Issue #67](https://github.com/marsiandeployer/human-in-the-loop-review/issues/67)
 

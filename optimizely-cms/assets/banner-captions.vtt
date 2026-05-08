@@ -1,0 +1,10 @@
+WEBVTT
+
+00:00.000 --> 00:07.000
+SimpleReview inspects an Optimizely Graph authentication failure from the rendered page.
+
+00:07.000 --> 00:15.000
+The clicked error becomes a focused fix request with endpoint, status, and operator context.
+
+00:15.000 --> 00:24.000
+SimpleReview drafts the code change and pull request so the team can review the fix before merge.

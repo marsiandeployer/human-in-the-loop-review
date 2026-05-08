@@ -141,7 +141,7 @@ On 2026-05-07 the FL.ru workflow was tested and submitted on project `5503877`: 
 1. **Inline animated banner** — мокап на фоне строго по теме статьи (URL bar = relevant admin URL, highlighted element = relevant feature, sidebar comment = topic-specific), курсор → **Fix It button**. Каждая статья = уникальный мокап, не одинаковый template.
 2. **TL;DR card** (3-5 буллетов)
 3. **Real research** — WebFetch на оф. доки, GitHub source, meta-форумы. Цитировать конкретные имена методов/файлов.
-4. **Real CMS screenshots** — если статья касается экрана CMS/админки/магазина, поднять движок в Docker и сделать реальные скриншоты через skill `.claude/skills/cms-docker-screenshots/SKILL.md`. Скриншот обязательно открыть и визуально проверить: это должен быть именно экран, о котором пишет статья, без setup wizard/login/пустого состояния.
+4. **Real CMS screenshots** — если статья касается экрана CMS/админки/магазина, поднять движок в Docker и сделать реальные скриншоты через skill `.claude/skills/cms-docker-screenshots/SKILL.md`. Скриншот обязательно открыть и визуально проверить: это должен быть именно экран, о котором пишет статья, без setup wizard/login/пустого состояния, cookie/chat overlay, случайно обрезанного края или незавершённого UI-блока.
 5. **First-hand артефакт** — обязательно. Без рабочего кода / конфига / бенчмарка / debug-table / реального скриншота из движка статья не публикуется.
 6. **Cross-link block** — 4 sibling-статьи + back to hub
 7. **FAQ** (5-7 Q&A) + FAQPage JSON-LD
@@ -518,7 +518,14 @@ state. **No first-hand artifact = don't ship the article.**
 
 5. **Verify the image is real.** Read the JPG back via the Read tool — confirm
    the screenshot shows what we claim (correct admin panel, real error text,
-   target element in the right place). Fake-looking mockups are caught here.
+   target element in the right place). Also check that the frame is complete:
+   no cookie/privacy/chat widget, no right-edge text clipping, no half-visible
+   card/list/hero mockup at the bottom. If the viewport cuts the next block,
+   crop to a complete semantic frame or recapture with a taller viewport. When
+   replacing an existing article image, version the `<img src>` query
+   (`?v=YYYYMMDDx`) so the live page does not show a stale cached asset. After
+   editing HTML, open the rendered article and inspect that screenshot too.
+   Fake-looking mockups and stale cached images are caught here.
 
 6. **Apply the fix, capture the recovered state.** Same pattern — `docker run`
    with corrected env, take a second screenshot of the working state. The
