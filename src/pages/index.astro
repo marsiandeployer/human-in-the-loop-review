@@ -1,0 +1,7 @@
+---
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+
+const html = await readFile(path.resolve(process.cwd(), 'simple-review', 'index.html'), 'utf8');
+---
+<Fragment set:html={html} />

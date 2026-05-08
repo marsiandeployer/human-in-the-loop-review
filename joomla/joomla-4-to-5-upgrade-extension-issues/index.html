@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Joomla 4 to 5 Upgrade: Extension Compatibility Fix</title>
+  <meta name="description" content="Plan a Joomla 4.4 to Joomla 5 upgrade without breaking extensions: compatibility plugin, Manage Extensions audit, update sites, staging test, and SimpleReview site-ready fixes.">
+  <meta name="keywords" content="joomla 4 to joomla 5 upgrade extension, joomla 5 extension compatibility, joomla 4.4 to 5, joomla backward compatibility plugin">
+  <link rel="canonical" href="https://onout.org/joomla/joomla-4-to-5-upgrade-extension-issues/">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../../favicon.png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Joomla 4 to 5 Upgrade: Extension Compatibility Fix">
+  <meta property="og:description" content="A practical Joomla 4.4 to 5 upgrade checklist focused on extension compatibility, update sites, and fixes you can upload to the site.">
+  <meta property="og:url" content="https://onout.org/joomla/joomla-4-to-5-upgrade-extension-issues/">
+  <meta property="og:image" content="https://onout.org/joomla/joomla-extensions-search-errors-fix/screenshots/joomla-manage-extensions.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://onout.org/joomla/joomla-extensions-search-errors-fix/screenshots/joomla-manage-extensions.png">
+  <!-- ga-bot-disable v1 -->
+  <script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "inLanguage": "en",
+    "headline": "Joomla 4 to 5 Upgrade: Extension Compatibility Fix",
+    "description": "Plan a Joomla 4.4 to Joomla 5 upgrade without breaking extensions: compatibility plugin, Manage Extensions audit, update sites, staging test, and SimpleReview site-ready fixes.",
+    "url": "https://onout.org/joomla/joomla-4-to-5-upgrade-extension-issues/",
+    "datePublished": "2026-05-08",
+    "dateModified": "2026-05-08",
+    "image": "https://onout.org/joomla/joomla-extensions-search-errors-fix/screenshots/joomla-manage-extensions.png",
+    "author": { "@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Vibers",
+      "url": "https://onout.org/vibers/",
+      "logo": { "@type": "ImageObject", "url": "https://onout.org/vibers/favicon.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://onout.org/joomla/joomla-4-to-5-upgrade-extension-issues/" },
+    "keywords": ["joomla 4 to joomla 5 upgrade extension", "joomla 5 extension compatibility", "joomla backward compatibility plugin"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "en",
+    "mainEntity": [
+      {"@type":"Question","name":"Is Joomla 4.4 to Joomla 5 a migration?","acceptedAnswer":{"@type":"Answer","text":"Joomla documents the 4.4.x to 5.x move as an upgrade, not a full migration, but third-party extensions still need compatibility checks before the live site is updated."}},
+      {"@type":"Question","name":"What breaks most often during a Joomla 5 upgrade?","acceptedAnswer":{"@type":"Answer","text":"The usual failures are outdated third-party extensions, old class names removed in Joomla 5, stale update sites, PHP version mismatches, and template overrides that call deprecated APIs."}},
+      {"@type":"Question","name":"Should I rely only on the Joomla pre-update check?","acceptedAnswer":{"@type":"Answer","text":"No. Joomla documentation treats the pre-update extension section as a high-level overview. The practical source of truth is System > Manage > Extensions plus a staging test of the actual screens."}},
+      {"@type":"Question","name":"Can SimpleReview fix Joomla upgrade issues?","acceptedAnswer":{"@type":"Answer","text":"SimpleReview can prepare site-ready fixes for file-level upgrade problems: template overrides, namespaced class changes, manifest/update XML issues, language strings, or obvious PHP compatibility fixes. Risky database repair and paid extension licensing still need human review."}}
+    ]
+  }
+  </script>
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-text-size-adjust:100%}
+    body{background:#f6f7fb;color:#172033;font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+    a{color:#1769c2;text-decoration:none}a:hover{text-decoration:underline}
+    code{background:#eef2f7;border:1px solid #dbe4f0;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;padding:1px 5px}
+    .page{background:#fff;max-width:920px;margin:0 auto;min-height:100vh;padding:0 40px 44px}
+    .site-nav{align-items:center;border-bottom:2px solid #1f3553;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;padding:24px 0 18px}
+    .brand{color:#172033;font-size:17px;font-weight:800}.nav-links{display:flex;flex-wrap:wrap;gap:18px;font-size:14px}.nav-links a{color:#536171}
+    .article-meta{color:#6c7683;display:flex;flex-wrap:wrap;font-size:13px;gap:14px;margin:34px 0 12px}
+    h1{color:#18395c;font-size:42px;font-weight:800;letter-spacing:-.8px;line-height:1.12;margin:0 0 14px;max-width:820px}
+    .lead{border-left:4px solid #f44321;color:#344052;font-size:18px;line-height:1.62;margin:0 0 26px;padding-left:18px}
+    h2{border-top:1px solid #e7edf4;color:#18395c;font-size:26px;letter-spacing:-.35px;line-height:1.22;margin:42px 0 14px;padding-top:24px}
+    h3{color:#18395c;font-size:18px;margin:28px 0 8px}p,ul,ol{margin-bottom:16px}ul,ol{padding-left:24px}li{margin-bottom:8px}
+    .takeaways,.warning,.cta-block{border-radius:8px;margin:24px 0;padding:20px 22px}.takeaways{background:#eef6ff;border:1px solid #c8dff6}.takeaways strong{color:#18395c}.warning{background:#fff6ed;border:1px solid #ffd5ac;color:#6f3d0e}.cta-block{background:#18395c;color:#fff;text-align:center}.cta-block h2{border:0;color:#fff;margin:0 0 8px;padding:0}.cta-block p{color:#d7e5f7}.cta-btn{align-items:center;background:#f44321;border-radius:7px;color:#fff;display:inline-flex;font-weight:700;margin-top:4px;min-height:44px;padding:10px 22px}.cta-btn:hover{background:#d33718;text-decoration:none}
+    .table-wrap{overflow-x:auto}table{border-collapse:collapse;font-size:14px;margin:18px 0 24px;width:100%}th{background:#18395c;color:#fff;font-weight:700;text-align:left}th,td{border-bottom:1px solid #e4ebf4;padding:10px 12px;vertical-align:top}tr:nth-child(even) td{background:#fbfdff}
+    .figure{margin:24px 0 30px}.figure img{border:1px solid #d7e2ee;border-radius:8px;display:block;height:auto;width:100%}.figure figcaption{color:#667381;font-size:13px;line-height:1.5;margin-top:8px}
+    .video-wrap{margin:22px 0 30px}.video-wrap video{background:#111827;border-radius:10px;display:block;width:100%}.sources-list{font-size:14px;padding-left:20px}
+    .related{border-top:2px solid #18395c;margin-top:42px;padding-top:24px}.related-grid{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}.related-card{border:1px solid #e0e8f1;border-radius:8px;padding:15px}.related-card a{color:#172033;font-weight:700}.related-card p{color:#6c7683;font-size:13px;margin:6px 0 0}
+    footer{border-top:1px solid #e7edf4;color:#778390;display:flex;flex-wrap:wrap;font-size:13px;gap:10px;justify-content:space-between;margin-top:42px;padding-top:20px}
+
+    .sc-banner{background:#111827;border-radius:12px;box-shadow:0 6px 28px rgba(15,23,42,.18);font-family:'Inter',sans-serif;margin:30px 0;overflow:hidden;position:relative}
+    .sc-chrome{align-items:center;background:#e7ebf2;border-bottom:1px solid #cbd5e1;display:flex;gap:8px;min-width:0;padding:8px 12px}.sc-dots{display:flex;gap:5px}.sc-dots span{border-radius:50%;height:10px;width:10px}.sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{background:#fff;border:1px solid #cad3df;border-radius:5px;color:#4b5563;flex:1;font-size:12px;min-width:0;overflow:hidden;padding:5px 10px;text-overflow:ellipsis;white-space:nowrap}.sc-ext{background:#f44321;border-radius:5px;color:#fff;font-size:12px;font-weight:800;padding:3px 7px;animation:extPulse 28s infinite}
+    .sc-stage{background:#f2f5f9;min-height:360px;overflow:hidden;position:relative}.sc-admin{display:grid;grid-template-columns:150px 1fr;min-height:360px}.sc-side{background:#1f3553;color:#d9e6f5;padding:18px 12px}.sc-logo{color:#fff;font-size:22px;font-weight:800;margin-bottom:20px}.sc-menu{font-size:12px;line-height:2.4}.sc-main{padding:18px 22px}.sc-title{align-items:center;color:#18395c;display:flex;font-size:18px;font-weight:800;gap:8px;margin-bottom:18px}.sc-toolbar{display:flex;gap:10px;margin-bottom:18px}.sc-btn{background:#fff;border:1px solid #cbd5e1;border-radius:5px;color:#274765;font-size:12px;padding:9px 12px}.sc-table{background:#fff;border:1px solid #d8e2ee;border-radius:8px;overflow:hidden}.sc-row{display:grid;grid-template-columns:54px 1fr 88px 80px;border-bottom:1px solid #e6edf5;font-size:12px;gap:10px;padding:10px 12px}.sc-row:last-child{border-bottom:0}.sc-head{background:#f8fafc;color:#42617d;font-weight:800}.sc-ok{color:#15803d;font-weight:800}.sc-warn{color:#b45309;font-weight:800}.sc-bad{color:#b91c1c;font-weight:800}
+    .sc-cursor{background:#fff;border:2px solid #f44321;border-radius:50%;box-shadow:0 6px 16px rgba(244,67,33,.25);height:22px;left:77%;position:absolute;top:24%;width:22px;z-index:6;animation:cursorMove 28s infinite}.sc-panel{background:#fff;border:1px solid #dce6f2;border-radius:10px;box-shadow:0 16px 44px rgba(15,23,42,.25);position:absolute;right:26px;top:76px;width:310px;z-index:5;opacity:0;transform:translateY(12px);animation:panelShow 28s infinite}.sc-panel-h{background:#18395c;border-radius:10px 10px 0 0;color:#fff;font-weight:800;padding:12px 14px}.sc-panel-b{padding:14px}.sc-panel-b p{color:#475569;font-size:12px;line-height:1.5;margin:0 0 10px}.sc-fix{background:#f44321;border-radius:6px;color:#fff;display:inline-block;font-size:12px;font-weight:800;padding:8px 12px}.sc-done{background:#e8fff1;border:1px solid #a7f3d0;color:#166534;font-size:12px;font-weight:800;margin-top:10px;padding:8px;border-radius:6px;opacity:0;animation:doneShow 28s infinite}
+    @keyframes extPulse{0%,10%,100%{box-shadow:none}12%,16%{box-shadow:0 0 0 6px rgba(244,67,33,.28)}}@keyframes cursorMove{0%,12%{left:77%;top:24%}22%,36%{left:44%;top:59%}50%,64%{left:84%;top:34%}78%,100%{left:74%;top:70%}}@keyframes panelShow{0%,30%{opacity:0;transform:translateY(12px)}36%,88%{opacity:1;transform:translateY(0)}94%,100%{opacity:0;transform:translateY(12px)}}@keyframes doneShow{0%,62%{opacity:0}68%,88%{opacity:1}94%,100%{opacity:0}}
+    @media(max-width:760px){.page{padding:0 20px 34px}h1{font-size:30px}.related-grid{grid-template-columns:1fr}.sc-admin{grid-template-columns:1fr}.sc-side{display:none}.sc-panel{left:14px;right:14px;width:auto}.sc-row{grid-template-columns:44px 1fr 72px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="/vibers/">Vibers - Human Code Review</a>
+    <div class="nav-links">
+      <a href="/joomla/">Joomla hub</a>
+      <a href="/joomla/joomla-extensions-search-errors-fix/">Extension errors</a>
+      <a href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="article-meta"><span>Joomla / Upgrade</span><span>May 8, 2026</span><span>12 min read</span></div>
+    <h1>Joomla 4 to 5 Upgrade: Extension Compatibility Fix</h1>
+    <p class="lead">The Joomla 4.4 to Joomla 5 upgrade is usually not blocked by Joomla core. It is blocked by extensions: old plugins, template overrides, stale update sites, or code that only works while Joomla's backward compatibility layer is covering it. This guide gives you a practical extension-first upgrade path and shows where SimpleReview can prepare a fix you can upload to the site.</p>
+
+    <section class="sc-banner" aria-label="Animated SimpleReview Joomla 4 to 5 extension upgrade demo">
+      <div class="sc-chrome"><div class="sc-dots"><span></span><span></span><span></span></div><div class="sc-url">joomla.example/administrator/index.php?option=com_installer&view=manage</div><div class="sc-ext">SR</div></div>
+      <div class="sc-stage">
+        <div class="sc-admin">
+          <div class="sc-side"><div class="sc-logo">Joomla!</div><div class="sc-menu">Home Dashboard<br>Content<br>Menus<br>Components<br>Users<br>System<br>Help</div></div>
+          <div class="sc-main">
+            <div class="sc-title">Extensions: Manage - Joomla 5 readiness</div>
+            <div class="sc-toolbar"><div class="sc-btn">Check For Updates</div><div class="sc-btn">Filter: third-party</div><div class="sc-btn">Export list</div></div>
+            <div class="sc-table">
+              <div class="sc-row sc-head"><div>Status</div><div>Extension</div><div>Type</div><div>Fix</div></div>
+              <div class="sc-row"><div class="sc-ok">OK</div><div>Joomla core extensions</div><div>Core</div><div>None</div></div>
+              <div class="sc-row"><div class="sc-warn">BC</div><div>Legacy content slider</div><div>Module</div><div>Patch</div></div>
+              <div class="sc-row"><div class="sc-bad">FAIL</div><div>Old contact override</div><div>Template</div><div>Upload</div></div>
+              <div class="sc-row"><div class="sc-warn">XML</div><div>Vendor update site</div><div>Update</div><div>Rebuild</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-cursor"></div>
+        <div class="sc-panel">
+          <div class="sc-panel-h">SimpleReview turns the upgrade issue into a site fix</div>
+          <div class="sc-panel-b">
+            <p>It checks the visible Joomla screen, maps the extension file, updates the override or manifest, and gives you a package you can upload to the site.</p>
+            <span class="sc-fix">Prepare upload-ready fix</span>
+            <div class="sc-done">Fix ready: override patch + update-site note</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="video-wrap">
+      <video controls playsinline preload="metadata" poster="../joomla-extensions-search-errors-fix/screenshots/joomla-manage-extensions.png">
+        <source src="banner_voiced.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="takeaways">
+      <p><strong>Short version:</strong> upgrade to Joomla 4.4.x first, check hosting requirements, list every third-party extension in <code>System - Manage - Extensions</code>, test the site on staging, keep the backward compatibility plugin as a temporary bridge, then fix or replace any extension that only works because of that bridge.</p>
+    </div>
+
+    <h2>Start from Joomla 4.4, not an older 4.x site</h2>
+    <p>Joomla's official planning guide assumes you are already on Joomla 4.4.x before moving to Joomla 5.x. If the site is on an earlier Joomla 4 version, update to 4.4 first, then do the extension audit. This matters because the pre-update tooling and compatibility warnings are part of the 4.4 upgrade path.</p>
+    <p>Check the server before blaming an extension. Joomla's planning guide lists PHP 8.1+, MySQL 8.0.13+, MariaDB 10.4+, or PostgreSQL 12+ as the baseline for the Joomla 5 upgrade path. If the Joomla Update component does not show the 5.x update, hosting requirements are one of the first things to verify.</p>
+
+    <h2>Do not trust the pre-update check as the only source of truth</h2>
+    <p>The Joomla guide is blunt about this: the extension section in the pre-update check is a high-level overview, not a guarantee. An extension can look compatible, then fail when an editor opens a real component view, submits a form, or loads a template override.</p>
+    <p>The practical audit starts in <code>System - Manage - Extensions</code>. Export or screenshot the list and separate Joomla Project extensions from third-party extensions. Then test only the screens your site actually uses: checkout, contact, registration, search, gallery, downloads, membership, or whatever your business depends on.</p>
+
+    <figure class="figure">
+      <img src="../joomla-extensions-search-errors-fix/screenshots/joomla-manage-extensions.png" alt="Joomla 5.4.5 administrator Extensions Manage table with status, type, version, author and locked columns">
+      <figcaption>Real Joomla 5.4.5 Docker screenshot: Manage Extensions is the screen to audit extension type, version, author, locked state, and Joomla Project vs third-party ownership before an upgrade.</figcaption>
+    </figure>
+
+    <h2>Use the backward compatibility plugin as a bridge, not a plan</h2>
+    <p>Joomla 5 includes a Behaviour - Backward Compatibility plugin that helps many Joomla 4 extensions keep running while developers remove deprecated code. That is useful during upgrade testing. It is not a reason to ignore extension maintenance.</p>
+    <p>For developers and site maintainers, the Joomla migration notes call out the kind of code that needs attention: old class names, removed deprecations, and patterns like <code>Factory::getUser()</code> that should move toward current Joomla APIs. If a template override or custom extension is still using old APIs, write down exactly which screen triggers the error before patching.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Upgrade signal</th><th>What it usually means</th><th>Next action</th></tr></thead>
+        <tbody>
+          <tr><td>Pre-update warning only</td><td>Joomla sees metadata or version uncertainty</td><td>Check vendor docs, staging test, and extension update site</td></tr>
+          <tr><td>Works only with compatibility plugin</td><td>Deprecated Joomla 4-era code is still in use</td><td>Patch custom code or ask vendor for Joomla 5 release</td></tr>
+          <tr><td>White screen after upgrade</td><td>Fatal PHP error in plugin, module, template override, or old library</td><td>Disable suspect extension on staging, capture stack trace, patch file</td></tr>
+          <tr><td>No updates found</td><td>Update site XML missing, disabled, stale, or vendor account gated</td><td>Open Update Sites, rebuild, verify vendor URL and license</td></tr>
+          <tr><td>Frontend layout breaks</td><td>Template override uses removed class/helper/API</td><td>Patch override under <code>templates/[template]/html/</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Rebuild and verify update sites before replacing files</h2>
+    <p>Joomla extensions discover updates through update-site XML endpoints. If an update site is stale or disabled, the upgrade plan can be wrong because Joomla is testing an old extension version. Check <code>System - Update - Update Sites</code>, use Rebuild when records drift, and open the vendor update URL if a paid extension depends on a license portal.</p>
+
+    <figure class="figure">
+      <img src="../joomla-extensions-search-errors-fix/screenshots/joomla-update-sites.png" alt="Joomla 5.4.5 Update Sites table showing update XML URLs and rebuild button">
+      <figcaption>Real Joomla 5.4.5 Docker screenshot: Update Sites shows the XML endpoints Joomla uses to find extension updates. Rebuild helps when installed manifests and update records drift.</figcaption>
+    </figure>
+
+    <h2>A safe upgrade sequence for extension-heavy Joomla sites</h2>
+    <ol>
+      <li>Take a full file and database backup, then restore it to staging. Do not test Joomla 5 first on production.</li>
+      <li>Update the production-equivalent staging copy to Joomla 4.4.x.</li>
+      <li>Check System Information for PHP, database, and required extensions.</li>
+      <li>Open Manage Extensions and tag every third-party extension: keep, update first, replace, remove, or custom patch.</li>
+      <li>Open Update Sites, rebuild records, and confirm paid vendor update URLs still work.</li>
+      <li>Run the Joomla 5 update on staging with the backward compatibility plugin enabled.</li>
+      <li>Test the actual revenue or lead flows, not just the homepage.</li>
+      <li>Disable the backward compatibility plugin on staging and test again. Anything that breaks now needs a real fix.</li>
+      <li>Prepare a file-level patch, upload-ready package, or vendor upgrade plan.</li>
+      <li>Repeat the same tested steps on production during a maintenance window.</li>
+    </ol>
+
+    <div class="warning">
+      <strong>Do not edit the database first.</strong> Most Joomla 4 to 5 extension issues start as file, manifest, PHP, or update-site problems. Database edits should come after a clear stack trace or vendor instruction.
+    </div>
+
+    <h2>Where SimpleReview fits</h2>
+    <p><a href="/joomla/">SimpleReview for Joomla</a> is useful when the upgrade failure points to a file you can change: a template override, namespaced class replacement, extension manifest, update XML, language string, or small PHP compatibility fix. You click the broken Joomla screen, describe the expected behavior, and get a site-ready fix you can upload or deploy.</p>
+    <p>Escalate to <a href="/vibers/">Vibers human review</a> when the site has custom paid extensions, database migrations, customer data, payment flows, or a Joomla 3 to 5 jump disguised as a simple upgrade.</p>
+
+    <div class="cta-block">
+      <h2>Turn the Joomla 5 upgrade error into an upload-ready fix</h2>
+      <p>Use SimpleReview on the failing admin or frontend screen. It prepares the file change and gives you a fix you can upload to the site after review.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/baiophhkajldflnpaaijgdigbkomkimm">Install SimpleReview</a>
+    </div>
+
+    <h2>Sources checked</h2>
+    <ul class="sources-list">
+      <li><a href="https://docs.joomla.org/Special:MyLanguage/Joomla_4.4.x_to_5.x_Planning_and_Upgrade_Step_by_Step">Joomla Documentation: Joomla 4.4.x to 5.x Planning and Upgrade Step by Step</a></li>
+      <li><a href="https://manual.joomla.org/migrations/44-50/">Joomla Programmer Documentation: Joomla 4.4 to 5.0 Upgrade Notes</a></li>
+      <li><a href="https://manual.joomla.org/migrations/50-51/compat-plugin/">Joomla Programmer Documentation: Joomla 5 Compatibility Plugin</a></li>
+      <li><a href="https://manual.joomla.org/docs/4.4/building-extensions/install-update/update-server/">Joomla Programmer Documentation: Update Servers</a></li>
+      <li>Semrush Keyword Magic export: <code>docs/keywords/joomla_broad-match_us_2026-04-30.csv</code> (<code>joomla 4 to joomla 5 upgade extension</code>, 880/mo, KD 16).</li>
+    </ul>
+
+    <section class="related">
+      <h2>Related Joomla fixes</h2>
+      <div class="related-grid">
+        <div class="related-card"><a href="/joomla/">SimpleReview for Joomla</a><p>Main Joomla hub for site-ready fixes.</p></div>
+        <div class="related-card"><a href="/joomla/joomla-extensions-search-errors-fix/">Joomla extension install/update errors</a><p>Diagnose installer, update sites, and Discover problems.</p></div>
+        <div class="related-card"><a href="/joomla/joomla-form-errors-find-all/">Find all Joomla form errors</a><p>Trace validation, debug, and template override failures.</p></div>
+        <div class="related-card"><a href="/joomla/how-to-fix-joomla-issues/">How to fix Joomla issues</a><p>General repair guide for Joomla 4/5 sites.</p></div>
+      </div>
+    </section>
+  </article>
+
+  <footer>
+    <span>© 2026 Vibers / SimpleReview</span>
+    <span><a href="/vibers/">Vibers</a> · <a href="/simple-review/">SimpleReview</a> · <a href="/joomla/">Joomla hub</a></span>
+  </footer>
+</div>
+</body>
+</html>

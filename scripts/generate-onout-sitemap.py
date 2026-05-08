@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import json
+import subprocess
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -124,53 +126,88 @@ def collect_onout_root(urls: dict[str, SitemapUrl]) -> None:
         return
     for path in sorted(ONOUT_ROOT.rglob("*.html")):
         route = html_path_to_route(path, ONOUT_ROOT)
+        if route and route.startswith("/promo/") and route.endswith(".html"):
+            continue
         if route:
             add_url(urls, f"{ONOUT}{route}", path)
 
 
-def collect_vibers_alias(urls: dict[str, SitemapUrl]) -> None:
+def is_public_astro_route(route: str) -> bool:
+    if route.endswith(".html"):
+        return False
+    if route == "/":
+        return True
+    if route.startswith("/vibers/"):
+        return True
+    if route == "/simple-review-wordpress/":
+        return True
+
+    first_part = route.strip("/").split("/", 1)[0]
+    return first_part in CMS_SLUGS
+
+
+def load_astro_routes() -> list[dict[str, object]]:
+    script = """
+import { getStaticHtmlRoutes, sitemapAlternates } from './src/lib/static-html-routes.mjs';
+
+const routes = await getStaticHtmlRoutes();
+console.log(JSON.stringify(routes.map((item) => ({
+  route: item.route,
+  file: item.file,
+  alternates: sitemapAlternates(item.route),
+}))));
+"""
+    result = subprocess.run(
+        ["node", "--input-type=module", "-e", script],
+        cwd=VIBERS_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
+
+
+def normalize_alternates(raw: object) -> tuple[tuple[str, str], ...]:
+    if not isinstance(raw, list):
+        return ()
+    alternates: list[tuple[str, str]] = []
+    for item in raw:
+        if (
+            isinstance(item, list)
+            and len(item) == 2
+            and isinstance(item[0], str)
+            and isinstance(item[1], str)
+        ):
+            alternates.append((item[0], item[1]))
+    return tuple(alternates)
+
+
+def collect_astro_routes(urls: dict[str, SitemapUrl]) -> None:
     if not VIBERS_ROOT.exists():
         return
 
-    # /vibers/ remains a public nginx alias for the Vibers product and blog.
-    for path in sorted((VIBERS_ROOT / "blog").rglob("index.html")):
-        route = html_path_to_route(path, VIBERS_ROOT, prefix="/vibers")
-        if route:
-            add_url(urls, f"{ONOUT}{route}", path)
-    index_path = VIBERS_ROOT / "index.html"
-    if index_path.exists():
-        add_url(urls, f"{ONOUT}/vibers/", index_path)
+    for item in load_astro_routes():
+        route = item.get("route")
+        file_path = item.get("file")
+        if not isinstance(route, str) or not isinstance(file_path, str):
+            continue
+        if not is_public_astro_route(route):
+            continue
+        source = Path(file_path)
+        if source.exists():
+            add_url(
+                urls,
+                f"{ONOUT}{route}",
+                source,
+                normalize_alternates(item.get("alternates")),
+            )
 
-    # Clean product routes configured explicitly in nginx.
-    # Note: /simple-review/ is intentionally NOT included — it 301-redirects to
-    # https://onout.org/ (SimpleReview lives on the homepage). Submitting a
-    # redirected URL in a sitemap triggers a GSC warning and confuses Google.
-    for clean_slug in ("simple-review-wordpress",):
-        path = VIBERS_ROOT / clean_slug / "index.html"
-        if path.exists():
-            add_url(urls, f"{ONOUT}/{clean_slug}/", path)
-
+    # /simple-review/ intentionally stays out of the sitemap because nginx
+    # redirects it to /. The clean review-service URL below is a legacy alias
+    # configured explicitly in nginx and must remain canonical in search.
     code_review_path = VIBERS_ROOT / "blog" / "code-review-as-a-service" / "index.html"
     if code_review_path.exists():
         add_url(urls, f"{ONOUT}/code-review-as-a-service/", code_review_path)
-
-    # Clean CMS routes from nginx regex. RU files are excluded from onout sitemap;
-    # their canonical public URLs live on habab.ru.
-    for slug in CMS_SLUGS:
-        cms_root = VIBERS_ROOT / slug
-        if not cms_root.exists():
-            continue
-        alternates: tuple[tuple[str, str], ...] = ()
-        if slug in RU_CMS_SLUGS:
-            alternates = (
-                ("en", f"{ONOUT}/{slug}/"),
-                ("ru", f"{HABAB}/{slug}/"),
-                ("x-default", f"{ONOUT}/{slug}/"),
-            )
-        for path in sorted(cms_root.rglob("index.html")):
-            route = html_path_to_route(path, VIBERS_ROOT)
-            if route:
-                add_url(urls, f"{ONOUT}{route}", path, alternates if path.parent == cms_root else ())
 
 
 def render_xml(urls: dict[str, SitemapUrl]) -> str:
@@ -204,7 +241,7 @@ def main() -> int:
 
     urls: dict[str, SitemapUrl] = {}
     collect_onout_root(urls)
-    collect_vibers_alias(urls)
+    collect_astro_routes(urls)
 
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)

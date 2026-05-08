@@ -1,0 +1,17 @@
+{
+  "name": "vibers-onout-astro",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:astro": "node scripts/build-astro-site.mjs",
+    "preview:astro": "astro preview --host 127.0.0.1 --port 4321",
+    "generate:sitemap": "python3 scripts/generate-onout-sitemap.py",
+    "smoke:prod": "bash scripts/smoke-prod-astro.sh",
+    "deploy:astro": "bash scripts/deploy-astro-prod.sh",
+    "check:astro": "npm run build:astro && npm run generate:sitemap"
+  },
+  "devDependencies": {
+    "astro": "^6.3.1"
+  }
+}

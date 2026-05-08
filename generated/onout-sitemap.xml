@@ -281,11 +281,11 @@
   </url>
   <url>
     <loc>https://onout.org/builder-io/</loc>
-    <lastmod>2026-05-08T06:53:27+00:00</lastmod>
+    <lastmod>2026-05-08T08:38:09+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/buttercms/</loc>
-    <lastmod>2026-05-08T07:34:23+00:00</lastmod>
+    <lastmod>2026-05-08T08:34:03+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/cal-com/</loc>
@@ -297,7 +297,7 @@
   </url>
   <url>
     <loc>https://onout.org/cloudcannon/</loc>
-    <lastmod>2026-05-08T07:34:23+00:00</lastmod>
+    <lastmod>2026-05-08T08:34:26+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/code-review-as-a-service/</loc>
@@ -309,7 +309,7 @@
   </url>
   <url>
     <loc>https://onout.org/contentful/</loc>
-    <lastmod>2026-05-08T06:53:27+00:00</lastmod>
+    <lastmod>2026-05-08T08:25:32+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/contentstack/</loc>
@@ -485,19 +485,23 @@
   </url>
   <url>
     <loc>https://onout.org/headless-cms-landscape/</loc>
-    <lastmod>2026-05-08T07:34:23+00:00</lastmod>
+    <lastmod>2026-05-08T08:34:03+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/hygraph/</loc>
-    <lastmod>2026-05-07T17:10:15+00:00</lastmod>
+    <lastmod>2026-05-08T08:25:49+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/joomla/</loc>
-    <lastmod>2026-05-08T06:51:39+00:00</lastmod>
+    <lastmod>2026-05-08T08:18:31+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/joomla/how-to-fix-joomla-issues/</loc>
     <lastmod>2026-05-07T15:46:35+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://onout.org/joomla/joomla-4-to-5-upgrade-extension-issues/</loc>
+    <lastmod>2026-05-08T08:18:21+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/joomla/joomla-extensions-search-errors-fix/</loc>
@@ -573,7 +577,7 @@
   </url>
   <url>
     <loc>https://onout.org/optimizely-cms/</loc>
-    <lastmod>2026-05-08T07:34:23+00:00</lastmod>
+    <lastmod>2026-05-08T08:24:45+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/payload-cms/</loc>
@@ -605,98 +609,6 @@
   </url>
   <url>
     <loc>https://onout.org/product-template/</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/1c-wordpress-sync.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/ai-avatar-platform.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/ai-coaching-platform.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/amoexcel-googledrive-sync.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/bitcoin-mempool-explorer.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/book-to-audio-tg.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/calorie-tracker-bot.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/contract-analysis.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/crypto-aml-checker.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/crypto-lead-automation.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/figma-to-code.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/freelance-lead-parser.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/hr-dialogue-mimic.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/image-share-platform.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/learning-platform.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/news-analysis.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/site-presentations.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/telegram-bot-development.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/telegram-copilot-psychotherapist.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/telephony-dashboard.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/voice-to-text-app.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/yadirect-mcp-server.html</loc>
-    <lastmod>2026-04-30T15:19:07+00:00</lastmod>
-  </url>
-  <url>
-    <loc>https://onout.org/promo/youtube-telegram-scraper.html</loc>
     <lastmod>2026-04-30T15:19:07+00:00</lastmod>
   </url>
   <url>
@@ -757,7 +669,7 @@
   </url>
   <url>
     <loc>https://onout.org/sitecore-xm/</loc>
-    <lastmod>2026-05-08T06:53:27+00:00</lastmod>
+    <lastmod>2026-05-08T08:25:10+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/statamic/</loc>
@@ -765,7 +677,7 @@
   </url>
   <url>
     <loc>https://onout.org/storyblok/</loc>
-    <lastmod>2026-05-07T15:47:41+00:00</lastmod>
+    <lastmod>2026-05-08T08:34:03+00:00</lastmod>
   </url>
   <url>
     <loc>https://onout.org/strapi/</loc>
