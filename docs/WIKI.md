@@ -435,7 +435,7 @@ Shipped CMS deep articles that are useful for forum replies:
 | Joomla | Contact/custom form validation errors | https://onout.org/joomla/joomla-form-errors-find-all/ | Official Joomla form validation/debug research + real Joomla 5.4.5 Docker screenshots + animated SimpleReview banner video |
 | Joomla | Joomla 4.4 to 5 extension compatibility upgrade | https://onout.org/joomla/joomla-4-to-5-upgrade-extension-issues/ | Official Joomla migration/update-site research + real Joomla 5.4.5 extension screenshots reused from the Docker run + animated SimpleReview banner video |
 | Joomla | Hire Joomla developer or use SimpleReview | https://onout.org/joomla/hire-joomla-developer-vs-simplereview/ | Service-intent guide based on Joomla service-provider/forum/update-site research + real Joomla 5.4.5 extension screenshots + animated SimpleReview banner video |
-| Drupal | Hire Drupal developer vs SimpleReview | https://onout.org/drupal/hire-drupal-developer-or-use-simplereview/ | Service-intent buyer guide with Drupal-specific file/config boundaries and SimpleReview animated banner |
+| Drupal | Hire Drupal developer vs SimpleReview | https://onout.org/drupal/hire-drupal-developer-or-use-simplereview/ | Service-intent guide based on Drupal.org services/config/Twig/hooks research + real Drupal 11.3.8 Docker admin screenshots + voiced SimpleReview banner video |
 
 Planned CMS/platform backlog from GitHub issue #66 (no `/root/vibers/<slug>/index.html` yet unless listed above):
 
@@ -478,7 +478,7 @@ When adding a new CMS hub, update all four places in the same task: `scripts/gen
 - **Re-run queue:** `sanity` (timed out), `crystallize` / `contentful` / `builder.io` / `keystatic` / `vault-cms` (bare-name seeds pulled non-product noise — re-query with disambiguating terms)
 - **Bogus entry:** "Craft Cross CMS" is not a real product (working list = 41, not 42)
 
-**Banner recording params (memory):** Emulation viewport 800×460, ScreenCast maxWidth 800, ffmpeg crop `720:446:40:0`, 14.714 fps (412 frames / 28 s), TTS via OpenAI tts-1 voice=nova, 4 segments mixed via `adelay+amix`. Recorder script: `scripts/record-article-banner.js`.
+**Banner recording params (memory):** Emulation viewport 800×460, ScreenCast maxWidth 800, ffmpeg crop `720:460:40:0`, 14.714 fps (412 frames / 28 s), TTS via OpenAI tts-1 voice=nova, 4 segments mixed via `adelay+amix`. Recorder script: `scripts/record-article-banner.js`. The old `720:446:40:0` crop can trim caption/progress content on taller banners; use the 460px height and inspect a montage before commit.
 
 ## First-hand article writing playbook
 

@@ -60,6 +60,7 @@ function httpGet(url){return new Promise((res,rej)=>{http.get(url,r=>{let d='';r
   await sleep(300);
 
   const scroll = await send('Runtime.evaluate', {expression:`
+    document.body.classList.add('recording');
     var b = document.querySelector('.sc-banner') || document.querySelector('#sc-banner-fallback');
     if(!b){ 'no-banner' } else {
       b.scrollIntoView({block:'start'});
@@ -104,12 +105,13 @@ function httpGet(url){return new Promise((res,rej)=>{http.get(url,r=>{let d='';r
   }
   await httpGet(`http://localhost:${CDP_PORT}/json/close/${tab.id}`).catch(()=>{});
 
-  // ffmpeg: stitch frames + crop to banner area (720x446, offset x=40 y=0)
+  // ffmpeg: stitch frames + crop to the full visible banner viewport (720x460, offset x=40 y=0).
+  // Older captures used 446px height and could trim the caption/progress area on taller banners.
   console.log('[ffmpeg]', OUT_MP4);
   const r = spawnSync('ffmpeg', [
     '-y', '-framerate', '14.714',
     '-i', path.join(FRAMES_DIR, 'frame_%05d.jpg'),
-    '-vf', 'crop=720:446:40:0',
+    '-vf', 'crop=720:460:40:0',
     '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '22', '-preset', 'medium',
     OUT_MP4
   ], {stdio:'inherit'});
