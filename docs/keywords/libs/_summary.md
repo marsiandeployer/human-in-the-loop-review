@@ -1,4 +1,30 @@
-# 38 self-hosted libraries — keyword research summary
+# Keyword research summary index
+
+## Headless CMS batch — 2026-05-07
+
+Source: Semrush Keyword Magic, US database, broad-match seeds.  
+Canonical raw CSVs: `docs/keywords/headless-cms-2026-05-07/*.csv` (38 files: 33 bare seeds + 5 disambiguated re-runs).  
+Full filtered summary: `docs/keywords/headless-cms-2026-05-07/_summary.md`.  
+Per-CMS backlog files: 34 headless CMS markdown files in `docs/keywords/libs/`.
+
+The headless CMS batch was manually filtered because several bare-word seeds pulled
+unrelated demand (`contentful` → content marketing, `crystallize` → football, `keystatic`
+→ MIDI keyboards, `vault cms` → HashiCorp/medical noise). Use the filtered brand-relevant
+volume below, not raw Semrush totals, when prioritizing content.
+
+| Tier | Rule | CMSes | Content status |
+|------|------|-------|----------------|
+| Tier 1 | >=2k brand-volume | Storyblok, Ghost CMS, Contentstack, Contentful, Hygraph, Hashnode | Dedicated article/hub coverage shipped with real screenshots and voiced banners. |
+| Tier 2 | 300-2k brand-volume | Decap CMS, Sitecore XM Cloud, DatoCMS, Optimizely CMS, ButterCMS, Kontent.ai, TinaCMS, Builder.io, CloudCannon, Sanity, Prismic, KeystoneJS | Comparison/scout pages shipped where a real artifact was available; lower-priority pages covered by the headless landscape page. |
+| Tier 3 | <300 brand-volume | Pages CMS, microCMS, ApostropheCMS, JekyllPad, Spinal CMS, Cosmic, Caisy, Flotiq, Front Matter CMS, Prepr CMS, Keystatic, Crystallize, GitCMS, Sitepins, Vault CMS, StudioCMS | Covered through the headless CMS landscape round-up; no dedicated page unless new demand appears. |
+
+Backlog files generated from this batch:
+
+- Tier 1: `storyblok.md`, `ghost-cms.md`, `contentstack.md`, `contentful.md`, `hygraph.md`, `hashnode.md`
+- Tier 2: `decap-cms.md`, `sitecore-xm.md`, `datocms.md`, `optimizely-cms.md`, `buttercms.md`, `kontent-ai.md`, `tinacms.md`, `builder-io.md`, `cloudcannon.md`, `sanity.md`, `prismic-cms.md`, `keystonejs.md`
+- Tier 3: `pages-cms.md`, `microcms.md`, `apostrophecms.md`, `jekyllpad.md`, `spinal-cms.md`, `cosmic-cms.md`, `caisy-cms.md`, `flotiq.md`, `front-matter-cms.md`, `prepr-cms.md`, `keystatic.md`, `crystallize.md`, `gitcms.md`, `sitepins.md`, `vault-cms.md`, `studiocms.md`
+
+## 38 self-hosted libraries — keyword research summary
 
 Source: Semrush Keyword Magic, US, 2026-05-01.  
 Per-library backlog: `docs/keywords/libs/<slug>.md`.  
