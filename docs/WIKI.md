@@ -433,6 +433,9 @@ Shipped CMS deep articles that are useful for forum replies:
 |-----|-------|------------|----------|
 | Joomla | Extension install/update/discover errors | https://onout.org/joomla/joomla-extensions-search-errors-fix/ | Official Joomla docs research + real Joomla 5.4.5 Docker screenshots + animated SimpleReview banner video |
 | Joomla | Contact/custom form validation errors | https://onout.org/joomla/joomla-form-errors-find-all/ | Official Joomla form validation/debug research + real Joomla 5.4.5 Docker screenshots + animated SimpleReview banner video |
+| Joomla | Joomla 4.4 to 5 extension compatibility upgrade | https://onout.org/joomla/joomla-4-to-5-upgrade-extension-issues/ | Official Joomla migration/update-site research + real Joomla 5.4.5 extension screenshots reused from the Docker run + animated SimpleReview banner video |
+| Joomla | Hire Joomla developer or use SimpleReview | https://onout.org/joomla/hire-joomla-developer-vs-simplereview/ | Service-intent guide based on Joomla service-provider/forum/update-site research + real Joomla 5.4.5 extension screenshots + animated SimpleReview banner video |
+| Drupal | Hire Drupal developer vs SimpleReview | https://onout.org/drupal/hire-drupal-developer-or-use-simplereview/ | Service-intent buyer guide with Drupal-specific file/config boundaries and SimpleReview animated banner |
 
 Planned CMS/platform backlog from GitHub issue #66 (no `/root/vibers/<slug>/index.html` yet unless listed above):
 
@@ -526,6 +529,12 @@ state. **No first-hand artifact = don't ship the article.**
    (`?v=YYYYMMDDx`) so the live page does not show a stale cached asset. After
    editing HTML, open the rendered article and inspect that screenshot too.
    Fake-looking mockups and stale cached images are caught here.
+   For onout.org production-path checks, do not rely on `file://` rendering:
+   validate through nginx with the onout vhost header. Quick asset check:
+   `curl -H "Host: onout.org" http://127.0.0.1/<path>`. For Puppeteer, route
+   browser traffic through a tiny local proxy that forwards to `127.0.0.1:80`
+   with `Host: onout.org`; Chrome does not reliably allow setting `Host`
+   directly via `page.setExtraHTTPHeaders()`.
 
 6. **Apply the fix, capture the recovered state.** Same pattern — `docker run`
    with corrected env, take a second screenshot of the working state. The

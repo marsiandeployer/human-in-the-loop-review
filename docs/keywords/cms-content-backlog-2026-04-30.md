@@ -31,7 +31,7 @@ Cost: ~1-2 days. Target: ship-then-measure.
 | ☐ | magento | `magento-1-to-2-migration-playbook` | Magento 1 → 2 Migration: The 2026 Playbook | `magento migration from 1 to 2` | 170 | 10 | KD 8-15 |
 | ☐ | magento | `magento-to-shopify-migration-when-to-do-it` | Magento → Shopify Migration: When (Not) to Do It | `magento to shopify migration` | 590 | 9 | KD 9-26 |
 | ☐ | drupal | `drupal-vs-wordpress-honest-tradeoffs` | Drupal vs WordPress: Honest Tradeoffs (2026) | `drupal vs wordpress` | 1600 | 22 | KD 20-22 |
-| ☐ | drupal | `hire-drupal-developer-or-use-simplereview` | Hire a Drupal Developer or Use SimpleReview? | `hire drupal developer` | 320 | 4 | KD 0-5 — easy win |
+| ☑ | drupal | `hire-drupal-developer-or-use-simplereview` | Hire a Drupal Developer or Use SimpleReview? | `hire drupal developer` | 320 | 4 | Published with Drupal-specific buyer guide, SimpleReview banner, and hub/internal links |
 | ☐ | drupal | `wordpress-multisite-vs-drupal-multisite` | WordPress Multisite vs Drupal Multisite — Pros & Cons | `wordpress multisite vs drupal multisite comparison pros cons` | 590 | 0 | KD 0! |
 | ☐ | drupal | `drupal-vs-sitecore` | Drupal vs Sitecore: Open-Source vs Enterprise DXP | `drupal vs sitecore` | 90 | 0 | KD 0! |
 | ☐ | drupal | `drupal-7-eol-migration-path` | Drupal 7 EOL: Your Migration Path to Drupal 10/11 | `drupal 7 to 10 migration` | 140 | 21 | KD 16-21 |
@@ -49,9 +49,9 @@ Cost: ~1-2 days. Target: ship-then-measure.
 | ☑ | joomla | `joomla-extensions-search-errors-fix` | Joomla Extension "Searching for Errors" — Diagnose & Fix | `joomla: extension seaching for errors` | 2400 | 6 | Published 2026-05-08 with official Joomla research, real Joomla 5.4.5 Docker screenshots, SimpleReview animated banner video, and hub/internal links |
 | ☑ | joomla | `joomla-form-errors-find-all` | How to Find All Form Errors on a Joomla Site | `joomla: how to find all form errors on a website` | 1900 | 7 | Published 2026-05-08 with official Joomla validation/debug research, real Joomla 5.4.5 contact-form error screenshots, SimpleReview animated banner video, and internal links |
 | ☐ | joomla | `joomla-3-change-footer-template-js-unlimited` | Joomla 3: Change Footer Info in JS_Unlimited Template | `joomla 3: change footer info in template js_unlimited` | 720 | 9 | KD 9, vol 720 |
-| ☐ | joomla | `joomla-4-to-5-upgrade-extension-issues` | Joomla 4 → 5 Upgrade: Extension Compatibility Fix | `joomla 4 to joomla 5 upgade extension` | 880 | 16 | KD 16, vol 880 |
+| ☑ | joomla | `joomla-4-to-5-upgrade-extension-issues` | Joomla 4 → 5 Upgrade: Extension Compatibility Fix | `joomla 4 to joomla 5 upgade extension` | 880 | 16 | Published 2026-05-08 with official Joomla migration/update-site research, real Joomla 5.4.5 extension screenshots, SimpleReview animated banner video, and internal links |
 | ☐ | joomla | `joomla-imagick-php-module-not-loaded-fix` | Fix "Imagick PHP Module Not Loaded" on Joomla 3 | `automatic intro image: imagick php module not loaded joomla 3` | 720 | 16 | KD 16 |
-| ☐ | joomla | `hire-joomla-developer-vs-simplereview` | Hire Joomla Developer or Use SimpleReview? | `hire joomla developer` | 210 | 5 | KD 3-5 |
+| ☑ | joomla | `hire-joomla-developer-vs-simplereview` | Hire Joomla Developer or Use SimpleReview? | `hire joomla developer` | 210 | 5 | Published 2026-05-08 with Joomla service-provider/forum/update-site research, real Joomla 5.4.5 Docker screenshots, SimpleReview animated banner video, and hub/internal links |
 | ☐ | bitrix | `тарифы-битрикс-24-сравнение` | Тарифы Битрикс 24: какой выбрать в 2026 | `тарифы битрикс 24` | 590 | 12 | KD 12-20 (RU) |
 | ☐ | bitrix | `битрикс-резервное-копирование-полный-гид` | Резервное копирование Битрикс — полный гид 2026 | `битрикс резервное копирование` | 90 | 19 | KD 5-9 (RU) |
 | ☐ | bitrix | `стоимость-разработки-битрикс-2026` | Сколько стоит разработка на Битрикс в 2026 | `стоимость разработки интернет магазина на битрикс` | 70 | 9 | KD 9-23 (RU) |
