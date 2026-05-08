@@ -198,7 +198,7 @@
 
       <figure>
         <img src="assets/01-pricing.jpg" alt="Contentful pricing page on 2026-05-07: 'Products and plans built to grow your business' headline, sub-heading 'Compare plans for every project, business, and team', captured from www.contentful.com/pricing">
-        <figcaption>Captured 2026-05-07 from <code>https://www.contentful.com/pricing/</code> via headless Chrome at 992&times;558. Above-the-fold is intentionally aspirational; the tier table itself sits below.</figcaption>
+        <figcaption>Captured again on 2026-05-08 from <code>https://www.contentful.com/pricing/</code> via headless Chrome at 1440&times;950. Above-the-fold is intentionally aspirational; the tier table itself sits below.</figcaption>
       </figure>
 
       <p>Pulling the numbers out of the page on the day we tested:</p>
@@ -491,7 +491,7 @@ x-contentful-request-id: bce88fd6-367b-43a3-b5c4-d17f700b26ba
           &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
         </p>
         <p style="margin-top:8px">
-          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 145 at 992&times;558, against the public marketing site, the public CDA reference, <code>cdn.contentful.com</code>, and <code>api.contentful.com</code>. Contentful and Compose are trademarks of Contentful GmbH. Sources: <a href="https://www.contentful.com/pricing/" target="_blank" rel="noopener">contentful.com/pricing</a>, <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/" target="_blank" rel="noopener">CDA reference</a>, <code>curl https://cdn.contentful.com/spaces/INVALID/entries</code> (HTTP 404, request id <code>aaeeb664-5507-496f-81a7-d0870f99bf61</code>), <code>curl https://cdn.contentful.com/spaces/cfexampleapi/entries</code> with bogus bearer (HTTP 401, request id <code>c4dc9272-4de6-4c1c-94dc-e306d9c8ea30</code>), <code>curl https://api.contentful.com/spaces</code> unauthenticated (HTTP 401, request id <code>bce88fd6-367b-43a3-b5c4-d17f700b26ba</code>).
+          Tested 2026-05-07 from a Hetzner FRA-region box, with the pricing screenshot refreshed on 2026-05-08 in headless Chrome at 1440&times;950, against the public marketing site, the public CDA reference, <code>cdn.contentful.com</code>, and <code>api.contentful.com</code>. Contentful and Compose are trademarks of Contentful GmbH. Sources: <a href="https://www.contentful.com/pricing/" target="_blank" rel="noopener">contentful.com/pricing</a>, <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/" target="_blank" rel="noopener">CDA reference</a>, <code>curl https://cdn.contentful.com/spaces/INVALID/entries</code> (HTTP 404, request id <code>aaeeb664-5507-496f-81a7-d0870f99bf61</code>), <code>curl https://cdn.contentful.com/spaces/cfexampleapi/entries</code> with bogus bearer (HTTP 401, request id <code>c4dc9272-4de6-4c1c-94dc-e306d9c8ea30</code>), <code>curl https://api.contentful.com/spaces</code> unauthenticated (HTTP 401, request id <code>bce88fd6-367b-43a3-b5c4-d17f700b26ba</code>).
         </p>
       </footer>
     </article>

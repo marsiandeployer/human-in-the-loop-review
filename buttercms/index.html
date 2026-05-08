@@ -199,8 +199,8 @@
       <p>Open <code>https://buttercms.com/pricing/</code> on a Tuesday afternoon and you get what a developer comparison spreadsheet actually needs: a tiered table, a free row, monthly numbers next to a yearly toggle that drops the price 10%, and a clear free-trial line. After spending the previous week trying to extract numbers out of Contentstack and Sitecore demo-request forms, this is the bar we'd want every vendor to hit.</p>
 
       <figure>
-        <img src="assets/01-pricing.jpg" alt="ButterCMS pricing page on 2026-05-07: blue 'Choose the pricing plan that's right' headline, a Monthly/Yearly toggle, '14-day free trial' subline, navigation with Product / Solutions / Developers / Partners / Resources / Pricing">
-        <figcaption>Captured 2026-05-07 from <code>https://buttercms.com/pricing/</code> via headless Chrome at 992&times;558. Headline reads "Choose the pricing plan that's right"; the page advertises a 14-day free trial on every paid tier and a 10% yearly discount.</figcaption>
+        <img src="assets/01-pricing.jpg" alt="ButterCMS pricing page on 2026-05-08: full blue 'Choose the pricing plan that's right for you' headline, Monthly/Yearly toggle, 14-day free trial subline, and five visible plan cards">
+        <figcaption>Captured again 2026-05-08 from <code>https://buttercms.com/pricing/</code> via headless Chrome at 1440&times;950 after accepting the CookieHub prompt. Headline reads "Choose the pricing plan that's right for you"; the page advertises a 14-day free trial on every paid tier and a 10% yearly discount.</figcaption>
       </figure>
 
       <p>The published tiers (monthly / yearly-effective):</p>
@@ -478,7 +478,7 @@ content-length: 27</code></pre>
           &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
         </p>
         <p style="margin-top:8px">
-          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 145 at 992&times;558, against the public marketing site, public docs, and the <code>api.buttercms.com</code> v2 Read API. ButterCMS is a trademark of Butter CMS Inc. Sources: <a href="https://buttercms.com/pricing/" target="_blank" rel="noopener">buttercms.com/pricing</a>, <a href="https://buttercms.com/docs/api/" target="_blank" rel="noopener">API docs</a>, <code>curl https://api.buttercms.com/v2/posts/?auth_token=invalid_token_test</code> with HTTP 401 and body <code>{"detail":"Invalid token."}</code> served via Heroku + Varnish (cache-iad-kcgs7200170-IAD, cache-bma-essb1270047-BMA).
+          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 145 at 992&times;558, against the public marketing site, public docs, and the <code>api.buttercms.com</code> v2 Read API; pricing screenshot refreshed 2026-05-08 at 1440&times;950. ButterCMS is a trademark of Butter CMS Inc. Sources: <a href="https://buttercms.com/pricing/" target="_blank" rel="noopener">buttercms.com/pricing</a>, <a href="https://buttercms.com/docs/api/" target="_blank" rel="noopener">API docs</a>, <code>curl https://api.buttercms.com/v2/posts/?auth_token=invalid_token_test</code> with HTTP 401 and body <code>{"detail":"Invalid token."}</code> served via Heroku + Varnish (cache-iad-kcgs7200170-IAD, cache-bma-essb1270047-BMA).
         </p>
       </footer>
     </article>
