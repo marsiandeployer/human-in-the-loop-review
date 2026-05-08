@@ -155,6 +155,12 @@ We ship a SimpleReview module/extension to every major CMS marketplace. Each CMS
 | DNN | [/dnn/](https://onout.org/dnn/) | Hub only; deep articles require per-topic research | DNN Store |
 | Concrete CMS | [/concrete-cms/](https://onout.org/concrete-cms/) | Hub only; deep articles require per-topic research | Concrete CMS Marketplace |
 | TYPO3 | [/typo3/](https://onout.org/typo3/) | Hub only; deep articles require per-topic research | TYPO3 Extension Repository |
+| ButterCMS | [/buttercms/](https://onout.org/buttercms/) | SaaS scout with real Read API curl + voiced SimpleReview banner | ButterCMS app / API ecosystem |
+| Prismic | [/prismic/](https://onout.org/prismic/) | SaaS scout with real Content API ref test + voiced SimpleReview banner | Prismic app / slice ecosystem |
+| CloudCannon | [/cloudcannon/](https://onout.org/cloudcannon/) | Git-CMS scout with real public-site screenshots + voiced SimpleReview banner | CloudCannon / static-site teams |
+| Optimizely CMS | [/optimizely-cms/](https://onout.org/optimizely-cms/) | Enterprise SaaS scout with real Optimizely Graph curl + voiced SimpleReview banner | Optimizely partner ecosystem |
+| Kontent.ai | [/kontent-ai/](https://onout.org/kontent-ai/) | Enterprise SaaS scout with real Delivery API curl + voiced SimpleReview banner | Kontent.ai / Kentico ecosystem |
+| Headless CMS landscape | [/headless-cms-landscape/](https://onout.org/headless-cms-landscape/) | Tier-3 headless CMS round-up anchored by a real Cosmic API probe | Research / comparison content |
 
 ### Language routing and sitemap checks
 

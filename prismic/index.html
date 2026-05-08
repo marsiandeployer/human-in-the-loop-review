@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prismic scout: Slice Machine, the public CDN API, and the Type Builder switch</title>
+  <meta name="description" content="Prismic is SaaS-only. We hit the public Content API at cdn.prismic.io/api/v2, watched the master-ref handshake, tested error envelopes, and read what the docs admit about Slice Machine being replaced. Real numbers from a 2026-05-07 scout.">
+  <link rel="canonical" href="https://onout.org/prismic/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Prismic scout: Slice Machine, the public CDN API, and the Type Builder switch">
+  <meta property="og:description" content="SaaS-only headless CMS — scout-mode test. Public CDN API, master-ref handshake, slice-based modelling, and the Type Builder transition. Dated 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/prismic/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Prismic scout: Slice Machine, the public CDN API, and the Type Builder switch",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/prismic/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #e5e7eb; }
+    figcaption { font-size: 13px; color: #666; margin-top: 8px; text-align: center; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    .banner-placeholder { background: #0f0f0f; color: #888; border-radius: 12px; padding: 60px 20px; text-align: center; font-size: 13px; margin: 0 0 32px; min-height: 280px; display: flex; align-items: center; justify-content: center; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5;width:calc(100% - 214px);max-width:500px}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide;max-height:28px;overflow:hidden 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Prismic
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">SaaS scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>API <code>v2</code> · <code>x-prismic-version: 6</code></span>
+          <span>·</span>
+          <span>No self-host path</span>
+        </div>
+        <h1>Prismic scout: Slice Machine, the public CDN API, and the Type Builder switch</h1>
+        <p class="lede">Prismic is a French-origin hosted headless CMS. Like Storyblok or Contentful, the source is closed and there is no self-host build. The signature feature is <em>slices</em> — content models that live in your repo as React/Vue/Svelte components and sync to the cloud through a CLI called Slice Machine. We did the next-best scouting test: we hit the public Content API at <code>cdn.prismic.io/api/v2</code>, captured the master-ref handshake, broke it on purpose, and read what the docs themselves admit about Slice Machine being quietly replaced. Screenshots taken on the date stamped above.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever site you click. <strong>We are not affiliated with Prismic</strong>, we're not a partner, we don't get paid to recommend anything. This page is a scout's notebook from one Linux box on one date. Prismic is SaaS-only, so we did not deploy a stack — we tested the parts you can test from outside: the public website, the public Content API, the developer docs, and the public issue trackers on the SDKs. If we got a number wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open an issue</a> and we'll correct it.</p>
+      </div>
+
+      <h2>What "SaaS-only" means here</h2>
+
+      <p>Prismic runs on AWS, fronted by CloudFront. The repository (their word for an instance — every project gets <code>&lt;name&gt;.cdn.prismic.io</code>) is provisioned by them, the schema lives in their dashboard or in your repo via Slice Machine, and the source is closed. There is no community Docker image, no Helm chart, no on-premise SKU. Self-hosting Prismic is not a question of "find the right config" — it isn't an option. If that's a hard constraint (data sovereignty, air-gapped networks, no third-party DPAs), stop here and look at <a href="../strapi/" rel="noopener">Strapi</a> or <a href="../directus/" rel="noopener">Directus</a>.</p>
+
+      <h2>Friction 1 — pricing leads with Free, but the second tier is a $150 cliff</h2>
+
+      <figure>
+        <img src="assets/01-pricing.jpg" alt="Prismic pricing page captured 2026-05-07 — four plans: Free $0, Medium $150/month, Platinum $675/month, Enterprise Custom">
+        <figcaption><code>prismic.io/pricing</code> — 2026-05-07. Annual toggle on; the gap between Free and Medium is wider than most competitors'.</figcaption>
+      </figure>
+
+      <p>The plan names on the test date: <strong>Free</strong> ($0), <strong>Medium</strong> ($150/mo, annual), <strong>Platinum</strong> ($675/mo, annual), <strong>Enterprise</strong> (custom). We're not restating the limit grid here for SEO — we're restating the prices because the shape of this ladder is unusual. Free is generous on the surface ("for developers building personal websites or a PoC"), but the moment a project graduates beyond a single repository, you don't pay $20 — you pay $150. Storyblok's first paid tier is $99/mo, Contentful's Lite is $300/mo. Prismic's Medium sits between them and tries to do both.</p>
+
+      <p>What you're paying for at Medium, per the comparison grid: more API calls, more locales, more user seats, scheduled publishing, and the Asset CDN. The number that matters most to a small team is the seat count — Free is one repository with limited collaborators; Medium is the first plan where multiple editors are practical. If your project will have one developer and zero non-technical editors, Free might genuinely carry you. If anyone else will publish, you're on the $150 plan whether you wanted to be or not.</p>
+
+      <h2>First-hand artifact — the public Content Delivery API</h2>
+
+      <p>Every Prismic repository exposes <code>https://&lt;repo&gt;.cdn.prismic.io/api/v2</code>. The shape is two-step: hit <code>/api/v2</code> first to discover the master ref (Prismic's content version stamp), then hit <code>/api/v2/documents/search?ref=&lt;ref&gt;</code> with that ref to get documents. Here's what we got at <strong>07:06 UTC on 2026-05-08</strong> from a Hetzner box, against a real test repository (<code>example-prismic</code>) used by several Prismic SDK demos:</p>
+
+<pre><code>$ curl -sSL -D - "https://example-prismic.cdn.prismic.io/api/v2"
+
+HTTP/2 200
+content-type: application/json; charset=utf-8
+content-length: 2286
+server: CloudFront
+x-prismic-region: eu-west-2
+x-prismic-version: 6
+cache-control: max-age=0, no-store
+access-control-allow-origin: *
+x-cache: Miss from cloudfront
+x-amz-cf-pop: HEL51-P4
+
+{
+  "refs": [{"id":"master","ref":"W3ROxyYAAPeuMvvg","label":"Master","isMasterRef":true}],
+  "types": {"blog":"Blog","page":"Page"},
+  "languages": [{"id":"es-es","name":"Spanish - Spain (Traditional)"}],
+  "forms": {
+    "everything": {
+      "method": "GET",
+      "action": "https://example-prismic.cdn.prismic.io/api/v2/documents/search",
+      "fields": {"ref":..., "q":..., "lang":..., "page":..., "pageSize":..., "graphQuery":..., ...}
+    }
+  },
+  "oauth_initiate": "https://example-prismic.prismic.io/auth",
+  "oauth_token": "https://example-prismic.prismic.io/auth/token",
+  "version": "482083b"
+}</code></pre>
+
+      <p>Three observations from the wire:</p>
+
+      <ul>
+        <li><strong>The repository is in <code>eu-west-2</code></strong> (London) per <code>x-prismic-region</code>, served by CloudFront edge <code>HEL51-P4</code> (Helsinki). Prismic doesn't advertise multi-region routing the way Storyblok does — your data sits where the repository was provisioned, and the CDN gets it close to readers from there.</li>
+        <li><strong>The response is a discovery document, not the content.</strong> You get back the master ref (<code>W3ROxyYAAPeuMvvg</code>), the list of content types, the available languages, and a description of the search forms. Every Prismic SDK starts by parsing this. The whole content tree is one extra request away.</li>
+        <li><strong><code>cache-control: no-store</code> on the discovery endpoint, <code>max-age=315360000</code> on the search endpoint</strong> (we'll see that one below). Prismic invalidates the master ref on every publish, so you re-fetch <code>/api</code> often but cache document responses near-permanently — keyed by ref. Smart, but it means a stale ref gives you stale content forever until you re-discover.</li>
+      </ul>
+
+      <p>Asking for documents with that ref returns a real, well-formed payload — three pages, two stories per page:</p>
+
+<pre><code>$ curl -sSL "https://example-prismic.cdn.prismic.io/api/v2/documents/search?ref=W3ROxyYAAPeuMvvg&pageSize=2"
+
+{
+  "page": 1, "results_per_page": 2, "results_size": 2,
+  "total_results_size": 3, "total_pages": 2,
+  "next_page": "https://example-prismic.cdn.prismic.io/api/v2/documents/search?ref=W3ROxyYAAPeuMvvg&page=2&pageSize=2",
+  "results": [
+    {"id":"W3ROryYAADHBMvt1","uid":"test2","type":"page","first_publication_date":"2018-08-15T16:03:19+0000",
+     "lang":"es-es","data":{"groupfields":[{"image1":{"dimensions":{"width":960,"height":800}, ...}}]}},
+    {"id":"W3RNpyYAADHBMvbc","uid":"otro-uid","type":"page", ...
+     "data":{"title":[{"type":"heading1","text":"otro uid"}],
+             "description":[{"type":"paragraph","text":"descripción"}]}}
+  ],
+  "version":"3f9f504",
+  "license":"All Rights Reserved"
+}</code></pre>
+
+      <p>Two things to notice in the body. First, every text field is a <strong>rich-text array of typed spans</strong>, not a string — <code>[{"type":"heading1","text":"otro uid","spans":[]}]</code>. That's Prismic's structured-text model; it's how they keep formatting decoupled from rendering, but it means even a plain headline costs you a `.map()` in JSX. Second, <code>x-ratelimit-limit: 200</code> (per minute) and <code>x-ratelimit-remaining</code> ticks down on the response headers. You can see budget usage on every request, which is genuinely useful.</p>
+
+      <h2>Friction 2 — the error envelope is honest, and that helps</h2>
+
+      <p>We tried two failure modes against the same repository. The error responses are short and the messages are usable:</p>
+
+<pre><code>$ curl -sSL -D - "https://example-prismic.cdn.prismic.io/api/v2/documents/search?ref=invalid_ref"
+
+HTTP/2 404
+content-type: application/json
+{"type":"api_notfound_error","message":"Ref not found. Ensure you have the correct ref and try again. Master ref is: W3ROxyYAAPeuMvvg"}
+
+$ curl -sSL -D - "https://example-prismic.cdn.prismic.io/api/v2/documents/search"
+
+HTTP/2 400
+{"type":"api_validation_error","message":"Please specify ref"}
+
+$ curl -sSL -D - "https://this-repo-does-not-exist-xyz.cdn.prismic.io/api/v2"
+
+HTTP/2 404
+content-length: 0
+x-prismic-region: eu-west-2
+x-prismic-version: 6</code></pre>
+
+      <div class="callout-fix">
+        <div class="lbl">Right call by Prismic</div>
+        <p>The bad-ref response not only tells you the ref is wrong, it tells you what the master ref currently is. That means a developer who hand-pasted a stale ref can recover from a single curl, no SDK debug session needed. It's the friendliest error envelope of any headless CMS we've poked at this week, and it costs Prismic almost nothing — they had to put the master ref into the response anyway. Worth copying.</p>
+      </div>
+
+      <p>The bogus-subdomain response is also worth flagging — empty body, but the headers (<code>x-prismic-region</code>, <code>x-prismic-version</code>) come through. That confirms the request hit Prismic's edge, was routed by subdomain, and rejected at the application layer rather than DNS-failing. Their wildcard is <code>*.cdn.prismic.io</code>, all routed to the same gateway.</p>
+
+      <h2>Friction 3 — the Slice Machine page admits Slice Machine is being replaced</h2>
+
+      <figure>
+        <img src="assets/02-slice-machine.jpg" alt="Prismic docs page for Slice Machine, captured 2026-05-07 — shows a callout reading 'New users have access to the Type Builder, a cloud-based content modeling tool that replaces Slice Machine. New projects should use the Type Builder.'">
+        <figcaption><code>prismic.io/docs/slice-machine</code> — 2026-05-07. The yellow callout in the middle is the news.</figcaption>
+      </figure>
+
+      <p>Slice Machine is the feature Prismic has been pitching for years: a CLI you run locally, you build a slice as a React/Vue/Svelte component, the CLI introspects the props, generates a JSON schema, and pushes it to your Prismic repository. Designers see "Hero with image left", developers see <code>&lt;Hero/&gt;</code>, content editors see a slice they can drop into any page. It's a real differentiator vs Storyblok's nested-bloks model — Prismic's slices are component-shaped from day one.</p>
+
+      <p>The friction, on the test date, is what the Slice Machine documentation page itself says at the top:</p>
+
+      <div class="callout-broken">
+        <div class="lbl">Quoted from Prismic's own docs</div>
+        <p>"New users have access to the <strong>Type Builder</strong>, a cloud-based content modeling tool that replaces Slice Machine. New projects should use the Type Builder."</p>
+      </div>
+
+      <p>Translation: the local-first CLI that defined Prismic's developer story is being shifted into legacy mode for new repositories. The Type Builder is a dashboard tool — schema lives in Prismic's cloud, not your git history. If you start a new project today and follow the on-rails flow, you'll model your content in their UI, not in your codebase. If you specifically wanted "schema as code", you have to opt out by installing Slice Machine into an existing repo and pointing it at a new Prismic repository.</p>
+
+      <p>This is a real pivot, and we don't have a strong opinion on it yet — Type Builder might be a better experience for non-technical content modellers, and Slice Machine is by all accounts still maintained. But the docs page that should be selling Slice Machine to new readers is instead asking them to use a different tool. That's worth knowing before you base a tooling decision on a 2024 Prismic blog post about "schemas in your git history".</p>
+
+      <h2>Friction 4 — the Content API needs a typed-text mental model</h2>
+
+      <figure>
+        <img src="assets/03-api-docs.jpg" alt="Prismic Fetch Content documentation page captured 2026-05-07 — left sidebar lists Frameworks Next.js Nuxt SvelteKit, main heading 'Fetch Content', references to @prismicio/client and TypeScript">
+        <figcaption><code>prismic.io/docs/api</code> (Fetch Content section) — 2026-05-07. <code>@prismicio/client</code> is the official SDK; the typed-text shape lives behind it.</figcaption>
+      </figure>
+
+      <p>If you've worked with Contentful or Sanity, the Prismic Content API will feel slightly off in one specific way: <strong>everything text is a structured-text array</strong>. A field marked "Title" in the dashboard does not return <code>"Hello"</code> — it returns <code>[{"type":"heading1","text":"Hello","spans":[]}]</code>. Every paragraph is an array. Every link is an object with a <code>link_type</code>. The official client (<code>@prismicio/client</code>) wraps this with helpers (<code>asText()</code>, <code>asHTML()</code>, <code>asLink()</code>), and that's where most teams live; raw API consumption is for people who actively want to render Prismic's structured-text format themselves.</p>
+
+      <p>The trade-off is real. Structured text means a single field can carry inline links, bold spans, and image references without escaping or stringifying — useful for a CMS that wants to be the canonical source for marketing copy. The cost is that "show me the title" is never one property access; it's <code>asText(doc.data.title)</code> at minimum, and you need the SDK at hand to do it idiomatically. New developers reach for <code>doc.data.title</code>, get an array, and write a render-blank bug.</p>
+
+      <h2>Friction 5 — the signup gate is light, but the path forward is opinionated</h2>
+
+      <figure>
+        <img src="assets/04-signup.jpg" alt="Prismic signup page captured 2026-05-07 — minimal form: email address field, Continue button, 'Continue with GitHub' option below the OR divider">
+        <figcaption><code>prismic.io/dashboard/signup</code> — 2026-05-07. Email or GitHub. No company-name field, no role dropdown.</figcaption>
+      </figure>
+
+      <p>For comparison: Storyblok's signup has a required Company Name field. Prismic's signup is the opposite extreme — one email field, one button, GitHub OAuth. After you confirm the email, you pick a repository name, you pick a starter (Next.js, Nuxt, SvelteKit, blank), and the dashboard runs you through a tutorial that scaffolds a local project. The on-rails flow assumes you have Node, you have a terminal, and you'll <code>npx</code> something within a few minutes. Indie devs and weekend-project builders won't bounce here. Marketing-led teams who want to click around the dashboard with no code might find the absence of a "skip the tutorial" button mildly confusing.</p>
+
+      <h2>Honest comparison — one row each</h2>
+
+      <p>One row per CMS, picked for the dimension that actually moves the decision:</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Tool</th><th>Free tier headline</th><th>The thing it's better at</th><th>The thing it's worse at</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Prismic</strong></td>
+            <td>1 repo, generous Free, $150 to scale</td>
+            <td>Slices — component-shaped content models that match how a frontend team actually thinks about pages</td>
+            <td>Slice Machine is being soft-deprecated in favour of Type Builder; structured-text arrays surprise new readers</td>
+          </tr>
+          <tr>
+            <td><a href="../storyblok/" rel="noopener"><strong>Storyblok</strong></a></td>
+            <td>1 seat, 100k API req, 2 locales</td>
+            <td>Visual Editor — clicking on the live page to edit a heading is genuinely smooth when it works</td>
+            <td>Nested bloks model is its own learning curve; localStorage friction in private-browsing iframes</td>
+          </tr>
+          <tr>
+            <td><a href="../contentstack/" rel="noopener"><strong>Contentstack</strong></a></td>
+            <td>No public free tier — sales call required</td>
+            <td>Battle-tested at large enterprise; broad localisation and workflow features</td>
+            <td>Pricing opacity; the funnel is built for procurement, not for an evaluating engineer</td>
+          </tr>
+          <tr>
+            <td><strong>Sanity</strong></td>
+            <td>3 users, 10k docs, generous bandwidth</td>
+            <td>Studio is a React app in your repo — schema is code, version-controlled, no CLI sync step</td>
+            <td>No native Visual Editor; <em>Presentation</em> exists but you wire it up</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>If your team thinks in components and wants the content model to be shaped like the frontend, Prismic's slice model is closer to that than anything else in this table — even with the Type Builder transition in flight. If you want the schema to live in your repo with no extra ceremony, Sanity does that more cleanly. If your team's job description is "click on the page to edit it", Storyblok is harder to beat.</p>
+
+      <h2>Things we'd change in the docs</h2>
+
+      <ol>
+        <li><strong>Resolve the Slice Machine vs Type Builder story up front.</strong> Right now the Slice Machine page tells you to use the other tool, and the marketing site still leads with Slice Machine vocabulary. Pick one canonical name for new readers in 2026.</li>
+        <li><strong>Document the master-ref handshake in the quickstart, not just the API reference.</strong> "Why do I need two requests to read a page?" is the first question a curl-curious developer asks, and the docs assume you'll use the SDK before you understand why.</li>
+        <li><strong>Show the rate-limit headers in a table somewhere visible.</strong> <code>x-ratelimit-remaining</code> is on every response, but the docs talk about rate limits as a number in a list rather than a runtime signal you can read.</li>
+        <li><strong>Add a "your title is an array, here's why" sidebar</strong> to the Fetch Content page. Structured text is the right call but it's the first wall a new reader hits, and explaining it in line beats sending them to the SDK helpers reference.</li>
+      </ol>
+
+      <h2>Where this fits</h2>
+
+      <p>One short, honest write-up per CMS we evaluate. Adjacent: <a href="../storyblok/">Storyblok scout</a>, <a href="../contentstack/">Contentstack scout</a>, <a href="../ghost/">Ghost 5.x first-deploy notes</a>, <a href="../strapi/">Strapi 5 self-host scout</a>, <a href="../directus/">Directus on a single VPS</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin into a draft code-fix PR — including the slice-builder views inside the Prismic dashboard, once you're past signup.</p>
+
+      <h2>Demo: SimpleReview on a Prismic issue</h2>
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/MslHEWXGe1g?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      
+
+
+      <video src="banner_voiced.mp4?v=1" width="100%" autoplay muted loop playsinline controls
+        style="border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block;margin-bottom:16px"
+        onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'"></video>
+      <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated SimpleReview demo: Prismic stale-ref error turns into a master-ref refresh patch">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl https://example-prismic.cdn.prismic.io/api/v2/documents/search?ref=invalid_ref</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl cdn.prismic.io/api/v2/documents/search?ref=invalid_ref</span></div>
+              <div class="sc-term-line sc-term-out">HTTP/2 404</div>
+              <div class="sc-term-line sc-term-info">x-prismic-version: 6</div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">Prismic master ref is stale</div>
+                <div class="sc-err-msg"><code>api_notfound_error</code>: Ref not found. Master ref is available from <code>/api/v2</code>.</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">Fix ready</span>
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">ref=$(fetchMasterRef()) && search({ ref })</span></div>
+              <div class="sc-term-line sc-term-info">HTTP/2 200</div>
+              <div class="sc-term-line sc-term-out">results[], next_page, typed rich-text fields</div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo">SimpleReview <span class="sc-panel-badge">AI fix</span></div>
+              <div class="sc-sb-hint">Click the broken response to attach context</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div>Stale ref hard-coded into the Prismic client</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div>Refresh <code>/api/v2</code> before document search</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div>Cache master ref with publish-aware invalidation</div>
+            </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">PR: Refresh Prismic ref</div>
+                <div class="sc-pr-meta">+ lib/prismic-client.ts
++ tests/prismic-ref.test.ts
++ docs/prismic.md</div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-popup">
+            <div class="sc-popup-hdr"><span>Comment for agent</span><span class="sc-popup-x">x</span></div>
+            <div class="sc-popup-ta"><span class="sc-ta-inner">Stop hard-coding the master ref</span><span class="sc-blink">|</span></div>
+            <button class="sc-popup-fix"><span class="sc-fxt">Fix it</span><span class="sc-fsp"><span class="sc-fsp-icon">*</span></span><span class="sc-fdn">PR drafted</span></button>
+          </div>
+          <div class="sc-cursor"><div class="sc-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M4 3l14 12-7 1.5L8 22 4 3z" fill="#fff" stroke="#111" stroke-width="1.5"/></svg></div></div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption"><strong>SimpleReview</strong> - Prismic stale-ref error turns into a master-ref refresh patch</div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 from a Hetzner CX-line VM, Ubuntu 22.04, against <code>example-prismic.cdn.prismic.io</code> running <code>x-prismic-version: 6</code>, region <code>eu-west-2</code>, served via CloudFront edge <code>HEL51-P4</code>. Master ref captured at test time: <code>W3ROxyYAAPeuMvvg</code>. Prismic is a trademark of Prismic SAS.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

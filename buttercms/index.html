@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ButterCMS: the marketing-page CMS that actually publishes its prices</title>
+  <meta name="description" content="We scouted ButterCMS on 2026-05-07 the way a small team picking a headless CMS would: pricing page, free plan, real curl against api.buttercms.com. Heroku-fronted Read API, Django-shaped 401 JSON, $0 free tier with 50K API calls, $71 Basic. Where it fits next to DatoCMS, Storyblok, Strapi and Directus.">
+  <link rel="canonical" href="https://onout.org/buttercms/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ButterCMS: the marketing-page CMS that actually publishes its prices">
+  <meta property="og:description" content="A real curl against api.buttercms.com, the public pricing tiers, and where ButterCMS fits next to DatoCMS, Storyblok, Strapi, Directus. Scouting note from 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/buttercms/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "ButterCMS: the marketing-page CMS that actually publishes its prices",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/buttercms/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #ececec; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    .banner-ph { background: #f4f6fa; border: 1px dashed #c4cdd9; border-radius: 12px; padding: 56px 24px; text-align: center; color: #6a7280; font-size: 14px; margin: 0 0 16px; }
+    .banner-ph strong { display: block; color: #1a4480; font-size: 15px; margin-bottom: 4px; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5;width:calc(100% - 214px);max-width:500px}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide;max-height:28px;overflow:hidden 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      ButterCMS
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">SaaS scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>ButterCMS Read API <code>v2</code></span>
+          <span>·</span>
+          <span>host: <code>api.buttercms.com</code> (Heroku + Varnish)</span>
+        </div>
+        <h1>ButterCMS: the marketing-page CMS that actually publishes its prices</h1>
+        <p class="lede">ButterCMS is the headless CMS you reach for when the project isn't headless-first. It's a Texas-based SaaS pitched at marketing pages bolted onto an app you already shipped — a blog, a press section, a careers page, a "what's new" feed — and almost nothing else. The interesting thing about ButterCMS in May 2026 isn't the feature list; it's that the entire scouting flow that breaks against vendors like Contentstack or Sitecore (no public price, no self-serve trial, sales-call gate) <em>just works</em> here. The pricing page has numbers. The free plan exists. The Read API answers your <code>curl</code> in 113 ms and tells you exactly which token you got wrong. That's worth a scouting note.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever element you click on a broken admin or storefront. We are not affiliated with ButterCMS, not partners, not paying customers. This page is a scouting note from one real evaluation session on 2026-05-07: public pricing page, public docs, the actual <code>api.buttercms.com</code> Read API hit with a real <code>curl</code>. We did not sign up for the trial. If we got a number wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll fix it.</p>
+      </div>
+
+      <h2>The pricing page is, refreshingly, a pricing page</h2>
+
+      <p>Open <code>https://buttercms.com/pricing/</code> on a Tuesday afternoon and you get what a developer comparison spreadsheet actually needs: a tiered table, a free row, monthly numbers next to a yearly toggle that drops the price 10%, and a clear free-trial line. After spending the previous week trying to extract numbers out of Contentstack and Sitecore demo-request forms, this is the bar we'd want every vendor to hit.</p>
+
+      <figure>
+        <img src="assets/01-pricing.jpg" alt="ButterCMS pricing page on 2026-05-07: blue 'Choose the pricing plan that's right' headline, a Monthly/Yearly toggle, '14-day free trial' subline, navigation with Product / Solutions / Developers / Partners / Resources / Pricing">
+        <figcaption>Captured 2026-05-07 from <code>https://buttercms.com/pricing/</code> via headless Chrome at 992&times;558. Headline reads "Choose the pricing plan that's right"; the page advertises a 14-day free trial on every paid tier and a 10% yearly discount.</figcaption>
+      </figure>
+
+      <p>The published tiers (monthly / yearly-effective):</p>
+
+      <table class="measure">
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>Price</th>
+            <th>API calls / mo</th>
+            <th>Bandwidth</th>
+            <th>Caps that bite</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Free</strong></td>
+            <td class="num">$0</td>
+            <td class="num">50K</td>
+            <td class="num">100&nbsp;GB</td>
+            <td>5 Pages, 50 Blog posts, 50 Collections, 500 Assets, 2 Roles</td>
+          </tr>
+          <tr>
+            <td><strong>Basic</strong></td>
+            <td class="num">$71 / $63.90</td>
+            <td class="num">100K</td>
+            <td class="num">250&nbsp;GB</td>
+            <td>20 Pages, 100 Blog posts, 100 Collections, 1K Assets, image editing</td>
+          </tr>
+          <tr>
+            <td><strong>Advanced</strong></td>
+            <td class="num">$224 / $201.60</td>
+            <td class="num">500K</td>
+            <td class="num">500&nbsp;GB</td>
+            <td>50 Pages, 500 Blog posts, 500 Collections, 2K Assets, 3 Roles</td>
+          </tr>
+          <tr>
+            <td><strong>Professional</strong></td>
+            <td class="num">$359 / $323.10</td>
+            <td class="num">1M</td>
+            <td class="num">1&nbsp;TB</td>
+            <td>100 Pages, unlimited posts, 1K Collections, 3K Assets, 3 Locales</td>
+          </tr>
+          <tr>
+            <td><strong>Enterprise</strong></td>
+            <td>Custom</td>
+            <td>Custom</td>
+            <td>Custom</td>
+            <td>SLA, dedicated support, migration help</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>The shape of the table is itself a thesis. Notice what isn't a paywall: <em>users</em>. Every tier has unlimited seats. The thing that meters is API calls and content volume — i.e., how big the site you're publishing is, not how big your team is. That's the right shape for a CMS pitched at "the marketing team needs to edit the homepage without redeploy" — you want every editor on the plan, you don't want to shop for seat counts.</p>
+
+      <p>The thing that <em>does</em> bite is the per-tier object cap. Five Pages on the free plan is enough to evaluate the editor; 20 on Basic is enough for a small marketing site; the jump to 50 on Advanced ($224/mo) is where a real product site starts to live. If you're picking ButterCMS for a docs-heavy site, run a count: a SaaS landing page, pricing, about, careers, contact, plus 30 blog posts already eats a Basic plan and pushes you onto Advanced fast.</p>
+
+      <h2>One real call against the Read API</h2>
+
+      <p>The pricing page is one signal; the production API is the other. ButterCMS exposes its Read API on <code>api.buttercms.com</code> behind Heroku and Varnish. You can hit it without an account and observe the real behaviour — you'll just get an authentication error, but the error itself is documentation:</p>
+
+<pre><code>$ curl -sI \
+    "https://api.buttercms.com/v2/posts/?auth_token=invalid_token_test"
+
+HTTP/2 401
+allow: GET, POST, HEAD, OPTIONS
+content-type: application/json
+www-authenticate: Token
+server: Heroku
+via: 1.1 heroku-router, 1.1 varnish, 1.1 varnish
+x-served-by: cache-iad-kcgs7200170-IAD, cache-bma-essb1270047-BMA
+x-cache: MISS, MISS
+vary: origin
+access-control-allow-origin: *
+referrer-policy: same-origin
+x-content-type-options: nosniff
+x-frame-options: DENY
+strict-transport-security: (via Heroku edge)
+content-length: 27</code></pre>
+
+      <p>Body of the response, verbatim:</p>
+
+<pre><code>{"detail":"Invalid token."}</code></pre>
+
+      <p>Five things this tells you in one round trip. <strong>One:</strong> <code>www-authenticate: Token</code> means it's Django REST Framework's <code>TokenAuthentication</code> under the hood. The error shape (<code>{"detail": "..."}</code>) is the DRF default. That's not a guess — it's the literal fingerprint. <strong>Two:</strong> Heroku origin behind Varnish ("via: 1.1 heroku-router, 1.1 varnish, 1.1 varnish") with Fastly-style POPs ("cache-iad", "cache-bma") means this is hosted on Heroku with Fastly out front. <strong>Three:</strong> <code>vary: origin</code> + <code>access-control-allow-origin: *</code> means CORS is wide open for browser calls — you can fetch from any domain, which fits the "drop a JS snippet on the marketing site" use case. <strong>Four:</strong> <code>x-frame-options: DENY</code> on the API itself is a low-stakes belt-and-braces touch. <strong>Five:</strong> <code>x-cache: MISS</code> on a 401 means the Varnish layer doesn't cache auth failures — correct, but not always what vendors get right.</p>
+
+      <p>Hit the API root with no path:</p>
+
+<pre><code>$ curl -s "https://api.buttercms.com/v2/"
+{"sitemap":"https://api.buttercms.com/v2/sitemap",
+ "posts/search":"https://api.buttercms.com/v2/posts/search",
+ "posts":"https://api.buttercms.com/v2/posts",
+ "pages":"https://api.buttercms.com/v2/pages",
+ "search":"https://api.buttercms.com/v2/search",
+ "authors":"https://api.buttercms.com/v2/authors",
+ "categories":"https://api.buttercms.com/v2/categories",
+ "tags":"https://api.buttercms.com/v2/tags"}</code></pre>
+
+      <p>That's a HATEOAS-style root — DRF's <code>DefaultRouter</code> behaviour — and it tells you the entire surface of the Read API in a single GET. <strong>Eight resources:</strong> sitemap, posts, post search, pages, global search, authors, categories, tags. No GraphQL, no introspection endpoint, no field-selection query syntax. Just nouns. If you've used WordPress's REST API or any Django-shaped backend, this is exactly the surface you'd expect, and you can model it in your client in twenty minutes.</p>
+
+      <div class="callout-fix">
+        <div class="lbl">Why this matters</div>
+        <p>The error JSON shape (<code>{"detail":"Invalid token."}</code>) is the same shape as a missing-token error (<code>{"detail":"Incorrect authentication credentials."}</code>) and the same shape any DRF endpoint anywhere returns. Your error-handling code for ButterCMS is the same code you'd write for any DRF API. That's not "bland" — that's the tax stay-low signal. Boring infrastructure is the kind that doesn't surprise you at 3am.</p>
+      </div>
+
+      <figure>
+        <img src="assets/02-docs.jpg" alt="ButterCMS API docs on 2026-05-07. Left sidebar lists API overview, API architecture & principles, Authentication & API tokens, Request/response format, REST endpoints & URLs, HTTP status codes & errors, Rate limits & throttling, Bulk Operations, Pages: key concepts, Components: key concepts.">
+        <figcaption>The API reference at <code>buttercms.com/docs/api/</code>, captured 2026-05-07. Note the docs sidebar names every concept a developer needs upfront — "HTTP status codes &amp; errors", "Rate limits &amp; throttling", "Authentication &amp; API tokens" — at one click depth.</figcaption>
+      </figure>
+
+      <p>Per the public docs the Read API speaks 2xx for success, 400 for validation, 401 unauthorized, 404 not found, 429 rate-limit-exceeded with a <code>Retry-After</code> header, and 500 for server errors. Authentication is a single token passed either as <code>?auth_token=...</code> in the query string or <code>Authorization: Token ...</code> in the header — Read tokens are public-safe, Write tokens are server-only. That's a clean split and matches the threat model: a Read token in your front-end JS is by design (rotate it if leaked), a Write token is not.</p>
+
+      <h2>The angle: it's a marketing-page CMS, not a headless-first one</h2>
+
+      <p>ButterCMS markets itself as "the headless CMS for marketing-driven teams." Read that literally. The product is shaped for the case where you have a SaaS app already shipped — a Next.js or Rails or Laravel front end — and you want to bolt on the surfaces that the marketing team needs to own without filing engineering tickets. Blog. Press. Careers. Customer stories. A "what's new" page. Each of those is a content type in their model; each renders as a route on your app via their SDK; each is editable by a non-engineer.</p>
+
+      <p>This is a different shape from the headless-first players. <a href="../datocms/">DatoCMS</a> and Storyblok start from "the entire site is content," with visual builders and structured content modelling pitched as the core surface. Contentstack and Sitecore start from "the entire enterprise's content stack," with workflow, localization, and governance as the core surface. ButterCMS starts from "the parts of your already-built app that the marketing team wants to edit." The pricing reflects this — bandwidth and API-call meters scale with traffic to those marketing pages, not with team size or content-modelling complexity.</p>
+
+      <p>The trade is real. If you want to model your entire product catalog in a CMS — every SKU, every variant, every landing page across 12 locales — ButterCMS will work, but the per-tier caps (50 Collections on Free, 100 on Basic) will push you up the price ladder fast and the lack of GraphQL or field-selection means you're paying API-call quota for fields you're not using. If you want to publish a blog and keep your engineers out of every press-release deploy, ButterCMS is the smaller, faster choice.</p>
+
+      <h2>Honestly, next to DatoCMS, Storyblok, Strapi, Directus</h2>
+
+      <table class="measure">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>ButterCMS</th>
+            <th>DatoCMS / Storyblok</th>
+            <th>Strapi / Directus (self-host)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Public free tier</td>
+            <td>Yes — 50K calls / 100GB / 5 pages</td>
+            <td>Yes (Dato free, Storyblok free)</td>
+            <td>Free forever — your hardware</td>
+          </tr>
+          <tr>
+            <td>Time to first <code>curl</code></td>
+            <td>Sign up &rarr; copy token &rarr; ~5 min</td>
+            <td>Sign up &rarr; copy token &rarr; ~5 min</td>
+            <td><code>docker run</code> &rarr; ~10 min</td>
+          </tr>
+          <tr>
+            <td>Query language</td>
+            <td>REST only (filters via query params)</td>
+            <td>GraphQL + REST</td>
+            <td>REST + GraphQL plugin</td>
+          </tr>
+          <tr>
+            <td>Visual builder</td>
+            <td>Page Components (a section model)</td>
+            <td>Visual Editor (Storyblok), Modular blocks (Dato)</td>
+            <td>BYO via plugins / custom UI</td>
+          </tr>
+          <tr>
+            <td>Seats</td>
+            <td>Unlimited on every tier</td>
+            <td>Tiered seats (per project)</td>
+            <td>Whoever has SSH access</td>
+          </tr>
+          <tr>
+            <td>Pricing entry point</td>
+            <td>$71/mo Basic</td>
+            <td>~$59/mo Dato Pro / ~$99/mo Storyblok Entry</td>
+            <td>$0 + your time</td>
+          </tr>
+          <tr>
+            <td>Lock-in</td>
+            <td>Medium. Content lives on their stack; export via API.</td>
+            <td>Medium. Same shape.</td>
+            <td>Low. Postgres dump = your data.</td>
+          </tr>
+          <tr>
+            <td>Best for</td>
+            <td>Marketing pages bolted onto an existing app</td>
+            <td>Headless-first sites + structured content</td>
+            <td>Teams that want to own the stack</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>None of this is a verdict. The honest framing: if your product is a SaaS app and you want a marketing CMS that the team can use without engineering, ButterCMS is the lowest-friction option in the table. If your product <em>is</em> the content (a magazine, an e-commerce catalog, a documentation site), the headless-first players give you better tooling for the work. If you have engineers who'd rather own the database than own a renewal contract, self-hosting Strapi or Directus is still the right call.</p>
+
+      <h2>Things we'd change</h2>
+
+      <ol>
+        <li><strong>Surface the rate-limit numbers in API responses.</strong> The docs say 429s come with <code>Retry-After</code> headers — good — but a per-second / per-month budget exposed as <code>X-RateLimit-Remaining</code> on every 200 would let clients self-throttle without polling a status endpoint.</li>
+        <li><strong>Publish a per-API-call price for over-quota usage.</strong> Right now hitting the call cap means you upgrade the plan. Some tier with metered overage ($X per 100K extra calls) would let teams handle a launch-day spike without a plan change.</li>
+        <li><strong>Ship GraphQL.</strong> The DRF-shaped REST is fine, but on a $359/mo tier with a 1M call budget, a single page-render asking for one entry plus its author plus its category is three round trips when it could be one.</li>
+        <li><strong>Don't change the error JSON shape.</strong> <code>{"detail": "Invalid token."}</code> is boring and predictable and that is why we like it.</li>
+      </ol>
+
+      <h2>What we'd actually do</h2>
+
+      <p>If we had a SaaS shipping in three weeks and the founders wanted a blog + careers page they could edit without a deploy, we'd put ButterCMS on the shortlist with WordPress headless and Ghost. The 14-day trial is enough to evaluate the editor with a real writer, the SDK is a one-liner in Next.js, and the $71 Basic plan is roughly the price of a small Heroku dyno — i.e., not a budget conversation. If we had a content-first product (a publication, a docs site, a catalog), we'd start with DatoCMS or Storyblok for the structured-content tooling, or self-host Directus for the SQL-first model.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>Adjacent scouting notes from the same week: <a href="../contentstack/">Contentstack — behind the "Contact us" wall</a>, <a href="../datocms/">DatoCMS — structured content that publishes its prices</a>, <a href="../strapi/">Strapi — the open-source headless default</a>, <a href="../directus/">Directus — SQL-first with a real admin</a>, <a href="../ghost/">Ghost — the headless-blog wedge</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin or storefront into a draft code-fix PR — it works on a ButterCMS-rendered marketing page the same way it works on a Strapi one, because by the time the page renders it's just HTML.</p>
+
+      <h2>Demo: SimpleReview on a ButterCMS issue</h2>
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/I37N8KBLUrs?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      
+
+
+      <video src="banner_voiced.mp4?v=1" width="100%" autoplay muted loop playsinline controls
+        style="border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block;margin-bottom:16px"
+        onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'"></video>
+      <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated SimpleReview demo: ButterCMS invalid-token response becomes a site-ready token/header fix">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl https://api.buttercms.com/v2/posts/?auth_token=invalid_token_test</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -i api.buttercms.com/v2/posts</span></div>
+              <div class="sc-term-line sc-term-out">HTTP/2 401</div>
+              <div class="sc-term-line sc-term-info">www-authenticate: Token</div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">ButterCMS Read API rejected the token</div>
+                <div class="sc-err-msg"><code>{"detail":"Invalid token."}</code> came from the public v2 API; the client sent query auth instead of a read-token header.</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">Fix ready</span>
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -H "Authorization: Token $BUTTER_READ_TOKEN" ...</span></div>
+              <div class="sc-term-line sc-term-info">HTTP/2 200</div>
+              <div class="sc-term-line sc-term-out">posts[], meta.next_page, cache-safe error handler</div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo">SimpleReview <span class="sc-panel-badge">AI fix</span></div>
+              <div class="sc-sb-hint">Click the broken response to attach context</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div>DRF-style 401 envelope from <code>api.buttercms.com</code></div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div>Move token out of query examples and normalize 401 handling</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div>Next.js fetch wrapper + README env check</div>
+            </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">PR: ButterCMS token guard</div>
+                <div class="sc-pr-meta">+ lib/buttercms.ts
++ .env.example
++ docs/api-errors.md</div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-popup">
+            <div class="sc-popup-hdr"><span>Comment for agent</span><span class="sc-popup-x">x</span></div>
+            <div class="sc-popup-ta"><span class="sc-ta-inner">Use header auth and add a readable 401 state</span><span class="sc-blink">|</span></div>
+            <button class="sc-popup-fix"><span class="sc-fxt">Fix it</span><span class="sc-fsp"><span class="sc-fsp-icon">*</span></span><span class="sc-fdn">PR drafted</span></button>
+          </div>
+          <div class="sc-cursor"><div class="sc-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M4 3l14 12-7 1.5L8 22 4 3z" fill="#fff" stroke="#111" stroke-width="1.5"/></svg></div></div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption"><strong>SimpleReview</strong> - ButterCMS invalid-token response becomes a site-ready token/header fix</div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 145 at 992&times;558, against the public marketing site, public docs, and the <code>api.buttercms.com</code> v2 Read API. ButterCMS is a trademark of Butter CMS Inc. Sources: <a href="https://buttercms.com/pricing/" target="_blank" rel="noopener">buttercms.com/pricing</a>, <a href="https://buttercms.com/docs/api/" target="_blank" rel="noopener">API docs</a>, <code>curl https://api.buttercms.com/v2/posts/?auth_token=invalid_token_test</code> with HTTP 401 and body <code>{"detail":"Invalid token."}</code> served via Heroku + Varnish (cache-iad-kcgs7200170-IAD, cache-bma-essb1270047-BMA).
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

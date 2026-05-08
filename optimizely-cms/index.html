@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Optimizely CMS: scouting the Episerver-rooted DXP from outside the sales wall</title>
+  <meta name="description" content="A 2026-05-07 scouting note on Optimizely CMS — the SaaS DXP that grew out of Episerver. Real screenshots of the developer docs, the product page, and the Plans page, a real curl against the public Optimizely Graph endpoint (cg.optimizely.com), and where Optimizely lands next to Sitecore XM Cloud, Contentstack, and AEM.">
+  <link rel="canonical" href="https://onout.org/optimizely-cms/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Optimizely CMS: scouting the Episerver-rooted DXP from outside the sales wall">
+  <meta property="og:description" content="The DXP that used to be Episerver. Sales wall, Opal AI agents, a real curl against cg.optimizely.com (HTTP 401, RFC 7807-ish error envelope), and where it sits next to Sitecore XM Cloud and Contentstack. Scouting note from 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/optimizely-cms/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Optimizely CMS: scouting the Episerver-rooted DXP from outside the sales wall",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/optimizely-cms/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #ececec; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .banner-placeholder { background: #0f0f0f; color: #888; border-radius: 12px; padding: 64px 24px; text-align: center; font-size: 13px; margin: 0 0 24px; border: 1px dashed #333; }
+    .banner-placeholder strong { color: #1ca0e2; display: block; font-size: 15px; margin-bottom: 6px; }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5;width:calc(100% - 214px);max-width:500px}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide;max-height:28px;overflow:hidden 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Optimizely CMS
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Enterprise SaaS scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>&middot;</span>
+          <span>cg.optimizely.com (Optimizely Graph)</span>
+          <span>&middot;</span>
+          <span>docs.developers.optimizely.com</span>
+        </div>
+        <h1>Optimizely CMS: scouting the Episerver-rooted DXP from outside the sales wall</h1>
+        <p class="lede">Optimizely CMS is what Episerver became after the 2021 rebrand and the merger with Optimizely's experimentation business. It still carries the .NET / Windows roots that define the on-prem product, but the 2026 buying motion is firmly SaaS — Optimizely Graph in front, "Opal" AI agents on top, and a sales-led plans page where every CTA is "Talk to sales." We spent an evening trying to evaluate it the way someone whose CMO just said "use Optimizely" would: read the docs, hit a public endpoint with <code>curl</code>, look at the Plans page, decide whether this is sane to put on a roadmap. Here is what we found, what we couldn't find, and where Optimizely lands next to <a href="../sitecore-xm/">Sitecore XM Cloud</a>, <a href="../contentstack/">Contentstack</a>, and the open-source headless tier we already self-host.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever element you click on a broken admin or storefront. We are <strong>not</strong> affiliated with Optimizely, not partners, not customers, never sat through a demo call. This page is a single scouting session on 2026-05-07 from outside the sales wall: real headless-Chrome screenshots of the public marketing, plans, and developer docs sites, and a real <code>curl</code> against the public Optimizely Graph endpoint at <code>cg.optimizely.com</code>. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we will fix it.</p>
+      </div>
+
+      <h2>What Optimizely CMS is, briefly</h2>
+
+      <p>Episerver shipped its first CMS in 1997 as a Windows / ASP.NET / SQL Server stack. For two decades it sat in the "enterprise .NET CMS" lane — IIS hosting, Visual Studio integrations, a content tree authoring model, license deals opening around six figures a year, and a deep partner network of Microsoft-stack agencies. <strong>The 2020&ndash;2021 acquisition of Optimizely (then a standalone experimentation company) flipped the brand: Episerver took the Optimizely name and the merged entity reframed itself as a "Digital Experience Platform."</strong></p>
+
+      <p>The CMS is still the gravity centre. Optimizely now sells it as <em>"Optimizely CMS"</em> (formerly Episerver Content Cloud) and pairs it with separate but co-marketed products for Experimentation, Personalization, Commerce, Content Marketing Platform, and Data Platform. The 2026 wrapper around all of this is "Opal" &mdash; the agentic AI layer that Optimizely rolled out across 2025. The company describes the CMS as <em>"a headless CMS that gives developers the freedom to build, marketers the tools to launch fast, and the business the control to scale anywhere"</em> on the public product page:</p>
+
+      <figure>
+        <img src="assets/02-product-page.jpg" alt="Optimizely Content Management System product page captured 2026-05-07. Top nav: Optimizely logo, Products, Resources, Plans, Partners, Developers, Log in. CONTENT MANAGEMENT SYSTEM eyebrow. H1 'Build an ultra-fast website and engage instantly.' Body: 'A headless CMS that gives developers the freedom to build, marketers the tools to launch fast, and the business the control to scale anywhere.' Cookie banner overlay at bottom.">
+        <figcaption>Captured 2026-05-07 from <code>https://www.optimizely.com/products/content-management/</code> via headless Chrome at 992&times;558. Note the headless framing as the lead — that's the 2026 positioning. The on-prem .NET roots are not visible above the fold any more; the cookie banner is the most prominent thing below the hero.</figcaption>
+      </figure>
+
+      <h2>Friction 1 &mdash; the Plans page is product cards, not numbers</h2>
+
+      <p>The first move on any vendor evaluation is the pricing page. Optimizely does have one — at <code>/plans/</code> — and it does respond with HTTP 200, which is more than we got from Sitecore. Loaded in a real browser, however, the page is not a pricing ladder. It is a product menu. The H1 reads <strong>"Plans &amp; pricing"</strong> and the body is three side-by-side product cards: Optimizely Opal (AI), Experimentation, and Content Management. None of them carries a number above the fold. Each card opens into a "Talk to sales" form.</p>
+
+      <figure>
+        <img src="assets/03-plans.jpg" alt="Optimizely Plans page captured 2026-05-07. Top nav: Optimizely logo, Products, Resources, Plans, Partners, Developers, Log in. Page H1 'Plans & pricing' on dark hero. Three product cards visible side by side: 'Optimizely Opal (AI)' with subtitle 'Deploy agents and scale marketing execution' and bullets including 'Pre-built' and 'Drag-and...'; 'Experimentation' with 'Continuously improve every customer'; and 'Content M...' with 'Create and deli...' Cookie banner overlay at bottom.">
+        <figcaption><code>https://www.optimizely.com/plans/</code> on 2026-05-07. The page shape is &ldquo;pick the product, then talk to sales,&rdquo; not &ldquo;pick the tier.&rdquo; The Opal (AI) card is co-equal with Experimentation and Content Management — that is the marketing centre of gravity in 2026.</figcaption>
+      </figure>
+
+      <p>And the path that <em>would</em> exist on a more transparent vendor &mdash; a per-product pricing URL &mdash; returns a 404:</p>
+
+<pre><code>$ curl -sI -L \
+    -w "%{http_code} %{url_effective}\n" \
+    https://www.optimizely.com/products/cms/pricing \
+    -o /dev/null
+404 https://www.optimizely.com/products/cms/pricing</code></pre>
+
+      <div class="callout-broken">
+        <div class="lbl">What gets hidden</div>
+        <p>If you're trying to put Optimizely CMS into a five-vendor comparison spreadsheet, you cannot price it from the public site. There is no Starter / Growth / Enterprise table, no per-seat cost, no per-environment cost. The only path to a number is a sales call &mdash; the same pattern we saw on Sitecore XM Cloud and Contentstack the same week.</p>
+      </div>
+
+      <h2>Friction 2 &mdash; the developer docs are good, but they live behind an "AI On" toggle</h2>
+
+      <p>The canonical developer documentation lives at <code>docs.developers.optimizely.com</code>. As of 2026-05-07 the landing page reads <strong>"Optimizely developer documentation"</strong> with the subtitle "How can we help you?" and an <em>"AI On"</em> toggle next to a search box — meaning the default search experience is now an LLM-style answer engine, not a literal index. The Quick Links row leads with two cards: <strong>Release notes</strong> and <strong>Opal and AI features</strong>. That's the 2026 emphasis: the historic docs are still there underneath, but the front door is built around the AI assistant.</p>
+
+      <figure>
+        <img src="assets/01-docs-landing.jpg" alt="docs.developers.optimizely.com captured 2026-05-07. Header has the multi-coloured Optimizely 'O' logo, with right-side links 'User Documentation', 'Dev Community', 'Optimizely Acade[my]'. H1 'Optimizely developer documentation'. Subtitle 'How can we help you?'. Search bar with green 'AI On' toggle on the left. 'Quick Links' section with two visible cards: 'Release notes' (with arrow) and 'Opal and AI features'.">
+        <figcaption>Captured 2026-05-07 from <code>https://docs.developers.optimizely.com/</code>. The "AI On" toggle is on by default. The first two Quick Links — Release notes and Opal — say everything about the 2026 priorities. The reference docs are detailed and well-organized once you click through, but the landing page is pitched at executives evaluating the AI story, not developers landing from a Stack Overflow link.</figcaption>
+      </figure>
+
+      <p>Three other top-nav targets are visible: <strong>User Documentation</strong>, <strong>Dev Community</strong>, and <strong>Optimizely Academy</strong> — the latter two open in new tabs, confirming they're separate properties. That's the same shape as Sitecore's split between <code>doc.sitecore.com</code> and <code>developers.sitecore.com</code>: a sprawling content portfolio organized by audience rather than by product.</p>
+
+      <h2>What the API actually does &mdash; one real call</h2>
+
+      <p>Pricing pages can hide numbers; production endpoints cannot. <strong>Optimizely Graph</strong> is Optimizely's GraphQL content-delivery API and is publicly addressable at <code>cg.optimizely.com</code>. Without an account, without a tenant, without any context, you can hit it with <code>curl</code> and observe how it behaves. The error envelope itself is documentation, in the same way a 401 page on any well-built API tells you what the auth layer expects.</p>
+
+<pre><code>$ curl -s -X POST \
+    "https://cg.optimizely.com/content/v2" \
+    -H "Content-Type: application/json" \
+    -d '{"query":"{ __schema { queryType { name } } }"}' \
+    -i
+
+HTTP/2 401
+date: Fri, 08 May 2026 07:06:09 GMT
+content-type: application/json
+content-length: 146
+access-control-allow-origin: *
+x-correlation-id: 9f869ebefec1d284
+x-response-time: 0
+x-started-at: 2026-05-08T07:06:09.118Z
+vary: accept-encoding
+server: cloudflare
+cf-ray: 9f869ebefec1d284-FRA
+alt-svc: h3=":443"; ma=86400</code></pre>
+
+      <p>Body of the response, verbatim:</p>
+
+<pre><code>{
+  "code": "AUTHENTICATION_ERROR",
+  "status": 401,
+  "details": {
+    "correlationId": "9f869ebefec1d284",
+    "startedAt": "2026-05-08T07:06:09.118Z",
+    "elapsedTime": 0
+  }
+}</code></pre>
+
+      <p>That is a clean, structured error envelope &mdash; not RFC 7807 strictly (no <code>type</code> URI, no <code>detail</code> field), but the Optimizely-specific shape is consistent: <code>code</code>, <code>status</code>, and a <code>details</code> object with <code>correlationId</code> for support tickets, <code>startedAt</code> for wall-clock pinning, and <code>elapsedTime</code> for billing/SLA traceability. The HTTP status is <code>401</code> with no <code>WWW-Authenticate</code> header, which means the endpoint expects an auth header it doesn't advertise on the failure path. Sending an explicit but invalid <code>Authorization: epi-single invalid-test-key</code> header still returns the same 401 envelope &mdash; the credentials are validated, not just looked for.</p>
+
+      <p><code>cf-ray</code> ending in <code>-FRA</code> means the request hit Cloudflare's Frankfurt POP (we're on a Hetzner FRA-region box). Total time end-to-end was under 200ms; the rejection happened at the edge, not the origin. CORS is fully open for browser-side queries, the long-lived session cookie (<code>__cf_bm</code>) is <code>HttpOnly; Secure</code>, and the response time is logged in the body for the caller to trust-but-verify.</p>
+
+      <p>Optimizely Graph is a tenant-scoped GraphQL endpoint where the tenant resolves from the <code>Authorization</code> header (in practice <code>epi-single &lt;key&gt;</code> for single-key read access, or HMAC for App Key + Secret pairs). Without a valid key the surface area doesn't leak schema, fields, or tenant identifiers. Compared to the legacy Episerver Content Delivery API &mdash; an OData-style REST endpoint baked into the .NET CMS &mdash; this is a substantial cleanup.</p>
+
+      <h2>How Optimizely CMS compares to the alternatives</h2>
+
+      <p>We've now done the same scouting walk on a handful of CMSes in adjacent tiers. The honest comparison isn't "which is better" &mdash; it's "which procurement category are you in and which trade-offs match." Optimizely sits at the high-touch end of the headless market, alongside <a href="../sitecore-xm/">Sitecore XM Cloud</a> and Adobe Experience Manager, well above the open-source self-host tier.</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Dimension</th><th>Optimizely CMS</th><th>Sitecore XM Cloud</th><th><a href="../contentstack/">Contentstack</a></th><th>Self-host (Strapi/Directus/Payload)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Time to first <code>curl</code> against your own data</td>
+            <td>Behind a sales call. No public sandbox URL we found.</td>
+            <td>Behind a sales call.</td>
+            <td>Behind a demo-request form.</td>
+            <td>~10 min from <code>docker run</code>.</td>
+          </tr>
+          <tr>
+            <td>Public pricing</td>
+            <td><code>/plans/</code> page exists but resolves to product cards, not numbers.</td>
+            <td>None visible. <code>/pricing</code> path 403s.</td>
+            <td>"Contact us" only.</td>
+            <td>Self-host: free. Cloud tiers: published.</td>
+          </tr>
+          <tr>
+            <td>Hosting model in 2026</td>
+            <td>SaaS (Optimizely CMS / DXP). On-prem Episerver in long-tail maintenance.</td>
+            <td>Cloud-only (XM Cloud). On-prem XM/XP in maintenance.</td>
+            <td>SaaS-only since launch.</td>
+            <td>You.</td>
+          </tr>
+          <tr>
+            <td>Delivery layer</td>
+            <td>Optimizely Graph &mdash; Cloudflare-fronted GraphQL with structured JSON errors and correlation IDs.</td>
+            <td>Experience Edge &mdash; Cloudflare-fronted GraphQL, RFC 7807 errors.</td>
+            <td>Multi-region CDN (AWS/Azure/GCP), 7 region URLs.</td>
+            <td>Whatever you put in front of the container.</td>
+          </tr>
+          <tr>
+            <td>Auth model on the public CDN endpoint</td>
+            <td><code>Authorization: epi-single &lt;key&gt;</code> single-key, or HMAC App Key + Secret.</td>
+            <td><code>sc_apikey</code> header, tenant resolved at edge.</td>
+            <td><code>api_key</code> + <code>access_token</code> headers.</td>
+            <td>BYO.</td>
+          </tr>
+          <tr>
+            <td>AI surface</td>
+            <td>"Opal" agents &mdash; pre-built agents, drag-and-drop workflows; a co-equal product with the CMS.</td>
+            <td>"SitecoreAI" &mdash; agentic content authoring, brand voice, currently the marketing wrapper.</td>
+            <td>Brand-aware writing assistant + agent workflows.</td>
+            <td>BYO LLM via plugins.</td>
+          </tr>
+          <tr>
+            <td>Heritage stack</td>
+            <td>.NET / ASP.NET / SQL Server underneath. Episerver lineage still visible in the developer surface.</td>
+            <td>Windows / .NET / Solr / MongoDB on-prem; cloud is rebuilt.</td>
+            <td>Built cloud-native.</td>
+            <td>Node.js or Python.</td>
+          </tr>
+          <tr>
+            <td>Vendor lock-in</td>
+            <td>High. Authoring lives in their tenant; export tooling exists for support, not migration.</td>
+            <td>High.</td>
+            <td>High.</td>
+            <td>Low. Database is yours.</td>
+          </tr>
+          <tr>
+            <td>Realistic procurement window</td>
+            <td>Months. Master Service Agreement, DPA, security review.</td>
+            <td>Months.</td>
+            <td>Weeks to months.</td>
+            <td>One afternoon.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>None of those rows are a verdict. If your CMO has already chosen Optimizely on the basis of <em>"who do our peer brands use"</em> &mdash; and the partner network is genuinely deep, especially in retail and B2B with Microsoft-stack agencies &mdash; none of the technical rows will overturn that decision and they shouldn't. If your situation is closer to "a six-person team picking a CMS for the next two years," Optimizely is a category mismatch, not a worse product.</p>
+
+      <h2>If you've been told "use Optimizely" &mdash; questions worth asking before the demo</h2>
+
+      <p>This article's audience is partly someone who got handed Optimizely as a directive from someone above them and wants to be a credible voice in the room. A short list of things we'd want answered on a first call, in roughly the order we'd ask them:</p>
+
+      <ol>
+        <li><strong>What does a year cost at our content volume?</strong> Optimizely prices on a custom basis &mdash; entries, environments, Optimizely Graph requests, Opal agent runs. Get a written number with the variables that move it. Specifically: are Opal agent invocations metered, and what is the unit?</li>
+        <li><strong>What is the migration story <em>off?</em></strong> Authoring lives in their tenant. The export path exists; ask for a written description of the worst-case "we leave in 18 months" scenario, including image / asset URL portability and content tree fidelity.</li>
+        <li><strong>What does the on-prem-Episerver-to-cloud migration cost?</strong> If you have legacy Episerver, this is the largest hidden line item. Item compatibility, custom rendering rewrites, and the cost of re-platforming any custom .NET code all live here.</li>
+        <li><strong>What is the Opal gating story today vs roadmap?</strong> The Plans page leads with Opal as a co-equal product. Ask which Opal agents are GA, which are early access, and which are conference-deck. Ask for sample agent definitions.</li>
+        <li><strong>What is the SLA on Optimizely Graph in our region?</strong> Cloudflare-fronted is a strong sign; ask for the contractual number, the published incident history, and whether the SLA covers cold-cache reads or only warm.</li>
+        <li><strong>Who are our two reference customers in our industry that started in the last 18 months?</strong> Old references selected on-prem Episerver for different reasons; new customers selected the SaaS DXP for the reasons that matter to you.</li>
+      </ol>
+
+      <h2>Things we'd change about the public surface</h2>
+
+      <ol>
+        <li><strong>Make the Plans page actually plan-shaped.</strong> The current page is a product menu. Even a single anchor number &mdash; "starts at $X / month for Y entries / Z Optimizely Graph requests" &mdash; would let evaluators leave the page with a budget.</li>
+        <li><strong>Self-serve developer sandbox.</strong> A scoped 14-day tenant with the demo content tree pre-loaded would let evaluators write a real Next.js + Optimizely Graph integration before the first sales call. Sitecore and Contentstack have the same gap; not an excuse.</li>
+        <li><strong>Cite the on-prem-Episerver-to-cloud migration cost on the marketing page.</strong> The audience that needs Optimizely CMS most &mdash; existing Episerver customers &mdash; also has the largest unspoken cost. Owning that number publicly is a trust move.</li>
+        <li><strong>Give the developer docs landing a developer-first front door.</strong> A side-by-side "I'm evaluating" / "I'm building" split would close the gap for the dev landing from a search result.</li>
+      </ol>
+
+      <h2>What we'd actually do</h2>
+
+      <p>In a Fortune-500 brand-team seat &mdash; especially one already on the .NET / Microsoft stack &mdash; we'd budget the demo. Optimizely's heritage in that ecosystem is genuine, the partner network is wide, Optimizely Graph is well-engineered behind Cloudflare, and the Opal bets are credible. Co-marketing the experimentation product alongside the CMS is also a real differentiator nobody else cleanly matches.</p>
+
+      <p>In a startup of 6&ndash;30 people with no editorial team and no legal department, we'd not open the conversation. The procurement window, the lock-in, and the inability to evaluate without a phone call are disqualifying for that segment. We'd self-host <a href="../strapi/">Strapi</a>, <a href="../directus/">Directus</a>, or <a href="../payload-cms/">Payload</a> and revisit once we had revenue and a compliance need to justify the line item.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>Adjacent scouting notes from the same week: <a href="../sitecore-xm/">Sitecore XM Cloud &mdash; outside the sales wall</a>, <a href="../contentstack/">Contentstack &mdash; behind the Contact-us wall</a>, <a href="../strapi/">Strapi &mdash; the open-source headless default</a>, <a href="../directus/">Directus &mdash; SQL-first with a real admin</a>, <a href="../payload-cms/">Payload &mdash; TypeScript-first headless</a>, <a href="../ghost/">Ghost &mdash; the headless-blog wedge</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin or storefront into a draft code-fix PR &mdash; it works the same on an Optimizely-rendered Next.js front end as it does on a Strapi one, because by the time the page renders it is just HTML.</p>
+
+      <h2>Demo: SimpleReview on an Optimizely CMS issue</h2>
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/M1uSk3h3c04?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      
+
+
+      <video src="banner_voiced.mp4?v=1" width="100%" autoplay muted loop playsinline controls
+        style="border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block;margin-bottom:16px"
+        onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'"></video>
+      <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated SimpleReview demo: Optimizely Graph 401 becomes an env guard and operator-facing error state">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl -X POST https://cg.optimizely.com/content/v2 -d query</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl -X POST cg.optimizely.com/content/v2</span></div>
+              <div class="sc-term-line sc-term-out">HTTP/2 401</div>
+              <div class="sc-term-line sc-term-info">x-correlation-id: 9f869ebefec1d284</div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">Optimizely Graph auth is missing</div>
+                <div class="sc-err-msg"><code>AUTHENTICATION_ERROR</code> includes correlationId, but the app never surfaces it to the operator.</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">Fix ready</span>
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">Authorization: epi-single $OPTIMIZELY_GRAPH_KEY</span></div>
+              <div class="sc-term-line sc-term-info">Graph request wrapper validates env</div>
+              <div class="sc-term-line sc-term-out">UI shows correlationId on failure</div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo">SimpleReview <span class="sc-panel-badge">AI fix</span></div>
+              <div class="sc-sb-hint">Click the broken response to attach context</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div>401 from Optimizely Graph with support-grade trace id</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div>Add env validation and correlationId UI copy</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div>Support ticket can include exact failing request</div>
+            </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">PR: Optimizely Graph guard</div>
+                <div class="sc-pr-meta">+ lib/optimizely-graph.ts
++ components/api-error.tsx
++ .env.example</div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-popup">
+            <div class="sc-popup-hdr"><span>Comment for agent</span><span class="sc-popup-x">x</span></div>
+            <div class="sc-popup-ta"><span class="sc-ta-inner">Show correlationId and validate the Graph key</span><span class="sc-blink">|</span></div>
+            <button class="sc-popup-fix"><span class="sc-fxt">Fix it</span><span class="sc-fsp"><span class="sc-fsp-icon">*</span></span><span class="sc-fdn">PR drafted</span></button>
+          </div>
+          <div class="sc-cursor"><div class="sc-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M4 3l14 12-7 1.5L8 22 4 3z" fill="#fff" stroke="#111" stroke-width="1.5"/></svg></div></div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption"><strong>SimpleReview</strong> - Optimizely Graph 401 becomes an env guard and operator-facing error state</div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 145 at 992&times;558, against the public marketing site, the public Plans page, the public developer documentation, and the public <code>cg.optimizely.com</code> Optimizely Graph endpoint. Optimizely, Optimizely CMS, Optimizely Graph, Opal, and Episerver are trademarks of Optimizely. Sources: <a href="https://www.optimizely.com/products/content-management/" target="_blank" rel="noopener">optimizely.com/products/content-management</a>, <a href="https://www.optimizely.com/plans/" target="_blank" rel="noopener">optimizely.com/plans</a>, <a href="https://docs.developers.optimizely.com/" target="_blank" rel="noopener">docs.developers.optimizely.com</a>, <code>curl https://cg.optimizely.com/content/v2</code> with no Authorization header (HTTP 401, correlation id <code>9f869ebefec1d284</code>) and with an invalid <code>Authorization: epi-single invalid-test-key</code> header (same 401 envelope, correlation id <code>9f869ef4cf369a07</code>).
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

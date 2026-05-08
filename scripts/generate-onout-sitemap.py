@@ -56,6 +56,12 @@ CMS_SLUGS = (
     "sanity",
     "sitecore-xm",
     "builder-io",
+    "buttercms",
+    "prismic",
+    "cloudcannon",
+    "optimizely-cms",
+    "kontent-ai",
+    "headless-cms-landscape",
 )
 RU_CMS_SLUGS = {"bitrix", "webasyst"}
 

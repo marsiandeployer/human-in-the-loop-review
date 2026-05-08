@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kontent.ai: scouting the Czech enterprise headless CMS from outside the sales wall</title>
+  <meta name="description" content="A 2026-05-07 scouting note on Kontent.ai (formerly Kentico Kontent) — the Brno-headquartered enterprise SaaS headless CMS. Real screenshots of the pricing slider and the Delivery API docs, a real curl against deliver.kontent.ai with an invalid environment id, and where Kontent.ai sits next to Contentstack, Sitecore XM Cloud, and the open-source headless tier.">
+  <link rel="canonical" href="https://onout.org/kontent-ai/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Kontent.ai: scouting the Czech enterprise headless CMS from outside the sales wall">
+  <meta property="og:description" content="The Brno-headquartered enterprise headless CMS, formerly Kentico Kontent. Pricing slider with no published $ tier numbers, a real curl against deliver.kontent.ai, and where it sits next to Contentstack, Sitecore XM Cloud, and Strapi/Directus. Scouting note from 2026-05-07.">
+  <meta property="og:url" content="https://onout.org/kontent-ai/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Kontent.ai: scouting the Czech enterprise headless CMS from outside the sales wall",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/kontent-ai/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 14px; }
+    table.measure th, table.measure td { padding: 10px 12px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num { font-family: ui-monospace, monospace; color: #1a4480; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #ececec; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #1ca0e2; background: #f7fbfe; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #1a4480; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #234; margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+    }
+    .banner-placeholder { background: #0f0f0f; color: #888; border-radius: 12px; padding: 64px 24px; text-align: center; font-size: 13px; margin: 0 0 24px; border: 1px dashed #333; }
+    .banner-placeholder strong { color: #1ca0e2; display: block; font-size: 15px; margin-bottom: 6px; }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5;width:calc(100% - 214px);max-width:500px}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide;max-height:28px;overflow:hidden 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Kontent.ai
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Enterprise SaaS scout</span>
+          <span>Tested 2026-05-07</span>
+          <span>·</span>
+          <span>deliver.kontent.ai</span>
+          <span>·</span>
+          <span>kontent.ai (formerly Kentico Kontent)</span>
+        </div>
+        <h1>Kontent.ai: scouting the Czech enterprise headless CMS from outside the sales wall</h1>
+        <p class="lede">Kontent.ai is the SaaS headless CMS that used to be called Kentico Kontent, sister product of the on-prem Kentico Xperience. In 2024 it dropped the Kentico prefix and re-branded itself around the AI suffix — the same marketing move Sitecore made with "SitecoreAI." We spent an evening evaluating it the same way we evaluated Sitecore XM Cloud and Contentstack the week before: read the docs, hit the Delivery API with <code>curl</code>, screenshot the pricing page, decide where this lands in a spreadsheet next to Contentstack, AEM, and the open-source tier we already self-host. Here is what we found, what we couldn't price without a sales call, and one thing the public Delivery API does much better than its enterprise peers.</p>
+      </header>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever element you click on a broken admin or storefront. We are <strong>not</strong> affiliated with Kontent.ai or Kentico, not partners, not customers, never sat through a demo call. This page is a single scouting session on 2026-05-07 from outside the sales wall: real headless-Chrome screenshots of the public pricing and docs pages, a real <code>curl</code> against the public Delivery API, and the on-record rebrand timeline as it actually exists today. If we got something wrong, <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we will fix it.</p>
+      </div>
+
+      <h2>What Kontent.ai is, briefly</h2>
+
+      <p>Kontent.ai is a cloud-only enterprise headless CMS made by a Czech company headquartered in Brno. Its parent organisation, Kentico, has been shipping CMS software since 2004, originally as an on-prem .NET / SQL Server product called Kentico CMS — later renamed Kentico Xperience. Around 2019 they spun out a separate cloud-native, content-as-a-service product as <strong>Kentico Kontent</strong>; in 2024 that product dropped the Kentico prefix and re-branded as <strong>Kontent.ai</strong>. The on-prem Kentico Xperience product still exists and is still actively sold; Kontent.ai is the cloud-first, headless-only sibling.</p>
+
+      <p>The .ai suffix is the same marketing pivot Sitecore made with "SitecoreAI" in roughly the same window. Underneath, the product is a structured-content CMS with content types, taxonomies, multi-language workflows, a Delivery API for read paths, and a separate Management API for writes. The .NET SDK is first-class — unsurprising for a company whose parent product is a Microsoft-stack CMS — but they also publish JS/TS, Java, PHP, Python, Ruby, and Swift SDKs. The customer wall on the homepage on 2026-05-07 — Vogue, WebMD Ignite, ESMO, DKMS, University of Oxford, R&amp;A, PPG Paints — skews editorial / institutional, not DTC commerce. Editorial workflow, taxonomies, multilingual variants, and approvals are first-class; storefront / cart primitives are not.</p>
+
+      <figure>
+        <img src="assets/03-homepage.jpg" alt="Kontent.ai homepage on 2026-05-07. Black background, KONTENT.AI wordmark top-left, nav: Product, Solutions, Customers, Pricing, Resources, Login, 'See if we're a fit' CTA. H1: 'The CMS built for speed, control, and the future of content'. Sub: 'Faster publishing for content teams, headless flexibility for developers, and complete control over content at scale.' Two CTAs: purple 'See if we're a fit' and outline 'Explore the platform'. Customer logo strip below: VOGUE, WebMD Ignite, ESMO, DKMS, University of Oxford, R&A, PPG Paints.">
+        <figcaption>Captured 2026-05-07 from <code>https://kontent.ai/</code> via headless Chrome at 1280&times;858. The wordmark is now <strong>KONTENT.AI</strong> with the dotted "i" stylized as a wedge — that's the 2024 rebrand. The customer wall skews editorial / pharma / institutional, not commerce.</figcaption>
+      </figure>
+
+      <h2>Friction 1 — pricing is a slider with no published numbers</h2>
+
+      <p>On most enterprise SaaS, the public pricing page does one of two things: it shows a Starter / Growth / Enterprise ladder where two of the three tiers have a published number, or it shows nothing and routes everything to a sales form. Kontent.ai picks a third option that we hadn't seen before: it shows a public configurator with three sliders — <strong>User seats</strong>, <strong>Content types</strong>, <strong>Content items</strong> — and a panel that updates the implied <em>volume discount percentage</em> as you drag, but never resolves to an actual dollar number. The sliders shape the quote; the quote itself comes from the form.</p>
+
+      <figure>
+        <img src="assets/01-pricing.jpg" alt="Kontent.ai pricing page captured 2026-05-07. Headline: 'Predictable pricing at enterprise scale'. Body copy: 'No complicated tiers. No excessive add-ons. No unexpected price jumps. Just transparent, flexible pricing that adapts to your business needs, both now and in the future. Use the sliders to see your potential savings instantly. For a detailed quote, fill out the form and our team will review your needs and get in touch with you to design a tailored estimate.' Three sliders visible: User seats (set to 21-50), Content types (set to 51-100), Content items (set to 26k-100k). Side card: 'Additional volume discount 10%'. No dollar prices visible.">
+        <figcaption>Captured 2026-05-07 from <code>https://kontent.ai/pricing/</code>. The sliders shape an implicit quote but never resolve to a dollar number. "Use the sliders to see your potential savings instantly. For a detailed quote, fill out the form…" The "predictable pricing" framing is honest about being custom-quoted; it's just not a number you can paste into a procurement spreadsheet without a phone call.</figcaption>
+      </figure>
+
+      <div class="callout-broken">
+        <div class="lbl">What gets hidden</div>
+        <p>If you're trying to put Kontent.ai into a five-vendor comparison spreadsheet, the slider gives you the variables that drive the quote (seats, types, items) but not the per-unit cost behind any of them. That is more transparent than "Contact us" — at least the dimensions are named — but it still puts you on the phone before you can model annual cost in two scenarios. Compared to Contentstack ("Contact us"), Sitecore XM Cloud ("Book a demo," <code>/pricing</code> path 403s), and AEM (also custom-quoted), this slider page is the most informative of the four. That is a low bar.</p>
+      </div>
+
+      <h2>Friction 2 — the Delivery API is genuinely good</h2>
+
+      <p>Pricing pages can hide numbers; production endpoints cannot. The Kontent.ai Delivery API — the public CDN-fronted REST endpoint your apps hit at runtime — is documented, addressable, and behaves cleanly even with garbage input. The base URL is <code>https://deliver.kontent.ai/&lt;environment-id&gt;/items</code>, where <code>environment-id</code> is a UUID provisioned per tenant. Without an account, without any credentials, you can hit the endpoint with an obviously-fake UUID and get back an exemplary error response.</p>
+
+<pre><code>$ curl -s -i \
+    https://deliver.kontent.ai/00000000-0000-0000-0000-000000000000/items
+
+HTTP/2 404
+content-type: application/json; charset=utf-8
+strict-transport-security: max-age=63072000; includeSubdomains; preload
+x-frame-options: DENY
+x-content-type-options: nosniff
+referrer-policy: strict-origin
+access-control-allow-origin: *
+x-served-by: cache-bma-essb1270074-BMA, cache-bma-essb1270026-BMA
+x-cache: MISS, MISS
+date: Fri, 08 May 2026 07:09:02 GMT
+content-length: 352</code></pre>
+
+      <p>And the body, verbatim:</p>
+
+<pre><code>{
+  "message": "The specified environment with the ID '00000000-0000-0000-0000-000000000000' doesn't exist. Check for the correct environment ID in Kontent.ai > Environment settings > General. See https://kontent.ai/learn/reference/delivery-api for more details.",
+  "request_id": "6eb03aceeefd588b",
+  "error_code": 105,
+  "specific_code": 0
+}</code></pre>
+
+      <p>There are five things right with this response that a depressing number of enterprise APIs get wrong:</p>
+
+      <ol>
+        <li><strong>The error message names the missing thing in plain English</strong> ("environment with the ID 'X' doesn't exist") instead of a generic "Bad Request."</li>
+        <li><strong>It tells the operator where to look</strong> — "Kontent.ai &gt; Environment settings &gt; General" — which is the actual UI path for a person with admin access. That is a huge time-saver compared to APIs that return a stack trace fragment or "code 105" with no human anchor.</li>
+        <li><strong>It links to the docs</strong>. <code>kontent.ai/learn/reference/delivery-api</code> is a real, indexed, public page. The link works.</li>
+        <li><strong>It exposes a <code>request_id</code></strong>, not a stack-trace blob, for support tickets — and a numeric <code>error_code</code> + <code>specific_code</code> for programmatic error handling.</li>
+        <li><strong>It's served from a CDN</strong>. <code>x-served-by: cache-bma-...-BMA</code> is Fastly's Stockholm POP. (Sitecore Edge is Cloudflare-fronted; Contentstack is multi-region AWS/Azure/GCP. Kontent.ai is on Fastly.) From a Hetzner Frankfurt box the round trip is ~30&nbsp;ms. The CDN edge is enforcing the tenant boundary, so an invalid UUID never touches the origin.</li>
+      </ol>
+
+      <p>Compare that to the equivalent error from Sitecore Experience Edge — <code>{"detail": "No sitecore context"}</code> — which is technically RFC 7807 Problem Details compliant but tells a developer nothing about <em>what to do next</em>. Kontent.ai's response is not RFC 7807; it's a plain JSON envelope with their own conventions. But it is genuinely operator-friendly. We'd take it over the spec-compliant terse one any day.</p>
+
+      <h2>The docs portal is where this product earns its keep</h2>
+
+      <p>The other artifact worth looking at is the Learn portal — <code>kontent.ai/learn/</code>. Unlike Sitecore's recent reorganization that folded everything into a "SitecoreAI Documentation" landing aimed at executives, the Kontent.ai Learn portal is structured around the actual workflow stages a developer cares about: <strong>Try Kontent.ai</strong>, <strong>Plan</strong>, <strong>Set up</strong>, <strong>Model</strong>, <strong>Develop</strong>, <strong>Create</strong>. The Delivery API reference page (below) opens with a one-paragraph "what this is, what it does," names the related concepts (CDN, content filtering, HTTPS), and immediately surfaces the three things a new developer wants to do — Hello World, build first app, optimize performance.</p>
+
+      <figure>
+        <img src="assets/02-docs-delivery-api.jpg" alt="kontent.ai/learn/reference/delivery-api on 2026-05-07. Top nav: Cheat sheets, Documentation, API reference, Product updates, Sign in. Sub-header: KONTENT.AI LEARN. Main nav tabs: Try Kontent.ai, Plan, Set up, Model, Develop, Create. Left side panel: 'Delivery REST API · API Reference' with sub-nav Introduction (About Delivery API selected), Published content vs. preview, Postman collection, SDKs, Authentication, API keys, API limitations, How the API caches your content, Errors. Filtering section, Resources section. Right column: H1 'About Delivery API'. Body: 'Use Delivery API to deliver large amounts of content to your website or app. Your content is cached in a CDN, which makes the content quickly available from wherever you are. The API provides content filtering options you can use to get just the content you need.' Highlighted box 'Related paths' with three links: Hello World, Build your first app, Optimize the performance.">
+        <figcaption><code>kontent.ai/learn/reference/delivery-api</code> on 2026-05-07. The "Related paths" callout — Hello World &rarr; Build your first app &rarr; Optimize the performance — is the kind of staged on-ramp that respects a new developer's time. The left nav names "Errors," "API limitations," "How the API caches your content" — not buried, not under a marketing tab, just listed where you'd expect them.</figcaption>
+      </figure>
+
+      <p>The Postman collection is linked from the sidebar, the SDK list is one click away, and the API-keys, authentication, and rate-limit pages are sibling documents — not behind three nav levels. Rating just the docs experience, Kontent.ai lands above Contentstack and well above the post-rebrand Sitecore docs landing.</p>
+
+      <h2>How Kontent.ai compares to the alternatives</h2>
+
+      <p>We've now done the same scouting walk on a handful of CMSes. The honest comparison isn't "which is better" — it's "which procurement category are you in and which trade-offs match." Kontent.ai sits in the upper-mid tier of the headless market, alongside Contentstack and a step below Sitecore XM Cloud / Adobe AEM in marketed scale, but at meaningful remove from the open-source self-host tier we'd reach for in a startup.</p>
+
+      <table class="measure">
+        <thead>
+          <tr><th>Dimension</th><th>Kontent.ai</th><th><a href="../sitecore-xm/">Sitecore XM Cloud</a></th><th><a href="../contentstack/">Contentstack</a></th><th>Self-host (Strapi/Directus/Payload)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Time to first <code>curl</code> against the public CDN</td>
+            <td>~30 ms (Fastly BMA POP). Endpoint is publicly addressable; account-gated content only.</td>
+            <td>~120 ms (Cloudflare FRA POP). Same pattern.</td>
+            <td>Behind a demo-request form for usage, but endpoints documented.</td>
+            <td>~10 min from <code>docker run</code>.</td>
+          </tr>
+          <tr>
+            <td>Public pricing</td>
+            <td>Slider with three named cost-driver dimensions. No $ tier numbers. Form for quote.</td>
+            <td>None visible. <code>/pricing</code> path 403s.</td>
+            <td>"Contact us" only.</td>
+            <td>Self-host: free. Cloud tiers: published.</td>
+          </tr>
+          <tr>
+            <td>Hosting model in 2026</td>
+            <td>Cloud-only. Sister product Kentico Xperience is on-prem and still sold.</td>
+            <td>Cloud-only (XM Cloud). On-prem XM/XP in maintenance.</td>
+            <td>SaaS-only since launch.</td>
+            <td>You.</td>
+          </tr>
+          <tr>
+            <td>Delivery layer</td>
+            <td>Fastly-fronted REST. Stockholm POP for FRA traffic.</td>
+            <td>Cloudflare-fronted GraphQL. RFC 7807 errors.</td>
+            <td>Multi-region CDN (AWS/Azure/GCP), 7 region URLs.</td>
+            <td>Whatever you put in front of the container.</td>
+          </tr>
+          <tr>
+            <td>Error envelope quality</td>
+            <td>Operator-friendly: names what's missing, points at the UI path, links to docs, exposes <code>request_id</code> + numeric <code>error_code</code>.</td>
+            <td>Standards-compliant (RFC 7807) but minimal: <code>"No sitecore context"</code>.</td>
+            <td>Standards-compliant, machine-readable.</td>
+            <td>BYO.</td>
+          </tr>
+          <tr>
+            <td>SDK breadth</td>
+            <td>.NET (first-class), JS/TS, Java, PHP, Python, Ruby, Swift.</td>
+            <td>JSS / Next.js Headless SDK + .NET legacy.</td>
+            <td>Multiple, JS-led.</td>
+            <td>Community-maintained.</td>
+          </tr>
+          <tr>
+            <td>Origin / data residency</td>
+            <td>Czech-headquartered (Brno), EU-native data residency.</td>
+            <td>Danish HQ; cloud is multi-region.</td>
+            <td>US-headquartered, multi-region.</td>
+            <td>Where you put the box.</td>
+          </tr>
+          <tr>
+            <td>AI surface</td>
+            <td>The .ai rebrand is mostly marketing wrapping; the AI features ship under the same product. Brand voice / drafting assistant in the authoring app.</td>
+            <td>"SitecoreAI" — agentic content authoring, currently the marketing wrapper.</td>
+            <td>Brand-aware writing assistant + agent workflows.</td>
+            <td>BYO LLM via plugins.</td>
+          </tr>
+          <tr>
+            <td>Vendor lock-in</td>
+            <td>High. Authoring lives in their tenant; export tooling exists.</td>
+            <td>High. Same shape.</td>
+            <td>High. Same shape.</td>
+            <td>Low. Database is yours.</td>
+          </tr>
+          <tr>
+            <td>Realistic procurement window</td>
+            <td>Weeks to a few months.</td>
+            <td>Months. MSA, DPA, security review.</td>
+            <td>Weeks to months.</td>
+            <td>One afternoon.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>None of those rows are a verdict. If your CMO already chose a vendor on the basis of <em>"who do our peer brands use,"</em> none of the technical rows will overturn that. For a six-person team picking a CMS for two years, Kontent.ai is a category mismatch — the slider is honest, but it's still an enterprise-procurement product.</p>
+
+      <h2>Where Kontent.ai is the right answer</h2>
+
+      <p>Two situations where we'd put Kontent.ai on a shortlist on technical merits, not just brand-tier matching:</p>
+
+      <ol>
+        <li><strong>EU data residency is contractually required.</strong> Czech HQ, Fastly EU POPs, GDPR-native. The data path doesn't touch a US-headquartered tenant by default. That alone closes deals in EU public sector and pharma where a US vendor needs an extra two months of legal review.</li>
+        <li><strong>Microsoft / .NET shop with editorial-heavy content.</strong> The .NET SDK is genuinely first-class — that's the pedigree from Kentico's Xperience product. Combined with editorial workflows and multi-language variants, this is the natural pick for a brand whose CMS team is .NET and whose content is pages, not products.</li>
+      </ol>
+
+      <p>Where we'd push back: a startup of 6&ndash;30 with no editorial team, no compliance need, and no .NET investment shouldn't be on this shortlist. Procurement window, lock-in, and inability to model cost without a phone call are disqualifying for that segment. We'd self-host <a href="../strapi/">Strapi</a>, <a href="../directus/">Directus</a>, or <a href="../payload-cms/">Payload</a> and revisit once we had revenue and a compliance need.</p>
+
+      <h2>Questions worth asking before the demo</h2>
+
+      <ol>
+        <li><strong>What is the unit cost behind each slider?</strong> Seats, content types, content items. Get a written per-unit number so you can model 2x and 5x growth.</li>
+        <li><strong>What is the migration story off?</strong> Authoring lives in their tenant. Ask for a written worst-case "we leave in 18 months" description.</li>
+        <li><strong>What is the SLA on Delivery API in our region?</strong> Fastly-fronted is a strong sign; ask for the contractual number and the incident history.</li>
+        <li><strong>Where does my data physically live, and is that contractual?</strong> EU data residency is a Kontent.ai strength; make sure it's in the MSA, not just the marketing site.</li>
+        <li><strong>Which AI features are GA today vs roadmap?</strong> The rebrand happened in 2024. Some features are real, some are conference-deck. Get the list.</li>
+      </ol>
+
+      <h2>Things we'd change about the public surface</h2>
+
+      <ol>
+        <li><strong>Resolve the slider to a number.</strong> The three sliders already shape the quote. Put a "starts at $X / month at this configuration" badge on it. Procurement will love you for it.</li>
+        <li><strong>Self-serve developer sandbox.</strong> A scoped 30-day tenant with the demo content tree pre-loaded would let evaluators write a real Next.js or .NET integration before the first sales call. The Delivery API is too good to hide behind a quote form.</li>
+        <li><strong>Own the rebrand more forcefully on the customer-stories page.</strong> Several visible case studies still read "Kentico Kontent" — confusing for someone who searched "Kontent.ai."</li>
+      </ol>
+
+      <h2>What we'd actually do</h2>
+
+      <p>If we were the CMS lead at a European publisher with a dotnet stack and a compliance officer in the meeting, we'd put Kontent.ai on the shortlist alongside Contentstack and probably above Sitecore XM Cloud — the docs and the API are better, the EU-native data path is real, and the procurement story is meaningfully shorter than Sitecore's. We'd skip it for any team that's primarily a JS shop with a developer-experience-first culture and no compliance-driven need; <a href="../payload-cms/">Payload</a> or <a href="../directus/">Directus</a> are better fits for that profile and cost two orders of magnitude less to evaluate.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>Adjacent scouting notes: <a href="../sitecore-xm/">Sitecore XM Cloud</a>, <a href="../contentstack/">Contentstack</a>, <a href="../datocms/">DatoCMS</a>, <a href="../strapi/">Strapi</a>, <a href="../directus/">Directus</a>, <a href="../payload-cms/">Payload</a>, <a href="../ghost/">Ghost</a>. <a href="https://onout.org/">SimpleReview</a> is the Chrome extension that turns whatever element you click on a broken admin or storefront into a draft code-fix PR — it works the same on a Kontent.ai-rendered Next.js front end as on a Strapi one, because by the time the page renders it is just HTML.</p>
+
+      <h2>Demo: SimpleReview on a Kontent.ai issue</h2>
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/IS0XSjZ-wfg?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      
+
+
+      <video src="banner_voiced.mp4?v=1" width="100%" autoplay muted loop playsinline controls
+        style="border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block;margin-bottom:16px"
+        onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'"></video>
+      <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated SimpleReview demo: Kontent.ai Delivery API 404 becomes a deploy-time environment-id guard">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl https://deliver.kontent.ai/00000000-0000-0000-0000-000000000000/items</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl deliver.kontent.ai/00000000-.../items</span></div>
+              <div class="sc-term-line sc-term-out">HTTP/2 404</div>
+              <div class="sc-term-line sc-term-info">request_id: 6eb03aceeefd588b</div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">Kontent.ai environment id is wrong</div>
+                <div class="sc-err-msg">Delivery API says the environment does not exist and names the exact admin path to check.</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">Fix ready</span>
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">KONTENT_ENVIRONMENT_ID=$(validated uuid)</span></div>
+              <div class="sc-term-line sc-term-info">startup check prevents deploy</div>
+              <div class="sc-term-line sc-term-out">404 message links editor to Environment settings</div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo">SimpleReview <span class="sc-panel-badge">AI fix</span></div>
+              <div class="sc-sb-hint">Click the broken response to attach context</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div>Fake UUID reached Delivery API and returned code 105</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div>Validate env id at boot and preserve request_id</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div>Broken preview explains where to find the correct id</div>
+            </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">PR: Kontent env validator</div>
+                <div class="sc-pr-meta">+ lib/kontent.ts
++ tests/kontent-env.test.ts
++ .env.example</div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-popup">
+            <div class="sc-popup-hdr"><span>Comment for agent</span><span class="sc-popup-x">x</span></div>
+            <div class="sc-popup-ta"><span class="sc-ta-inner">Validate the Kontent environment id</span><span class="sc-blink">|</span></div>
+            <button class="sc-popup-fix"><span class="sc-fxt">Fix it</span><span class="sc-fsp"><span class="sc-fsp-icon">*</span></span><span class="sc-fdn">PR drafted</span></button>
+          </div>
+          <div class="sc-cursor"><div class="sc-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M4 3l14 12-7 1.5L8 22 4 3z" fill="#fff" stroke="#111" stroke-width="1.5"/></svg></div></div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption"><strong>SimpleReview</strong> - Kontent.ai Delivery API 404 becomes a deploy-time environment-id guard</div>
+      </div>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Tested 2026-05-07 from a Hetzner FRA-region box, headless Chrome 145 at 1280&times;858, against the public marketing site, the Learn portal, and the public <code>deliver.kontent.ai</code> Delivery API endpoint. Kontent.ai, Kentico, and Kentico Xperience are trademarks of Kentico Software s.r.o. Sources: <a href="https://kontent.ai/" target="_blank" rel="noopener">kontent.ai</a>, <a href="https://kontent.ai/pricing/" target="_blank" rel="noopener">kontent.ai/pricing</a>, <a href="https://kontent.ai/learn/reference/delivery-api" target="_blank" rel="noopener">kontent.ai/learn/reference/delivery-api</a>, <code>curl https://deliver.kontent.ai/00000000-0000-0000-0000-000000000000/items</code> (HTTP 404, request id <code>6eb03aceeefd588b</code>, served from <code>cache-bma</code> — Fastly Stockholm).
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>

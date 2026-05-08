@@ -375,7 +375,7 @@ Source of truth for **currently shipped CMS hubs** is code, not memory:
 - `README.md` → public project-level summary table.
 - This wiki section → operational checklist for forum links, content planning, and future CMS phases.
 
-Live indexed CMS hubs (39):
+Live indexed CMS hubs (45):
 
 | Phase | CMS / platform | Slug | Public URL | RU sibling |
 |-------|----------------|------|------------|------------|
@@ -414,6 +414,12 @@ Live indexed CMS hubs (39):
 | 1.5 | DatoCMS (visual SaaS) | `datocms` | https://onout.org/datocms/ | — |
 | 1.5 | TinaCMS (git-based local) | `tinacms` | https://onout.org/tinacms/ | — |
 | 1.5 | KeystoneJS (TypeScript+Prisma) | `keystonejs` | https://onout.org/keystonejs/ | — |
+| 2 | ButterCMS (marketing-page SaaS) | `buttercms` | https://onout.org/buttercms/ | — |
+| 2 | Prismic (SaaS slices / Type Builder) | `prismic` | https://onout.org/prismic/ | — |
+| 2 | CloudCannon (managed git-CMS) | `cloudcannon` | https://onout.org/cloudcannon/ | — |
+| 2 | Optimizely CMS (Episerver-rooted DXP) | `optimizely-cms` | https://onout.org/optimizely-cms/ | — |
+| 2 | Kontent.ai (enterprise SaaS) | `kontent-ai` | https://onout.org/kontent-ai/ | — |
+| 3 | Headless CMS landscape round-up | `headless-cms-landscape` | https://onout.org/headless-cms-landscape/ | — |
 
 Separate platform cluster, not part of `CMS_SLUGS` yet:
 

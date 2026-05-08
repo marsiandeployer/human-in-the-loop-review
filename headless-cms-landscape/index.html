@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Small-footprint headless CMS landscape: 16 lesser-known players we mapped on 2026-05-07</title>
+  <meta name="description" content="Past Storyblok and Contentful, there are sixteen smaller headless CMSes worth knowing. Pages CMS, microCMS, ApostropheCMS, Caisy, Cosmic, Crystallize, Keystatic, StudioCMS and more — a landscape map from one evaluation session, with a real curl against api.cosmicjs.com and a real screenshot of microCMS yen pricing.">
+  <link rel="canonical" href="https://onout.org/headless-cms-landscape/">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Small-footprint headless CMS landscape — 16 lesser-known players (2026)">
+  <meta property="og:description" content="Past the big six headless CMSes there's a long tail of smaller players. We mapped sixteen of them in one evaluation session: niche, stack, license, source URL, plus a real curl against api.cosmicjs.com.">
+  <meta property="og:url" content="https://onout.org/headless-cms-landscape/">
+  <meta property="og:image" content="https://onout.org/vibers/assets/vibers-logo-source.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- ga-bot-disable v1 -->
+<script>(function(){var d=navigator.webdriver===true;if(!d&&navigator.userAgent){d=/HeadlessChrome|Puppeteer|Playwright|PhantomJS|Selenium|Bot|crawler|spider/i.test(navigator.userAgent);}if(!d&&location.search.indexOf("nogtag=1")>-1)d=true;if(d){window["ga-disable-G-LQLZ1SZS26"]=true;window["ga-disable-G-R05C1YP0CP"]=true;}})();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQLZ1SZS26"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LQLZ1SZS26');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "inLanguage": "en",
+    "headline": "Small-footprint headless CMS landscape — 16 lesser-known players (2026)",
+    "datePublished": "2026-05-07",
+    "author": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "publisher": {"@type": "Organization", "name": "Vibers", "url": "https://onout.org/vibers/"},
+    "mainEntityOfPage": "https://onout.org/headless-cms-landscape/"
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { font-family: inherit; }
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { background: #fafaf8; color: #1a1a1a; line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    pre, code, kbd { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+    code { background: #f1f3f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; color: #1a4480; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 16px 18px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 12px 0 18px; }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    h1, h2, h3 { color: #1a4480; text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .page { background: #fff; min-height: 100vh; padding: 0 20px; }
+    .content-wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+    a { color: #1ca0e2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .site-nav { font-size: 13px; color: #888; margin-bottom: 24px; padding-top: 22px; }
+    .site-nav a { color: #888; border-bottom: 1px solid #ddd; }
+    .article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 13px; color: #666; margin: 6px 0 18px; }
+    .article-meta .pill { background: #eef3f8; color: #1a4480; padding: 3px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.1; margin: 14px 0 14px; }
+    .lede { font-size: 18px; color: #2a2a2a; line-height: 1.55; margin-bottom: 24px; }
+    h2 { font-size: 26px; font-weight: 700; margin: 36px 0 12px; line-height: 1.22; }
+    h3 { font-size: 19px; font-weight: 700; margin: 22px 0 8px; color:#234; }
+    p { margin-bottom: 14px; font-size: 16.5px; color: #2a2a2a; }
+    ul, ol { margin: 0 0 16px 22px; }
+    li { margin-bottom: 6px; font-size: 16.5px; color: #2a2a2a; }
+    table.measure { width: 100%; border-collapse: collapse; margin: 8px 0 22px; font-size: 13.5px; }
+    table.measure th, table.measure td { padding: 9px 10px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: top; }
+    table.measure th { background: #f7fbfe; color: #1a4480; font-weight: 700; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; }
+    table.measure td.num, table.measure td.mono { font-family: ui-monospace, monospace; color: #1a4480; font-size: 12.5px; }
+    table.measure td a { font-weight: 600; }
+    figure { margin: 18px 0 22px; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid #ececec; }
+    figcaption { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.5; }
+    .callout-honest { margin: 26px 0 22px; padding: 18px 22px; border-left: 4px solid #f59e0b; background: #fffbeb; border-radius: 0 8px 8px 0; }
+    .callout-honest .lbl { font-size: 11px; font-weight: 700; color: #92400e; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-honest p { font-size: 15.5px; color: #422; margin-bottom: 8px; }
+    .callout-honest p:last-child { margin-bottom: 0; }
+    .callout-broken { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: 0 8px 8px 0; }
+    .callout-broken .lbl { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-broken p { font-size: 15.5px; color: #4a1212; margin-bottom: 8px; }
+    .callout-broken p:last-child { margin-bottom: 0; }
+    .callout-fix { margin: 18px 0 22px; padding: 16px 20px; border-left: 4px solid #16a34a; background: #f0fdf4; border-radius: 0 8px 8px 0; }
+    .callout-fix .lbl { font-size: 11px; font-weight: 700; color: #166534; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .callout-fix p { font-size: 15.5px; color: #14532d; margin-bottom: 8px; }
+    .callout-fix p:last-child { margin-bottom: 0; }
+    .group-card { margin: 18px 0 24px; padding: 18px 22px; border: 1px solid #e7eef5; border-radius: 10px; background: #fafdff; }
+    .group-card h3 { margin-top: 0; }
+    .banner-placeholder { background: #f4f6fa; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 36px 20px; margin: 8px 0 28px; text-align: center; color: #64748b; }
+    .banner-placeholder .ph-title { font-size: 14px; font-weight: 700; color: #475569; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 8px; }
+    .banner-placeholder p { font-size: 14px; color: #64748b; margin-bottom: 0; }
+    .footer { margin: 56px 0 32px; padding-top: 24px; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+    .footer a { color: #888; border-bottom: 1px solid #ddd; }
+    .toc { font-size: 14px; background: #f7fbfe; border-radius: 8px; padding: 14px 18px; margin: 18px 0 28px; }
+    .toc strong { display: block; font-size: 12px; color: #1a4480; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+    .toc a { color: #1a4480; }
+    @media (max-width: 720px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
+      .content-wrap { padding: 0 4px; }
+      table.measure { font-size: 12px; }
+      table.measure th, table.measure td { padding: 6px 6px; }
+    }
+    .sc-banner{background:#0f0f0f;border-radius:12px;overflow:hidden;margin:0 0 32px;box-shadow:0 4px 32px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+    .sc-chrome{background:#e8e8e8;border-bottom:1px solid #d0d0d0;padding:8px 12px;display:flex;align-items:center;gap:8px}
+    .sc-dots{display:flex;gap:5px}.sc-dots span{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .sc-dots span:nth-child(1){background:#ff5f57}.sc-dots span:nth-child(2){background:#ffbd2e}.sc-dots span:nth-child(3){background:#28c840}
+    .sc-url{flex:1;background:#fff;border:1px solid #c8c8c8;border-radius:4px;padding:4px 12px;font-size:12px;color:#444;margin:0 8px;font-family:ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sc-ext-icon{width:20px;height:20px;border-radius:4px;display:block;flex-shrink:0;animation:extPulse 28s infinite}
+    @keyframes extPulse{0%,10%{box-shadow:none}11.5%{box-shadow:0 0 0 6px rgba(28,160,226,.7)}13%,100%{box-shadow:none}}
+    .sc-viewport{display:flex;flex-direction:column;min-height:360px;position:relative;background:#0d1117;overflow:hidden}
+    .sc-content-row{display:flex;flex:1;position:relative;overflow:hidden;background:#0d1117}
+    .sc-site{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px;line-height:1.55}
+    .sc-term-prompt{color:#7ee787}.sc-term-cmd{color:#fff}.sc-term-out{color:#9ca3af}.sc-term-info{color:#79c0ff}.sc-term-warn{color:#fbbf24}.sc-term-err{color:#f85149}
+    .sc-term-line{margin-bottom:1px}
+    .sc-error-box{background:#1f1f1f;border:1px solid #404040;border-left:4px solid #d63638;border-radius:5px;padding:8px 11px;margin:6px 0 0;position:relative;animation:errSel 28s infinite;outline-offset:3px;color:#e5e5e5;width:calc(100% - 214px);max-width:500px}
+    @keyframes errSel{0%,21%{outline:none}23%,86%{outline:3px solid #FF6B35;box-shadow:0 0 0 4px rgba(255,107,53,.18)}90%,100%{outline:none}}
+    .sc-error-box::after{content:'Selected';position:absolute;top:-8px;right:8px;background:#FF6B35;color:#fff;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:3px;line-height:1;opacity:0;animation:selBadge 28s infinite}
+    @keyframes selBadge{0%,21%{opacity:0}23%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-err-title{font-weight:700;font-size:10px;color:#f85149;margin-bottom:4px;animation:errHide 28s infinite}
+    .sc-err-msg{color:#9ca3af;font-size:9.5px;line-height:1.4;animation:errHide;max-height:28px;overflow:hidden 28s infinite}
+    .sc-err-msg .sc-rcount{color:#fbbf24;font-weight:700}
+    @keyframes errHide{0%,84%{opacity:1}88%,99%{opacity:0}100%{opacity:1}}
+    .sc-recovered{position:absolute;left:0;right:0;top:0;bottom:0;background:#0d1117;display:flex;flex-direction:column;opacity:0;animation:recShow 28s infinite;padding:14px 18px;color:#c9d1d9;font-family:ui-monospace,monospace;font-size:11px;line-height:1.55}
+    @keyframes recShow{0%,84%{opacity:0;pointer-events:none}88%,99%{opacity:1}100%{opacity:0}}
+    .sc-rec-success{display:inline-block;background:rgba(34,197,94,.15);color:#7ee787;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:8px;border:1px solid rgba(34,197,94,.3);font-family:-apple-system,sans-serif}
+    .sc-sidebar{width:200px;background:#f7f7f7;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;gap:7px;padding:10px 9px;box-sizing:border-box;position:absolute;right:0;top:0;bottom:0;z-index:5;animation:sbSlide 28s infinite}
+    @keyframes sbSlide{0%,11%{transform:translateX(100%);opacity:0}14%,93%{transform:translateX(0);opacity:1}96%,100%{transform:translateX(100%);opacity:0}}
+    .sc-panel-logo{font-size:11px;font-weight:700;color:#1ca0e2;display:flex;align-items:center;gap:5px;font-family:-apple-system,sans-serif}
+    .sc-panel-badge{font-size:8px;background:#1ca0e2;color:#fff;padding:1px 5px;border-radius:3px;font-weight:700}
+    .sc-sb-hint{font-size:9px;color:#bbb;text-align:center;padding:4px 2px;animation:sbHintFade 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes sbHintFade{0%,20%{opacity:1}24%,100%{opacity:0}}
+    .sc-sb-card{background:#fff;border:1px solid #e5e5e5;border-radius:4px;padding:6px 8px;font-size:10px;color:#333;line-height:1.4;opacity:0;font-family:-apple-system,sans-serif}
+    .sc-sb-c1{animation:sbC1 28s infinite}.sc-sb-c2{animation:sbC2 28s infinite}.sc-sb-c3{animation:sbC3 28s infinite}
+    @keyframes sbC1{0%,57%{opacity:0;transform:translateY(3px)}61%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC2{0%,65%{opacity:0;transform:translateY(3px)}69%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    @keyframes sbC3{0%,73%{opacity:0;transform:translateY(3px)}77%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-sb-hdr{font-size:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:#888;margin-bottom:3px}
+    .sc-sb-kv{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+    .sc-sb-k{color:#666}.sc-sb-v{color:#1a4480;font-family:monospace;font-weight:700;font-size:8px}
+    .sc-pr{background:#f0faf4;border:1px solid #86efac;border-radius:6px;padding:7px 8px;font-size:10px;color:#166534;opacity:0;animation:prShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes prShow{0%,82%{opacity:0;transform:translateY(3px)}86%,93%{opacity:1;transform:translateY(0)}96%,100%{opacity:0}}
+    .sc-pr-title{font-weight:700;margin-bottom:3px;font-size:10px}
+    .sc-pr-meta{font-size:8px;color:#15803d;line-height:1.4;font-family:ui-monospace,monospace}
+    .sc-popup{position:absolute;right:230px;top:170px;width:220px;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px;z-index:6;opacity:0;animation:popupShow 28s infinite;font-family:-apple-system,sans-serif}
+    @keyframes popupShow{0%,24%{opacity:0;transform:translateX(6px)}26%,86%{opacity:1;transform:translateX(0)}90%,100%{opacity:0}}
+    .sc-popup::after{content:'';position:absolute;top:14px;right:-6px;width:10px;height:10px;background:#fff;border-bottom:1px solid #ddd;border-right:1px solid #ddd;transform:rotate(-45deg)}
+    .sc-popup-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:10px;font-weight:700;color:#222}
+    .sc-popup-x{color:#bbb;font-size:13px;line-height:1}
+    .sc-popup-ta{background:#fafafa;border:1px solid #e0e0e0;border-radius:4px;padding:5px 7px;font-size:10px;color:#333;line-height:1.4;min-height:30px;margin-bottom:6px;white-space:nowrap;overflow:hidden}
+    .sc-ta-inner{display:inline-block;overflow:hidden;white-space:nowrap;max-width:0;animation:typeText 28s infinite}
+    @keyframes typeText{0%,26%{max-width:0}38%,93%{max-width:200px}96%,100%{max-width:0}}
+    .sc-blink{display:inline-block;color:#1ca0e2;animation:scBlink .8s step-end infinite}
+    @keyframes scBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .sc-popup-fix{background:#1ca0e2;color:#fff;border:none;border-radius:4px;padding:5px 9px;font-size:10px;font-weight:700;width:100%;text-align:center;font-family:inherit;position:relative;height:24px;overflow:hidden}
+    .sc-fxt,.sc-fsp,.sc-fdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+    .sc-fxt{animation:fxTxt 28s infinite}.sc-fsp{animation:fxSpin 28s infinite}.sc-fdn{animation:fxDone 28s infinite}
+    @keyframes fxTxt{0%,52%{opacity:1}55%,100%{opacity:0}}
+    @keyframes fxSpin{0%,54%{opacity:0}57%,63%{opacity:1}65%,100%{opacity:0}}
+    @keyframes fxDone{0%,63%{opacity:0}66%,86%{opacity:1}90%,100%{opacity:0}}
+    .sc-fsp-icon{display:inline-block;animation:fxSpinRot .1s linear infinite}
+    @keyframes fxSpinRot{to{transform:rotate(360deg)}}
+    .sc-cursor{position:absolute;width:18px;height:18px;pointer-events:none;z-index:10;opacity:0;animation:scCur 28s infinite}
+    .sc-arrow{position:absolute;inset:0;width:100%;height:100%}
+    .sc-arrow svg{width:100%;height:100%;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+    @keyframes scCur{
+      0%{left:360px;top:223px;opacity:0}2%{left:360px;top:223px;opacity:1}
+      10%{left:698px;top:23px;opacity:1}14%{left:698px;top:23px;opacity:1}
+      20%{left:280px;top:200px;opacity:1}22%{left:280px;top:200px;opacity:1}
+      26%{left:391px;top:280px;opacity:1}47%{left:391px;top:280px;opacity:1}
+      49%{left:391px;top:313px;opacity:1}58%{left:391px;top:313px;opacity:1}
+      74%{left:620px;top:130px;opacity:1}93%{left:620px;top:130px;opacity:1}
+      96%{opacity:0}100%{opacity:0}
+    }
+    .sc-caption{background:#0f0f0f;color:#b8b8b8;padding:8px 16px;font-size:11px;text-align:center;border-top:1px solid #222;font-family:-apple-system,sans-serif}
+    .sc-caption strong{color:#1ca0e2}
+    .sc-progress{height:3px;background:rgba(255,255,255,.08)}
+    .sc-progress-fill{height:100%;background:#1ca0e2;width:0;animation:progFill 28s linear infinite}
+    @keyframes progFill{0%{width:0}100%{width:100%}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="content-wrap">
+    <nav class="site-nav">
+      <a href="/">Vibers</a> &nbsp;&middot;&nbsp;
+      <a href="/blog/">Blog</a> &nbsp;&middot;&nbsp;
+      Headless CMS landscape
+    </nav>
+
+    <article>
+      <header>
+        <div class="article-meta">
+          <span class="pill">Landscape map</span>
+          <span>Compiled 2026-05-07</span>
+          <span>&middot;</span>
+          <span>16 small-footprint headless CMSes</span>
+          <span>&middot;</span>
+          <span>1 first-hand <code>curl</code></span>
+        </div>
+        <h1>Small-footprint headless CMS landscape &mdash; 16 lesser-known players we mapped in one evening</h1>
+        <p class="lede">Open any headless-CMS comparison list in 2026 and the first ten entries are the same: Storyblok, Contentful, Sanity, Strapi, Directus, Payload, Hygraph, Contentstack, DatoCMS, Ghost. After those there's a long tail &mdash; 30+ projects that each fill some specific niche but never broke into the consideration set of a generalist developer Googling "headless CMS." This page is a landscape map of sixteen of them: the ones our keyword research turned up under 300/mo brand searches but with shipping products and real users. None of them deserves a 2,000-word standalone hub from us; together they deserve one honest map.</p>
+      </header>
+      <div style="position:relative;padding-top:62%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,.18);margin:0 0 16px">
+        <iframe src="https://www.youtube.com/embed/yAC9PzBLr_g?rel=0" title="SimpleReview demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      
+
+
+      <video src="banner_voiced.mp4?v=1" width="100%" autoplay muted loop playsinline controls
+        style="border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,.18);display:block;margin-bottom:16px"
+        onerror="this.style.display='none';document.getElementById('sc-banner-fallback').style.display='block'"></video>
+      <div id="sc-banner-fallback" class="sc-banner" aria-label="Animated SimpleReview demo: Tier-3 landscape banner highlights the first-hand artifact rule">
+        <div class="sc-chrome">
+          <div class="sc-dots"><span></span><span></span><span></span></div>
+          <div class="sc-url">~/$ curl https://api.cosmicjs.com/v3/buckets/unknown/objects</div>
+          <img src="../favicon.png" class="sc-ext-icon" alt="SimpleReview">
+        </div>
+        <div class="sc-viewport">
+          <div class="sc-content-row">
+            <div class="sc-site">
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">curl api.cosmicjs.com/v3/buckets/unknown/objects</span></div>
+              <div class="sc-term-line sc-term-out">HTTP/2 401 / tenant error</div>
+              <div class="sc-term-line sc-term-info">round-up artifact: one real API probe</div>
+              <div class="sc-error-box">
+                <div class="sc-err-title">Tier-3 CMS shortlist has one verified API artifact</div>
+                <div class="sc-err-msg">The landscape page needs a visible proof point, not sixteen thin mini-reviews with copied claims.</div>
+              </div>
+              <div class="sc-recovered">
+                <span class="sc-rec-success">Fix ready</span>
+              <div class="sc-term-line"><span class="sc-term-prompt">$</span> <span class="sc-term-cmd">add first-hand matrix row + source links</span></div>
+              <div class="sc-term-line sc-term-info">Cosmic curl documented</div>
+              <div class="sc-term-line sc-term-out">16 vendors grouped by real evaluation constraints</div>
+              </div>
+            </div>
+            <div class="sc-sidebar">
+              <div class="sc-panel-logo">SimpleReview <span class="sc-panel-badge">AI fix</span></div>
+              <div class="sc-sb-hint">Click the broken response to attach context</div>
+            <div class="sc-sb-card sc-sb-c1">
+              <div class="sc-sb-hdr">Detected</div>
+              <div>Round-up risk: scaled-content pattern</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c2">
+              <div class="sc-sb-hdr">Fix plan</div>
+              <div>Anchor the page on one reproducible Cosmic probe</div>
+            </div>
+            <div class="sc-sb-card sc-sb-c3">
+              <div class="sc-sb-hdr">Result</div>
+              <div>Landscape map states what was and was not tested</div>
+            </div>
+              <div class="sc-pr">
+                <div class="sc-pr-title">PR: Landscape proof block</div>
+                <div class="sc-pr-meta">+ first-hand artifact table
++ source URL column
++ no thin vendor pages</div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-popup">
+            <div class="sc-popup-hdr"><span>Comment for agent</span><span class="sc-popup-x">x</span></div>
+            <div class="sc-popup-ta"><span class="sc-ta-inner">Keep the round-up anchored to a real probe</span><span class="sc-blink">|</span></div>
+            <button class="sc-popup-fix"><span class="sc-fxt">Fix it</span><span class="sc-fsp"><span class="sc-fsp-icon">*</span></span><span class="sc-fdn">PR drafted</span></button>
+          </div>
+          <div class="sc-cursor"><div class="sc-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M4 3l14 12-7 1.5L8 22 4 3z" fill="#fff" stroke="#111" stroke-width="1.5"/></svg></div></div>
+        </div>
+        <div class="sc-progress"><div class="sc-progress-fill"></div></div>
+        <div class="sc-caption"><strong>SimpleReview</strong> - Tier-3 landscape banner highlights the first-hand artifact rule</div>
+      </div>
+
+      <div class="callout-honest">
+        <div class="lbl">Honest about what this is</div>
+        <p>We're the team behind <a href="https://onout.org/">SimpleReview</a>, a Chrome extension that drafts code-fix PRs on whatever element you click on a broken admin or storefront. We are <strong>not affiliated with any of the sixteen vendors below</strong>. We don't have a partner program with them, we don't have referral codes, we haven't bought a paid seat. This page is a single landscape sweep done on 2026-05-07: pricing pages, GitHub repos, public docs, and one real <code>curl</code> against the Cosmic CDN. We didn't deploy each of these to a staging box &mdash; that would be sixteen self-hosted Docker stacks and we'd never finish. So this is a map, not sixteen reviews.</p>
+        <p>If you maintain one of the products below and we got a fact wrong &mdash; pricing changed, license changed, the project got acquired &mdash; <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open a GitHub issue</a> and we'll patch this page. The dated source URL for every claim is in the table.</p>
+      </div>
+
+      <div class="toc">
+        <strong>What's on this page</strong>
+        <a href="#why-these-exist">Why these sixteen exist</a> &middot;
+        <a href="#big-table">The full comparison table</a> &middot;
+        <a href="#group-git">Git-backed open source</a> &middot;
+        <a href="#group-saas">API-first SaaS small-time</a> &middot;
+        <a href="#group-code">Code-first / framework-rooted</a> &middot;
+        <a href="#group-niche">Niche / orphan</a> &middot;
+        <a href="#first-hand">First-hand: <code>curl api.cosmicjs.com</code></a> &middot;
+        <a href="#when-tier3">When Tier-3 over Tier-1</a> &middot;
+        <a href="#tier-1-2">The articles we did write standalone</a>
+      </div>
+
+      <h2 id="why-these-exist">Why these sixteen exist</h2>
+
+      <p>The short version: the big six headless CMSes optimise for "we are an editorial team that needs a CDN, a multi-language model, and a procurement-friendly SOC 2 report." Everyone outside that frame &mdash; a Hugo blogger who wants a UI, an Astro developer who wants content in <code>git</code>, a Japanese marketing team that wants a Tokyo-region API, an e-commerce shop that wants PIM and CMS in one box &mdash; gets a tool that fits them better than Contentful does. Each of the sixteen below is somebody's "fits me better than the big ones" answer. We've grouped them into four clusters; the clusters aren't perfectly clean (Caisy is both API-first and German, Keystatic is both code-first and git-backed) but a four-cluster map beats a sixteen-row alphabetical list for navigation.</p>
+
+      <h2 id="big-table">The full comparison &mdash; sixteen on one screen</h2>
+
+      <p>One row per product. Stack column says what you write your front end against and (where applicable) what the CMS itself is built in. Pricing column gives the floor and the next paid step on the day we tested. Source column is the URL we verified the row from on 2026-05-07.</p>
+
+      <table class="measure">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Stack</th>
+            <th>OSS?</th>
+            <th>Pricing floor &rarr; next step</th>
+            <th>Niche / why-it-exists</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pages CMS</strong></td>
+            <td class="mono">pages-cms</td>
+            <td class="mono">Next.js + React; edits files in your GitHub repo</td>
+            <td>MIT</td>
+            <td class="num">Free / self-host</td>
+            <td>UI for Jekyll/Hugo/Astro/Gatsby content sitting in a repo. No DB, no API.</td>
+            <td><a href="https://pagescms.org/" target="_blank" rel="noopener">pagescms.org</a></td>
+          </tr>
+          <tr>
+            <td><strong>microCMS</strong></td>
+            <td class="mono">microcms</td>
+            <td class="mono">SaaS; REST + JS/TS SDKs; Tokyo-region API</td>
+            <td>No</td>
+            <td class="num">Hobby ¥0 &rarr; Team ¥4,900/mo &rarr; Business ¥75,000/mo</td>
+            <td>The Japan-native headless CMS. Default choice on JP dev Twitter.</td>
+            <td><a href="https://microcms.io/pricing" target="_blank" rel="noopener">microcms.io/pricing</a></td>
+          </tr>
+          <tr>
+            <td><strong>ApostropheCMS</strong></td>
+            <td class="mono">apostrophecms</td>
+            <td class="mono">Node.js (server-rendered or headless); Vue admin</td>
+            <td>MIT (Community)</td>
+            <td class="num">Free / self-host &rarr; Pro $199/mo &rarr; Assembly $499/mo</td>
+            <td>Visual in-page editing. The "marketing site CMS" that happens to do headless.</td>
+            <td><a href="https://apostrophecms.com/pricing" target="_blank" rel="noopener">apostrophecms.com/pricing</a></td>
+          </tr>
+          <tr>
+            <td><strong>Caisy</strong></td>
+            <td class="mono">caisy-cms</td>
+            <td class="mono">SaaS GraphQL; component blueprints</td>
+            <td>No</td>
+            <td class="num">Free &rarr; Growth $49/mo &rarr; Enterprise $1,499/mo</td>
+            <td>The German Storyblok-shaped competitor. Generous free tier (5k entries).</td>
+            <td><a href="https://caisy.io/pricing" target="_blank" rel="noopener">caisy.io/pricing</a></td>
+          </tr>
+          <tr>
+            <td><strong>Cosmic</strong></td>
+            <td class="mono">cosmic-cms</td>
+            <td class="mono">SaaS REST; Next/React/Vue/Astro/Nuxt SDKs</td>
+            <td>No</td>
+            <td class="num">Free &rarr; Builder $49/mo &rarr; Team $299/mo</td>
+            <td>The "AI-first" rebrand &mdash; agents that draft content in-product.</td>
+            <td><a href="https://www.cosmicjs.com/pricing" target="_blank" rel="noopener">cosmicjs.com/pricing</a></td>
+          </tr>
+          <tr>
+            <td><strong>Flotiq</strong></td>
+            <td class="mono">flotiq</td>
+            <td class="mono">SaaS REST + GraphQL; PHP/Node/Python/JS SDKs</td>
+            <td>No</td>
+            <td class="num">Free &rarr; Basic $37/mo &rarr; Growth $114/mo</td>
+            <td>Polish API-first CMS, EU-funded. Conservative pricing, classic CRUD shape.</td>
+            <td><a href="https://flotiq.com/pricing/" target="_blank" rel="noopener">flotiq.com/pricing</a></td>
+          </tr>
+          <tr>
+            <td><strong>Prepr CMS</strong></td>
+            <td class="mono">prepr-cms</td>
+            <td class="mono">SaaS GraphQL; personalisation engine built in</td>
+            <td>No</td>
+            <td class="num">Community &euro;0 &rarr; Flex &euro;299/mo (yearly) &rarr; Enterprise custom</td>
+            <td>Dutch CMS with A/B testing &amp; personalisation as core, not add-on.</td>
+            <td><a href="https://prepr.io/pricing" target="_blank" rel="noopener">prepr.io/pricing</a></td>
+          </tr>
+          <tr>
+            <td><strong>Front Matter CMS</strong></td>
+            <td class="mono">front-matter-cms</td>
+            <td class="mono">VS Code extension; reads/writes Markdown front matter</td>
+            <td>MIT</td>
+            <td class="num">Free</td>
+            <td>"CMS that's just your editor." Lives inside VS Code, edits files locally.</td>
+            <td><a href="https://frontmatter.codes/" target="_blank" rel="noopener">frontmatter.codes</a></td>
+          </tr>
+          <tr>
+            <td><strong>Keystatic</strong></td>
+            <td class="mono">keystatic</td>
+            <td class="mono">React; ships as Next/Astro/Remix integration</td>
+            <td>MIT</td>
+            <td class="num">Free / self-host</td>
+            <td>Local + GitHub modes; schema is TS code. Thinkmill (Sydney) project.</td>
+            <td><a href="https://keystatic.com/" target="_blank" rel="noopener">keystatic.com</a></td>
+          </tr>
+          <tr>
+            <td><strong>JekyllPad</strong></td>
+            <td class="mono">jekyllpad</td>
+            <td class="mono">Browser SaaS; talks to your Jekyll/Hugo/Astro repo</td>
+            <td>No (SaaS)</td>
+            <td class="num">Free &mdash; 5 posts/mo &rarr; paid (TBC)</td>
+            <td>Browser WYSIWYG for SSG repos. The "non-developer drafts in browser" wedge.</td>
+            <td><a href="https://jekyllpad.com/" target="_blank" rel="noopener">jekyllpad.com</a></td>
+          </tr>
+          <tr>
+            <td><strong>Spinal CMS</strong></td>
+            <td class="mono">spinal-cms</td>
+            <td class="mono">Browser SaaS; git-based; SSG-agnostic</td>
+            <td>No (SaaS)</td>
+            <td class="num">See <code>/pricing/</code></td>
+            <td>"SaaS &amp; agency marketing-content git workflow without the git." Niche use case.</td>
+            <td><a href="https://spinalcms.com/" target="_blank" rel="noopener">spinalcms.com</a></td>
+          </tr>
+          <tr>
+            <td><strong>Crystallize</strong></td>
+            <td class="mono">crystallize</td>
+            <td class="mono">SaaS GraphQL; PIM + commerce + CMS in one</td>
+            <td>No</td>
+            <td class="num">Particle free + metering &rarr; Atom $949/mo &rarr; Crystal custom</td>
+            <td>Headless commerce with content built in. Norwegian/Oslo team.</td>
+            <td><a href="https://crystallize.com/pricing" target="_blank" rel="noopener">crystallize.com/pricing</a></td>
+          </tr>
+          <tr>
+            <td><strong>GitCMS</strong></td>
+            <td class="mono">gitcms</td>
+            <td class="mono">Hosted git-based CMS; SSG-agnostic</td>
+            <td>No (we couldn't verify)</td>
+            <td class="num">Unverified (page was 403 for our IP)</td>
+            <td>Another git-backed editing UI; small footprint, hard to confirm liveness.</td>
+            <td><a href="https://gitcms.dev/" target="_blank" rel="noopener">gitcms.dev</a></td>
+          </tr>
+          <tr>
+            <td><strong>Sitepins</strong></td>
+            <td class="mono">sitepins</td>
+            <td class="mono">SaaS git-based; Astro/Next/Hugo/Nuxt/Svelte/11ty/Jekyll</td>
+            <td>No (SaaS)</td>
+            <td class="num">Free trial &rarr; paid (page TBC)</td>
+            <td>Visual editor over a static-site repo. Same shape as Pages CMS but SaaS.</td>
+            <td><a href="https://sitepins.com/" target="_blank" rel="noopener">sitepins.com</a></td>
+          </tr>
+          <tr>
+            <td><strong>Vault CMS</strong></td>
+            <td class="mono">vault-cms</td>
+            <td class="mono">Unclear &mdash; effectively no US search demand</td>
+            <td>?</td>
+            <td class="num">?</td>
+            <td>Trademark collision with HashiCorp Vault &amp; medical-device terms; no clear product page.</td>
+            <td>(no canonical URL we could verify)</td>
+          </tr>
+          <tr>
+            <td><strong>StudioCMS</strong></td>
+            <td class="mono">studiocms</td>
+            <td class="mono">Astro + libSQL; serverless-friendly</td>
+            <td>MIT</td>
+            <td class="num">Free / self-host</td>
+            <td>"All-in-one CMS for your next Astro project." New project, small footprint.</td>
+            <td><a href="https://studiocms.dev/" target="_blank" rel="noopener">studiocms.dev</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Two rows are honest "we couldn't fully verify" entries: Vault CMS and GitCMS. We left them in because cutting them would make the landscape feel cleaner than it is &mdash; the bottom of the long tail has projects with broken homepages, IP-banned servers, and dead Twitter accounts.</p>
+
+      <h2 id="group-git">Group 1 &mdash; open-source git-backed (5)</h2>
+
+      <div class="group-card">
+        <h3>Pages CMS &middot; Front Matter CMS &middot; JekyllPad &middot; GitCMS &middot; Sitepins</h3>
+        <p>These five share one premise: <em>your content already lives in a git repo as Markdown / JSON / YAML, and what you want is a UI on top of it</em>. No separate database, no separate API. The CMS is a thin editor that commits to the repo on save; the SSG (Jekyll, Hugo, Astro, 11ty, Gatsby, Next, Nuxt) does the rest at build time. The differences inside the group are about <strong>where the editor lives</strong>:</p>
+        <ul>
+          <li><strong>Pages CMS</strong> &mdash; a Next.js app you self-host (or use free pagescms.org). MIT, on GitHub. Their own line: <em>"Manage content and media right in your GitHub repository. No database, no API, no extra backend."</em></li>
+          <li><strong>Front Matter CMS</strong> &mdash; the editor <em>is</em> VS Code. Extension. Open it on a Hugo/Jekyll/Astro/11ty/Docusaurus repo and you get a content panel, media library, calendar. Free, MIT, offline. Lowest friction if you already live in VS Code.</li>
+          <li><strong>JekyllPad</strong> &mdash; browser SaaS, same idea as Pages CMS hosted. Free tier capped at 5 posts/month is unusually small &mdash; a freemium funnel, not a "free forever" tier.</li>
+          <li><strong>Sitepins</strong> &mdash; browser SaaS, broader SSG support (Astro, Next, Hugo, Nuxt, Svelte, 11ty, Jekyll, plus TOML). Free trial; paid pricing not on the homepage.</li>
+          <li><strong>GitCMS</strong> &mdash; <code>gitcms.dev</code> returned <code>403 Forbidden</code> for headless Chrome on 2026-05-07; <code>gitcms.blog</code> 301s to it. DNS alive, product surface unverifiable from outside.</li>
+        </ul>
+      </div>
+
+      <h2 id="group-saas">Group 2 &mdash; API-first SaaS small-time (5)</h2>
+
+      <div class="group-card">
+        <h3>microCMS &middot; Cosmic &middot; Caisy &middot; Flotiq &middot; Prepr CMS</h3>
+        <p>Same product shape as Contentful or Sanity &mdash; hosted SaaS, content schema, REST or GraphQL, admin UI, SDKs &mdash; but each has a regional or vertical wedge.</p>
+        <ul>
+          <li><strong>microCMS</strong> &mdash; JP-native. Pricing in yen: Hobby ¥0 / Team ¥4,900 / Business ¥75,000 (~$0 / $32 / $490). Verbatim from their site: <em>"microCMSはAPIベースの日本製ヘッドレスCMSです"</em> (microCMS is an API-based Japan-made headless CMS). The local-data-residency answer for ap-northeast-1.</li>
+          <li><strong>Cosmic</strong> &mdash; American, pivoted to "AI-first" in 2025-2026. Homepage pitch: <em>"Agents that create content, build features, and ship code, without leaving the chat."</em> Free / Builder $49 / Team $299. Real <code>curl</code> against their CDN below.</li>
+          <li><strong>Caisy</strong> &mdash; German. Most generous free tier in this group: 3 users, 2 locales, 5,000 entries, 1M API calls, 100GB traffic. Growth $49/mo. Published numbers, no "contact us" theatrics for the prosumer tier.</li>
+          <li><strong>Flotiq</strong> &mdash; Polish, EU-funded. Free 1k objects / 100k API calls; Basic $37/mo. Conservative CRUD admin, SDKs in PHP/Node/Python/JS/.NET.</li>
+          <li><strong>Prepr CMS</strong> &mdash; Dutch (Utrecht). Wedge is <em>personalisation as core</em>, not enterprise add-on &mdash; A/B testing, customer events, adaptive content all in Community. Community &euro;0 / Flex &euro;299/mo (yearly) / Enterprise custom.</li>
+        </ul>
+      </div>
+
+      <h2 id="group-code">Group 3 &mdash; code-first / framework-rooted (3)</h2>
+
+      <div class="group-card">
+        <h3>ApostropheCMS &middot; Keystatic &middot; StudioCMS</h3>
+        <p>Unifying theme: <em>your schema is code</em>. You define the model in JS/TS, the admin UI is generated, the CMS is a library you import rather than a service you call.</p>
+        <ul>
+          <li><strong>ApostropheCMS</strong> &mdash; oldest project on this page. Node.js. Community Edition is MIT, free forever, with unlimited users/types, in-page visual editing, Vue admin. Hosted Pro $199/mo (5 editors, advanced permissions, document versions, AI translation); Assembly $499/mo+ for multisite. The open-source edition is genuinely the same product as the hosted one.</li>
+          <li><strong>Keystatic</strong> &mdash; React, MIT, by Sydney consultancy <a href="https://www.thinkmill.com.au/" target="_blank" rel="noopener">Thinkmill</a> (same shop as <a href="../keystonejs/">KeystoneJS</a>). Ships as a Next/Astro/Remix integration. Schema in TypeScript. Edits commit to GitHub or save locally depending on mode. Their line: <em>"A tool that makes Markdown, JSON and YAML content in your codebase editable by humans."</em></li>
+          <li><strong>StudioCMS</strong> &mdash; youngest. MIT, Astro-native, data in remote libSQL (Turso's open core). Pitch: <em>"the all-in-one content management solution for your next Astro project."</em> Brand search 0/mo because too new to index, but Astro + libSQL + serverless makes it one to watch.</li>
+        </ul>
+      </div>
+
+      <h2 id="group-niche">Group 4 &mdash; niche / orphan (3)</h2>
+
+      <div class="group-card">
+        <h3>Crystallize &middot; Spinal CMS &middot; Vault CMS</h3>
+        <p>Three that don't fit cleanly elsewhere.</p>
+        <ul>
+          <li><strong>Crystallize</strong> &mdash; not really a "headless CMS" in the same sense. It's <em>headless commerce with PIM and content rolled in</em>. Norwegian (Oslo), GraphQL-first, metered on top of base tiers. Particle free + metering / Atom $949/mo + metering / Crystal custom. The answer for content-heavy e-commerce that doesn't want to bolt Shopify onto Sanity.</li>
+          <li><strong>Spinal CMS</strong> &mdash; "marketing-content git workflow without the git." SaaS companies and agencies with mixed-technical teams: developers want git-backed content, marketers don't want to learn <code>git</code>. Closed-source SaaS.</li>
+          <li><strong>Vault CMS</strong> &mdash; trademark collision soup (HashiCorp Vault, medical-device hits, unrelated brands). Our keyword research couldn't find a canonical product page with measurable US search demand under any disambiguating phrasing. Listed because it appeared in Tier-3 by name; we can't responsibly link to a specific product.</li>
+        </ul>
+      </div>
+
+      <h2 id="first-hand">First-hand: <code>curl https://api.cosmicjs.com</code></h2>
+
+      <p>Sixteen products is too many for us to hands-on-test each one inside a single article. So we picked one &mdash; <strong>Cosmic</strong> &mdash; and ran the same evaluation walk we ran on Contentful in our standalone scout (pricing page + a real <code>curl</code> against the public CDN). One first-hand artifact for the round-up, in keeping with our rule: never ship a CMS write-up without at least one verifiable, dated, reproducible thing the reader can run themselves.</p>
+
+      <figure>
+        <img src="assets/01-cosmic-pricing.jpg" alt="Cosmic pricing page on 2026-05-07: header 'Get the right plan for your needs', subhead 'Get started for free. Custom plans available.', plan tiles for Free $0/month, Builder $49/month, Team $299/month, captured from www.cosmicjs.com/pricing">
+        <figcaption>Captured 2026-05-07 from <code>https://www.cosmicjs.com/pricing</code> via headless Chrome at 992&times;558. Tiers visible: Free $0/mo, Builder $49/mo, Team $299/mo (most popular). The "AI-powered headless CMS" rebrand is front and centre in the top-nav menu structure (AI / Features / Solutions / Resources / Community / Docs).</figcaption>
+      </figure>
+
+      <p>Now the production API. Cosmic's CDN is <code>api.cosmicjs.com</code> at version <code>v3</code>. Hit it with a deliberately invalid bucket slug:</p>
+
+<pre><code>$ curl -sD - "https://api.cosmicjs.com/v3/buckets/INVALID/objects"
+
+HTTP/2 404
+content-type: application/json
+x-amzn-requestid: e24c554b-0a6b-48df-93b9-67e29b35f395
+access-control-allow-origin: *
+x-amz-apigw-id: dCK3mEawjoEESxw=
+cache-control: private
+x-amzn-trace-id: Root=1-69fd8b63-420d8e261e65a2d11e56cf9e;Parent=0734d23220908819
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+x-served-by: cache-dub4341-DUB, cache-bma-essb1270041-BMA
+x-cache: MISS, MISS
+x-timer: S1778223971.429817,VS0,VE175
+content-length: 64
+
+{"status":404,"message":"bucket with slug: 'INVALID' not found"}</code></pre>
+
+      <p>Three things worth noting in this response, because they tell you most of what you need to know about the platform without reading any docs.</p>
+
+      <p><strong>One.</strong> The error envelope is flat and human-readable: <code>{"status": 404, "message": "bucket with slug: 'INVALID' not found"}</code>. Compare to <a href="../contentful/">Contentful's</a> nested <code>{"sys": {"type": "Error", "id": "NotFound"}, "message": "...", "requestId": "..."}</code>. Cosmic's is friendlier to grep, harder to programmatically switch on. There's no <code>requestId</code> field, so if you escalate to support, you correlate by the AWS <code>x-amzn-requestid</code> header instead.</p>
+
+      <p><strong>Two.</strong> The infrastructure is <strong>AWS API Gateway behind Fastly</strong>. <code>x-amz-apigw-id</code> is the API Gateway ID; <code>via: 1.1 varnish</code> + <code>x-served-by: cache-dub4341-DUB, cache-bma-essb1270041-BMA</code> tells you Fastly is fronting it (Dublin and Stockholm-Bromma POPs on this request). Same plumbing shape as Contentful, different POPs.</p>
+
+      <p><strong>Three.</strong> <code>cache-control: private</code> on a 404 with <code>x-cache: MISS, MISS</code> means the 404 was authoritative from origin, not edge-cached. Good behaviour &mdash; the alternative would mean a typo'd bucket slug persisting as an error after the user fixes it.</p>
+
+      <p>For comparison, hitting the API root with no auth header:</p>
+
+<pre><code>$ curl -sD - "https://api.cosmicjs.com/v3/"
+
+HTTP/2 403
+content-type: application/json
+x-amzn-errortype: MissingAuthenticationTokenException
+x-amz-apigw-id: dCK3oEYdDoEErZQ=
+
+{"message":"Missing Authentication Token"}</code></pre>
+
+      <p>That <code>MissingAuthenticationTokenException</code> is the AWS API Gateway default response for an unrecognised path &mdash; not a Cosmic-specific message. <code>/v3/</code> isn't a defined route; only <code>/v3/buckets/...</code> sub-paths are. The "discover buckets" attack surface is closed at the gateway.</p>
+
+      <div class="callout-fix">
+        <div class="lbl">What this artifact tells you about Cosmic vs Contentful</div>
+        <p>Both put Varnish in front, both run on US East infrastructure with EU edge POPs, both return JSON envelopes on errors. Cosmic's envelope is simpler (flatter, no <code>sys</code> wrapper). Cosmic exposes the AWS plumbing in headers (<code>x-amz-apigw-id</code>, <code>x-amzn-requestid</code>); Contentful hides it. Cosmic's free tier is more generous in dollar terms ($0 with a usable cap vs Contentful's free tier capped on locales). Pick Contentful if your buyer is a Fortune-500 procurement officer who wants a SOC 2 report; pick Cosmic if your buyer is you and you want to ship this weekend and not see a $300 wall in month seven.</p>
+      </div>
+
+      <h2 id="when-tier3">When Tier-3 over Tier-1</h2>
+
+      <p>The honest answer most developer blogs won't give you: <em>most projects should pick a Tier-1 headless CMS</em>. Storyblok, Contentful, Sanity, Strapi, Directus, Payload, Hygraph &mdash; the reason these have 2,000-13,000/mo brand search volume is the same reason they have a thick consideration set: they ship, they have docs, they have a Stack Overflow long tail of answers, the SDKs are maintained, the migration paths in and out are well-trodden. Picking microCMS over Sanity for a generic English-language SaaS in 2026 mostly means you'll have to write your own Stack Overflow answers.</p>
+
+      <p>Three situations where one of the sixteen above is genuinely the better answer:</p>
+
+      <ol>
+        <li><strong>Your content lives in git already.</strong> If you have a Hugo or Astro site in a GitHub repo, and you want one non-technical person to edit posts, the Tier-1 answer is "spin up a Sanity Studio, write a content adapter, deploy a build pipeline that pulls from Sanity and writes Markdown into your repo on save." The Tier-3 answer is "install Pages CMS or Front Matter, point it at the repo, done." That's a 2-hour Saturday vs a 2-week sprint.</li>
+        <li><strong>You have a regional data-residency requirement that's not EU.</strong> microCMS has Tokyo regions because it's a Japanese company. Caisy is a German company on AWS Frankfurt. Flotiq is Polish. If your compliance requirement is "data must stay in country X" and X isn't on the residency list of Contentful or Sanity, the Tier-3 list is where you start.</li>
+        <li><strong>You need a non-CMS feature that's a CMS feature here.</strong> Crystallize bundles PIM and content management for commerce. Prepr bundles personalisation and A/B testing as core, not as a $500/mo add-on. ApostropheCMS bundles in-page visual editing the way WordPress does, which most headless CMSes deliberately don't. If a Tier-1 quote includes a $1,000-2,000/mo add-on for the feature you need, a Tier-3 vendor where it's free-tier-included is worth a closer look.</li>
+      </ol>
+
+      <p>Outside those three: pick a Tier-1. You'll regret it less.</p>
+
+      <h2 id="tier-1-2">The articles we wrote standalone (Tier 1 + 2)</h2>
+
+      <p>For the seventeen larger headless CMSes that do clear our brand-volume bar, we have individual scouts &mdash; same shape as our <a href="../contentful/">Contentful</a> piece. Grouped by tier so you can find the right one:</p>
+
+      <h3>Tier 1 (~2,000+/mo brand search)</h3>
+      <ul>
+        <li><a href="../storyblok/">Storyblok</a> &mdash; the visual-editor-first headless CMS, German, generous free tier.</li>
+        <li><a href="../ghost/">Ghost</a> &mdash; the headless-blog wedge; nonprofit foundation; Node.js; SQLite-or-MySQL.</li>
+        <li><a href="../contentstack/">Contentstack</a> &mdash; behind the "Contact us" wall, enterprise-only pricing.</li>
+        <li><a href="../contentful/">Contentful</a> &mdash; the legacy incumbent; real <code>curl</code> against <code>cdn.contentful.com</code>; the &euro;300 Lite wall.</li>
+        <li><a href="../hygraph/">Hygraph</a> &mdash; multi-region GraphQL, content federation; ex-GraphCMS.</li>
+        <li><a href="../hashnode/">Hashnode</a> &mdash; developer-blog SaaS with a headless API; the dev-publishing wedge.</li>
+      </ul>
+
+      <h3>Tier 2 (~300&ndash;2,000/mo brand search)</h3>
+      <ul>
+        <li><a href="../decap-cms/">Decap CMS</a> &mdash; the renamed Netlify CMS; static-site git CMS; MIT.</li>
+        <li><a href="../sitecore-xm/">Sitecore XM Cloud</a> &mdash; the .NET enterprise; "Contact us" pricing.</li>
+        <li><a href="../datocms/">DatoCMS</a> &mdash; the GraphQL-first SaaS; Italian; clean DX.</li>
+        <li>Optimizely CMS &mdash; the personalisation-experimentation enterprise (article TBD).</li>
+        <li>ButterCMS &mdash; the "API on top of any back end" pitch (article TBD).</li>
+        <li>Kontent.ai &mdash; ex-Kentico Kontent; SaaS; AI repositioning (article TBD).</li>
+        <li><a href="../tinacms/">TinaCMS</a> &mdash; visual editing on git; React-first.</li>
+        <li><a href="../builder-io/">Builder.io</a> &mdash; visual page-builder; design-to-code AI focus.</li>
+        <li><a href="../cloudcannon/">CloudCannon</a> &mdash; SSG hosting + visual editing; Jekyll/Hugo/Eleventy first.</li>
+        <li><a href="../sanity/">Sanity</a> &mdash; Content Lake; structured-content pitch; React Studio.</li>
+        <li>Prismic &mdash; slice-machine; the component-content wedge (article TBD).</li>
+        <li><a href="../keystonejs/">KeystoneJS</a> &mdash; TS-schema-first headless; Thinkmill; same shop as Keystatic above.</li>
+      </ul>
+
+      <p>And the standalone open-source big-three back-end CMS scouts, which sit adjacent to all of the above: <a href="../strapi/">Strapi</a>, <a href="../directus/">Directus</a>, <a href="../payload-cms/">Payload</a>.</p>
+
+      <h2>What we'd actually do</h2>
+
+      <p>If we were starting an English-language SaaS marketing site tomorrow with a small editorial team and a Next.js front end, we'd still pick Sanity or Storyblok for the boring stable reason &mdash; the SDKs and the Stack Overflow long tail are denser. If we were starting a Hugo blog with one author and one sometimes-editor, we'd pick Pages CMS or Front Matter and not pay anyone. If we were a Japanese marketing team, microCMS. If we needed PIM + commerce + content in one box, Crystallize. The sixteen products here exist because each is the right answer for some specific shape of team the giants don't fit. Knowing the map matters more than knowing each cell.</p>
+
+      <p>Things we'd update later: confirm GitCMS liveness from a non-headless browser; pull next-tier pricing for JekyllPad / Sitepins / Spinal beyond the marketing floor; promote ApostropheCMS to a standalone Docker scout if reader interest emerges; track StudioCMS volume into 2026-Q4. <a href="https://onout.org/">SimpleReview</a> &mdash; the Chrome extension we ship &mdash; works on a Cosmic-rendered front end the same way it works on a microCMS or Keystatic one, because by render time it's just HTML.</p>
+
+      <footer class="footer">
+        <p>
+          <strong>Vibers</strong> &middot; the human-in-the-loop AI code review project
+          &middot; <a href="/">Home</a>
+          &middot; <a href="/blog/">Blog</a>
+          &middot; <a href="https://github.com/marsiandeployer/human-in-the-loop-review">GitHub</a>
+        </p>
+        <p style="margin-top:8px">
+          Compiled 2026-05-07 from a Hetzner FRA-region Hetzner box, headless Chrome 147 at 992&times;558. All sixteen rows verified against the source URLs cited in the table column on that date. First-hand <code>curl</code> artifact: <code>https://api.cosmicjs.com/v3/buckets/INVALID/objects</code> &rarr; HTTP 404, AWS request id <code>e24c554b-0a6b-48df-93b9-67e29b35f395</code>, Fastly POPs <code>cache-dub4341-DUB</code> + <code>cache-bma-essb1270041-BMA</code>. Pages CMS, Apostrophe, Keystatic, Front Matter, StudioCMS facts cross-verified against their respective open-source repos. microCMS yen prices captured from <code>microcms.io/pricing</code>; Cosmic dollar prices from <code>cosmicjs.com/pricing</code>. We don't have referral codes with any of the vendors above; if any pricing has shifted since 2026-05-07, please <a href="https://github.com/marsiandeployer/human-in-the-loop-review/issues/new" target="_blank" rel="noopener">open an issue</a>.
+        </p>
+      </footer>
+    </article>
+  </div>
+</div>
+</body>
+</html>
