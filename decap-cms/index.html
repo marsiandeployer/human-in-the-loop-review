@@ -329,7 +329,7 @@ Serving HTTP on 0.0.0.0 port 18093 (http://0.0.0.0:18093/) ...</code></pre>
       <p>Open <code>http://localhost:18093/admin/</code> and the bundle paints a login screen four seconds later:</p>
 
       <figure>
-        <img src="assets/01-login-screen.jpg" alt="Decap CMS login screen — pink Decap logo with a single dark Login button">
+        <img decoding="async" height="450" width="720" src="assets/01-login-screen-720.jpg?v=20260508e" alt="Decap CMS login screen — pink Decap logo with a single dark Login button">
         <figcaption>Decap CMS 3.12.2 first paint at <code>/admin/</code> with the <code>test-repo</code> backend. The pink logo is hard to miss; the friction is also hard to miss — there's no username, no password, no field. Just "Login". This is the whole login screen for <code>test-repo</code>: clicking the button accepts you as a fictional user.</figcaption>
       </figure>
 
@@ -338,14 +338,14 @@ Serving HTTP on 0.0.0.0 port 18093 (http://0.0.0.0:18093/) ...</code></pre>
       <p>You'd assume from the name that <code>test-repo</code> writes to a local repo. It doesn't. There is no repo. The Decap docs describe it as <em>"a backend that lives entirely in the browser, useful for offline demos"</em>, but in practice that wording underplays it. Click "Login", click <strong>New Blog</strong>, fill in a title — the editor flashes <code>CHANGES SAVED</code> in the toolbar before you've typed anything:</p>
 
       <figure>
-        <img src="assets/03-editor.jpg" alt="Decap CMS new entry editor — empty Title, empty Publish Date, Body section with Rich Text/Markdown toggle, top toolbar showing CHANGES SAVED">
+        <img loading="lazy" decoding="async" height="450" width="720" src="assets/03-editor-720.jpg?v=20260508e" alt="Decap CMS new entry editor — empty Title, empty Publish Date, Body section with Rich Text/Markdown toggle, top toolbar showing CHANGES SAVED">
         <figcaption>The new-entry editor on a brand-new entry, before a single keystroke. The green <code>CHANGES SAVED</code> pill is already visible. Decap is autosaving an entry that has no title, no date, no body. The "save" target, however, is not your collection folder.</figcaption>
       </figure>
 
       <p>Open DevTools and look at <code>localStorage</code>:</p>
 
       <figure>
-        <img src="assets/05-localstorage-proof.jpg" alt="DevTools-style overlay showing localStorage keys — cms.md-mode, cms.scroll-sync-enabled, decap-cms.entries.viewStyle, decap-cms-user with backendName test-repo, cms.preview-visible">
+        <img loading="lazy" decoding="async" height="450" width="720" src="assets/05-localstorage-proof-720.jpg?v=20260508e" alt="DevTools-style overlay showing localStorage keys — cms.md-mode, cms.scroll-sync-enabled, decap-cms.entries.viewStyle, decap-cms-user with backendName test-repo, cms.preview-visible">
         <figcaption>Real <code>localStorage</code> contents on <code>http://localhost:18093</code>. The <code>decap-cms-user</code> key is the entire authentication state for <code>test-repo</code> — a literal JSON blob <code>{"backendName":"test-repo"}</code>. Clear the storage and you're "logged out" instantly. The collection drafts you create live in the same storage; nothing is written to <code>content/blog/</code> on disk.</figcaption>
       </figure>
 
@@ -360,7 +360,7 @@ Serving HTTP on 0.0.0.0 port 18093 (http://0.0.0.0:18093/) ...</code></pre>
       <p>Click "Login", and the dashboard renders. Two collections from the YAML on the left, "Test Backend ↗" pinned to the top right as a permanent reminder of which backend is in use:</p>
 
       <figure>
-        <img src="assets/02-admin-dashboard.jpg" alt="Decap CMS admin dashboard — left sidebar lists Blog and Pages collections, main panel shows Blog with No Entries and a New Blog button, top right shows Test Backend label and Quick add">
+        <img loading="lazy" decoding="async" height="450" width="720" src="assets/02-admin-dashboard-720.jpg?v=20260508e" alt="Decap CMS admin dashboard — left sidebar lists Blog and Pages collections, main panel shows Blog with No Entries and a New Blog button, top right shows Test Backend label and Quick add">
         <figcaption>Real admin shell. Two collections from <code>config.yml</code>, an empty Blog list, and the <code>Test Backend ↗</code> tag on the right. The "↗" arrow links to the Decap docs page about test-repo — we like that detail; most apps don't tell you what mode you're in this loudly.</figcaption>
       </figure>
 
@@ -378,7 +378,7 @@ Serving HTTP on 0.0.0.0 port 18093 (http://0.0.0.0:18093/) ...</code></pre>
       <p>The login screen changes — same Decap logo, but the button is now "Login with GitHub":</p>
 
       <figure>
-        <img src="assets/04-github-backend-login.jpg" alt="Decap CMS login screen with GitHub backend — Decap logo and a dark Login with GitHub button featuring a GitHub octocat icon">
+        <img loading="lazy" decoding="async" height="450" width="720" src="assets/04-github-backend-login-720.jpg?v=20260508e" alt="Decap CMS login screen with GitHub backend — Decap logo and a dark Login with GitHub button featuring a GitHub octocat icon">
         <figcaption>Same admin bundle, different backend. The button now points at GitHub's OAuth flow. This is also where setup gets non-trivial.</figcaption>
       </figure>
 

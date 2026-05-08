@@ -231,21 +231,21 @@
     <p>Do not start by editing database tables. Joomla already exposes enough signal in the administrator UI to separate a bad package from a bad update server or a disabled plugin. In a clean Joomla 5.4.5 install, the extension workflow begins at <code>System → Install → Extensions</code>.</p>
 
     <figure class="figure">
-      <img src="screenshots/joomla-install-extensions.png" alt="Joomla 5.4.5 administrator Extensions Install screen with Upload Package File selected">
+      <img decoding="async" height="450" width="720" src="screenshots/joomla-install-extensions-720.jpg?v=20260508e" alt="Joomla 5.4.5 administrator Extensions Install screen with Upload Package File selected">
       <figcaption>Real Joomla 5.4.5 Docker screenshot: the Upload Package File tab is where ZIP format, upload-size, and package-structure issues surface first.</figcaption>
     </figure>
 
     <p>If the package uploads but the extension “does nothing”, go to Manage Extensions before you reinstall it three times. Modules and plugins often need to be enabled after installation; core extensions may be locked; and a disabled plugin can look like a broken install from the frontend.</p>
 
     <figure class="figure">
-      <img src="screenshots/joomla-manage-extensions.png" alt="Joomla 5.4.5 administrator Extensions Manage table with status, name, location, type and version columns">
+      <img loading="lazy" decoding="async" height="1082" width="720" src="screenshots/joomla-manage-extensions-720.jpg?v=20260508e" alt="Joomla 5.4.5 administrator Extensions Manage table with status, name, location, type and version columns">
       <figcaption>The Manage screen gives you status, location, type, version, folder, package ID, and extension ID. Those columns are the evidence you need before changing files.</figcaption>
     </figure>
 
     <p>For update problems, Update Sites is the next screen. Joomla extension updates depend on XML endpoints. If those rows are stale, disabled, missing, or pointing to a vendor URL that no longer responds, update checks can appear to hang or silently show no available update.</p>
 
     <figure class="figure">
-      <img src="screenshots/joomla-update-sites.png" alt="Joomla 5.4.5 administrator Update Sites table showing Joomla core and language update XML URLs">
+      <img loading="lazy" decoding="async" height="450" width="720" src="screenshots/joomla-update-sites-720.jpg?v=20260508e" alt="Joomla 5.4.5 administrator Update Sites table showing Joomla core and language update XML URLs">
       <figcaption>Update Sites shows the XML endpoints Joomla checks. Rebuild is useful when installed manifests and update-site records have drifted.</figcaption>
     </figure>
 

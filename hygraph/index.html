@@ -217,7 +217,7 @@ set-cookie: return-to=eyJ1cmwiOiJodHRwczovL2FwcC5oeWdyYXBoLmNvbS9zaWdudXAifQ%3D%
       <p>The base64 in the cookie decodes to <code>{"url":"https://app.hygraph.com/signup"}</code>, which means the app is doing the right thing under the hood — it remembers where you wanted to go and will bounce you back after auth. But the rendered page on a logged-out browser is <em>visually</em> a login form. The headline reads "LOGIN", the primary tabs are "Continue with GitHub" and "Continue with Google", the email + password fields are clearly labelled login fields. There <em>is</em> a small "Sign up" tab on the same widget, but it's not the default state, and on a small viewport it's below the fold. We screenshotted it at 992&times;558 (a typical 13-inch laptop frame) and the "Sign up" affordance is not the thing your eye lands on:</p>
 
       <figure>
-        <img src="assets/02-signup.jpg" alt="Hygraph signup landing as captured 2026-05-07: dark left panel with sample editor mockup; right panel headline reads LOGIN with Continue with GitHub and Continue with Google buttons. Sign-up tab is small.">
+        <img decoding="async" height="405" width="720" src="assets/02-signup-720.jpg?v=20260508e" alt="Hygraph signup landing as captured 2026-05-07: dark left panel with sample editor mockup; right panel headline reads LOGIN with Continue with GitHub and Continue with Google buttons. Sign-up tab is small.">
         <figcaption>Captured 2026-05-07 from <code>https://app.hygraph.com/signup</code> via headless Chrome at 992&times;558. The URL says signup, the page says <strong>LOGIN</strong>. The "Sign up" tab exists but is the secondary tab on the widget, not the primary state.</figcaption>
       </figure>
 
@@ -241,7 +241,7 @@ set-cookie: return-to=eyJ1cmwiOiJodHRwczovL2FwcC5oeWdyYXBoLmNvbS9zaWdudXAifQ%3D%
       <figcaption style="margin-top:-12px;margin-bottom:22px">Source: <code>hygraph.com/pricing</code> HTML, plan objects keyed by <code>priceMonthly</code> / <code>priceAnnual</code> in the embedded React-Server-Components payload. Captured 2026-05-07.</figcaption>
 
       <figure>
-        <img src="assets/01-pricing.jpg?v=20260508c" alt="Hygraph pricing page captured 2026-05-07. Headline 'Choose the plan that fits your team', three sub-pills 'Start free, stay free forever' / 'Simple pricing for fast results' / 'Explore, with extras', Monthly/Yearly billing toggle.">
+        <img loading="lazy" decoding="async" height="475" width="720" src="assets/01-pricing-720.jpg?v=20260508e" alt="Hygraph pricing page captured 2026-05-07. Headline 'Choose the plan that fits your team', three sub-pills 'Start free, stay free forever' / 'Simple pricing for fast results' / 'Explore, with extras', Monthly/Yearly billing toggle.">
         <figcaption>The pricing page hero — headline, the "Start free, stay free forever" badge, and the Monthly/Yearly toggle. The actual tier cards (Hobby / Growth / Enterprise) sit just below the fold in this 992&times;558 frame.</figcaption>
       </figure>
 
@@ -324,7 +324,7 @@ x-cdn-cache-status: init-project,optimize,miss,transform,fetch-cdn,cdn-miss,reje
       <p>The docs at <code>hygraph.com/docs</code> render a banner at the top of every page that reads, verbatim: "DOCS UPDATE — You are currently reading the Studio Docs. If you were looking for the Classic UI docs, you can find them here." That banner is a tell that Hygraph has shipped a new editor UI ("Studio") and the public docs are mid-migration: API references for content delivery, content management, schema introspection are the same in both UIs; but the editor walkthroughs ("how to add a Reference field") are version-specific.</p>
 
       <figure>
-        <img src="assets/03-docs.jpg" alt="Hygraph docs page captured 2026-05-07. Sidebar shows Get Started, Developer Guides, API Reference (expanded with Overview / Basics / Schema / Content API). Top banner reads 'DOCS UPDATE — You are currently reading the Studio Docs. If you were looking for the Classic UI docs, you can find them here.'">
+        <img loading="lazy" decoding="async" height="405" width="720" src="assets/03-docs-720.jpg?v=20260508e" alt="Hygraph docs page captured 2026-05-07. Sidebar shows Get Started, Developer Guides, API Reference (expanded with Overview / Basics / Schema / Content API). Top banner reads 'DOCS UPDATE — You are currently reading the Studio Docs. If you were looking for the Classic UI docs, you can find them here.'">
         <figcaption>The Content API → Queries reference page. Note the banner about "Studio Docs vs Classic UI docs" — that's the version skew you'll trip over when you Google a how-to for the editor side. The API reference itself is version-agnostic.</figcaption>
       </figure>
 

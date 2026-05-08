@@ -278,14 +278,14 @@ panic: failed to init dify plugin db</code></pre>
       <p>While we were debugging the missing Postgres, we tried opening <code>/signin</code> in a browser and got the Next.js generic runtime-error page rather than the actual signin form. Screenshot below.</p>
 
       <figure>
-        <img src="assets/02-signin-page.jpg" alt="Dify signin route showing the Next.js 'This page couldn't load' fallback when the API container is unable to respond">
+        <img decoding="async" height="405" width="720" src="assets/02-signin-page-720.jpg?v=20260508e" alt="Dify signin route showing the Next.js 'This page couldn't load' fallback when the API container is unable to respond">
         <figcaption>What <code>/signin</code> renders when the <code>api</code> container can't fulfill the initial RSC request — a generic Next.js error page with no clue about the underlying Postgres-not-running issue. The browser console is the only place that tells you it's a 502 from nginx.</figcaption>
       </figure>
 
       <p>The <code>/install</code> route is more graceful — it renders the Dify logo and a footer credit (<em>© 2026 LangGenius, Inc.</em>) while it waits for the API. Users who land there during boot at least see a recognisable shell rather than a stack trace.</p>
 
       <figure>
-        <img src="assets/01-install-page.jpg" alt="Dify install page during initial container boot showing logo and copyright while the API is still starting">
+        <img loading="lazy" decoding="async" height="405" width="720" src="assets/01-install-page-720.jpg?v=20260508e" alt="Dify install page during initial container boot showing logo and copyright while the API is still starting">
         <figcaption>The <code>/install</code> route during the first ~30 s of API boot. The small grey spinner top-right is the only signal that anything is happening; we caught the screenshot mid-load.</figcaption>
       </figure>
 

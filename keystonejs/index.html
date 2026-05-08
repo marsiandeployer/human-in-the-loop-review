@@ -313,7 +313,7 @@ function statelessSessions({
       <p>Once <code>PORT=18095 npm run dev</code> finished compiling, hitting <code>/</code> 302-redirected to <code>/init</code> — the first-run wizard. This is what it looks like on a fresh SQLite database:</p>
 
       <figure>
-        <img src="assets/01-init-firstuser.jpg" alt="Keystone 6 /init screen — Welcome to KeystoneJS, Create your first user to get started, with a Name field already showing 'Name must not be empty' in red before the user has typed anything">
+        <img decoding="async" height="405" width="720" src="assets/01-init-firstuser-720.jpg?v=20260508e" alt="Keystone 6 /init screen — Welcome to KeystoneJS, Create your first user to get started, with a Name field already showing 'Name must not be empty' in red before the user has typed anything">
         <figcaption>Keystone 6.5.2 first-run wizard at <code>/init</code>. Note that the "Name must not be empty" error is rendered <em>before</em> the user types — Keystone validates required fields on initial render. Cosmetic but jarring; almost every starter we've reviewed waits for blur or submit before flagging.</figcaption>
       </figure>
 
@@ -326,14 +326,14 @@ function statelessSessions({
       <p>Response includes a <code>sessionToken</code> (an iron-sealed cookie payload), which we set as <code>keystonejs-session</code> and got into the dashboard:</p>
 
       <figure>
-        <img src="assets/03-admin-home.jpg" alt="Keystone 6 dashboard, signed in as Admin, showing Users (1 item) and Posts (0 items) cards in the main panel and Dashboard, Users, Posts in the left sidebar">
+        <img loading="lazy" decoding="async" height="506" width="720" src="assets/03-admin-home-720.jpg?v=20260508e" alt="Keystone 6 dashboard, signed in as Admin, showing Users (1 item) and Posts (0 items) cards in the main panel and Dashboard, Users, Posts in the left sidebar">
         <figcaption>The Keystone 6 admin dashboard with one user and zero posts. Notice that <code>Tag</code> — which is in <code>schema.ts</code> as a real list with a back-relationship to <code>Post.tags</code> — is <em>not</em> in the sidebar. The starter ships it with <code>ui: { isHidden: true }</code> so it only appears via GraphQL. Worth knowing if you're surprised your relationships work but the list "doesn't exist."</figcaption>
       </figure>
 
       <p>And the GraphQL Apollo Sandbox at <code>/api/graphql</code>, which is mounted by default in dev:</p>
 
       <figure>
-        <img src="assets/02-graphql-playground.jpg" alt="Apollo Sandbox at /api/graphql showing the auto-generated Keystone schema with authenticatedItem, keystone meta, post, posts, postsCount, tag, tags queries">
+        <img loading="lazy" decoding="async" height="405" width="720" src="assets/02-graphql-playground-720.jpg?v=20260508e" alt="Apollo Sandbox at /api/graphql showing the auto-generated Keystone schema with authenticatedItem, keystone meta, post, posts, postsCount, tag, tags queries">
         <figcaption>The auto-generated GraphQL schema includes <code>authenticatedItem</code>, <code>keystone</code> meta, plus <code>post</code> / <code>posts</code> / <code>postsCount</code> and (despite being hidden in the admin UI) <code>tag</code> / <code>tags</code> queries. Schema-as-code in <code>schema.ts</code>, GraphQL surface in your face the moment you boot.</figcaption>
       </figure>
 

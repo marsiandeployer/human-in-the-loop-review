@@ -343,7 +343,7 @@ Running web application with command: next dev --turbopack -p 18094
       <p>The starter ships 16 demo files across <code>posts/</code> (six <code>.mdx</code>, one nested in <code>posts/june/</code> to demo folder collections), <code>authors/</code>, <code>pages/</code>, <code>tags/</code>, and a <code>global/index.json</code>. The schema doesn't restrict where files live within a collection's root path &mdash; a meaningful improvement over Decap's flat folders. The Next.js front:</p>
 
       <figure>
-        <img src="assets/01-frontend.jpg" alt="Tina Starter homepage with a llama logo, top button reading 'Support for live editing and editorial workflow', large headline 'Welcome to the TinaCloud Starter', subheading 'Build 10x Faster with TinaCMS', and Get Started / Read Blog buttons">
+        <img decoding="async" height="405" width="720" src="assets/01-frontend-720.jpg?v=20260508e" alt="Tina Starter homepage with a llama logo, top button reading 'Support for live editing and editorial workflow', large headline 'Welcome to the TinaCloud Starter', subheading 'Build 10x Faster with TinaCMS', and Get Started / Read Blog buttons">
         <figcaption>The default <code>tina-nextjs-starter</code> on first paint at <code>/</code>. Llama logo, "TinaCloud Starter" headline (the template's name still says TinaCloud even though local mode works), and a top banner advertising "live editing and editorial workflow" &mdash; that link goes to TinaCloud's docs, not a self-host guide.</figcaption>
       </figure>
 
@@ -361,14 +361,14 @@ Running web application with command: next dev --turbopack -p 18094
       <p>This modal has to be dismissed every time you open <code>/admin</code> in a new tab &mdash; no "remember my choice". If you came here expecting a TinaCloud login screen, the modal is the only signal that local mode is what you're in. Click through and you land in the collection list:</p>
 
       <figure>
-        <img src="assets/02-admin-posts-list.jpg" alt="TinaCMS admin showing Blog Posts collection with 6 .mdx entries listed — Learning about Markdown, Mermaid, TinaCMS, TinaCloud, components, and 'Learning to blog' — each with full filename path under content/posts/. Top of page shows a yellow 'You are in local mode' badge, an info banner reads 'You have not configured search. Read the docs', and Add Folder / Add File buttons sit on the right.">
+        <img loading="lazy" decoding="async" height="506" width="720" src="assets/02-admin-posts-list-720.jpg?v=20260508e" alt="TinaCMS admin showing Blog Posts collection with 6 .mdx entries listed — Learning about Markdown, Mermaid, TinaCMS, TinaCloud, components, and 'Learning to blog' — each with full filename path under content/posts/. Top of page shows a yellow 'You are in local mode' badge, an info banner reads 'You have not configured search. Read the docs', and Add Folder / Add File buttons sit on the right.">
         <figcaption>Real Blog Posts collection list under <code>tinacms 3.7.5</code> on local mode. The <code>You are in local mode</code> banner top-left is permanent &mdash; click it and a tooltip explains saves go to disk, not to a Git host. The <code>Read the docs</code> info banner is the search story: full-text search inside content is a TinaCloud feature, not bundled in the local datalayer. The .mdx column on the right is the actual file extension being read.</figcaption>
       </figure>
 
       <p>Click into any row and the editor opens with a real two-pane layout &mdash; form fields on the left, live preview of the rendered MDX on the right:</p>
 
       <figure>
-        <img src="assets/03-admin-editor.jpg" alt="TinaCMS visual editor with left sidebar showing Title input set to 'Learning about Markdown', Hero Image with a llama drawing, Excerpt rich-text field with markdown content, Reset and Save buttons greyed out, and right pane showing the live-rendered article with hero image, byline, and 'What is Markdown?' heading.">
+        <img loading="lazy" decoding="async" height="506" width="720" src="assets/03-admin-editor-720.jpg?v=20260508e" alt="TinaCMS visual editor with left sidebar showing Title input set to 'Learning about Markdown', Hero Image with a llama drawing, Excerpt rich-text field with markdown content, Reset and Save buttons greyed out, and right pane showing the live-rendered article with hero image, byline, and 'What is Markdown?' heading.">
         <figcaption>The actual editor at <code>/admin/index.html#/collections/post/learning-about-markdown</code>. Sidebar fields are generated from <code>tina/collection/post.tsx</code>. Right pane is the same Next.js page (<code>app/posts/[...urlSegments]/page.tsx</code>) with Tina's <code>useTina</code> hook subscribed to live form changes &mdash; type in the Title field and the heading on the right updates with no reload. Save / Reset are disabled until something dirty actually exists.</figcaption>
       </figure>
 
